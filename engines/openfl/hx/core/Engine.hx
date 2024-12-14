@@ -8,8 +8,15 @@ import openfl.display.Sprite;
  */
 class Engine extends Sprite {
 	/**
+	 * 舞台对象
+	 */
+	public var render:Stage;
+
+	/**
 	 * 初始化引擎入口类
 	 * @param mainClasses 
 	 */
-	public function init(mainClasses:Class<Stage>):Void {}
+	public function init(mainClasses:Class<Stage>):Void {
+		this.render = Type.createInstance(mainClasses, []);
+	}
 }

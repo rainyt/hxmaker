@@ -128,13 +128,9 @@ class DisplayObject {
 	 */
 	public function onInit():Void {}
 
-	private function __onAddToStage(stage:Stage):Bool {
-		if (this.stage == null) {
-			this.stage = stage;
-			this.onAddToStage();
-			return true;
-		}
-		return false;
+	private function __onAddToStage(stage:Stage):Void {
+		this.__stage = stage;
+		this.onAddToStage();
 	}
 
 	/**

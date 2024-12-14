@@ -33,9 +33,9 @@ class DisplayObjectContainer extends DisplayObject {
 			child.parent.removeChild(child);
 		}
 		this.__children.insert(index, child);
-		child.parent = this;
+		child.__parent = this;
 		// 追加舞台处理
-		if (this.stage != null) {
+		if (this.stage != null && child.stage == null) {
 			child.__onAddToStage(this.stage);
 		}
 	}
@@ -47,17 +47,14 @@ class DisplayObjectContainer extends DisplayObject {
 	public function removeChild(child:DisplayObject):Void {
 		this.__children.remove(child);
 		child.onRemoveToStage();
-		child.parent = null;
-		child.stage = null;
+		child.__parent = null;
+		child.__stage = null;
 	}
 
-	override function __onAddToStage(stage:Stage):Bool {
-		if (super.__onAddToStage(stage)) {
-			for (child in this.__children) {
-				child.__onAddToStage(stage);
-			}
-			return true;
+	override function __onAddToStage(stage:Stage):Void {
+		super.__onAddToStage(stage);
+		for (child in this.__children) {
+			child.__onAddToStage(stage);
 		}
-		return false;
 	}
 }

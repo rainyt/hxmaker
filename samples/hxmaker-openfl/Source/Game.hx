@@ -1,3 +1,4 @@
+import hx.displays.DisplayObjectContainer;
 import hx.displays.Image;
 import hx.displays.Stage;
 
@@ -11,6 +12,11 @@ class Game extends Stage {
 		var image:Image = new Image();
 		this.addChild(image);
 
-		trace("image.stage=", image.stage);
+		// 容器加图片显示对象
+		var box = new DisplayObjectContainer();
+		this.addChild(box);
+		var image2 = new Image();
+		box.addChild(image2);
+		this.addChild(box);
 	}
 }

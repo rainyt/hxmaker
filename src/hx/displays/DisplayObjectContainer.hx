@@ -11,6 +11,15 @@ class DisplayObjectContainer extends DisplayObject {
 	@:noCompletion private var __children:Array<DisplayObject> = [];
 
 	/**
+	 * 获得容器的显示对象列表
+	 */
+	public var children(get, never):Array<DisplayObject>;
+
+	private function get_children():Array<DisplayObject> {
+		return this.__children;
+	}
+
+	/**
 	 * 添加到当前容器中
 	 * @param child 
 	 */
@@ -49,6 +58,39 @@ class DisplayObjectContainer extends DisplayObject {
 		child.onRemoveToStage();
 		child.__parent = null;
 		child.__stage = null;
+	}
+
+	/**
+	 * 删除指定索引的显示对象
+	 * @param index 
+	 */
+	public function removeChildAt(index:Int):Void {
+		var child:DisplayObject = this.__children[index];
+		if (child != null) {
+			removeChild(child);
+		}
+	}
+
+	/**
+	 * 删除指定索引范围的显示对象
+	 * @param start 
+	 * @param end 
+	 */
+	public function removeChildren(start:Int = 0, end:Int = -1):Void {
+		var len = end == -1 ? this.__children.length : end;
+		while (start < len) {
+			removeChildAt(start);
+			start++;
+		}
+	}
+
+	/**
+	 * 获得显示对象列表
+	 * @param index 
+	 * @return DisplayObject
+	 */
+	public function getChildAt(index:Int):DisplayObject {
+		return this.__children[index];
 	}
 
 	override function __onAddToStage(stage:Stage):Void {

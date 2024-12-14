@@ -20,4 +20,15 @@ class Image extends DisplayObject implements IDataProider<BitmapData> {
 	public function get_data():BitmapData {
 		return __bitmapData;
 	}
+
+	/**
+	 * 构造一个位图对象
+	 * @param data 
+	 */
+	public function new(?data:BitmapData) {
+		super();
+		if (data != null) {
+			this.data = data;
+		}
+	}
 }

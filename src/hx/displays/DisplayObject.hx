@@ -115,4 +115,26 @@ class DisplayObject {
 	private function get_parent():DisplayObject {
 		return __parent;
 	}
+
+	/**
+	 * 构造一个显示对象
+	 */
+	public function new() {
+		this.onInit();
+	}
+
+	/**
+	 * 当对象被创建时调用，一般用于初始化对象
+	 */
+	public function onInit():Void {}
+
+	/**
+	 * 当对象被添加到舞台时调用，一般用于添加事件监听
+	 */
+	public function onAddToStage():Void {}
+
+	/**
+	 * 当对象从舞台中移除时调用，一般用于移除事件监听
+	 */
+	public function onRemoveToStage():Void {}
 }

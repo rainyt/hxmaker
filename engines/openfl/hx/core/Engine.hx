@@ -1,5 +1,6 @@
 package hx.core;
 
+import openfl.events.Event;
 import hx.displays.Stage;
 import openfl.display.Sprite;
 
@@ -20,5 +21,11 @@ class Engine extends Sprite {
 	public function init(mainClasses:Class<Stage>):Void {
 		this.render = Type.createInstance(mainClasses, []);
 		this.render.__render = new hx.core.Render();
+		// 帧渲染事件
+		this.addEventListener(Event.ENTER_FRAME, __onRenderEnterFrame);
+	}
+
+	private function __onRenderEnterFrame(e:Event):Void {
+		this.render.render();
 	}
 }

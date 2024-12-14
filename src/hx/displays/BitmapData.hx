@@ -10,14 +10,14 @@ class BitmapData {
 	 */
 	public static function formData(data:IBitmapData) {
 		var bitmapData = new BitmapData();
-		bitmapData.__data = data;
+		bitmapData.data = data;
 		return bitmapData;
 	}
 
 	/**
 	 * 位图数据
 	 */
-	@:noCompletion private var __data:IBitmapData;
+	public var data:IBitmapData;
 
 	public function new() {}
 }

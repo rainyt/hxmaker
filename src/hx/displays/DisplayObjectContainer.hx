@@ -3,6 +3,7 @@ package hx.displays;
 /**
  * 可装载子对象的容器
  */
+@:access(hx.displays.DisplayObject)
 class DisplayObjectContainer extends DisplayObject {
 	/**
 	 * 该容器中的所有子对象
@@ -28,6 +29,35 @@ class DisplayObjectContainer extends DisplayObject {
 		} else if (index > this.__children.length) {
 			index = this.__children.length;
 		}
+		if (child.parent != null) {
+			child.parent.removeChild(child);
+		}
 		this.__children.insert(index, child);
+		child.parent = this;
+		// 追加舞台处理
+		if (this.stage != null) {
+			child.__onAddToStage(this.stage);
+		}
+	}
+
+	/**
+	 * 删除显示对象
+	 * @param child 
+	 */
+	public function removeChild(child:DisplayObject):Void {
+		this.__children.remove(child);
+		child.onRemoveToStage();
+		child.parent = null;
+		child.stage = null;
+	}
+
+	override function __onAddToStage(stage:Stage):Bool {
+		if (super.__onAddToStage(stage)) {
+			for (child in this.__children) {
+				child.__onAddToStage(stage);
+			}
+			return true;
+		}
+		return false;
 	}
 }

@@ -12,7 +12,7 @@ class DisplayObject {
 	@:noCompletion private var __rotation:Float = 0;
 	@:noCompletion private var __alpha:Float = 1;
 	@:noCompletion private var __stage:Stage;
-	@:noCompletion private var __parent:DisplayObject;
+	@:noCompletion private var __parent:DisplayObjectContainer;
 
 	/**
 	 * 呈现在屏幕上的x坐标，该引擎的坐标系是左上角为原点，x轴向右为正，y轴向下为正
@@ -110,9 +110,9 @@ class DisplayObject {
 	/**
 	 * 获得当前对象的父节点对象
 	 */
-	public var parent(get, null):DisplayObject;
+	public var parent(get, null):DisplayObjectContainer;
 
-	private function get_parent():DisplayObject {
+	private function get_parent():DisplayObjectContainer {
 		return __parent;
 	}
 
@@ -127,6 +127,15 @@ class DisplayObject {
 	 * 当对象被创建时调用，一般用于初始化对象
 	 */
 	public function onInit():Void {}
+
+	private function __onAddToStage(stage:Stage):Bool {
+		if (this.stage == null) {
+			this.stage = stage;
+			this.onAddToStage();
+			return true;
+		}
+		return false;
+	}
 
 	/**
 	 * 当对象被添加到舞台时调用，一般用于添加事件监听

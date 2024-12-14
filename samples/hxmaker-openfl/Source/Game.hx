@@ -10,5 +10,7 @@ class Game extends Stage {
 		// 显示一张图片
 		var image:Image = new Image();
 		this.addChild(image);
+
+		trace("image.stage=", image.stage);
 	}
 }

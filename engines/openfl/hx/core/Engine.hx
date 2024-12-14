@@ -20,7 +20,7 @@ class Engine extends Sprite {
 	 */
 	public function init(mainClasses:Class<Stage>):Void {
 		this.render = Type.createInstance(mainClasses, []);
-		this.render.__render = new hx.core.Render();
+		this.render.__render = new hx.core.Render(this);
 		// 帧渲染事件
 		this.addEventListener(Event.ENTER_FRAME, __onRenderEnterFrame);
 	}

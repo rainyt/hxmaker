@@ -20,6 +20,21 @@ class DisplayObject {
 	@:noCompletion private var __worldRotation:Float = 0;
 	@:noCompletion private var __worldScaleX:Float = 1;
 	@:noCompletion private var __worldScaleY:Float = 1;
+	@:noCompletion private var __root:Dynamic;
+
+	/**
+	 * 根渲染显示对象，不同的引擎中对应的显示对象
+	 */
+	public var root(get, set):Dynamic;
+
+	private function set_root(value:Dynamic):Dynamic {
+		this.__root = value;
+		return value;
+	}
+
+	private function get_root():Dynamic {
+		return this.__root;
+	}
 
 	/**
 	 * 更新tranform

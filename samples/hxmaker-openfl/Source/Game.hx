@@ -43,5 +43,12 @@ class Game extends Stage {
 		this.addChild(box);
 		box.x = 300;
 		box.y = 300;
+
+		for (i in 0...1000) {
+			var image3 = new Image(assets.bitmapDatas.get("logo"));
+			this.addChild(image3);
+			image3.x = Math.random() * 500;
+			image3.y = Math.random() * 500;
+		}
 	}
 }

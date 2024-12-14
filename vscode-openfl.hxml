@@ -1,0 +1,5 @@
+--class-path src
+--class-path engines/openfl
+--library openfl
+--library lime
+--interp

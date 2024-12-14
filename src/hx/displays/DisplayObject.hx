@@ -11,6 +11,8 @@ class DisplayObject {
 	@:noCompletion private var __scaleY:Float = 1;
 	@:noCompletion private var __rotation:Float = 0;
 	@:noCompletion private var __alpha:Float = 1;
+	@:noCompletion private var __stage:Stage;
+	@:noCompletion private var __parent:DisplayObject;
 
 	/**
 	 * 呈现在屏幕上的x坐标，该引擎的坐标系是左上角为原点，x轴向右为正，y轴向下为正
@@ -94,5 +96,23 @@ class DisplayObject {
 
 	private function get_alpha():Float {
 		return __alpha;
+	}
+
+	/**
+	 * 获得当前对象的舞台对象
+	 */
+	public var stage(get, null):Stage;
+
+	private function get_stage():Stage {
+		return __stage;
+	}
+
+	/**
+	 * 获得当前对象的父节点对象
+	 */
+	public var parent(get, null):DisplayObject;
+
+	private function get_parent():DisplayObject {
+		return __parent;
 	}
 }

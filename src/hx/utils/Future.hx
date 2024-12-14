@@ -14,9 +14,10 @@ class Future<T> {
 	public var isError(default, null):Bool;
 	public var value(default, null):T;
 
-	public function new(data:Dynamic) {
+	public function new(data:Dynamic, autoPost:Bool = true) {
 		__data = data;
-		Timer.delay(post, 16);
+		if (autoPost)
+			Timer.delay(post, 16);
 	}
 
 	/**

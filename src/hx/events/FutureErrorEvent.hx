@@ -5,6 +5,11 @@ package hx.events;
  */
 class FutureErrorEvent extends Event {
 	/**
+	 * 加载失败
+	 */
+	public inline static var LOAD_ERROR = "loadError";
+
+	/**
 	 * 创建一个FtureErrorEvent对象
 	 * @param type 
 	 * @param errorCode 

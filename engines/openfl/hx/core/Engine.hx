@@ -1,5 +1,6 @@
 package hx.core;
 
+import haxe.Timer;
 import openfl.events.Event;
 import hx.displays.Stage;
 import openfl.display.Sprite;
@@ -23,9 +24,16 @@ class Engine extends Sprite {
 		this.render.__render = new hx.core.Render(this);
 		// 帧渲染事件
 		this.addEventListener(Event.ENTER_FRAME, __onRenderEnterFrame);
+		__lastTime = Timer.stamp();
 	}
 
+	private var __lastTime:Float = 0;
+
 	private function __onRenderEnterFrame(e:Event):Void {
+		var now = Timer.stamp();
+		var dt = now - __lastTime;
+		__lastTime = now;
+		this.render.onUpdate(dt);
 		@:privateAccess this.render.__tranform(this.render);
 		this.render.render();
 	}

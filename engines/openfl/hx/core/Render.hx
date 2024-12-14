@@ -6,7 +6,6 @@ import hx.displays.Image;
 import hx.displays.DisplayObjectContainer;
 import openfl.display.Bitmap;
 import openfl.display.Sprite;
-import hx.displays.Stage;
 import hx.displays.IRender;
 
 /**
@@ -66,7 +65,7 @@ class Render implements IRender {
 		bitmap.scaleX = image.__scaleX;
 		bitmap.scaleY = image.__scaleY;
 		bitmap.bitmapData = image.data.data.getTexture();
-		// __stage.addChild(bitmap);
+		// 批处理状态渲染
 		if (!state.push(bitmap)) {
 			// 开始绘制
 			this.drawBatchBitmapState();
@@ -75,6 +74,9 @@ class Render implements IRender {
 		}
 	}
 
+	/**
+	 * 渲染纹理批处理状态
+	 */
 	private function drawBatchBitmapState():Void {
 		if (state.bitmaps.length > 0) {
 			var shape:Shape = new Shape();
@@ -82,10 +84,17 @@ class Render implements IRender {
 			var rects:Vector<Float> = new Vector();
 			var transforms:Vector<Float> = new Vector();
 			for (bitmap in state.bitmaps) {
-				rects.push(0);
-				rects.push(0);
-				rects.push(bitmap.width);
-				rects.push(bitmap.height);
+				if (bitmap.scrollRect != null) {
+					rects.push(bitmap.scrollRect.x);
+					rects.push(bitmap.scrollRect.y);
+					rects.push(bitmap.scrollRect.width);
+					rects.push(bitmap.scrollRect.height);
+				} else {
+					rects.push(0);
+					rects.push(0);
+					rects.push(bitmap.width);
+					rects.push(bitmap.height);
+				}
 				transforms.push(bitmap.transform.matrix.a);
 				transforms.push(bitmap.transform.matrix.b);
 				transforms.push(bitmap.transform.matrix.c);

@@ -1,3 +1,5 @@
+import openfl.Lib;
+import haxe.Timer;
 import hx.utils.Assets;
 import hx.displays.DisplayObjectContainer;
 import hx.displays.Image;
@@ -44,11 +46,27 @@ class Game extends Stage {
 		box.x = 300;
 		box.y = 300;
 
+		var images = [];
 		for (i in 0...1000) {
 			var image3 = new Image(assets.bitmapDatas.get("logo"));
 			this.addChild(image3);
 			image3.x = Math.random() * 500;
 			image3.y = Math.random() * 500;
+			images.push(image3);
 		}
+
+		Lib.setInterval(() -> {
+			for (image in images) {
+				image.x += 5;
+				image.y += 3;
+				image.rotation += Math.random() * 10;
+				if (image.x > 500) {
+					image.x = 0;
+				}
+				if (image.y > 500) {
+					image.y = 0;
+				}
+			}
+		}, 16);
 	}
 }

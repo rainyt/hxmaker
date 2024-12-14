@@ -9,6 +9,8 @@
 
 	<haxelib name="openfl" />
 
+	<haxedef name="gl_stats"/>
+
 	<!-- 引擎盖上的游戏引擎 -->
 	<haxelib name="hxmaker" />
 

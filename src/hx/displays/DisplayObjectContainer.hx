@@ -10,6 +10,11 @@ class DisplayObjectContainer extends DisplayObject {
 	 */
 	@:noCompletion private var __children:Array<DisplayObject> = [];
 
+	public function new() {
+		super();
+		this.updateEnabled = true;
+	}
+
 	/**
 	 * 获得容器的显示对象列表
 	 */
@@ -104,6 +109,15 @@ class DisplayObjectContainer extends DisplayObject {
 		super.__tranform(parent);
 		for (child in this.__children) {
 			child.__tranform(this);
+		}
+	}
+
+	override function onUpdate(dt:Float) {
+		super.onUpdate(dt);
+		for (child in this.__children) {
+			if (child.updateEnabled) {
+				child.onUpdate(dt);
+			}
 		}
 	}
 }

@@ -190,4 +190,15 @@ class DisplayObject {
 	 * 当对象从舞台中移除时调用，一般用于移除事件监听
 	 */
 	public function onRemoveToStage():Void {}
+
+	/**
+	 * 是否启用帧事件更新
+	 */
+	public var updateEnabled:Bool = false;
+
+	/**
+	 * 每帧调用，一般用于更新对象状态，启动它需要设置`updateEnable`为`true`。请注意，如果显示对象不存在`stage`时，则不会调用。
+	 * @param dt 
+	 */
+	public function onUpdate(dt:Float):Void {}
 }

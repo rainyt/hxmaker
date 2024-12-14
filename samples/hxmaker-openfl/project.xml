@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project>
+
+	<meta title="HxmakerOpenfl" package="com.sample.hxmakeropenfl" version="1.0.0"
+		company="Company Name" />
+	<app main="Main" path="Export" file="HxmakerOpenfl" />
+
+	<source path="Source" />
+
+	<haxelib name="openfl" />
+
+	<!-- 引擎盖上的游戏引擎 -->
+	<haxelib name="hxmaker" />
+
+	<assets path="Assets" rename="assets" />
+
+</project>

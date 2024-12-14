@@ -1,10 +1,12 @@
 package hx.displays;
 
+import hx.events.Event;
+
 /**
  * 唯一统一的渲染对象
  */
 @:keep
-class DisplayObject {
+class DisplayObject extends EventDispatcher {
 	@:noCompletion private var __x:Float = 0;
 	@:noCompletion private var __y:Float = 0;
 	@:noCompletion private var __scaleX:Float = 1;
@@ -200,5 +202,9 @@ class DisplayObject {
 	 * 每帧调用，一般用于更新对象状态，启动它需要设置`updateEnable`为`true`。请注意，如果显示对象不存在`stage`时，则不会调用。
 	 * @param dt 
 	 */
-	public function onUpdate(dt:Float):Void {}
+	public function onUpdate(dt:Float):Void {
+		if (hasEventListener(Event.UPDATE)) {
+			dispatchEvent(new Event(Event.UPDATE));
+		}
+	}
 }

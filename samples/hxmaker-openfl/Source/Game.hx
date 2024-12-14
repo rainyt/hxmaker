@@ -1,3 +1,4 @@
+import hx.events.Event;
 import openfl.Lib;
 import haxe.Timer;
 import hx.utils.Assets;
@@ -55,7 +56,7 @@ class Game extends Stage {
 			images.push(image3);
 		}
 
-		Lib.setInterval(() -> {
+		this.addEventListener(Event.UPDATE, (e:Event) -> {
 			for (image in images) {
 				image.x += 5;
 				image.y += 3;
@@ -67,6 +68,6 @@ class Game extends Stage {
 					image.y = 0;
 				}
 			}
-		}, 16);
+		});
 	}
 }

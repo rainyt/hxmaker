@@ -10,6 +10,7 @@ import hx.displays.IRender;
 /**
  * OpenFL的渲染器支持
  */
+@:access(hx.displays.DisplayObject)
 class Render implements IRender {
 	/**
 	 * 在OpenFL中渲染的舞台对象
@@ -26,14 +27,17 @@ class Render implements IRender {
 		this.engine.addChild(__stage);
 	}
 
-	public function render(container:DisplayObjectContainer) {
-		// TODO 该怎么渲染呢？
+	public function clear():Void {
 		// 清理舞台
 		__stage.removeChildren();
-		// 重新绘制开始
+	}
+
+	public function renderDisplayObjectContainer(container:DisplayObjectContainer) {
 		for (object in container.children) {
 			if (object is Image) {
 				renderImage(cast object);
+			} else if (object is DisplayObjectContainer) {
+				renderDisplayObjectContainer(cast object);
 			}
 		}
 	}
@@ -42,8 +46,12 @@ class Render implements IRender {
 	 * 渲染Image对象
 	 * @param image 
 	 */
-	inline private function renderImage(image:Image) {
+	public function renderImage(image:Image) {
 		var bitmap:Bitmap = new Bitmap(image.data.data.getTexture());
 		__stage.addChild(bitmap);
+		bitmap.x = image.__worldX;
+		bitmap.y = image.__worldY;
 	}
+
+	public function endFill():Void {}
 }

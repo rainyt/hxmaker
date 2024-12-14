@@ -4,5 +4,11 @@ package hx.displays;
  * 统一的渲染接口实现
  */
 interface IRender {
-	public function render(container:DisplayObjectContainer):Void;
+	public function clear():Void;
+
+	public function renderDisplayObjectContainer(container:DisplayObjectContainer):Void;
+
+	public function renderImage(image:Image):Void;
+
+	public function endFill():Void;
 }

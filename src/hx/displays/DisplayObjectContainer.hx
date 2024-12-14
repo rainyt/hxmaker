@@ -99,4 +99,11 @@ class DisplayObjectContainer extends DisplayObject {
 			child.__onAddToStage(stage);
 		}
 	}
+
+	override function __tranform(parent:DisplayObject) {
+		super.__tranform(parent);
+		for (child in this.__children) {
+			child.__tranform(this);
+		}
+	}
 }

@@ -13,6 +13,39 @@ class DisplayObject {
 	@:noCompletion private var __alpha:Float = 1;
 	@:noCompletion private var __stage:Stage;
 	@:noCompletion private var __parent:DisplayObjectContainer;
+	@:noCompletion private var __visible:Bool = true;
+	@:noCompletion private var __worldX:Float = 0;
+	@:noCompletion private var __worldY:Float = 0;
+	@:noCompletion private var __worldAlpha:Float = 1;
+	@:noCompletion private var __worldRotation:Float = 0;
+	@:noCompletion private var __worldScaleX:Float = 1;
+	@:noCompletion private var __worldScaleY:Float = 1;
+
+	/**
+	 * 更新tranform
+	 * @param parent 
+	 */
+	private function __tranform(parent:DisplayObject):Void {
+		this.__worldX = parent.__worldX + this.__x;
+		this.__worldY = parent.__worldY + this.__y;
+		this.__worldAlpha = parent.__worldAlpha * this.__alpha;
+		this.__worldRotation = parent.__worldRotation + this.__rotation;
+		this.__worldScaleX = parent.__worldScaleX * this.__scaleX;
+		this.__worldScaleY = parent.__worldScaleY * this.__scaleY;
+	}
+
+	/**
+	 * 设置显示对象是否可见，当不可见时，不会参与渲染，也不会参与交互
+	 */
+	public var visible(get, set):Bool;
+
+	public function set_visible(value:Bool):Bool {
+		return __visible = value;
+	}
+
+	public function get_visible():Bool {
+		return __visible;
+	}
 
 	/**
 	 * 呈现在屏幕上的x坐标，该引擎的坐标系是左上角为原点，x轴向右为正，y轴向下为正

@@ -14,6 +14,8 @@ class Stage extends DisplayObjectContainer {
 	 * 渲染舞台，当开始对舞台对象进行渲染时，会对图片进行一个性能优化处理
 	 */
 	public function render():Void {
-		__render.render(this);
+		__render.clear();
+		__render.renderDisplayObjectContainer(this);
+		__render.endFill();
 	}
 }

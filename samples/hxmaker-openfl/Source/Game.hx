@@ -32,12 +32,16 @@ class Game extends Stage {
 		// 显示一张图片
 		var image:Image = new Image(assets.bitmapDatas.get("logo"));
 		this.addChild(image);
+		image.x = 100;
+		image.y = 100;
 
 		// 容器加图片显示对象
 		var box = new DisplayObjectContainer();
 		this.addChild(box);
-		var image2 = new Image();
+		var image2 = new Image(assets.bitmapDatas.get("logo"));
 		box.addChild(image2);
 		this.addChild(box);
+		box.x = 300;
+		box.y = 300;
 	}
 }

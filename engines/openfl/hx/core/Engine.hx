@@ -26,6 +26,7 @@ class Engine extends Sprite {
 	}
 
 	private function __onRenderEnterFrame(e:Event):Void {
+		@:privateAccess this.render.__tranform(this.render);
 		this.render.render();
 	}
 }

@@ -48,6 +48,18 @@ class Game extends Stage {
 		box.x = 300;
 		box.y = 300;
 
+		for (ix in 0...100) {
+			for (iy in 0...100) {
+				var image3 = new Image(assets.bitmapDatas.get("logo"));
+				this.addChild(image3);
+				image3.x = ix * 200;
+				image3.y = iy * 200;
+			}
+		}
+
+		var tuzi = new Image(assets.bitmapDatas.get("wabbit_alpha"));
+		this.addChild(tuzi);
+
 		var images = [];
 		for (i in 0...100) {
 			var image3 = new Image(assets.bitmapDatas.get("logo"));

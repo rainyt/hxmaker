@@ -1,12 +1,14 @@
 package hx.utils;
 
+import hx.events.FutureErrorEvent;
+import hx.utils.atlas.Atlas;
 import haxe.io.Path;
 import hx.displays.BitmapData;
 
 /**
  * 资源管理器
  */
-class Assets extends Future<Assets> {
+class Assets extends Future<Assets, Dynamic> {
 	/**
 	 * 正在加载的资源管理器
 	 */
@@ -27,7 +29,14 @@ class Assets extends Future<Assets> {
 	 * @param path 
 	 * @return String
 	 */
-	public static function formatName(path:String):String {
+	public static function formatName(data:Dynamic):String {
+		var path:String = null;
+		if (data is String) {
+			path = data;
+		} else {
+			var loadData:LoadData = data;
+			path = loadData.path;
+		}
 		var name = Path.withoutExtension(Path.withoutDirectory(path));
 		return name;
 	}
@@ -45,12 +54,17 @@ class Assets extends Future<Assets> {
 	/**
 	 * 加载的资源列表
 	 */
-	public var futures:Array<Future<Dynamic>> = [];
+	public var futures:Array<Future<Dynamic, Dynamic>> = [];
 
 	/**
 	 * 位图列表
 	 */
 	public var bitmapDatas:Map<String, BitmapData> = new Map();
+
+	/**
+	 * 精灵图图集列表
+	 */
+	public var atlases:Map<String, Atlas> = new Map();
 
 	/**
 	 * 已经加载完成的数量
@@ -89,10 +103,23 @@ class Assets extends Future<Assets> {
 	}
 
 	/**
+	 * 加载图集资源
+	 * @param path 
+	 * @param xml 
+	 */
+	public function loadAtlas(path:String, xml:String) {
+		pushFuture(new hx.core.TextureAtlasFuture({
+			png: path,
+			xml: xml,
+			path: path
+		}, false));
+	}
+
+	/**
 	 * 追加到加载队列
 	 * @param future 
 	 */
-	public function pushFuture(future:Future<Dynamic>) {
+	public function pushFuture(future:Future<Dynamic, Dynamic>) {
 		if (loading)
 			throw "Assets: can't push future when loading";
 		futures.push(future);
@@ -146,11 +173,13 @@ class Assets extends Future<Assets> {
 	 * 加成完成时触发
 	 * @param future 
 	 */
-	private function __onCompleted(future:Future<Dynamic>, data:Dynamic):Void {
+	private function __onCompleted(future:Future<Dynamic, Dynamic>, data:Dynamic):Void {
 		CURRENT_LOAD_COUNTS--;
 		loadedCounts++;
 		if (data is BitmapData) {
 			bitmapDatas.set(formatName(future.getLoadData()), data);
+		} else if (data is Atlas) {
+			atlases.set(formatName(future.getLoadData()), data);
 		}
 		if (loadedCounts == totalCounts) {
 			this.completeValue(this);
@@ -166,8 +195,9 @@ class Assets extends Future<Assets> {
 	 * 加载失败时触发
 	 * @param future 
 	 */
-	private function __onError(future:Dynamic):Void {
+	private function __onError(error:Dynamic):Void {
 		CURRENT_LOAD_COUNTS--;
-		readyLoadNext();
+		trace(error);
+		this.errorValue(FutureErrorEvent.create(FutureErrorEvent.LOAD_ERROR, -1, "Load fail."));
 	}
 }

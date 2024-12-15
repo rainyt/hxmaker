@@ -20,6 +20,7 @@ class Game extends Stage {
 		// 开始加载资源
 		assets.loadBitmapData("assets/logo.jpg");
 		assets.loadBitmapData("assets/wabbit_alpha.png");
+		assets.loadAtlas("assets/EmojAtlas.png", "assets/EmojAtlas.xml");
 		assets.onComplete((data) -> {
 			this.onLoaded();
 		}).onError(err -> {
@@ -82,5 +83,9 @@ class Game extends Stage {
 				}
 			}
 		});
+
+		var atlasImage = new Image(assets.atlases.get("EmojAtlas").bitmapDatas.get("zw_10"));
+		this.addChild(atlasImage);
+		atlasImage.x = atlasImage.y = 200;
 	}
 }

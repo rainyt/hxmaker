@@ -34,6 +34,7 @@ class Render implements IRender {
 	private var state:BatchBitmapState = new BatchBitmapState();
 
 	public function new(engine:Engine) {
+		this.__stage.mouseChildren = this.__stage.mouseEnabled = false;
 		this.engine = engine;
 		this.engine.addChild(__stage);
 		#if cpp
@@ -70,6 +71,8 @@ class Render implements IRender {
 	 * @param image 
 	 */
 	public function renderImage(image:Image) {
+		if (image.data == null)
+			return;
 		if (image.root == null) {
 			image.root = new Bitmap();
 		}
@@ -81,6 +84,9 @@ class Render implements IRender {
 		bitmap.scaleX = image.__scaleX;
 		bitmap.scaleY = image.__scaleY;
 		bitmap.bitmapData = image.data.data.getTexture();
+		if (image.data.rect != null) {
+			bitmap.scrollRect = new Rectangle(image.data.rect.x, image.data.rect.y, image.data.rect.width, image.data.rect.height);
+		}
 		// 批处理状态渲染
 		if (!state.push(bitmap)) {
 			// 开始绘制

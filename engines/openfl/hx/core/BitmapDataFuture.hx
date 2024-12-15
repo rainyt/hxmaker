@@ -8,7 +8,7 @@ import hx.utils.Future;
 /**
  * 纹理加载器
  */
-class BitmapDataFuture extends Future<BitmapData> {
+class BitmapDataFuture extends Future<BitmapData, String> {
 	override function post() {
 		super.post();
 		Assets.loadBitmapData(this.getLoadData(), false).onComplete((data) -> {

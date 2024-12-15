@@ -3,18 +3,18 @@ package hx.utils;
 import haxe.Timer;
 import hx.events.FutureErrorEvent;
 
-class Future<T> {
+class Future<T, DATA> {
 	@:noCompletion private var __completes:Array<T->Void> = [];
 	@:noCompletion private var __errors:Array<FutureErrorEvent->Void> = [];
 	@:noCompletion private var __dones:Array<Void->Void> = [];
-	@:noCompletion private var __data:Dynamic;
+	@:noCompletion private var __data:DATA;
 
 	public var error(default, null):FutureErrorEvent;
 	public var isComplete(default, null):Bool;
 	public var isError(default, null):Bool;
 	public var value(default, null):T;
 
-	public function new(data:Dynamic, autoPost:Bool = true) {
+	public function new(data:DATA, autoPost:Bool = true) {
 		__data = data;
 		if (autoPost)
 			Timer.delay(post, 16);
@@ -29,21 +29,21 @@ class Future<T> {
 	 * 获得加载数据
 	 * @return Dynamic
 	 */
-	public function getLoadData():Dynamic {
+	public function getLoadData():DATA {
 		return __data;
 	}
 
-	public function onComplete(listener:T->Void):Future<T> {
+	public function onComplete(listener:T->Void):Future<T, DATA> {
 		__completes.push(listener);
 		return this;
 	}
 
-	public function onError(listener:FutureErrorEvent->Void):Future<T> {
+	public function onError(listener:FutureErrorEvent->Void):Future<T, DATA> {
 		__errors.push(listener);
 		return this;
 	}
 
-	public function onDone(listener:Void->Void):Future<T> {
+	public function onDone(listener:Void->Void):Future<T, DATA> {
 		__dones.push(listener);
 		return this;
 	}
@@ -51,13 +51,13 @@ class Future<T> {
 	/**
 	 * 自定处理成功函数
 	 */
-	private var __customCompleteValue:Future<T>->T->Void;
+	private var __customCompleteValue:Future<T, DATA>->T->Void;
 
 	/**
 	 * 自定义处理成功数据，但请注意，需要主动调用`completeValue`或者`errorValue`才能结束当前请求
 	 * @param value 
 	 */
-	public function customCompleteValue(cb:Future<T>->T->Void):Future<T> {
+	public function customCompleteValue(cb:Future<T, DATA>->T->Void):Future<T, DATA> {
 		__customCompleteValue = cb;
 		return this;
 	}

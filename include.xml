@@ -1,3 +1,7 @@
 <project>
     <source path="engines/openfl" />
+    <!-- HTML5 CPP 默认开始高清模式 -->
+    <window allow-high-dpi="true" vsync="true" if="cpp || hl || html5" />
+    <!-- 调试模式 -->
+    <haxeflag name="--debug" if="debug" />
 </project>

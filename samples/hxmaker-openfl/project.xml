@@ -5,11 +5,13 @@
 		company="Company Name" />
 	<app main="Main" path="Export" file="HxmakerOpenfl" />
 
+	<!-- <window width="800" height="600" fps="61" /> -->
+
 	<source path="Source" />
 
 	<haxelib name="openfl" />
 
-	<haxedef name="gl_stats"/>
+	<haxedef name="gl_stats" />
 
 	<!-- 引擎盖上的游戏引擎 -->
 	<haxelib name="hxmaker" />

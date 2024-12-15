@@ -19,6 +19,7 @@ class Game extends Stage {
 		super.onInit();
 		// 开始加载资源
 		assets.loadBitmapData("assets/logo.jpg");
+		assets.loadBitmapData("assets/wabbit_alpha.png");
 		assets.onComplete((data) -> {
 			this.onLoaded();
 		}).onError(err -> {
@@ -48,7 +49,7 @@ class Game extends Stage {
 		box.y = 300;
 
 		var images = [];
-		for (i in 0...1000) {
+		for (i in 0...100) {
 			var image3 = new Image(assets.bitmapDatas.get("logo"));
 			this.addChild(image3);
 			image3.x = Math.random() * 500;
@@ -60,7 +61,7 @@ class Game extends Stage {
 			for (image in images) {
 				image.x += 5;
 				image.y += 3;
-				image.rotation += Math.random() * 10;
+				// image.rotation += Math.random() * 10;
 				if (image.x > 500) {
 					image.x = 0;
 				}

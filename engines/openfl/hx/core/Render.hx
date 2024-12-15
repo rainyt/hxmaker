@@ -1,5 +1,10 @@
 package hx.core;
 
+import openfl.display.Tile;
+import openfl.geom.Rectangle;
+import openfl.display.Tileset;
+import openfl.display.Tilemap;
+import openfl.utils.ObjectPool;
 import openfl.Vector;
 import openfl.display.Shape;
 import hx.displays.Image;
@@ -31,10 +36,21 @@ class Render implements IRender {
 	public function new(engine:Engine) {
 		this.engine = engine;
 		this.engine.addChild(__stage);
+		#if cpp
+		engine.stage.frameRate = 61;
+		#else
+		engine.stage.frameRate = 60;
+		#end
 	}
 
 	public function clear():Void {
 		// 清理舞台
+		for (i in 0...__stage.numChildren) {
+			var display = __stage.getChildAt(i);
+			if (display is Sprite) {
+				__pool.release(cast display);
+			}
+		}
 		__stage.removeChildren();
 		state.reset();
 	}
@@ -74,13 +90,19 @@ class Render implements IRender {
 		}
 	}
 
+	private var __pool:ObjectPool<Sprite> = new ObjectPool<Sprite>(() -> {
+		return new Sprite();
+	});
+
 	/**
 	 * 渲染纹理批处理状态
 	 */
 	private function drawBatchBitmapState():Void {
 		if (state.bitmaps.length > 0) {
-			var shape:Shape = new Shape();
-			shape.graphics.beginBitmapFill(state.bitmaps[0].bitmapData);
+			// 图形绘制
+			var shape:Sprite = __pool.get();
+			shape.graphics.clear();
+			shape.graphics.beginBitmapFill(state.bitmaps[0].bitmapData, null, false);
 			var rects:Vector<Float> = new Vector();
 			var transforms:Vector<Float> = new Vector();
 			for (bitmap in state.bitmaps) {
@@ -92,8 +114,8 @@ class Render implements IRender {
 				} else {
 					rects.push(0);
 					rects.push(0);
-					rects.push(bitmap.width);
-					rects.push(bitmap.height);
+					rects.push(bitmap.bitmapData.width);
+					rects.push(bitmap.bitmapData.height);
 				}
 				transforms.push(bitmap.transform.matrix.a);
 				transforms.push(bitmap.transform.matrix.b);
@@ -107,6 +129,8 @@ class Render implements IRender {
 			__stage.addChild(shape);
 		}
 	}
+
+	var tilemap:Tilemap = new Tilemap(0, 0);
 
 	public function endFill():Void {
 		this.drawBatchBitmapState();

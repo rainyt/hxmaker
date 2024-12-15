@@ -112,13 +112,16 @@ class Assets extends Future<Assets> {
 		this.totalCounts = futures.length;
 		this.loadedCounts = 0;
 		loadNext();
+		__assets.push(this);
 	}
 
 	/**
 	 * 停止加载
 	 */
 	public function stop():Void {
-		// TODO 这里应该停止所有加载流程
+		// 这里应该停止所有加载流程
+		loading = false;
+		__assets.remove(this);
 	}
 
 	/**
@@ -127,13 +130,16 @@ class Assets extends Future<Assets> {
 	private function loadNext():Void {
 		var future = futures[__loadIndex];
 		if (future == null) {
+			trace("停止");
 			return;
 		}
 		if (CURRENT_LOAD_COUNTS < MAX_ASSETS_LOAD_COUNTS) {
 			CURRENT_LOAD_COUNTS++;
+			trace("开始加载：", future.getLoadData());
 			future.post();
 			__loadIndex++;
 		}
+		loadNext();
 	}
 
 	/**
@@ -149,8 +155,11 @@ class Assets extends Future<Assets> {
 		if (loadedCounts == totalCounts) {
 			this.completeValue(this);
 			__assets.remove(this);
+			this.stop();
+			return;
 		}
-		readyLoadNext();
+		if (loading)
+			readyLoadNext();
 	}
 
 	/**

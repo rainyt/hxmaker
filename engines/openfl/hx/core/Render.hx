@@ -84,6 +84,7 @@ class Render implements IRender {
 		bitmap.scaleX = image.__scaleX;
 		bitmap.scaleY = image.__scaleY;
 		bitmap.bitmapData = image.data.data.getTexture();
+		bitmap.smoothing = image.smoothing;
 		if (image.data.rect != null) {
 			bitmap.scrollRect = new Rectangle(image.data.rect.x, image.data.rect.y, image.data.rect.width, image.data.rect.height);
 		}
@@ -108,7 +109,8 @@ class Render implements IRender {
 			// 图形绘制
 			var shape:Sprite = __pool.get();
 			shape.graphics.clear();
-			shape.graphics.beginBitmapFill(state.bitmaps[0].bitmapData, null, false);
+			var lastBitmap = state.bitmaps[0];
+			shape.graphics.beginBitmapFill(lastBitmap.bitmapData, null, false, lastBitmap.smoothing);
 			var rects:Vector<Float> = new Vector();
 			var transforms:Vector<Float> = new Vector();
 			for (bitmap in state.bitmaps) {

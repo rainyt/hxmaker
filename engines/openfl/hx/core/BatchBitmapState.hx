@@ -26,10 +26,26 @@ class BatchBitmapState {
 	 * @return Bool
 	 */
 	public function push(bitmap:Bitmap):Bool {
-		if (bitmaps.length == 0 || bitmaps[bitmaps.length - 1].bitmapData == bitmap.bitmapData) {
+		if (bitmaps.length == 0 || checkState(bitmap)) {
 			bitmaps.push(bitmap);
 			return true;
 		}
 		return false;
+	}
+
+	/**
+	 * 检查状态是否可以合并
+	 * @param bitmap 
+	 * @return Bool
+	 */
+	public function checkState(bitmap:Bitmap):Bool {
+		var lastBitmap = bitmaps[bitmaps.length - 1];
+		if (lastBitmap.bitmapData != bitmap.bitmapData) {
+			return false;
+		}
+		if (lastBitmap.smoothing != bitmap.smoothing) {
+			return false;
+		}
+		return true;
 	}
 }

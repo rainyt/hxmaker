@@ -89,6 +89,7 @@ class Game extends Stage {
 			this.addChild(atlasImage);
 			atlasImage.x = Math.random() * stage.stageWidth;
 			atlasImage.y = Math.random() * stage.stageHeight;
+			atlasImage.smoothing = false;
 		}
 	}
 }

@@ -5,6 +5,8 @@ package hx.displays;
  */
 class Stage extends DisplayObjectContainer {
 	@:noCompletion private var __render:IRender;
+	@:noCompletion private var __stageWidth:Float = 0;
+	@:noCompletion private var __stageHeight:Float = 0;
 
 	override function get_stage():Stage {
 		return this;
@@ -17,5 +19,23 @@ class Stage extends DisplayObjectContainer {
 		__render.clear();
 		__render.renderDisplayObjectContainer(this);
 		__render.endFill();
+	}
+
+	/**
+	 * 获得舞台宽度
+	 */
+	public var stageWidth(get, never):Float;
+
+	private function get_stageWidth():Float {
+		return __stageWidth;
+	}
+
+	/**
+	 * 获得舞台高度
+	 */
+	public var stageHeight(get, never):Float;
+
+	private function get_stageHeight():Float {
+		return __stageHeight;
 	}
 }

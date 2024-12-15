@@ -23,6 +23,7 @@ class DisplayObject extends EventDispatcher {
 	@:noCompletion private var __worldScaleX:Float = 1;
 	@:noCompletion private var __worldScaleY:Float = 1;
 	@:noCompletion private var __root:Dynamic;
+	@:noCompletion private var __autoInit:Bool = false;
 
 	/**
 	 * 根渲染显示对象，不同的引擎中对应的显示对象
@@ -170,7 +171,8 @@ class DisplayObject extends EventDispatcher {
 	 * 构造一个显示对象
 	 */
 	public function new() {
-		this.onInit();
+		if (__autoInit)
+			this.onInit();
 	}
 
 	/**

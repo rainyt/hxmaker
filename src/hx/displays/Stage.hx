@@ -38,4 +38,9 @@ class Stage extends DisplayObjectContainer {
 	private function get_stageHeight():Float {
 		return __stageHeight;
 	}
+
+	public function new() {
+		__autoInit = false;
+		super();
+	}
 }

@@ -83,9 +83,12 @@ class Game extends Stage {
 				}
 			}
 		});
-
-		var atlasImage = new Image(assets.atlases.get("EmojAtlas").bitmapDatas.get("zw_10"));
-		this.addChild(atlasImage);
-		atlasImage.x = atlasImage.y = 200;
+		trace("stage.stageWidth=", stage.stageWidth, "stage.stageHeight", stage.stageHeight);
+		for (_ => value in assets.atlases.get("EmojAtlas").bitmapDatas) {
+			var atlasImage = new Image(value);
+			this.addChild(atlasImage);
+			atlasImage.x = Math.random() * stage.stageWidth;
+			atlasImage.y = Math.random() * stage.stageHeight;
+		}
 	}
 }

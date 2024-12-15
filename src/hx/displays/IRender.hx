@@ -10,5 +10,7 @@ interface IRender {
 
 	public function renderImage(image:Image):Void;
 
+	public function renderLabel(image:Label):Void;
+
 	public function endFill():Void;
 }

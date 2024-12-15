@@ -1,12 +1,12 @@
 package hx.core;
 
-import openfl.display.Tile;
+import openfl.text.TextFormat;
+import openfl.text.TextField;
+import hx.displays.Label;
 import openfl.geom.Rectangle;
-import openfl.display.Tileset;
 import openfl.display.Tilemap;
 import openfl.utils.ObjectPool;
 import openfl.Vector;
-import openfl.display.Shape;
 import hx.displays.Image;
 import hx.displays.DisplayObjectContainer;
 import openfl.display.Bitmap;
@@ -22,6 +22,10 @@ class Render implements IRender {
 	 * 在OpenFL中渲染的舞台对象
 	 */
 	@:noCompletion private var __stage:Sprite = new Sprite();
+
+	private var __pool:ObjectPool<Sprite> = new ObjectPool<Sprite>(() -> {
+		return new Sprite();
+	});
 
 	/**
 	 * 游戏引擎对象
@@ -62,8 +66,39 @@ class Render implements IRender {
 				renderImage(cast object);
 			} else if (object is DisplayObjectContainer) {
 				renderDisplayObjectContainer(cast object);
+			} else if (object is Label) {
+				this.drawBatchBitmapState();
+				renderLabel(cast object);
 			}
 		}
+		container.__dirty = false;
+	}
+
+	/**
+	 * 渲染Label对象
+	 * @param image 
+	 */
+	public function renderLabel(label:Label):Void {
+		if (label.root == null) {
+			label.root = new TextField();
+			label.setDirty();
+		}
+		var textField:TextField = cast label.root;
+		textField.text = label.data;
+		textField.x = label.__worldX;
+		textField.y = label.__worldY;
+		textField.rotation = label.__rotation;
+		textField.alpha = label.__alpha;
+		textField.scaleX = label.__scaleX;
+		textField.scaleY = label.__scaleY;
+		textField.width = label.width;
+		textField.height = label.height;
+		if (label.__dirty) {
+			var format:hx.displays.TextFormat = label.__textFormat;
+			textField.setTextFormat(new TextFormat(format.font, format.size, format.color));
+		}
+		label.__dirty = false;
+		__stage.addChild(textField);
 	}
 
 	/**
@@ -85,6 +120,7 @@ class Render implements IRender {
 		bitmap.scaleY = image.__scaleY;
 		bitmap.bitmapData = image.data.data.getTexture();
 		bitmap.smoothing = image.smoothing;
+		image.__dirty = false;
 		if (image.data.rect != null) {
 			bitmap.scrollRect = new Rectangle(image.data.rect.x, image.data.rect.y, image.data.rect.width, image.data.rect.height);
 		}
@@ -92,14 +128,9 @@ class Render implements IRender {
 		if (!state.push(bitmap)) {
 			// 开始绘制
 			this.drawBatchBitmapState();
-			state.reset();
 			state.push(bitmap);
 		}
 	}
-
-	private var __pool:ObjectPool<Sprite> = new ObjectPool<Sprite>(() -> {
-		return new Sprite();
-	});
 
 	/**
 	 * 渲染纹理批处理状态
@@ -135,6 +166,7 @@ class Render implements IRender {
 			shape.graphics.drawQuads(rects, null, transforms);
 			shape.graphics.endFill();
 			__stage.addChild(shape);
+			state.reset();
 		}
 	}
 

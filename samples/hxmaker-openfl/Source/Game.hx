@@ -1,3 +1,4 @@
+import hx.displays.TextFormat;
 import hx.events.Event;
 import openfl.Lib;
 import haxe.Timer;
@@ -5,6 +6,7 @@ import hx.utils.Assets;
 import hx.displays.DisplayObjectContainer;
 import hx.displays.Image;
 import hx.displays.Stage;
+import hx.displays.Label;
 
 /**
  * 游戏基础类入口
@@ -83,12 +85,22 @@ class Game extends Stage {
 				}
 			}
 		});
-		trace("stage.stageWidth=", stage.stageWidth, "stage.stageHeight", stage.stageHeight);
+
 		for (_ => value in assets.atlases.get("EmojAtlas").bitmapDatas) {
 			var atlasImage = new Image(value);
 			this.addChild(atlasImage);
 			atlasImage.x = Math.random() * stage.stageWidth;
 			atlasImage.y = Math.random() * stage.stageHeight;
 		}
+
+		// 文本渲染支持
+		var label = new Label();
+		this.addChild(label);
+		label.data = "Hello, HxMaker!";
+		label.textFormat = new TextFormat(null, 62, 0xff0000);
+		label.width = 500;
+		label.height = 80;
+		label.x = 400;
+		label.y = 400;
 	}
 }

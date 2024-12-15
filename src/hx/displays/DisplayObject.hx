@@ -25,6 +25,9 @@ class DisplayObject extends EventDispatcher {
 	@:noCompletion private var __worldScaleY:Float = 1;
 	@:noCompletion private var __root:Dynamic;
 	@:noCompletion private var __autoInit:Bool = false;
+	@:noCompletion private var __dirty:Bool = false;
+	@:noCompletion private var __width:Null<Float> = null;
+	@:noCompletion private var __height:Null<Float> = null;
 
 	/**
 	 * 根渲染显示对象，不同的引擎中对应的显示对象
@@ -59,10 +62,14 @@ class DisplayObject extends EventDispatcher {
 	public var width(get, set):Float;
 
 	private function get_width():Float {
+		if (__width != null) {
+			return __width;
+		}
 		return 0;
 	}
 
 	private function set_width(value:Float):Float {
+		this.__width = value;
 		return value;
 	}
 
@@ -72,10 +79,14 @@ class DisplayObject extends EventDispatcher {
 	public var height(get, set):Float;
 
 	private function get_height():Float {
+		if (__height != null) {
+			return __height;
+		}
 		return 0;
 	}
 
 	private function set_height(value:Float):Float {
+		this.__height = value;
 		return value;
 	}
 
@@ -243,5 +254,20 @@ class DisplayObject extends EventDispatcher {
 		if (hasEventListener(Event.UPDATE)) {
 			dispatchEvent(new Event(Event.UPDATE));
 		}
+	}
+
+	/**
+	 * 标记为脏，需要刷新渲染
+	 */
+	public function invalidate():Void {
+		this.__dirty = true;
+	}
+
+	/**
+	 * 设置为脏
+	 * @param value 
+	 */
+	private function setDirty(value:Bool = true):Void {
+		this.__dirty = value;
 	}
 }

@@ -74,7 +74,7 @@ class Game extends Stage {
 			for (image in images) {
 				image.x += 5;
 				image.y += 3;
-				// image.rotation += Math.random() * 10;
+				image.rotation += Math.random() * 10;
 				if (image.x > 500) {
 					image.x = 0;
 				}
@@ -89,7 +89,6 @@ class Game extends Stage {
 			this.addChild(atlasImage);
 			atlasImage.x = Math.random() * stage.stageWidth;
 			atlasImage.y = Math.random() * stage.stageHeight;
-			atlasImage.smoothing = false;
 		}
 	}
 }

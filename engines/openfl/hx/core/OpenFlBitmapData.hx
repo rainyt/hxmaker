@@ -16,4 +16,12 @@ class OpenFlBitmapData implements IBitmapData {
 	public function getTexture():Dynamic {
 		return __root;
 	}
+
+	public function getWidth():Int {
+		return __root.width;
+	}
+
+	public function getHeight():Int {
+		return __root.height;
+	}
 }

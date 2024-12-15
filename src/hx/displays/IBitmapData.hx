@@ -5,4 +5,8 @@ package hx.displays;
  */
 interface IBitmapData {
 	public function getTexture():Dynamic;
+
+	public function getWidth():Int;
+
+	public function getHeight():Int;
 }

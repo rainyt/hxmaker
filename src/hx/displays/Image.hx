@@ -46,4 +46,18 @@ class Image extends DisplayObject implements IDataProider<BitmapData> {
 			this.data = data;
 		}
 	}
+
+	override function get_width():Float {
+		if (data != null) {
+			return data.data.getWidth() * this.scaleX;
+		}
+		return super.get_width();
+	}
+
+	override function get_height():Float {
+		if (data != null) {
+			return data.data.getHeight() * this.scaleY;
+		}
+		return super.get_height();
+	}
 }

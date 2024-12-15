@@ -1,5 +1,6 @@
 package hx.displays;
 
+import hx.gemo.Rectangle;
 import hx.events.Event;
 
 /**
@@ -50,6 +51,40 @@ class DisplayObject extends EventDispatcher {
 		this.__worldRotation = parent.__worldRotation + this.__rotation;
 		this.__worldScaleX = parent.__worldScaleX * this.__scaleX;
 		this.__worldScaleY = parent.__worldScaleY * this.__scaleY;
+	}
+
+	/**
+	 * 宽度
+	 */
+	public var width(get, set):Float;
+
+	private function get_width():Float {
+		return 0;
+	}
+
+	private function set_width(value:Float):Float {
+		return value;
+	}
+
+	/**
+	 * 高度
+	 */
+	public var height(get, set):Float;
+
+	private function get_height():Float {
+		return 0;
+	}
+
+	private function set_height(value:Float):Float {
+		return value;
+	}
+
+	/**
+	 * 获取显示对象的边界
+	 * @return Rectangle
+	 */
+	private function __getBounds():Rectangle {
+		return null;
 	}
 
 	/**

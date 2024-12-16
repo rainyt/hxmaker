@@ -85,6 +85,11 @@ class Render implements IRender {
 		}
 		var textField:EngineTextField = cast label.root;
 		textField.text = label.data;
+		if (label.__dirty) {
+			var format:hx.displays.TextFormat = label.__textFormat;
+			textField.setTextFormat(new TextFormat(format.font, format.size, format.color));
+			label.updateAlignTranform();
+		}
 		textField.x = label.__worldX;
 		textField.y = label.__worldY;
 		textField.rotation = label.__rotation;
@@ -93,10 +98,7 @@ class Render implements IRender {
 		textField.scaleY = label.__scaleY;
 		textField.width = label.width;
 		textField.height = label.height;
-		if (label.__dirty) {
-			var format:hx.displays.TextFormat = label.__textFormat;
-			textField.setTextFormat(new TextFormat(format.font, format.size, format.color));
-		}
+
 		label.__dirty = false;
 		__stage.addChild(textField);
 	}

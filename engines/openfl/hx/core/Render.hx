@@ -98,7 +98,6 @@ class Render implements IRender {
 		textField.scaleY = label.__scaleY;
 		textField.width = label.width;
 		textField.height = label.height;
-
 		label.__dirty = false;
 		__stage.addChild(textField);
 	}

@@ -18,10 +18,10 @@ class OpenFlBitmapData implements IBitmapData {
 	}
 
 	public function getWidth():Int {
-		return __root.width;
+		return __root != null ? __root.width : 0;
 	}
 
 	public function getHeight():Int {
-		return __root.height;
+		return __root != null ? __root.height : 0;
 	}
 }

@@ -41,6 +41,10 @@ class Game extends Stage {
 		this.addChild(image);
 		image.x = 100;
 		image.y = 100;
+		image.rotation = 45;
+
+		trace("图片矩阵", image.width, image.height);
+		return;
 
 		// 容器加图片显示对象
 		var box = new DisplayObjectContainer();

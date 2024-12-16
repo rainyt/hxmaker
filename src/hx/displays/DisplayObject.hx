@@ -27,32 +27,36 @@ class DisplayObject extends EventDispatcher {
 	@:noCompletion private var __root:Dynamic;
 	@:noCompletion private var __autoInit:Bool = false;
 	@:noCompletion private var __dirty:Bool = false;
+	@:noCompletion private var __transformDirty:Bool = false;
 	@:noCompletion private var __width:Null<Float> = null;
 	@:noCompletion private var __height:Null<Float> = null;
 	@:noCompletion private var __transform:Matrix;
 	@:noCompletion private var __worldTransform:Matrix;
+	@:noCompletion private var __rect:Rectangle;
 
 	/**
 	 * 更新tranform
-	 * @param parent 
+	 * @param parent 如果提供了parent，则会根据parent更新worldTransform
 	 */
 	private function __updateTransform(parent:DisplayObject):Void {
-		this.__worldX = parent.__worldX + this.__x;
-		this.__worldY = parent.__worldY + this.__y;
-		this.__worldAlpha = parent.__worldAlpha * this.__alpha;
-		this.__worldRotation = parent.__worldRotation + this.__rotation;
-		this.__worldScaleX = parent.__worldScaleX * this.__scaleX;
-		this.__worldScaleY = parent.__worldScaleY * this.__scaleY;
+		if (parent != null) {
+			this.__worldX = parent.__worldX + this.__x;
+			this.__worldY = parent.__worldY + this.__y;
+			this.__worldAlpha = parent.__worldAlpha * this.__alpha;
+			this.__worldRotation = parent.__worldRotation + this.__rotation;
+			this.__worldScaleX = parent.__worldScaleX * this.__scaleX;
+			this.__worldScaleY = parent.__worldScaleY * this.__scaleY;
+			// 世界矩阵
+			this.__worldTransform.identity();
+			this.__worldTransform.scale(this.__worldScaleX, this.__worldScaleY);
+			this.__worldTransform.rotate(this.__rotation);
+			this.__worldTransform.translate(this.__worldX, this.__worldY);
+		}
 		// 自身矩阵
 		this.__transform.identity();
 		this.__transform.scale(this.__scaleX, this.__scaleY);
 		this.__transform.rotate(this.__rotation);
 		this.__transform.translate(this.__x, this.__y);
-		// 世界矩阵
-		this.__worldTransform.identity();
-		this.__worldTransform.scale(this.__worldScaleX, this.__worldScaleY);
-		this.__worldTransform.rotate(this.__rotation);
-		this.__worldTransform.translate(this.__worldX, this.__worldY);
 	}
 
 	/**
@@ -64,11 +68,12 @@ class DisplayObject extends EventDispatcher {
 		if (__width != null) {
 			return __width;
 		}
-		return 0;
+		return __getLocalBounds(__getRect()).width;
 	}
 
 	private function set_width(value:Float):Float {
 		this.__width = value;
+		setTransformDirty();
 		return value;
 	}
 
@@ -81,21 +86,32 @@ class DisplayObject extends EventDispatcher {
 		if (__height != null) {
 			return __height;
 		}
-		return 0;
+		return __getLocalBounds(__getRect()).height;
 	}
 
 	private function set_height(value:Float):Float {
 		this.__height = value;
+		setTransformDirty();
 		return value;
+	}
+
+	@:noCompletion private function __getRect():Rectangle {
+		return __rect;
 	}
 
 	/**
 	 * 获取显示对象的边界
 	 * @return Rectangle
 	 */
-	// private function __getLocalBounds(rect:Rectangle,):Rectangle {
-	// return new Rectangle(0, 0, 0, 0);
-	// }
+	private function __getLocalBounds(rect:Rectangle):Rectangle {
+		// 如果存在变换矩阵，则使用变换矩阵计算边界
+		if (__transformDirty) {
+			__updateTransform(null);
+		}
+		var ret = new Rectangle();
+		rect.transform(ret, __transform);
+		return ret;
+	}
 
 	/**
 	 * 设置显示对象是否可见，当不可见时，不会参与渲染，也不会参与交互
@@ -103,6 +119,7 @@ class DisplayObject extends EventDispatcher {
 	public var visible(get, set):Bool;
 
 	public function set_visible(value:Bool):Bool {
+		this.setDirty();
 		return __visible = value;
 	}
 
@@ -117,6 +134,7 @@ class DisplayObject extends EventDispatcher {
 
 	private function set_x(value:Float):Float {
 		__x = value;
+		setTransformDirty();
 		return value;
 	}
 
@@ -131,6 +149,7 @@ class DisplayObject extends EventDispatcher {
 
 	private function set_y(value:Float):Float {
 		__y = value;
+		setTransformDirty();
 		return value;
 	}
 
@@ -145,6 +164,7 @@ class DisplayObject extends EventDispatcher {
 
 	private function set_scaleX(value:Float):Float {
 		__scaleX = value;
+		setTransformDirty();
 		return value;
 	}
 
@@ -159,6 +179,7 @@ class DisplayObject extends EventDispatcher {
 
 	private function set_scaleY(value:Float):Float {
 		__scaleY = value;
+		setTransformDirty();
 		return value;
 	}
 
@@ -173,6 +194,7 @@ class DisplayObject extends EventDispatcher {
 
 	private function set_rotation(value:Float):Float {
 		__rotation = value;
+		setTransformDirty();
 		return value;
 	}
 
@@ -187,6 +209,7 @@ class DisplayObject extends EventDispatcher {
 
 	private function set_alpha(value:Float):Float {
 		__alpha = value;
+		this.setDirty();
 		return value;
 	}
 
@@ -218,6 +241,7 @@ class DisplayObject extends EventDispatcher {
 	public function new() {
 		__transform = new Matrix();
 		__worldTransform = new Matrix();
+		__rect = new Rectangle();
 		if (__autoInit)
 			this.onInit();
 	}
@@ -261,7 +285,7 @@ class DisplayObject extends EventDispatcher {
 	 * 标记为脏，需要刷新渲染
 	 */
 	public function invalidate():Void {
-		this.__dirty = true;
+		this.setTransformDirty();
 	}
 
 	/**
@@ -270,5 +294,14 @@ class DisplayObject extends EventDispatcher {
 	 */
 	private function setDirty(value:Bool = true):Void {
 		this.__dirty = value;
+	}
+
+	/**
+	 * 设置转换为脏
+	 * @param value 
+	 */
+	private function setTransformDirty(value:Bool = true):Void {
+		this.__transformDirty = value;
+		this.setDirty();
 	}
 }

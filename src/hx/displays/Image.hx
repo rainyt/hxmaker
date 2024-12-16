@@ -1,5 +1,6 @@
 package hx.displays;
 
+import hx.gemo.Rectangle;
 import hx.providers.IRootDataProvider;
 
 /**
@@ -60,17 +61,16 @@ class Image extends DisplayObject implements IDataProider<BitmapData> implements
 		}
 	}
 
-	override function get_width():Float {
+	override function __getRect():Rectangle {
 		if (data != null) {
-			return data.data.getWidth() * this.scaleX;
+			if (data.frameRect != null) {
+				__rect.width = data.frameRect.width;
+				__rect.height = data.frameRect.height;
+			} else {
+				__rect.width = data.data.getWidth();
+				__rect.height = data.data.getHeight();
+			}
 		}
-		return super.get_width();
-	}
-
-	override function get_height():Float {
-		if (data != null) {
-			return data.data.getHeight() * this.scaleY;
-		}
-		return super.get_height();
+		return super.__getRect();
 	}
 }

@@ -1,5 +1,6 @@
 package hx.displays;
 
+import hx.gemo.Matrix;
 import hx.gemo.Rectangle;
 import hx.events.Event;
 
@@ -28,18 +29,30 @@ class DisplayObject extends EventDispatcher {
 	@:noCompletion private var __dirty:Bool = false;
 	@:noCompletion private var __width:Null<Float> = null;
 	@:noCompletion private var __height:Null<Float> = null;
+	@:noCompletion private var __transform:Matrix;
+	@:noCompletion private var __worldTransform:Matrix;
 
 	/**
 	 * 更新tranform
 	 * @param parent 
 	 */
-	private function __tranform(parent:DisplayObject):Void {
+	private function __updateTransform(parent:DisplayObject):Void {
 		this.__worldX = parent.__worldX + this.__x;
 		this.__worldY = parent.__worldY + this.__y;
 		this.__worldAlpha = parent.__worldAlpha * this.__alpha;
 		this.__worldRotation = parent.__worldRotation + this.__rotation;
 		this.__worldScaleX = parent.__worldScaleX * this.__scaleX;
 		this.__worldScaleY = parent.__worldScaleY * this.__scaleY;
+		// 自身矩阵
+		this.__transform.identity();
+		this.__transform.scale(this.__scaleX, this.__scaleY);
+		this.__transform.rotate(this.__rotation);
+		this.__transform.translate(this.__x, this.__y);
+		// 世界矩阵
+		this.__worldTransform.identity();
+		this.__worldTransform.scale(this.__worldScaleX, this.__worldScaleY);
+		this.__worldTransform.rotate(this.__rotation);
+		this.__worldTransform.translate(this.__worldX, this.__worldY);
 	}
 
 	/**
@@ -80,9 +93,9 @@ class DisplayObject extends EventDispatcher {
 	 * 获取显示对象的边界
 	 * @return Rectangle
 	 */
-	private function __getBounds():Rectangle {
-		return null;
-	}
+	// private function __getLocalBounds(rect:Rectangle,):Rectangle {
+	// return new Rectangle(0, 0, 0, 0);
+	// }
 
 	/**
 	 * 设置显示对象是否可见，当不可见时，不会参与渲染，也不会参与交互
@@ -203,6 +216,8 @@ class DisplayObject extends EventDispatcher {
 	 * 构造一个显示对象
 	 */
 	public function new() {
+		__transform = new Matrix();
+		__worldTransform = new Matrix();
 		if (__autoInit)
 			this.onInit();
 	}

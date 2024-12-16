@@ -105,10 +105,10 @@ class DisplayObjectContainer extends DisplayObject {
 		}
 	}
 
-	override function __tranform(parent:DisplayObject) {
-		super.__tranform(parent);
+	override function __updateTransform(parent:DisplayObject) {
+		super.__updateTransform(parent);
 		for (child in this.__children) {
-			child.__tranform(this);
+			child.__updateTransform(this);
 		}
 	}
 

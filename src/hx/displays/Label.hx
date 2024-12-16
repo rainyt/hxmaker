@@ -58,8 +58,8 @@ class Label extends DisplayObject implements IDataProider<String> implements IRo
 		this.height = 36;
 	}
 
-	override function __tranform(parent:DisplayObject) {
-		super.__tranform(parent);
+	override function __updateTransform(parent:DisplayObject) {
+		super.__updateTransform(parent);
 		this.updateAlignTranform();
 	}
 

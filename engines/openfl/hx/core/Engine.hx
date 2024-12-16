@@ -42,7 +42,7 @@ class Engine extends Sprite implements IEngine {
 		var dt = now - __lastTime;
 		__lastTime = now;
 		this.render.onUpdate(dt);
-		@:privateAccess this.render.__tranform(this.render);
+		@:privateAccess this.render.__updateTransform(this.render);
 		this.render.render();
 	}
 }

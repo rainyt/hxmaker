@@ -18,6 +18,7 @@ class Label extends DisplayObject implements IDataProider<String> implements IRo
 
 	@:noCompletion private function set_root(value:ITextFieldDataProvider):ITextFieldDataProvider {
 		this.__root = value;
+		this.updateAlignTranform();
 		return __root;
 	}
 
@@ -55,5 +56,64 @@ class Label extends DisplayObject implements IDataProider<String> implements IRo
 		this.data = text;
 		this.width = 200;
 		this.height = 36;
+	}
+
+	override function __tranform(parent:DisplayObject) {
+		super.__tranform(parent);
+		this.updateAlignTranform();
+	}
+
+	/**
+	 * 横向对齐方式
+	 */
+	public var horizontalAlign(get, set):HorizontalAlign;
+
+	private var __horizontalAlign:HorizontalAlign;
+
+	private function get_horizontalAlign():HorizontalAlign {
+		return __horizontalAlign;
+	}
+
+	private function set_horizontalAlign(value:HorizontalAlign):HorizontalAlign {
+		__horizontalAlign = value;
+		return value;
+	}
+
+	/**
+	 * 竖向对齐方式
+	 */
+	public var verticalAlign(get, set):VerticalAlign;
+
+	private var __verticalAlign:VerticalAlign;
+
+	private function get_verticalAlign():VerticalAlign {
+		return __verticalAlign;
+	}
+
+	private function set_verticalAlign(value:VerticalAlign):VerticalAlign {
+		__verticalAlign = value;
+		return value;
+	}
+
+	/**
+	 * 更新对齐位置
+	 */
+	private function updateAlignTranform():Void {
+		if (root != null) {
+			switch __verticalAlign {
+				case TOP:
+				case MIDDLE:
+					__worldY = (this.height - this.root.getTextHeight()) / 2;
+				case BOTTOM:
+					__worldY = this.height - this.root.getTextHeight();
+			}
+			switch __horizontalAlign {
+				case LEFT:
+				case CENTER:
+					__worldX = (this.width - this.root.getTextWidth()) / 2;
+				case RIGHT:
+					__worldX = (this.width - this.root.getTextWidth());
+			}
+		}
 	}
 }

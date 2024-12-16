@@ -1,12 +1,25 @@
 package hx.displays;
 
+import hx.providers.IRootDataProvider;
+
 /**
  * 使用位图进行渲染的图像
  */
 @:keep
-class Image extends DisplayObject implements IDataProider<BitmapData> {
+class Image extends DisplayObject implements IDataProider<BitmapData> implements IRootDataProvider<Dynamic> {
 	@:noCompletion private var __bitmapData:BitmapData;
 	@:noCompletion private var __smoothing:Bool = true;
+
+	public var root(get, set):Dynamic;
+
+	@:noCompletion private function get_root():Dynamic {
+		return __root;
+	}
+
+	@:noCompletion private function set_root(value:Dynamic):Dynamic {
+		this.__root = value;
+		return __root;
+	}
 
 	/**
 	 * 设置、获取位图数据

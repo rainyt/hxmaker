@@ -80,10 +80,10 @@ class Render implements IRender {
 	 */
 	public function renderLabel(label:Label):Void {
 		if (label.root == null) {
-			label.root = new TextField();
+			label.root = new EngineTextField();
 			label.setDirty();
 		}
-		var textField:TextField = cast label.root;
+		var textField:EngineTextField = cast label.root;
 		textField.text = label.data;
 		textField.x = label.__worldX;
 		textField.y = label.__worldY;
@@ -145,6 +145,8 @@ class Render implements IRender {
 			var rects:Vector<Float> = new Vector();
 			var transforms:Vector<Float> = new Vector();
 			for (bitmap in state.bitmaps) {
+				if (bitmap.bitmapData == null)
+					continue;
 				if (bitmap.scrollRect != null) {
 					rects.push(bitmap.scrollRect.x);
 					rects.push(bitmap.scrollRect.y);

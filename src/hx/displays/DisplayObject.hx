@@ -30,20 +30,6 @@ class DisplayObject extends EventDispatcher {
 	@:noCompletion private var __height:Null<Float> = null;
 
 	/**
-	 * 根渲染显示对象，不同的引擎中对应的显示对象
-	 */
-	public var root(get, set):Dynamic;
-
-	private function set_root(value:Dynamic):Dynamic {
-		this.__root = value;
-		return value;
-	}
-
-	private function get_root():Dynamic {
-		return this.__root;
-	}
-
-	/**
 	 * 更新tranform
 	 * @param parent 
 	 */

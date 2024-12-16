@@ -45,7 +45,9 @@ class Game extends Stage {
 		image.rotation = 75;
 
 		trace("图片矩阵", image.width, image.height, image.getBounds());
-		return;
+		this.addEventListener(Event.UPDATE, (e) -> {
+			image.rotation++;
+		});
 
 		// 容器加图片显示对象
 		var box = new DisplayObjectContainer();

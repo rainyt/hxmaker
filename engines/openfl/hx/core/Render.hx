@@ -131,13 +131,6 @@ class Render implements IRender {
 			this.drawBatchBitmapState();
 			state.push(bitmap);
 		}
-
-		var sprite = new Sprite();
-		this.__stage.addChild(sprite);
-		sprite.graphics.beginFill(0xff0000, 0.5);
-		var rect = image.getBounds();
-		sprite.graphics.drawRect(rect.x, rect.y, rect.width, rect.height);
-		sprite.graphics.endFill();
 	}
 
 	/**

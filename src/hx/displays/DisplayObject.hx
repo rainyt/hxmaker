@@ -60,6 +60,7 @@ class DisplayObject extends EventDispatcher {
 		this.__transform.scale(this.__scaleX, this.__scaleY);
 		this.__transform.rotate(this.__rotation.rotationToAngle());
 		this.__transform.translate(this.__x, this.__y);
+		this.__transformDirty = false;
 	}
 
 	/**

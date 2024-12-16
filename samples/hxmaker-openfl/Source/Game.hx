@@ -39,11 +39,12 @@ class Game extends Stage {
 		// 显示一张图片
 		var image:Image = new Image(assets.bitmapDatas.get("logo"));
 		this.addChild(image);
-		image.x = 100;
-		image.y = 100;
-		image.rotation = 45;
+		image.x = 500;
+		image.y = 500;
+		image.scaleX = 1;
+		image.rotation = 75;
 
-		trace("图片矩阵", image.width, image.height);
+		trace("图片矩阵", image.width, image.height, image.getBounds());
 		return;
 
 		// 容器加图片显示对象

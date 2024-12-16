@@ -1,8 +1,11 @@
 package hx.displays;
 
+import js.html.svg.Rect;
 import hx.gemo.Matrix;
 import hx.gemo.Rectangle;
 import hx.events.Event;
+
+using hx.utils.MathUtils;
 
 /**
  * 唯一统一的渲染对象
@@ -49,13 +52,13 @@ class DisplayObject extends EventDispatcher {
 			// 世界矩阵
 			this.__worldTransform.identity();
 			this.__worldTransform.scale(this.__worldScaleX, this.__worldScaleY);
-			this.__worldTransform.rotate(this.__rotation);
+			this.__worldTransform.rotate(this.__rotation.rotationToAngle());
 			this.__worldTransform.translate(this.__worldX, this.__worldY);
 		}
 		// 自身矩阵
 		this.__transform.identity();
 		this.__transform.scale(this.__scaleX, this.__scaleY);
-		this.__transform.rotate(this.__rotation);
+		this.__transform.rotate(this.__rotation.rotationToAngle());
 		this.__transform.translate(this.__x, this.__y);
 	}
 
@@ -87,6 +90,14 @@ class DisplayObject extends EventDispatcher {
 			return __height;
 		}
 		return __getLocalBounds(__getRect()).height;
+	}
+
+	/**
+	 * 获得边界
+	 * @return Rectangle
+	 */
+	private function getBounds():Rectangle {
+		return __getLocalBounds(__getRect());
 	}
 
 	private function set_height(value:Float):Float {

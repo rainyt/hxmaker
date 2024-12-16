@@ -23,8 +23,8 @@ class Render implements IRender {
 	 */
 	@:noCompletion private var __stage:Sprite = new Sprite();
 
-	private var __pool:ObjectPool<Sprite> = new ObjectPool<Sprite>(() -> {
-		return new Sprite();
+	private var __pool:ObjectPool<EngineSprite> = new ObjectPool<EngineSprite>(() -> {
+		return new EngineSprite();
 	});
 
 	/**
@@ -52,7 +52,7 @@ class Render implements IRender {
 		// 清理舞台
 		for (i in 0...__stage.numChildren) {
 			var display = __stage.getChildAt(i);
-			if (display is Sprite) {
+			if (display is EngineSprite) {
 				__pool.release(cast display);
 			}
 		}
@@ -131,6 +131,13 @@ class Render implements IRender {
 			this.drawBatchBitmapState();
 			state.push(bitmap);
 		}
+
+		var sprite = new Sprite();
+		this.__stage.addChild(sprite);
+		sprite.graphics.beginFill(0xff0000, 0.5);
+		var rect = image.getBounds();
+		sprite.graphics.drawRect(rect.x, rect.y, rect.width, rect.height);
+		sprite.graphics.endFill();
 	}
 
 	/**

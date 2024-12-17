@@ -94,15 +94,36 @@ class Game extends Stage {
 			}
 		});
 
-		for (_ => value in assets.atlases.get("EmojAtlas").bitmapDatas) {
-			var atlasImage = new Image(value);
-			this.addChild(atlasImage);
-			atlasImage.x = Math.random() * stage.stageWidth;
-			atlasImage.y = Math.random() * stage.stageHeight;
+		var emojs = [];
+
+		// for (_ => value in assets.atlases.get("EmojAtlas").bitmapDatas) {
+		// 	var atlasImage = new Image(value);
+		// 	this.addChild(atlasImage);
+		// 	atlasImage.x = Math.random() * stage.stageWidth;
+		// 	atlasImage.y = Math.random() * stage.stageHeight;
+		// 	emojs.push(atlasImage);
+		// }
+
+		var img = new Image(assets.atlases.get("EmojAtlas").bitmapDatas.get("zw_5"));
+		this.addChild(img);
+		img.x = img.y = 100;
+		emojs.push(img);
+
+		for (image in emojs) {
+			var rect = image.getBounds();
+			trace("矩阵", rect);
+			// 矩形渲染
+			var quad = new Quad(400, 50, Std.random(0xffffff));
+			this.addChild(quad);
+			quad.x = rect.x;
+			quad.y = rect.y;
+			quad.width = rect.width;
+			quad.height = rect.height;
+			quad.alpha = 0.3;
 		}
 
 		// 矩形渲染
-		var quad = new Quad(400,50,0xffff00);
+		var quad = new Quad(400, 50, 0xffff00);
 		this.addChild(quad);
 		quad.y = 400;
 
@@ -117,6 +138,5 @@ class Game extends Stage {
 		label.y = 0;
 		label.horizontalAlign = CENTER;
 		label.verticalAlign = MIDDLE;
-		
 	}
 }

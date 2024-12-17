@@ -64,10 +64,13 @@ class Image extends DisplayObject implements IDataProider<BitmapData> implements
 	override function __getRect():Rectangle {
 		if (data != null) {
 			if (data.frameRect != null) {
-				__rect.x = -data.frameRect.x;
-				__rect.y = -data.frameRect.y;
+				__rect.x = data.frameRect.x;
+				__rect.y = data.frameRect.y;
 				__rect.width = data.frameRect.width;
 				__rect.height = data.frameRect.height;
+			} else if (data.rect != null) {
+				__rect.width = data.rect.width;
+				__rect.height = data.rect.height;
 			} else {
 				__rect.width = data.data.getWidth();
 				__rect.height = data.data.getHeight();

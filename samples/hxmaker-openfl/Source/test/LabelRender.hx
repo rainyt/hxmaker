@@ -110,7 +110,7 @@ class LabelRender extends Scene {
 		label2.horizontalAlign = CENTER;
 		label2.verticalAlign = BOTTOM;
 
-		this.addEventListener(MouseEvent.MOUSE_DOWN, (e:MouseEvent) -> {
+		this.addEventListener(MouseEvent.CLICK, (e:MouseEvent) -> {
 			trace("点击到了", e.target);
 			var d:DisplayObject = e.target;
 			d.visible = false;

@@ -40,6 +40,10 @@ class Engine extends Sprite implements IEngine {
 
 	private var __lastTime:Float = 0;
 
+	private var __lastMouseX = 0.;
+
+	private var __lastMouseY = 0.;
+
 	private function __onRenderEnterFrame(e:Event):Void {
 		var now = Timer.stamp();
 		var dt = now - __lastTime;
@@ -51,7 +55,7 @@ class Engine extends Sprite implements IEngine {
 	private function __initMouseEvent():Void {
 		this.stage.addEventListener(MouseEvent.MOUSE_DOWN, __onMouseEvent);
 		this.stage.addEventListener(MouseEvent.MOUSE_UP, __onMouseEvent);
-		this.stage.addEventListener(MouseEvent.CLICK, __onMouseEvent);
+		// this.stage.addEventListener(MouseEvent.CLICK, __onMouseEvent);
 		this.stage.addEventListener(MouseEvent.MOUSE_WHEEL, __onMouseEvent);
 		this.stage.addEventListener(MouseEvent.MOUSE_MOVE, __onMouseEvent);
 	}
@@ -61,5 +65,18 @@ class Engine extends Sprite implements IEngine {
 		engineEvent.stageX = this.mouseX;
 		engineEvent.stageY = this.mouseY;
 		render.handleMouseEvent(engineEvent);
+		switch e.type {
+			case MouseEvent.MOUSE_DOWN:
+				__lastMouseX = this.mouseX;
+				__lastMouseY = this.mouseY;
+			case MouseEvent.MOUSE_UP:
+				// 判断距离
+				if (Math.sqrt(Math.pow(__lastMouseX - this.mouseX, 2) + Math.pow(__lastMouseY - this.mouseY, 2)) < 10) {
+					var engineEvent:hx.events.MouseEvent = new hx.events.MouseEvent(hx.events.MouseEvent.CLICK);
+					engineEvent.stageX = this.mouseX;
+					engineEvent.stageY = this.mouseY;
+					render.handleMouseEvent(engineEvent);
+				}
+		}
 	}
 }

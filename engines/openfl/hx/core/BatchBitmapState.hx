@@ -1,5 +1,6 @@
 package hx.core;
 
+import openfl.display.BitmapData;
 import openfl.display.Bitmap;
 
 /**
@@ -11,13 +12,23 @@ class BatchBitmapState {
 	 */
 	public var bitmaps:Array<Bitmap> = [];
 
-	public function new() {}
+	/**
+	 * 待渲染的纹理数据列表
+	 */
+	public var bitmapDatas:Array<BitmapData> = [];
+
+	public var render:Render;
+
+	public function new(render:Render) {
+		this.render = render;
+	}
 
 	/**
 	 * 重置
 	 */
 	public function reset():Void {
 		bitmaps = [];
+		bitmapDatas = [];
 	}
 
 	/**
@@ -26,7 +37,7 @@ class BatchBitmapState {
 	 * @return Bool
 	 */
 	public function push(bitmap:Bitmap):Bool {
-		if (bitmaps.length == 0 || checkState(bitmap)) {
+		if (checkState(bitmap)) {
 			bitmaps.push(bitmap);
 			return true;
 		}
@@ -39,12 +50,18 @@ class BatchBitmapState {
 	 * @return Bool
 	 */
 	public function checkState(bitmap:Bitmap):Bool {
-		var lastBitmap = bitmaps[bitmaps.length - 1];
-		if (lastBitmap.bitmapData != bitmap.bitmapData) {
-			return false;
-		}
-		if (lastBitmap.smoothing != bitmap.smoothing) {
-			return false;
+		if (bitmaps.length == 0 || bitmapDatas.indexOf(bitmap.bitmapData) == -1) {
+			// 多纹理支持，如果承载的多纹理数量允许，则可以继续添加
+			if (bitmapDatas.length >= render.supportedMultiTextureUnits) {
+				return false;
+			} else {
+				bitmapDatas.push(bitmap.bitmapData);
+			}
+		} else {
+			var lastBitmap = bitmaps[bitmaps.length - 1];
+			if (lastBitmap.smoothing != bitmap.smoothing) {
+				return false;
+			}
 		}
 		return true;
 	}

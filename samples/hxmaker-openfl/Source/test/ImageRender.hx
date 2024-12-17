@@ -47,6 +47,8 @@ class ImageRender extends Scene {
 		image.scaleX = 1;
 		image.rotation = 75;
 
+		// return;
+
 		trace("图片矩阵", image.width, image.height, image.getBounds());
 
 		// 容器加图片显示对象
@@ -128,9 +130,9 @@ class ImageRender extends Scene {
 		// }
 
 		// 矩形渲染
-		var quad = new Quad(400, 50, 0xffff00);
-		this.addChild(quad);
-		quad.y = 400;
+		// var quad = new Quad(400, 50, 0xffff00);
+		// this.addChild(quad);
+		// quad.y = 400;
 
 		this.addEventListener(MouseEvent.CLICK, (e:MouseEvent) -> {
 			trace("点击到了", e.target);

@@ -20,12 +20,12 @@ class DisplayObject extends EventDispatcher {
 	@:noCompletion private var __stage:Stage;
 	@:noCompletion private var __parent:DisplayObjectContainer;
 	@:noCompletion private var __visible:Bool = true;
-	@:noCompletion private var __worldX:Float = 0;
-	@:noCompletion private var __worldY:Float = 0;
+	// @:noCompletion private var __worldX:Float = 0;
+	// @:noCompletion private var __worldY:Float = 0;
 	@:noCompletion private var __worldAlpha:Float = 1;
-	@:noCompletion private var __worldRotation:Float = 0;
-	@:noCompletion private var __worldScaleX:Float = 1;
-	@:noCompletion private var __worldScaleY:Float = 1;
+	// @:noCompletion private var __worldRotation:Float = 0;
+	// @:noCompletion private var __worldScaleX:Float = 1;
+	// @:noCompletion private var __worldScaleY:Float = 1;
 	@:noCompletion private var __root:Dynamic;
 	@:noCompletion private var __dirty:Bool = true;
 	@:noCompletion private var __transformDirty:Bool = true;
@@ -57,17 +57,13 @@ class DisplayObject extends EventDispatcher {
 	 */
 	private function __updateTransform(parent:DisplayObject):Void {
 		if (parent != null) {
-			this.__worldX = parent.__worldX + this.__x;
-			this.__worldY = parent.__worldY + this.__y;
 			this.__worldAlpha = parent.__worldAlpha * this.__alpha;
-			this.__worldRotation = parent.__worldRotation + this.__rotation;
-			this.__worldScaleX = parent.__worldScaleX * this.__scaleX;
-			this.__worldScaleY = parent.__worldScaleY * this.__scaleY;
 			// 世界矩阵
 			this.__worldTransform.identity();
-			this.__worldTransform.scale(this.__worldScaleX, this.__worldScaleY);
+			this.__worldTransform.scale(this.__scaleX, this.__scaleY);
 			this.__worldTransform.rotate(this.__rotation.rotationToAngle());
-			this.__worldTransform.translate(this.__worldX, this.__worldY);
+			this.__worldTransform.translate(this.__x, this.__y);
+			this.__worldTransform.concat(parent.__worldTransform);
 		}
 		// 自身矩阵
 		this.__transform.identity();

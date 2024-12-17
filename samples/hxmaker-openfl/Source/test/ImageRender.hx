@@ -46,9 +46,7 @@ class ImageRender extends Scene {
 		image.rotation = 75;
 
 		trace("图片矩阵", image.width, image.height, image.getBounds());
-		this.addEventListener(Event.UPDATE, (e) -> {
-			image.rotation++;
-		});
+		
 
 		// 容器加图片显示对象
 		var box = new DisplayObjectContainer();
@@ -62,11 +60,17 @@ class ImageRender extends Scene {
 		for (ix in 0...100) {
 			for (iy in 0...100) {
 				var image3 = new Image(assets.bitmapDatas.get("logo"));
-				this.addChild(image3);
+				box.addChild(image3);
 				image3.x = ix * 200;
 				image3.y = iy * 200;
 			}
 		}
+
+		this.addEventListener(Event.UPDATE, (e) -> {
+			box.rotation++;
+		});
+
+		box.mouseEnabled = false;
 
 		var tuzi = new Image(assets.bitmapDatas.get("wabbit_alpha"));
 		this.addChild(tuzi);

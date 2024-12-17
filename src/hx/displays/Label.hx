@@ -19,7 +19,6 @@ class Label extends DisplayObject implements IDataProider<String> implements IRo
 
 	@:noCompletion private function set_root(value:ITextFieldDataProvider):ITextFieldDataProvider {
 		this.__root = value;
-		this.updateAlignTranform();
 		return __root;
 	}
 
@@ -104,16 +103,16 @@ class Label extends DisplayObject implements IDataProider<String> implements IRo
 			switch __verticalAlign {
 				case TOP:
 				case MIDDLE:
-					__worldY = (this.height - this.root.getTextHeight()) / 2;
+					__worldTransform.ty += (this.height - this.root.getTextHeight()) / 2;
 				case BOTTOM:
-					__worldY = this.height - this.root.getTextHeight();
+					__worldTransform.ty += (this.height - this.root.getTextHeight());
 			}
 			switch __horizontalAlign {
 				case LEFT:
 				case CENTER:
-					__worldX = (this.width - this.root.getTextWidth()) / 2;
+					__worldTransform.tx += (this.width - this.root.getTextWidth()) / 2;
 				case RIGHT:
-					__worldX = (this.width - this.root.getTextWidth());
+					__worldTransform.tx += (this.width - this.root.getTextWidth());
 			}
 		}
 	}
@@ -121,6 +120,22 @@ class Label extends DisplayObject implements IDataProider<String> implements IRo
 	override function __getRect():Rectangle {
 		__rect.x = 0;
 		__rect.y = 0;
+		if (root != null) {
+			switch __verticalAlign {
+				case TOP:
+				case MIDDLE:
+					__rect.y -= (this.height - this.root.getTextHeight()) / 2;
+				case BOTTOM:
+					__rect.y -= (this.height - this.root.getTextHeight());
+			}
+			switch __horizontalAlign {
+				case LEFT:
+				case CENTER:
+					__rect.x -= (this.width - this.root.getTextWidth()) / 2;
+				case RIGHT:
+					__rect.x -= (this.width - this.root.getTextWidth());
+			}
+		}
 		__rect.width = this.width;
 		__rect.height = this.height;
 		return super.__getRect();

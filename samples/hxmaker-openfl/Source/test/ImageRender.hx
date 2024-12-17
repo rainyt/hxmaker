@@ -60,7 +60,7 @@ class ImageRender extends Scene {
 		box.x = 300;
 		box.y = 300;
 
-		for (ix in 0...100) {
+		for (ix in 0...10) {
 			for (iy in 0...100) {
 				var image3 = new Image(assets.bitmapDatas.get("logo"));
 				box.addChild(image3);
@@ -75,8 +75,12 @@ class ImageRender extends Scene {
 
 		box.mouseEnabled = false;
 
-		var tuzi = new Image(assets.bitmapDatas.get("wabbit_alpha"));
-		this.addChild(tuzi);
+		for (i in 0...256) {
+			var tuzi = new Image(assets.bitmapDatas.get("wabbit_alpha"));
+			this.addChild(tuzi);
+			tuzi.x = Math.random() * stage.stageWidth;
+			tuzi.y = Math.random() * stage.stageHeight;
+		}
 
 		var images = [];
 		for (i in 0...100) {

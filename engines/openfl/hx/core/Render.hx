@@ -142,8 +142,8 @@ class Render implements IRender {
 			label.setDirty();
 		}
 		var textField:EngineTextField = cast label.root;
-		textField.text = label.data;
-		if (label.__dirty) {
+		if (label.data != null && textField.text != label.data) {
+			textField.text = label.data;
 			var format:hx.displays.TextFormat = label.__textFormat;
 			textField.setTextFormat(new TextFormat(format.font, format.size, format.color));
 			label.updateAlignTranform();
@@ -220,23 +220,6 @@ class Render implements IRender {
 					ids.push(id);
 					alphas.push(bitmap.alpha);
 				}
-				// if (bitmap.scrollRect != null) {
-				// 	rects.push(bitmap.scrollRect.x);
-				// 	rects.push(bitmap.scrollRect.y);
-				// 	rects.push(bitmap.scrollRect.width);
-				// 	rects.push(bitmap.scrollRect.height);
-				// } else {
-				// 	rects.push(0);
-				// 	rects.push(0);
-				// 	rects.push(bitmap.bitmapData.width);
-				// 	rects.push(bitmap.bitmapData.height);
-				// }
-				// transforms.push(bitmap.transform.matrix.a);
-				// transforms.push(bitmap.transform.matrix.b);
-				// transforms.push(bitmap.transform.matrix.c);
-				// transforms.push(bitmap.transform.matrix.d);
-				// transforms.push(bitmap.transform.matrix.tx);
-				// transforms.push(bitmap.transform.matrix.ty);
 
 				// vertices
 				var tileWidth:Float = bitmap.scrollRect != null ? bitmap.scrollRect.width : bitmap.bitmapData.width;

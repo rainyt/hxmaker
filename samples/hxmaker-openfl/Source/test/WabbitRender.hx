@@ -1,5 +1,9 @@
 package test;
 
+import hx.displays.DisplayObjectContainer;
+import hx.events.MouseEvent;
+import hx.displays.TextFormat;
+import hx.displays.Label;
 import hx.events.Event;
 import hx.displays.Image;
 import hx.utils.Assets;
@@ -10,6 +14,14 @@ class WabbitRender extends Scene {
 	 * 资源管理器
 	 */
 	var assets = new Assets();
+
+	var label = new Label();
+
+	var bunnys = [];
+
+	var gravity = 0.5;
+
+	var box:DisplayObjectContainer;
 
 	override function onStageInit() {
 		super.onStageInit();
@@ -22,46 +34,65 @@ class WabbitRender extends Scene {
 			trace("加载失败");
 		});
 		assets.start();
+
+		box = new DisplayObjectContainer();
+		this.addChild(box);
+
+		this.addChild(label);
+		label.width = stage.stageWidth;
+		label.horizontalAlign = CENTER;
+		label.height = 50;
+		label.textFormat = new TextFormat(null, 46, 0xff0000);
 	}
 
 	public function onLoaded():Void {
-		var bunnys = [];
-		for (i in 0...1000) {
+		this.createBunny();
+		this.addEventListener(Event.UPDATE, onUpdateEvent);
+		this.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
+	}
+
+	private function onMouseDown(e:MouseEvent):Void {
+		createBunny(5000);
+	}
+
+	private function createBunny(counts = 1000):Void {
+		for (i in 0...counts) {
 			var bunny = new Bunny(assets.bitmapDatas.get("wabbit_alpha_" + (Std.random(6) + 1)));
-			this.addChild(bunny);
+			box.addChild(bunny);
 			bunny.x = Math.random() * this.stage.stageWidth;
 			bunny.y = Math.random() * this.stage.stageHeight;
 			bunny.speedX = Math.random() * 5;
 			bunny.speedY = (Math.random() * 5) - 2.5;
 			bunnys.push(bunny);
 		}
-		var gravity = 0.5;
-		this.addEventListener(Event.UPDATE, (e) -> {
-			for (bunny in bunnys) {
-				bunny.x += bunny.speedX;
-				bunny.y += bunny.speedY;
-				bunny.speedY += gravity;
-				if (bunny.x > stage.stageWidth) {
-					bunny.speedX *= -1;
-					bunny.x = stage.stageWidth;
-				} else if (bunny.x < 0) {
-					bunny.speedX *= -1;
-					bunny.x = 0;
-				}
+		label.data = "数量：" + bunnys.length;
+	}
 
-				if (bunny.y > stage.stageHeight) {
-					bunny.speedY *= -0.8;
-					bunny.y = stage.stageHeight;
-
-					if (Math.random() > 0.5) {
-						bunny.speedY -= 3 + Math.random() * 4;
-					}
-				} else if (bunny.y < 0) {
-					bunny.speedY = 0;
-					bunny.y = 0;
-				}
+	private function onUpdateEvent(e:Event):Void {
+		for (bunny in bunnys) {
+			bunny.x += bunny.speedX;
+			bunny.y += bunny.speedY;
+			bunny.speedY += gravity;
+			if (bunny.x > stage.stageWidth) {
+				bunny.speedX *= -1;
+				bunny.x = stage.stageWidth;
+			} else if (bunny.x < 0) {
+				bunny.speedX *= -1;
+				bunny.x = 0;
 			}
-		});
+
+			if (bunny.y > stage.stageHeight) {
+				bunny.speedY *= -0.8;
+				bunny.y = stage.stageHeight;
+
+				if (Math.random() > 0.5) {
+					bunny.speedY -= 3 + Math.random() * 4;
+				}
+			} else if (bunny.y < 0) {
+				bunny.speedY = 0;
+				bunny.y = 0;
+			}
+		}
 	}
 }
 

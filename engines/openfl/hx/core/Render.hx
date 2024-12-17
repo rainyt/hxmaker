@@ -1,5 +1,6 @@
 package hx.core;
 
+import hx.displays.Quad;
 import openfl.text.TextFormat;
 import openfl.text.TextField;
 import hx.displays.Label;
@@ -62,6 +63,9 @@ class Render implements IRender {
 
 	public function renderDisplayObjectContainer(container:DisplayObjectContainer) {
 		for (object in container.children) {
+			if (!object.visible || object.alpha == 0) {
+				continue;
+			}
 			if (object is Image) {
 				renderImage(cast object);
 			} else if (object is DisplayObjectContainer) {
@@ -69,9 +73,34 @@ class Render implements IRender {
 			} else if (object is Label) {
 				this.drawBatchBitmapState();
 				renderLabel(cast object);
+			} else if (object is Quad) {
+				this.drawBatchBitmapState();
+				renderQuad(cast object);
 			}
 		}
 		container.__dirty = false;
+	}
+
+	/**
+	 * 渲染矩阵
+	 * @param quad 
+	 */
+	public function renderQuad(quad:Quad):Void {
+		if (quad.root == null) {
+			quad.root = new Sprite();
+			quad.setDirty();
+		}
+		var sprite:Sprite = quad.root;
+		sprite.graphics.clear();
+		sprite.graphics.beginFill(quad.data);
+		sprite.graphics.drawRect(0, 0, quad.width, quad.height);
+		sprite.x = quad.__worldX;
+		sprite.y = quad.__worldY;
+		sprite.rotation = quad.__worldRotation;
+		sprite.scaleX = quad.__worldScaleX;
+		sprite.scaleY = quad.__worldScaleY;
+		sprite.alpha = quad.__worldAlpha;
+		__stage.addChild(sprite);
 	}
 
 	/**
@@ -92,10 +121,10 @@ class Render implements IRender {
 		}
 		textField.x = label.__worldX;
 		textField.y = label.__worldY;
-		textField.rotation = label.__rotation;
-		textField.alpha = label.__alpha;
-		textField.scaleX = label.__scaleX;
-		textField.scaleY = label.__scaleY;
+		textField.rotation = label.__worldRotation;
+		textField.alpha = label.__worldAlpha;
+		textField.scaleX = label.__worldScaleX;
+		textField.scaleY = label.__worldScaleY;
 		textField.width = label.width;
 		textField.height = label.height;
 		label.__dirty = false;
@@ -115,10 +144,10 @@ class Render implements IRender {
 		var bitmap:Bitmap = image.root;
 		bitmap.x = image.__worldX;
 		bitmap.y = image.__worldY;
-		bitmap.rotation = image.__rotation;
-		bitmap.alpha = image.__alpha;
-		bitmap.scaleX = image.__scaleX;
-		bitmap.scaleY = image.__scaleY;
+		bitmap.rotation = image.__worldRotation;
+		bitmap.alpha = image.__worldAlpha;
+		bitmap.scaleX = image.__worldScaleX;
+		bitmap.scaleY = image.__worldScaleY;
 		bitmap.bitmapData = image.data.data.getTexture();
 		bitmap.smoothing = image.smoothing;
 		image.__dirty = false;

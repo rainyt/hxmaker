@@ -1,6 +1,5 @@
 package hx.displays;
 
-import js.html.svg.Rect;
 import hx.gemo.Matrix;
 import hx.gemo.Rectangle;
 import hx.events.Event;

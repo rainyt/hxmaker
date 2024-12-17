@@ -1,3 +1,4 @@
+import hx.displays.Quad;
 import hx.displays.TextFormat;
 import hx.events.Event;
 import openfl.Lib;
@@ -100,6 +101,11 @@ class Game extends Stage {
 			atlasImage.y = Math.random() * stage.stageHeight;
 		}
 
+		// 矩形渲染
+		var quad = new Quad(400,50,0xffff00);
+		this.addChild(quad);
+		quad.y = 400;
+
 		// 文本渲染支持
 		var label = new Label();
 		this.addChild(label);
@@ -111,5 +117,6 @@ class Game extends Stage {
 		label.y = 0;
 		label.horizontalAlign = CENTER;
 		label.verticalAlign = MIDDLE;
+		
 	}
 }

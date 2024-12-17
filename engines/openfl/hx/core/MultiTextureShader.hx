@@ -15,7 +15,7 @@ using StringTools;
 class MultiTextureShader extends GraphicsShader {
 	@:noCompletion private static var __pool:ObjectPool<MultiTextureShader>;
 
-	public static var vertexSource:String = "attribute float openfl_Alpha;
+	public static var vertexSource:String = "attribute float openfl_Alpha_multi;
 		attribute vec4 openfl_ColorMultiplier;
 		attribute vec4 openfl_ColorOffset;
 		attribute vec4 openfl_Position;
@@ -34,7 +34,7 @@ class MultiTextureShader extends GraphicsShader {
 
 		void main(void) {
 
-			openfl_Alphav = openfl_Alpha;
+			openfl_Alphav = openfl_Alpha_multi;
             openfl_TextureCoordv = openfl_TextureCoord;
             openfl_TextureIdv = openfl_TextureId;
 

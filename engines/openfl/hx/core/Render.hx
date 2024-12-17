@@ -1,5 +1,6 @@
 package hx.core;
 
+import openfl.geom.ColorTransform;
 import openfl.display.ShaderInput;
 import js.html.webgl.Sampler;
 import openfl.display.BitmapData;
@@ -194,7 +195,9 @@ class Render implements IRender {
 			var lastBitmap = state.bitmaps[0];
 			// shape.graphics.beginBitmapFill(lastBitmap.bitmapData, null, false, lastBitmap.smoothing);
 			var openfl_TextureId:ShaderParameter<Float> = defalutShader.data.openfl_TextureId;
+			var openfl_Alpha:ShaderParameter<Float> = defalutShader.data.openfl_Alpha_multi;
 			var ids = [];
+			var offests:Array<Float> = [];
 			var mapIds:Map<BitmapData, Int> = [];
 			for (index => data in state.bitmapDatas) {
 				mapIds.set(data, index);
@@ -208,12 +211,14 @@ class Render implements IRender {
 			var indices:Vector<Int> = new Vector();
 			var uvtData:Vector<Float> = new Vector();
 			var indicesOffset:Int = 0;
+			var alphas:Array<Float> = [];
 			for (bitmap in state.bitmaps) {
 				if (bitmap.bitmapData == null)
 					continue;
 				var id = mapIds.get(bitmap.bitmapData);
 				for (i in 0...6) {
 					ids.push(id);
+					alphas.push(bitmap.alpha);
 				}
 				// if (bitmap.scrollRect != null) {
 				// 	rects.push(bitmap.scrollRect.x);
@@ -292,6 +297,7 @@ class Render implements IRender {
 			// trace("ids.length", ids.length);
 			// shape.graphics.drawQuads(rects, null, transforms);
 			openfl_TextureId.value = ids;
+			openfl_Alpha.value = alphas;
 			shape.graphics.beginShaderFill(defalutShader);
 			shape.graphics.drawTriangles(vertices, indices, uvtData);
 			shape.graphics.endFill();

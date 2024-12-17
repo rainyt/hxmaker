@@ -9,3 +9,4 @@ A unified game engine written in Haxe that can run on any game engine.
 | hx.displays.DisplayObjectContainer | 容器，用于组合其他对象 | ✅ |
 | hx.displays.Quad | 矩形显示对象 | ✅ |
 | hx.displays.Scene | 场景，用于管理对象 | ✅ |
+| hx.events.MouseEvent | 鼠标事件 | ✅ |

@@ -96,11 +96,6 @@ class Render implements IRender {
 		sprite.graphics.clear();
 		sprite.graphics.beginFill(quad.data);
 		sprite.graphics.drawRect(0, 0, quad.width, quad.height);
-		// sprite.x = quad.__worldX;
-		// sprite.y = quad.__worldY;
-		// sprite.rotation = quad.__worldRotation;
-		// sprite.scaleX = quad.__worldScaleX;
-		// sprite.scaleY = quad.__worldScaleY;
 		sprite.transform.matrix = getMarix(quad);
 		sprite.alpha = quad.__worldAlpha;
 		__stage.addChild(sprite);
@@ -128,12 +123,7 @@ class Render implements IRender {
 			textField.setTextFormat(new TextFormat(format.font, format.size, format.color));
 			label.updateAlignTranform();
 		}
-		// textField.x = label.__worldX;
-		// textField.y = label.__worldY;
-		// textField.rotation = label.__worldRotation;
 		textField.alpha = label.__worldAlpha;
-		// textField.scaleX = label.__worldScaleX;
-		// textField.scaleY = label.__worldScaleY;
 		textField.transform.matrix = getMarix(label);
 		textField.width = label.width;
 		textField.height = label.height;
@@ -152,12 +142,7 @@ class Render implements IRender {
 			image.root = new Bitmap();
 		}
 		var bitmap:Bitmap = image.root;
-		// bitmap.x = image.__worldX;
-		// bitmap.y = image.__worldY;
-		// bitmap.rotation = image.__worldRotation;
 		bitmap.alpha = image.__worldAlpha;
-		// bitmap.scaleX = image.__worldScaleX;
-		// bitmap.scaleY = image.__worldScaleY;
 		bitmap.bitmapData = image.data.data.getTexture();
 		bitmap.smoothing = image.smoothing;
 		bitmap.transform.matrix = getMarix(image);

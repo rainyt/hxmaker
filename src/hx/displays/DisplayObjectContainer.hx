@@ -52,6 +52,7 @@ class DisplayObjectContainer extends DisplayObject {
 		if (this.stage != null && child.stage == null) {
 			child.__onAddToStage(this.stage);
 		}
+		this.setDirty();
 	}
 
 	/**
@@ -63,6 +64,7 @@ class DisplayObjectContainer extends DisplayObject {
 		child.onRemoveToStage();
 		child.__parent = null;
 		child.__stage = null;
+		this.setDirty();
 	}
 
 	/**

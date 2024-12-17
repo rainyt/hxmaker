@@ -16,6 +16,6 @@
 	<!-- 引擎盖上的游戏引擎 -->
 	<haxelib name="hxmaker" />
 
-	<assets path="Assets" rename="assets" />
+	<assets path="Assets" rename="assets" embed="false"/>
 
 </project>

@@ -27,14 +27,14 @@ class DisplayObject extends EventDispatcher {
 	@:noCompletion private var __worldScaleX:Float = 1;
 	@:noCompletion private var __worldScaleY:Float = 1;
 	@:noCompletion private var __root:Dynamic;
-	@:noCompletion private var __autoInit:Bool = false;
-	@:noCompletion private var __dirty:Bool = false;
-	@:noCompletion private var __transformDirty:Bool = false;
+	@:noCompletion private var __dirty:Bool = true;
+	@:noCompletion private var __transformDirty:Bool = true;
 	@:noCompletion private var __width:Null<Float> = null;
 	@:noCompletion private var __height:Null<Float> = null;
 	@:noCompletion private var __transform:Matrix;
 	@:noCompletion private var __worldTransform:Matrix;
 	@:noCompletion private var __rect:Rectangle;
+	@:noCompletion private var __stageInit:Bool = false;
 
 	/**
 	 * 更新tranform
@@ -253,8 +253,7 @@ class DisplayObject extends EventDispatcher {
 		__transform = new Matrix();
 		__worldTransform = new Matrix();
 		__rect = new Rectangle();
-		if (__autoInit)
-			this.onInit();
+		this.onInit();
 	}
 
 	/**
@@ -264,8 +263,17 @@ class DisplayObject extends EventDispatcher {
 
 	private function __onAddToStage(stage:Stage):Void {
 		this.__stage = stage;
+		if (!__stageInit) {
+			__stageInit = true;
+			this.onStageInit();
+		}
 		this.onAddToStage();
 	}
+
+	/**
+	 * 从舞台初始化时触发，该函数每个周期只会触发一次
+	 */
+	public function onStageInit():Void {}
 
 	/**
 	 * 当对象被添加到舞台时调用，一般用于添加事件监听
@@ -305,6 +313,9 @@ class DisplayObject extends EventDispatcher {
 	 */
 	private function setDirty(value:Bool = true):Void {
 		this.__dirty = value;
+		if (value && stage != null && stage != this) {
+			this.stage.setDirty();
+		}
 	}
 
 	/**

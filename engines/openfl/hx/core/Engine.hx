@@ -32,7 +32,7 @@ class Engine extends Sprite implements IEngine {
 		// 帧渲染事件
 		this.addEventListener(Event.ENTER_FRAME, __onRenderEnterFrame);
 		__lastTime = Timer.stamp();
-		this.render.onInit();
+		this.render.onStageInit();
 	}
 
 	private var __lastTime:Float = 0;
@@ -42,7 +42,6 @@ class Engine extends Sprite implements IEngine {
 		var dt = now - __lastTime;
 		__lastTime = now;
 		this.render.onUpdate(dt);
-		@:privateAccess this.render.__updateTransform(this.render);
 		this.render.render();
 	}
 }

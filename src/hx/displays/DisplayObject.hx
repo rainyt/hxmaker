@@ -40,6 +40,23 @@ class DisplayObject extends EventDispatcher {
 	@:noCompletion private var __originWorldY = 0.;
 
 	/**
+	 * 获得矩阵
+	 */
+	public var transform(get, set):Matrix;
+
+	private function get_transform():Matrix {
+		if (__transformDirty) {
+			__updateTransform(null);
+		}
+		return this.__transform;
+	}
+
+	private function set_transform(value:Matrix):Matrix {
+		__transform = value;
+		return value;
+	}
+
+	/**
 	 * 当前显示对象是否允许被触摸
 	 */
 	public var mouseEnabled(get, set):Bool;
@@ -63,7 +80,7 @@ class DisplayObject extends EventDispatcher {
 			// 世界矩阵
 			this.__worldTransform.identity();
 			this.__worldTransform.scale(this.__scaleX, this.__scaleY);
-			this.__worldTransform.rotate(this.__rotation.rotationToAngle());
+			this.__worldTransform.rotate(this.__rotation.rotationToRadian());
 			this.__worldTransform.translate(this.__x, this.__y);
 			this.__worldTransform.translate(this.__originWorldX, this.__originWorldY);
 			this.__worldTransform.concat(parent.__worldTransform);
@@ -71,7 +88,7 @@ class DisplayObject extends EventDispatcher {
 		// 自身矩阵
 		this.__transform.identity();
 		this.__transform.scale(this.__scaleX, this.__scaleY);
-		this.__transform.rotate(this.__rotation.rotationToAngle());
+		this.__transform.rotate(this.__rotation.rotationToRadian());
 		this.__transform.translate(this.__x, this.__y);
 		this.__transformDirty = false;
 	}

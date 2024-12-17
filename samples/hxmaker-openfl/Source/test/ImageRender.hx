@@ -1,5 +1,7 @@
 package test;
 
+import hx.displays.DisplayObject;
+import hx.events.MouseEvent;
 import hx.displays.Quad;
 import hx.displays.TextFormat;
 import hx.displays.Label;
@@ -46,7 +48,6 @@ class ImageRender extends Scene {
 		image.rotation = 75;
 
 		trace("图片矩阵", image.width, image.height, image.getBounds());
-		
 
 		// 容器加图片显示对象
 		var box = new DisplayObjectContainer();
@@ -130,5 +131,11 @@ class ImageRender extends Scene {
 		var quad = new Quad(400, 50, 0xffff00);
 		this.addChild(quad);
 		quad.y = 400;
+
+		this.addEventListener(MouseEvent.CLICK, (e:MouseEvent) -> {
+			trace("点击到了", e.target);
+			var display:DisplayObject = e.target;
+			display.alpha = 0.5;
+		});
 	}
 }

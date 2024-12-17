@@ -23,7 +23,7 @@ class LabelRender extends Scene {
 		label.y = 0;
 		label.horizontalAlign = CENTER;
 		label.verticalAlign = MIDDLE;
-		box.x = 300;
+		box.y = 100;
 
 		// 中文渲染
 		var label2 = new Label();
@@ -116,9 +116,6 @@ class LabelRender extends Scene {
 
 		this.addEventListener(MouseEvent.CLICK, (e:MouseEvent) -> {
 			trace("点击到了", e.target);
-			label.x -= 100;
-			trace("容器大小：", this.getBounds(), label.getBounds());
-			// label.parent?.removeChild(label);
 		});
 	}
 }

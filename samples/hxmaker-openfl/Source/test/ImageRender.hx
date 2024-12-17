@@ -20,11 +20,13 @@ class ImageRender extends Scene {
 	 */
 	var assets = new Assets();
 
-	override function onAddToStage() {
-		super.onAddToStage();
+	override function onStageInit() {
+		super.onStageInit();
 		// 开始加载资源
 		assets.loadBitmapData("assets/logo.jpg");
-		assets.loadBitmapData("assets/wabbit_alpha.png");
+		for (i in 0...6) {
+			assets.loadBitmapData("assets/wabbit_alpha_" + (i + 1) + ".png");
+		}
 		assets.loadAtlas("assets/EmojAtlas.png", "assets/EmojAtlas.xml");
 		assets.onComplete((data) -> {
 			this.onLoaded();
@@ -76,7 +78,7 @@ class ImageRender extends Scene {
 		box.mouseEnabled = false;
 
 		for (i in 0...256) {
-			var tuzi = new Image(assets.bitmapDatas.get("wabbit_alpha"));
+			var tuzi = new Image(assets.bitmapDatas.get("wabbit_alpha_" + (Std.random(6) + 1)));
 			this.addChild(tuzi);
 			tuzi.x = Math.random() * stage.stageWidth;
 			tuzi.y = Math.random() * stage.stageHeight;

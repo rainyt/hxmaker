@@ -12,5 +12,6 @@ class Main extends hx.core.Engine {
 		this.init(Game, 1920, 1080);
 		var fps = new FPS(10, 10, 0xff0000);
 		this.addChild(fps);
+		fps.scaleX = fps.scaleY = 2;
 	}
 }

@@ -1,3 +1,4 @@
+import test.WabbitRender;
 import test.LabelRender;
 import hx.displays.Stage;
 import hx.displays.Scene;
@@ -10,7 +11,7 @@ class Game extends Stage {
 	/**
 	 * 测试用例列表
 	 */
-	public static var tests:Array<Class<hx.displays.Scene>> = [ImageRender, LabelRender];
+	public static var tests:Array<Class<hx.displays.Scene>> = [WabbitRender, ImageRender, LabelRender];
 
 	override function onStageInit() {
 		super.onStageInit();

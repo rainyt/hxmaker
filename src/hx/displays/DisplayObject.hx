@@ -11,21 +11,16 @@ using hx.utils.MathUtils;
  */
 @:keep
 class DisplayObject extends EventDispatcher {
-	@:noCompletion private var __x:Float = 0;
-	@:noCompletion private var __y:Float = 0;
 	@:noCompletion private var __scaleX:Float = 1;
 	@:noCompletion private var __scaleY:Float = 1;
 	@:noCompletion private var __rotation:Float = 0;
+	@:noCompletion private var __rotationCosine:Float;
+	@:noCompletion private var __rotationSine:Float;
 	@:noCompletion private var __alpha:Float = 1;
 	@:noCompletion private var __stage:Stage;
 	@:noCompletion private var __parent:DisplayObjectContainer;
 	@:noCompletion private var __visible:Bool = true;
-	// @:noCompletion private var __worldX:Float = 0;
-	// @:noCompletion private var __worldY:Float = 0;
 	@:noCompletion private var __worldAlpha:Float = 1;
-	// @:noCompletion private var __worldRotation:Float = 0;
-	// @:noCompletion private var __worldScaleX:Float = 1;
-	// @:noCompletion private var __worldScaleY:Float = 1;
 	@:noCompletion private var __root:Dynamic;
 	@:noCompletion private var __dirty:Bool = true;
 	@:noCompletion private var __transformDirty:Bool = true;
@@ -45,9 +40,6 @@ class DisplayObject extends EventDispatcher {
 	public var transform(get, set):Matrix;
 
 	private function get_transform():Matrix {
-		if (__transformDirty) {
-			__updateTransform(null);
-		}
 		return this.__transform;
 	}
 
@@ -79,17 +71,10 @@ class DisplayObject extends EventDispatcher {
 			this.__worldAlpha = parent.__worldAlpha * this.__alpha;
 			// 世界矩阵
 			this.__worldTransform.identity();
-			this.__worldTransform.scale(this.__scaleX, this.__scaleY);
-			this.__worldTransform.rotate(this.__rotation.rotationToRadian());
-			this.__worldTransform.translate(this.__x, this.__y);
+			this.__worldTransform.concat(__transform);
 			this.__worldTransform.translate(this.__originWorldX, this.__originWorldY);
 			this.__worldTransform.concat(parent.__worldTransform);
 		}
-		// 自身矩阵
-		this.__transform.identity();
-		this.__transform.scale(this.__scaleX, this.__scaleY);
-		this.__transform.rotate(this.__rotation.rotationToRadian());
-		this.__transform.translate(this.__x, this.__y);
 		this.__transformDirty = false;
 	}
 
@@ -152,10 +137,6 @@ class DisplayObject extends EventDispatcher {
 	 * @return Rectangle
 	 */
 	private function __getLocalBounds(rect:Rectangle, parent:Matrix = null):Rectangle {
-		// 如果存在变换矩阵，则使用变换矩阵计算边界
-		if (__transformDirty) {
-			__updateTransform(null);
-		}
 		var ret = new Rectangle();
 		if (parent != null) {
 			rect.transform(ret, parent);
@@ -197,13 +178,13 @@ class DisplayObject extends EventDispatcher {
 	public var x(get, set):Float;
 
 	private function set_x(value:Float):Float {
-		__x = value;
+		__transform.tx = value;
 		setTransformDirty();
 		return value;
 	}
 
 	private function get_x():Float {
-		return __x;
+		return __transform.tx;
 	}
 
 	/**
@@ -212,13 +193,13 @@ class DisplayObject extends EventDispatcher {
 	public var y(get, set):Float;
 
 	private function set_y(value:Float):Float {
-		__y = value;
+		__transform.ty = value;
 		setTransformDirty();
 		return value;
 	}
 
 	private function get_y():Float {
-		return __y;
+		return __transform.ty;
 	}
 
 	/**
@@ -227,8 +208,22 @@ class DisplayObject extends EventDispatcher {
 	public var scaleX(get, set):Float;
 
 	private function set_scaleX(value:Float):Float {
-		__scaleX = value;
-		setTransformDirty();
+		if (value != __scaleX) {
+			__scaleX = value;
+			if (__transform.b == 0) {
+				if (value != __transform.a)
+					setTransformDirty();
+				__transform.a = value;
+			} else {
+				var a = __rotationCosine * value;
+				var b = __rotationSine * value;
+				if (__transform.a != a || __transform.b != b) {
+					setTransformDirty();
+				}
+				__transform.a = a;
+				__transform.b = b;
+			}
+		}
 		return value;
 	}
 
@@ -242,8 +237,22 @@ class DisplayObject extends EventDispatcher {
 	public var scaleY(get, set):Float;
 
 	private function set_scaleY(value:Float):Float {
-		__scaleY = value;
-		setTransformDirty();
+		if (value != __scaleY) {
+			__scaleY = value;
+			if (__transform.c == 0) {
+				if (value != __transform.d)
+					setTransformDirty();
+				__transform.d = value;
+			} else {
+				var c = -__rotationSine * value;
+				var d = __rotationCosine * value;
+				if (__transform.d != d || __transform.c != c) {
+					setTransformDirty();
+				}
+				__transform.c = c;
+				__transform.d = d;
+			}
+		}
 		return value;
 	}
 
@@ -257,8 +266,17 @@ class DisplayObject extends EventDispatcher {
 	public var rotation(get, set):Float;
 
 	private function set_rotation(value:Float):Float {
-		__rotation = value;
-		setTransformDirty();
+		if (value != __rotation) {
+			__rotation = value;
+			var radians = __rotation * (Math.PI / 180);
+			__rotationSine = Math.sin(radians);
+			__rotationCosine = Math.cos(radians);
+			__transform.a = __rotationCosine * __scaleX;
+			__transform.b = __rotationSine * __scaleX;
+			__transform.c = -__rotationSine * __scaleY;
+			__transform.d = __rotationCosine * __scaleY;
+			setTransformDirty();
+		}
 		return value;
 	}
 
@@ -303,6 +321,11 @@ class DisplayObject extends EventDispatcher {
 	 * 构造一个显示对象
 	 */
 	public function new() {
+		__rotation = 0;
+		__rotationSine = 0;
+		__rotationCosine = 1;
+		__scaleX = 1;
+		__scaleY = 1;
 		__transform = new Matrix();
 		__worldTransform = new Matrix();
 		__rect = new Rectangle();

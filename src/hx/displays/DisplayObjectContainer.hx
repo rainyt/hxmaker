@@ -172,10 +172,6 @@ class DisplayObjectContainer extends DisplayObject {
 	}
 
 	override function getBounds(parent:Matrix = null):Rectangle {
-		// 如果存在变换矩阵，则使用变换矩阵计算边界
-		if (__transformDirty) {
-			__updateTransform(null);
-		}
 		if (parent != null) {
 			parent.concat(__transform);
 		}

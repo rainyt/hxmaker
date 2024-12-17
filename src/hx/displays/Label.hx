@@ -145,9 +145,6 @@ class Label extends DisplayObject implements IDataProider<String> implements IRo
 	}
 
 	override function getBounds(parent:Matrix = null):Rectangle {
-		if (__transformDirty) {
-			__updateTransform(null);
-		}
 		if (parent != null) {
 			var t = parent.clone();
 			t.concat(__transform);

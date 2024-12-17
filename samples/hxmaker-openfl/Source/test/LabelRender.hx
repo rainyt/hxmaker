@@ -1,5 +1,6 @@
 package test;
 
+import hx.displays.DisplayObjectContainer;
 import hx.displays.DisplayObject;
 import hx.events.MouseEvent;
 import hx.displays.TextFormat;
@@ -10,8 +11,10 @@ class LabelRender extends Scene {
 	override function onAddToStage() {
 		super.onAddToStage();
 		// 文本渲染支持
+		var box = new DisplayObjectContainer();
+		this.addChild(box);
 		var label = new Label();
-		this.addChild(label);
+		box.addChild(label);
 		label.data = "Hello, HxMaker!";
 		label.textFormat = new TextFormat(null, 62, 0xff0000);
 		label.width = stage.stageWidth;
@@ -20,6 +23,7 @@ class LabelRender extends Scene {
 		label.y = 0;
 		label.horizontalAlign = CENTER;
 		label.verticalAlign = MIDDLE;
+		box.x = 0;
 
 		// 中文渲染
 		var label2 = new Label();
@@ -112,9 +116,9 @@ class LabelRender extends Scene {
 
 		this.addEventListener(MouseEvent.CLICK, (e:MouseEvent) -> {
 			trace("点击到了", e.target);
-			var d:DisplayObject = e.target;
-			d.visible = false;
-			d.mouseEnabled = false;
+			label.x -= 100;
+			trace("容器大小：", this.getBounds(), label.getBounds());
+			// label.parent?.removeChild(label);
 		});
 	}
 }

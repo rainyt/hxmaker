@@ -36,6 +36,8 @@ class DisplayObject extends EventDispatcher {
 	@:noCompletion private var __rect:Rectangle;
 	@:noCompletion private var __stageInit:Bool = false;
 	@:noCompletion private var __mouseEnabled:Bool = true;
+	@:noCompletion private var __originWorldX = 0.;
+	@:noCompletion private var __originWorldY = 0.;
 
 	/**
 	 * 当前显示对象是否允许被触摸
@@ -63,6 +65,7 @@ class DisplayObject extends EventDispatcher {
 			this.__worldTransform.scale(this.__scaleX, this.__scaleY);
 			this.__worldTransform.rotate(this.__rotation.rotationToAngle());
 			this.__worldTransform.translate(this.__x, this.__y);
+			this.__worldTransform.translate(this.__originWorldX, this.__originWorldY);
 			this.__worldTransform.concat(parent.__worldTransform);
 		}
 		// 自身矩阵
@@ -107,8 +110,14 @@ class DisplayObject extends EventDispatcher {
 	 * 获得边界
 	 * @return Rectangle
 	 */
-	private function getBounds():Rectangle {
-		return __getLocalBounds(__getRect());
+	public function getBounds(parent:Matrix = null):Rectangle {
+		if (parent != null) {
+			var t = parent.clone();
+			t.concat(__transform);
+			return __getLocalBounds(__getRect(), t);
+		} else {
+			return __getLocalBounds(__getRect());
+		}
 	}
 
 	private function set_height(value:Float):Float {
@@ -125,13 +134,17 @@ class DisplayObject extends EventDispatcher {
 	 * 获取显示对象的边界
 	 * @return Rectangle
 	 */
-	private function __getLocalBounds(rect:Rectangle):Rectangle {
+	private function __getLocalBounds(rect:Rectangle, parent:Matrix = null):Rectangle {
 		// 如果存在变换矩阵，则使用变换矩阵计算边界
 		if (__transformDirty) {
 			__updateTransform(null);
 		}
 		var ret = new Rectangle();
-		rect.transform(ret, __transform);
+		if (parent != null) {
+			rect.transform(ret, parent);
+		} else {
+			rect.transform(ret, __transform);
+		}
 		return ret;
 	}
 

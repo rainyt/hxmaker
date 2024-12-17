@@ -1,5 +1,8 @@
 package hx.displays;
 
+import hx.gemo.Matrix;
+import hx.gemo.Rectangle;
+
 /**
  * 可装载子对象的容器
  */
@@ -165,7 +168,23 @@ class DisplayObjectContainer extends DisplayObject {
 				return true;
 			}
 		}
-
 		return false;
+	}
+
+	override function getBounds(parent:Matrix = null):Rectangle {
+		// 如果存在变换矩阵，则使用变换矩阵计算边界
+		if (__transformDirty) {
+			__updateTransform(null);
+		}
+		if (parent != null) {
+			parent.concat(__transform);
+		}
+		var rect = new Rectangle();
+		for (object in this.children) {
+			var objectRect = object.getBounds(parent ?? __transform.clone());
+			trace(objectRect);
+			rect.expand(objectRect.x, objectRect.y, objectRect.width, objectRect.height);
+		}
+		return rect;
 	}
 }

@@ -122,6 +122,7 @@ class Render implements IRender {
 			var format:hx.displays.TextFormat = label.__textFormat;
 			textField.setTextFormat(new TextFormat(format.font, format.size, format.color));
 			label.updateAlignTranform();
+			label.__updateTransform(label.parent);
 		}
 		textField.alpha = label.__worldAlpha;
 		textField.transform.matrix = getMarix(label);

@@ -1,5 +1,6 @@
 package hx.displays;
 
+import hx.gemo.Matrix;
 import hx.gemo.Rectangle;
 import hx.providers.ITextFieldDataProvider;
 import hx.providers.IRootDataProvider;
@@ -59,8 +60,8 @@ class Label extends DisplayObject implements IDataProider<String> implements IRo
 	}
 
 	override function __updateTransform(parent:DisplayObject) {
-		super.__updateTransform(parent);
 		this.updateAlignTranform();
+		super.__updateTransform(parent);
 	}
 
 	/**
@@ -76,6 +77,7 @@ class Label extends DisplayObject implements IDataProider<String> implements IRo
 
 	private function set_horizontalAlign(value:HorizontalAlign):HorizontalAlign {
 		__horizontalAlign = value;
+		this.setTransformDirty();
 		return value;
 	}
 
@@ -92,6 +94,7 @@ class Label extends DisplayObject implements IDataProider<String> implements IRo
 
 	private function set_verticalAlign(value:VerticalAlign):VerticalAlign {
 		__verticalAlign = value;
+		this.setTransformDirty();
 		return value;
 	}
 
@@ -103,16 +106,16 @@ class Label extends DisplayObject implements IDataProider<String> implements IRo
 			switch __verticalAlign {
 				case TOP:
 				case MIDDLE:
-					__worldTransform.ty += (this.height - this.root.getTextHeight()) / 2;
+					__originWorldY = (this.height - this.root.getTextHeight()) / 2;
 				case BOTTOM:
-					__worldTransform.ty += (this.height - this.root.getTextHeight());
+					__originWorldY = (this.height - this.root.getTextHeight());
 			}
 			switch __horizontalAlign {
 				case LEFT:
 				case CENTER:
-					__worldTransform.tx += (this.width - this.root.getTextWidth()) / 2;
+					__originWorldX = (this.width - this.root.getTextWidth()) / 2;
 				case RIGHT:
-					__worldTransform.tx += (this.width - this.root.getTextWidth());
+					__originWorldX = (this.width - this.root.getTextWidth());
 			}
 		}
 	}
@@ -139,5 +142,18 @@ class Label extends DisplayObject implements IDataProider<String> implements IRo
 		__rect.width = this.width;
 		__rect.height = this.height;
 		return super.__getRect();
+	}
+
+	override function getBounds(parent:Matrix = null):Rectangle {
+		if (__transformDirty) {
+			__updateTransform(null);
+		}
+		if (parent != null) {
+			var t = parent.clone();
+			t.concat(__transform);
+			return __getLocalBounds(new Rectangle(0, 0, this.width, this.height), t);
+		} else {
+			return __getLocalBounds(new Rectangle(0, 0, this.width, this.height));
+		}
 	}
 }

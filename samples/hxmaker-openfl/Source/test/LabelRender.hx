@@ -23,7 +23,7 @@ class LabelRender extends Scene {
 		label.y = 0;
 		label.horizontalAlign = CENTER;
 		label.verticalAlign = MIDDLE;
-		box.x = 0;
+		box.x = 300;
 
 		// 中文渲染
 		var label2 = new Label();

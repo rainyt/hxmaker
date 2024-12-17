@@ -94,4 +94,14 @@ class Rectangle {
 
 		rect.setTo(tx0 + m.tx, ty0 + m.ty, tx1 - tx0, ty1 - ty0);
 	}
+
+	/**
+	 * 当前矩阵是否包含点
+	 * @param x 
+	 * @param y 
+	 * @return Bool
+	 */
+	public function containsPoint(x:Float, y:Float):Bool {
+		return (x >= this.x && x <= this.x + this.width && y >= this.y && y <= this.y + this.height);
+	}
 }

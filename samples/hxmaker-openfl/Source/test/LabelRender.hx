@@ -1,5 +1,7 @@
 package test;
 
+import hx.displays.DisplayObject;
+import hx.events.MouseEvent;
 import hx.displays.TextFormat;
 import hx.displays.Label;
 import hx.displays.Scene;
@@ -107,5 +109,12 @@ class LabelRender extends Scene {
 		label2.y = 0;
 		label2.horizontalAlign = CENTER;
 		label2.verticalAlign = BOTTOM;
+
+		this.addEventListener(MouseEvent.MOUSE_DOWN, (e:MouseEvent) -> {
+			trace("点击到了", e.target);
+			var d:DisplayObject = e.target;
+			d.visible = false;
+			d.mouseEnabled = false;
+		});
 	}
 }

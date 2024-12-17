@@ -35,6 +35,21 @@ class DisplayObject extends EventDispatcher {
 	@:noCompletion private var __worldTransform:Matrix;
 	@:noCompletion private var __rect:Rectangle;
 	@:noCompletion private var __stageInit:Bool = false;
+	@:noCompletion private var __mouseEnabled:Bool = true;
+
+	/**
+	 * 当前显示对象是否允许被触摸
+	 */
+	public var mouseEnabled(get, set):Bool;
+
+	private function set_mouseEnabled(value:Bool):Bool {
+		__mouseEnabled = value;
+		return value;
+	}
+
+	private function get_mouseEnabled():Bool {
+		return __mouseEnabled;
+	}
 
 	/**
 	 * 更新tranform
@@ -121,6 +136,18 @@ class DisplayObject extends EventDispatcher {
 		}
 		var ret = new Rectangle();
 		rect.transform(ret, __transform);
+		return ret;
+	}
+
+	/**
+	 * 获得显示对象的世界边界
+	 * @param rect 
+	 * @return Rectangle
+	 */
+	private function __getWorldLocalBounds(rect:Rectangle):Rectangle {
+		// 如果存在变换矩阵，则使用变换矩阵计算边界
+		var ret = new Rectangle();
+		rect.transform(ret, __worldTransform);
 		return ret;
 	}
 
@@ -325,5 +352,45 @@ class DisplayObject extends EventDispatcher {
 	private function setTransformDirty(value:Bool = true):Void {
 		this.__transformDirty = value;
 		this.setDirty();
+	}
+
+	/**
+	 * 通关世界坐标测试是否碰撞
+	 * @param x 
+	 * @param y 
+	 * @return Bool
+	 */
+	public function hitTestWorldPoint(x:Float, y:Float):Bool {
+		var rect = this.__getWorldLocalBounds(__getRect());
+		if (rect.containsPoint(x, y)) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * 点击测试
+	 * @param x 
+	 * @param y 
+	 * @param stacks 
+	 * @return DisplayObject
+	 */
+	private function __hitTest(x:Float, y:Float, stacks:Array<DisplayObject>):Bool {
+		if (!mouseEnabled) {
+			return false;
+		}
+		if (hitTestWorldPoint(x, y)) {
+			stacks.push(this);
+			return true;
+		}
+		return false;
+	}
+
+	public function toString():String {
+		return "[object " + getType() + "]";
+	}
+
+	public function getType():String {
+		return Type.getClassName(Type.getClass(this));
 	}
 }

@@ -13,11 +13,11 @@ class EventDispatcher {
 	 * @param type 
 	 * @param listener 
 	 */
-	public function addEventListener(type:String, listener:Event->Void) {
+	public function addEventListener<T>(type:String, listener:T->Void) {
 		if (!__listeners.exists(type)) {
 			__listeners.set(type, []);
 		}
-		__listeners.get(type).push(listener);
+		__listeners.get(type).push(cast listener);
 	}
 
 	/**
@@ -25,10 +25,10 @@ class EventDispatcher {
 	 * @param type 
 	 * @param listener 
 	 */
-	public function removeEventListener(type:String, listener:Event->Void) {
+	public function removeEventListener<T>(type:String, listener:T->Void) {
 		if (__listeners.exists(type)) {
 			var listeners = __listeners.get(type);
-			listeners.remove(listener);
+			listeners.remove(cast listener);
 		}
 	}
 

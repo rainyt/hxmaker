@@ -20,6 +20,8 @@ class Event {
 
 	public var bubbling:Bool;
 
+	public var target:Dynamic;
+
 	/**
 	 * 构造一个事件
 	 * @param type 事件名

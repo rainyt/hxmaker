@@ -1,5 +1,6 @@
 package hx.displays;
 
+import hx.gemo.Rectangle;
 import hx.providers.ITextFieldDataProvider;
 import hx.providers.IRootDataProvider;
 
@@ -115,5 +116,13 @@ class Label extends DisplayObject implements IDataProider<String> implements IRo
 					__worldX = (this.width - this.root.getTextWidth());
 			}
 		}
+	}
+
+	override function __getRect():Rectangle {
+		__rect.x = 0;
+		__rect.y = 0;
+		__rect.width = this.width;
+		__rect.height = this.height;
+		return super.__getRect();
 	}
 }

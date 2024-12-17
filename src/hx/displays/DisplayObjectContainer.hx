@@ -10,6 +10,22 @@ class DisplayObjectContainer extends DisplayObject {
 	 */
 	@:noCompletion private var __children:Array<DisplayObject> = [];
 
+	@:noCompletion private var __mouseChildren:Bool = true;
+
+	/**
+	 * 当前显示对象是否允许子对象被触摸，如果返回false，则返回当前显示对象
+	 */
+	public var mouseChildren(get, set):Bool;
+
+	private function set_mouseChildren(value:Bool):Bool {
+		__mouseChildren = value;
+		return value;
+	}
+
+	private function get_mouseChildren():Bool {
+		return __mouseChildren;
+	}
+
 	public function new() {
 		super();
 		this.updateEnabled = true;
@@ -121,5 +137,35 @@ class DisplayObjectContainer extends DisplayObject {
 				child.onUpdate(dt);
 			}
 		}
+	}
+
+	override function hitTestWorldPoint(x:Float, y:Float):Bool {
+		var i = this.children.length;
+		while (i-- > 0) {
+			var display = this.children[i];
+			if (display.hitTestWorldPoint(x, y)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	override function __hitTest(x:Float, y:Float, stacks:Array<DisplayObject>):Bool {
+		if (!mouseEnabled) {
+			return false;
+		}
+		var i = this.children.length;
+		stacks.push(this);
+		while (i-- > 0) {
+			var display = this.children[i];
+			if (display.__hitTest(x, y, stacks)) {
+				if (!this.mouseChildren) {
+					stacks.pop();
+				}
+				return true;
+			}
+		}
+
+		return false;
 	}
 }

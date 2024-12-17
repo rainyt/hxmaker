@@ -46,4 +46,25 @@ class Stage extends DisplayObjectContainer {
 	public function new() {
 		super();
 	}
+
+	/**
+	 * 触发鼠标事件
+	 * @param event 
+	 */
+	public function handleMouseEvent(event:hx.events.MouseEvent):Void {
+		var touchList = [];
+		if (__hitTest(event.stageX, event.stageY, touchList)) {
+			var display:DisplayObject = touchList[touchList.length - 1];
+			for (object in touchList) {
+				event.target = display;
+				object.dispatchEvent(event);
+			}
+		}
+	}
+
+	/**
+	 * 触发触摸事件
+	 * @param event 
+	 */
+	public function handleTouchEvent(event:hx.events.TouchEvent):Void {}
 }

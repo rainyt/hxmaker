@@ -1,5 +1,6 @@
 package hx.core;
 
+import openfl.events.MouseEvent;
 import hx.utils.ScaleUtils;
 import haxe.Timer;
 import openfl.events.Event;
@@ -33,6 +34,8 @@ class Engine extends Sprite implements IEngine {
 		this.addEventListener(Event.ENTER_FRAME, __onRenderEnterFrame);
 		__lastTime = Timer.stamp();
 		this.render.onStageInit();
+		// 鼠标事件
+		__initMouseEvent();
 	}
 
 	private var __lastTime:Float = 0;
@@ -43,5 +46,20 @@ class Engine extends Sprite implements IEngine {
 		__lastTime = now;
 		this.render.onUpdate(dt);
 		this.render.render();
+	}
+
+	private function __initMouseEvent():Void {
+		this.stage.addEventListener(MouseEvent.MOUSE_DOWN, __onMouseEvent);
+		this.stage.addEventListener(MouseEvent.MOUSE_UP, __onMouseEvent);
+		this.stage.addEventListener(MouseEvent.CLICK, __onMouseEvent);
+		this.stage.addEventListener(MouseEvent.MOUSE_WHEEL, __onMouseEvent);
+		this.stage.addEventListener(MouseEvent.MOUSE_MOVE, __onMouseEvent);
+	}
+
+	private function __onMouseEvent(e:MouseEvent):Void {
+		var engineEvent:hx.events.MouseEvent = new hx.events.MouseEvent(e.type);
+		engineEvent.stageX = this.mouseX;
+		engineEvent.stageY = this.mouseY;
+		render.handleMouseEvent(engineEvent);
 	}
 }

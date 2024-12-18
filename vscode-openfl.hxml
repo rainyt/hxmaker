@@ -1,8 +1,4 @@
 --main Test
 --class-path src
 --class-path test
---class-path engines/openfl
---library openfl
---library lime
---library hxmaker-openfl
 --interp

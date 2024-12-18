@@ -154,7 +154,7 @@ class DisplayObjectContainer extends DisplayObject {
 	}
 
 	override function __hitTest(x:Float, y:Float, stacks:Array<DisplayObject>):Bool {
-		if (!mouseEnabled) {
+		if (!mouseEnabled || !this.visible) {
 			return false;
 		}
 		var i = this.children.length;

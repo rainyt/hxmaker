@@ -99,7 +99,7 @@ class Assets extends Future<Assets, Dynamic> {
 	 * @return Future<BitmapData>
 	 */
 	public function loadBitmapData(path:String) {
-		pushFuture(new hx.core.BitmapDataFuture(path, false));
+		pushFuture(new hx.utils.BitmapDataFuture(path, false));
 	}
 
 	/**
@@ -108,7 +108,7 @@ class Assets extends Future<Assets, Dynamic> {
 	 * @param xml 
 	 */
 	public function loadAtlas(path:String, xml:String) {
-		pushFuture(new hx.core.TextureAtlasFuture({
+		pushFuture(new hx.utils.TextureAtlasFuture({
 			png: path,
 			xml: xml,
 			path: path

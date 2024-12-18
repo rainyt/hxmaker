@@ -425,7 +425,7 @@ class DisplayObject extends EventDispatcher {
 	 * @return DisplayObject
 	 */
 	private function __hitTest(x:Float, y:Float, stacks:Array<DisplayObject>):Bool {
-		if (!mouseEnabled) {
+		if (!mouseEnabled || !this.visible) {
 			return false;
 		}
 		if (hitTestWorldPoint(x, y)) {

@@ -4,4 +4,5 @@
 --class-path engines/openfl
 --library openfl
 --library lime
+--library hxmaker-openfl
 --interp

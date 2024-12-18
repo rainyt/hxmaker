@@ -59,6 +59,10 @@ class Stage extends DisplayObjectContainer {
 				event.target = display;
 				object.dispatchEvent(event);
 			}
+		} else {
+			// 舞台要触发事件
+			event.target = this;
+			this.dispatchEvent(event);
 		}
 	}
 

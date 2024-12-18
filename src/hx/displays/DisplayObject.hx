@@ -87,7 +87,7 @@ class DisplayObject extends EventDispatcher {
 		if (__width != null) {
 			return __width;
 		}
-		return __getLocalBounds(__getRect()).width;
+		return getBounds().width;
 	}
 
 	private function set_width(value:Float):Float {
@@ -105,7 +105,7 @@ class DisplayObject extends EventDispatcher {
 		if (__height != null) {
 			return __height;
 		}
-		return __getLocalBounds(__getRect()).height;
+		return getBounds().height;
 	}
 
 	/**

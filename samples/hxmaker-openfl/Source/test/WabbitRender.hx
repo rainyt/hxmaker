@@ -17,7 +17,7 @@ class WabbitRender extends Scene {
 
 	var label = new Label();
 
-	var bunnys = [];
+	var bunnys:Array<Bunny> = [];
 
 	var gravity = 0.5;
 
@@ -54,9 +54,9 @@ class WabbitRender extends Scene {
 		createBunny(5000);
 	}
 
-	private function createBunny(counts = 1000):Void {
+	private function createBunny(counts = 5000):Void {
 		for (i in 0...counts) {
-			var bunny = new Bunny(assets.bitmapDatas.get("wabbit_alpha_" + (Std.random(2) + 1)));
+			var bunny = new Bunny(assets.bitmapDatas.get("wabbit_alpha_" + (Std.random(6) + 1)));
 			box.addChild(bunny);
 			bunny.x = Math.random() * this.stage.stageWidth;
 			bunny.y = Math.random() * this.stage.stageHeight;

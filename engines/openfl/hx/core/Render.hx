@@ -52,7 +52,12 @@ class Render implements IRender {
 	/**
 	 * 位图批渲染状态处理支持
 	 */
-	private var state:BatchBitmapState;
+	private var states:Array<BatchBitmapState> = [];
+
+	/**
+	 * 当前位图批渲染索引
+	 */
+	private var __currentStateIndex = 0;
 
 	/**
 	 * 多纹理支持的纹理单元数量
@@ -60,7 +65,6 @@ class Render implements IRender {
 	public var supportedMultiTextureUnits:Int = 1;
 
 	public function new(engine:Engine) {
-		this.state = new BatchBitmapState(this);
 		this.__stage.mouseChildren = this.__stage.mouseEnabled = false;
 		this.engine = engine;
 		this.engine.addChild(__stage);
@@ -78,14 +82,20 @@ class Render implements IRender {
 
 	public function clear():Void {
 		// 清理舞台
+		__currentStateIndex = 0;
 		for (i in 0...__stage.numChildren) {
 			var display = __stage.getChildAt(i);
 			if (display is EngineSprite) {
 				__pool.release(cast display);
 			}
 		}
+		for (state in states) {
+			state.reset();
+		}
+		if (states[__currentStateIndex] == null) {
+			states[__currentStateIndex] = new BatchBitmapState(this);
+		}
 		__stage.removeChildren();
-		state.reset();
 	}
 
 	public function renderDisplayObjectContainer(container:DisplayObjectContainer) {
@@ -173,10 +183,6 @@ class Render implements IRender {
 		bitmap.alpha = image.__worldAlpha;
 		bitmap.bitmapData = image.data.data.getTexture();
 		bitmap.smoothing = image.smoothing;
-
-		// var tileTransform = @:privateAccess bitmap.__transform;
-		// var imageTransform = @:privateAccess image.__transform;
-		// tileTransform.setTo(imageTransform.a, imageTransform.b, imageTransform.c, imageTransform.d, imageTransform.tx, imageTransform.ty);
 		bitmap.transform.matrix = getMarix(image);
 		image.__dirty = false;
 		if (image.data.rect != null) {
@@ -189,6 +195,7 @@ class Render implements IRender {
 			bitmap.scrollRect = null;
 		}
 		// 批处理状态渲染
+		var state = states[__currentStateIndex];
 		if (!state.push(bitmap)) {
 			// 开始绘制
 			this.drawBatchBitmapState();
@@ -200,7 +207,8 @@ class Render implements IRender {
 	 * 渲染纹理批处理状态
 	 */
 	private function drawBatchBitmapState():Void {
-		if (state.bitmaps.length > 0) {
+		var state = states[__currentStateIndex];
+		if (state.bitmapIndex > 0) {
 			// 图形绘制
 			var shape:Sprite = __pool.get();
 			shape.graphics.clear();
@@ -221,6 +229,10 @@ class Render implements IRender {
 			shape.graphics.endFill();
 			__stage.addChild(shape);
 			state.reset();
+			__currentStateIndex++;
+			if (states[__currentStateIndex] == null) {
+				states[__currentStateIndex] = new BatchBitmapState(this);
+			}
 		}
 	}
 

@@ -63,6 +63,11 @@ class BatchBitmapState {
 	 */
 	public var dataPerIndices:Int = 0;
 
+	/**
+	 * 位图索引
+	 */
+	public var bitmapIndex:Int = 0;
+
 	public var render:Render;
 
 	public function new(render:Render) {
@@ -70,20 +75,46 @@ class BatchBitmapState {
 	}
 
 	/**
-	 * 重置
+	 * 重置，仅重置数据索引
 	 */
 	public function reset():Void {
-		bitmaps = [];
+		this.cut();
+		indicesOffset = 0;
+		dataPerIndices = 0;
+		dataPerVertex = 0;
+		bitmapIndex = 0;
 		bitmapDatas = [];
+		mapIds = [];
+	}
+
+	/**
+	 * 清理，跟重置不同，会将所有已缓存的数据清理
+	 */
+	public function clean():Void {
+		bitmaps = [];
 		ids = [];
 		alphas = [];
 		vertices = new Vector();
 		indices = new Vector();
-		mapIds = [];
 		uvtData = new Vector();
-		indicesOffset = 0;
-		dataPerIndices = 0;
-		dataPerVertex = 0;
+	}
+
+	/**
+	 * 数据剪切
+	 */
+	public function cut():Void {
+		if (bitmapIndex < bitmaps.length)
+			bitmaps = bitmaps.splice(0, bitmapIndex);
+		if (dataPerVertex < vertices.length)
+			vertices = vertices.splice(0, dataPerVertex);
+		if (dataPerIndices < indices.length)
+			indices = indices.splice(0, dataPerIndices);
+		if (dataPerIndices < ids.length)
+			ids = ids.splice(0, dataPerIndices);
+		if (dataPerIndices < alphas.length)
+			alphas = alphas.splice(0, dataPerIndices);
+		if (dataPerVertex < uvtData.length)
+			uvtData = uvtData.splice(0, dataPerVertex);
 	}
 
 	/**
@@ -93,7 +124,11 @@ class BatchBitmapState {
 	 */
 	public function push(bitmap:Bitmap):Bool {
 		if (checkState(bitmap)) {
-			bitmaps.push(bitmap);
+			var oldBitmap = bitmaps[bitmapIndex];
+			var isNull = oldBitmap == null;
+			// var isDirty = isNull || oldBitmap.bitmapData != bitmap.bitmapData;
+			bitmaps[bitmapIndex] = bitmap;
+			// if (isDirty) {
 			var id = mapIds.get(bitmap.bitmapData);
 			ids[dataPerIndices] = id;
 			ids[dataPerIndices + 1] = id;
@@ -107,6 +142,7 @@ class BatchBitmapState {
 			alphas[dataPerIndices + 3] = bitmap.alpha;
 			alphas[dataPerIndices + 4] = bitmap.alpha;
 			alphas[dataPerIndices + 5] = bitmap.alpha;
+			// }
 			// transform
 			var tileWidth:Float = bitmap.scrollRect != null ? bitmap.scrollRect.width : bitmap.bitmapData.width;
 			var tileHeight:Float = bitmap.scrollRect != null ? bitmap.scrollRect.height : bitmap.bitmapData.height;
@@ -127,13 +163,15 @@ class BatchBitmapState {
 			vertices[dataPerVertex + 5] = (y3);
 			vertices[dataPerVertex + 6] = (x4);
 			vertices[dataPerVertex + 7] = (y4);
-			// indices
-			indices[dataPerIndices] = (indicesOffset);
-			indices[dataPerIndices + 1] = (indicesOffset + 1);
-			indices[dataPerIndices + 2] = (indicesOffset + 2);
-			indices[dataPerIndices + 3] = (indicesOffset + 1);
-			indices[dataPerIndices + 4] = (indicesOffset + 2);
-			indices[dataPerIndices + 5] = (indicesOffset + 3);
+			if (isNull) {
+				// indices
+				indices[dataPerIndices] = (indicesOffset);
+				indices[dataPerIndices + 1] = (indicesOffset + 1);
+				indices[dataPerIndices + 2] = (indicesOffset + 2);
+				indices[dataPerIndices + 3] = (indicesOffset + 1);
+				indices[dataPerIndices + 4] = (indicesOffset + 2);
+				indices[dataPerIndices + 5] = (indicesOffset + 3);
+			}
 			// UVs
 			if (bitmap.scrollRect != null) {
 				var uvX = bitmap.scrollRect.x / bitmap.bitmapData.width;
@@ -161,6 +199,7 @@ class BatchBitmapState {
 			indicesOffset += 4;
 			dataPerIndices += 6;
 			dataPerVertex += 8;
+			bitmapIndex++;
 			return true;
 		}
 		return false;

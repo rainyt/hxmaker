@@ -62,7 +62,7 @@ class ImageRender extends Scene {
 		box.x = 300;
 		box.y = 300;
 
-		for (ix in 0...10) {
+		for (ix in 0...30) {
 			for (iy in 0...100) {
 				var image3 = new Image(assets.bitmapDatas.get("logo"));
 				box.addChild(image3);

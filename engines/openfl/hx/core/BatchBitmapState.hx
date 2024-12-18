@@ -126,9 +126,9 @@ class BatchBitmapState {
 		if (checkState(bitmap)) {
 			var oldBitmap = bitmaps[bitmapIndex];
 			var isNull = oldBitmap == null;
-			// var isDirty = isNull || oldBitmap.bitmapData != bitmap.bitmapData;
 			bitmaps[bitmapIndex] = bitmap;
-			// if (isDirty) {
+			#if custom_render
+			#else
 			var id = mapIds.get(bitmap.bitmapData);
 			ids[dataPerIndices] = id;
 			ids[dataPerIndices + 1] = id;
@@ -142,7 +142,6 @@ class BatchBitmapState {
 			alphas[dataPerIndices + 3] = bitmap.alpha;
 			alphas[dataPerIndices + 4] = bitmap.alpha;
 			alphas[dataPerIndices + 5] = bitmap.alpha;
-			// }
 			// transform
 			var tileWidth:Float = bitmap.scrollRect != null ? bitmap.scrollRect.width : bitmap.bitmapData.width;
 			var tileHeight:Float = bitmap.scrollRect != null ? bitmap.scrollRect.height : bitmap.bitmapData.height;
@@ -199,6 +198,7 @@ class BatchBitmapState {
 			indicesOffset += 4;
 			dataPerIndices += 6;
 			dataPerVertex += 8;
+			#end
 			bitmapIndex++;
 			return true;
 		}

@@ -209,6 +209,12 @@ class Render implements IRender {
 	private function drawBatchBitmapState():Void {
 		var state = states[__currentStateIndex];
 		if (state.bitmapIndex > 0) {
+			#if custom_render
+			var bitmapBatch = new BitmapBatchDisplayObject();
+			bitmapBatch.state = state;
+			bitmapBatch.render = this;
+			this.__stage.addChild(bitmapBatch);
+			#else
 			// 图形绘制
 			var shape:Sprite = __pool.get();
 			shape.graphics.clear();
@@ -228,7 +234,7 @@ class Render implements IRender {
 			shape.graphics.drawTriangles(state.vertices, state.indices, state.uvtData);
 			shape.graphics.endFill();
 			__stage.addChild(shape);
-			state.reset();
+			#end
 			__currentStateIndex++;
 			if (states[__currentStateIndex] == null) {
 				states[__currentStateIndex] = new BatchBitmapState(this);

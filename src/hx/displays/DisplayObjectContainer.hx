@@ -168,6 +168,7 @@ class DisplayObjectContainer extends DisplayObject {
 				return true;
 			}
 		}
+		stacks.pop();
 		return false;
 	}
 

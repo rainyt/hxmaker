@@ -15,7 +15,7 @@ class Game extends Stage {
 
 	override function onStageInit() {
 		super.onStageInit();
-		this.showScene(0);
+		this.showScene(1);
 	}
 
 	public function showScene(index:Int):Void {

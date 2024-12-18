@@ -25,6 +25,8 @@ class WabbitRender extends Scene {
 
 	override function onStageInit() {
 		super.onStageInit();
+		box = new DisplayObjectContainer();
+		this.addChild(box);
 		for (i in 0...6) {
 			assets.loadBitmapData("assets/wabbit_alpha_" + (i + 1) + ".png");
 		}
@@ -34,9 +36,6 @@ class WabbitRender extends Scene {
 			trace("加载失败");
 		});
 		assets.start();
-
-		box = new DisplayObjectContainer();
-		this.addChild(box);
 
 		this.addChild(label);
 		label.width = stage.stageWidth;
@@ -57,7 +56,7 @@ class WabbitRender extends Scene {
 
 	private function createBunny(counts = 1000):Void {
 		for (i in 0...counts) {
-			var bunny = new Bunny(assets.bitmapDatas.get("wabbit_alpha_" + (Std.random(6) + 1)));
+			var bunny = new Bunny(assets.bitmapDatas.get("wabbit_alpha_" + (Std.random(2) + 1)));
 			box.addChild(bunny);
 			bunny.x = Math.random() * this.stage.stageWidth;
 			bunny.y = Math.random() * this.stage.stageHeight;

@@ -147,11 +147,11 @@ class Matrix {
 		ty += dy;
 	}
 
-	@:noCompletion private inline function __transformX(px:Float, py:Float):Float {
+	private inline function __transformX(px:Float, py:Float):Float {
 		return px * a + py * c + tx;
 	}
 
-	@:noCompletion private inline function __transformY(px:Float, py:Float):Float {
+	private inline function __transformY(px:Float, py:Float):Float {
 		return px * b + py * d + ty;
 	}
 }

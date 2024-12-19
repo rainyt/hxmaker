@@ -7,7 +7,25 @@ import hx.displays.BitmapData;
  * 图形绘制数据
  */
 class GraphicDrawData {
-	public var draws:Array<Draw>;
+	/**
+	 * 渲染命令列表
+	 */
+	public var draws:Array<Draw> = [];
+
+	/**
+	 * 当前绘制命令索引
+	 */
+	public var index:Int = 0;
+
+	/**
+	 * 当前使用的位图
+	 */
+	public var currentBitmapData:BitmapData;
+
+	/**
+	 * 平滑选项
+	 */
+	public var smoothing:Bool;
 
 	public function new() {}
 }
@@ -16,7 +34,7 @@ enum Draw {
 	/**
 	 * 准备位图
 	 */
-	BEGIN_BITMAP_DATA(bitampData:BitmapData);
+	BEGIN_BITMAP_DATA(bitmapData:BitmapData, smoothing:Bool);
 
 	/**
 	 * 渲染三角形

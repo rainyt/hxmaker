@@ -16,8 +16,8 @@ class Graphic extends DisplayObject {
 	 * @param bitmapData 
 	 * @param smoothing 
 	 */
-	public function beginBitmapData(bitmapData:BitmapData, smoothing:Bool = false):Void {
-		__graphicDrawData.draws.push(BEGIN_BITMAP_DATA(bitmapData));
+	public function beginBitmapData(bitmapData:BitmapData, smoothing:Bool = true):Void {
+		__graphicDrawData.draws.push(BEGIN_BITMAP_DATA(bitmapData, smoothing));
 	}
 
 	/**
@@ -28,7 +28,7 @@ class Graphic extends DisplayObject {
 	 * @param alpha 本次绘制的透明度
 	 * @param colorTransform 颜色变换
 	 */
-	public function drawTriangle(vertices:Array<Float>, indices:Array<Int>, uvs:Array<Float>, alpha:Float = 1, ?colorTransform:ColorTransform):Void {
+	public function drawTriangles(vertices:Array<Float>, indices:Array<Int>, uvs:Array<Float>, alpha:Float = 1, ?colorTransform:ColorTransform):Void {
 		__graphicDrawData.draws.push(DRAW_TRIANGLE(vertices, indices, uvs, alpha, colorTransform));
 	}
 

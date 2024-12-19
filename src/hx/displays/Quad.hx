@@ -43,6 +43,6 @@ class Quad extends DisplayObject implements IDataProider<UInt> implements IRootD
 		super();
 		this.width = width;
 		this.height = height;
-        this.data = color;
+		this.data = color;
 	}
 }

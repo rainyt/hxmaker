@@ -1,5 +1,6 @@
 package hx.displays;
 
+import hx.gemo.ColorTransform;
 import hx.gemo.Matrix;
 import hx.gemo.Rectangle;
 import hx.events.Event;
@@ -33,6 +34,18 @@ class DisplayObject extends EventDispatcher {
 	@:noCompletion private var __mouseEnabled:Bool = true;
 	@:noCompletion private var __originWorldX = 0.;
 	@:noCompletion private var __originWorldY = 0.;
+	@:noCompletion private var __colorTransform:ColorTransform;
+
+	public var colorTransform(get, set):ColorTransform;
+
+	private function get_colorTransform():ColorTransform {
+		return __colorTransform.clone();
+	}
+
+	private function set_colorTransform(value:ColorTransform):ColorTransform {
+		__colorTransform.setTo(value);
+		return value;
+	}
 
 	/**
 	 * 获得矩阵
@@ -326,6 +339,7 @@ class DisplayObject extends EventDispatcher {
 		__rotationCosine = 1;
 		__scaleX = 1;
 		__scaleY = 1;
+		__colorTransform = new ColorTransform();
 		__transform = new Matrix();
 		__worldTransform = new Matrix();
 		__rect = new Rectangle();

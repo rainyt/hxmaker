@@ -140,4 +140,12 @@ class Label extends DisplayObject implements IDataProider<String> implements IRo
 			return __getLocalBounds(new Rectangle(0, 0, this.width, this.height));
 		}
 	}
+
+	public function getTextWidth():Float {
+		return root == null ? 0 : root.getTextWidth();
+	}
+
+	public function getTextHeight():Float {
+		return root == null ? 0 : root.getTextHeight();
+	}
 }

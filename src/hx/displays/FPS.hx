@@ -3,14 +3,25 @@ package hx.displays;
 import hx.utils.ContextStats;
 import hx.events.Event;
 
-class FPS extends Label {
+class FPS extends DisplayObjectContainer {
+	private var __bg:Quad;
+
+	public var label:Label;
+
 	override function onInit() {
 		super.onInit();
 		this.updateEnabled = true;
+		__bg = new Quad(0, 0, 0x0);
+		__bg.alpha = 0.8;
+		this.addChild(__bg);
+		this.label = new Label();
+		this.addChild(label);
 		this.addEventListener(Event.UPDATE, onUpdated);
 	}
 
 	private function onUpdated(e:Event) {
-		this.data = "FPS:" + ContextStats.fps + "\ndrawCall:" + ContextStats.drawCall + "\nvertexCount:" + ContextStats.vertexCount;
+		this.label.data = "FPS:" + ContextStats.fps + "\ndrawCall:" + ContextStats.drawCall + "\nvertexCount:" + ContextStats.vertexCount;
+		this.__bg.width = label.getTextWidth() + 10;
+		this.__bg.height = label.getTextHeight() + 10;
 	}
 }

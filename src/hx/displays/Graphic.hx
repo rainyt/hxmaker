@@ -12,6 +12,14 @@ class Graphic extends DisplayObject {
 	private var __graphicDrawData:GraphicDrawData = new GraphicDrawData();
 
 	/**
+	 * 纯色块渲染
+	 * @param color 
+	 */
+	public function beginFill(color:Int):Void {
+		__graphicDrawData.draws.push(BEGIN_FILL(color));
+	}
+
+	/**
 	 * 图形渲染
 	 * @param bitmapData 
 	 * @param smoothing 
@@ -30,6 +38,17 @@ class Graphic extends DisplayObject {
 	 */
 	public function drawTriangles(vertices:Array<Float>, indices:Array<Int>, uvs:Array<Float>, alpha:Float = 1, ?colorTransform:ColorTransform):Void {
 		__graphicDrawData.draws.push(DRAW_TRIANGLE(vertices, indices, uvs, alpha, colorTransform));
+	}
+
+	/**
+	 * 渲染矩形
+	 * @param x 坐标x 
+	 * @param y 坐标y
+	 * @param width 宽度
+	 * @param height 高度
+	 */
+	public function drawQuad(x:Float, y:Float, width:Float, height:Float, alpha:Float = 1, ?colorTransform:ColorTransform):Void {
+		drawTriangles([x, y, x + width, y, x, y + height, x + width, y + height], [0, 1, 2, 1, 2, 3], [0, 0, 1, 0, 0, 1, 1, 1], alpha, colorTransform);
 	}
 
 	/**

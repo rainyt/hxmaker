@@ -32,6 +32,11 @@ class GraphicDrawData {
 
 enum Draw {
 	/**
+	 * 填充的颜色
+	 */
+	BEGIN_FILL(color:UInt);
+
+	/**
 	 * 准备位图
 	 */
 	BEGIN_BITMAP_DATA(bitmapData:BitmapData, smoothing:Bool);

@@ -28,13 +28,6 @@ interface IRender {
 	public function renderLabel(image:Label):Void;
 
 	/**
-	 * 渲染四边形
-	 * @param quad 
-	 */
-	@:deprecated("应该使用renderGraphics统一实现")
-	public function renderQuad(quad:Quad):Void;
-
-	/**
 	 * 渲染三角形图形
 	 * @param graphics 
 	 */

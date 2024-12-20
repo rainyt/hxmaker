@@ -21,14 +21,32 @@ class SpineTextureAtlas extends Atlas implements TextureLoader {
 	 */
 	public var skeletonBinary:SkeletonBinary;
 
-	public function loadPage(page:TextureAtlasPage, path:String) {}
+	private var __regions:Map<String, TextureAtlasRegion> = new Map();
 
+	/**
+	 * 加载资源
+	 * @param page 
+	 * @param path 
+	 */
+	public function loadPage(page:TextureAtlasPage, path:String) {
+		page.texture = this.bitmapData;
+		page.width = this.bitmapData.data.getWidth();
+		page.height = this.bitmapData.data.getHeight();
+	}
+
+	/**
+	 * 卸载资源
+	 * @param page 
+	 */
 	public function unloadPage(page:TextureAtlasPage) {}
 
-	public function loadRegion(region:TextureAtlasRegion):Void {}
-
 	public function getRegionByName(name:String):TextureAtlasRegion {
-		return null;
+		return __regions.get(name);
+	}
+
+	public function loadRegion(region:TextureAtlasRegion):Void {
+		region.texture = this.bitmapData;
+		__regions.set(region.name, region);
 	}
 
 	/**

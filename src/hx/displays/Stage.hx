@@ -1,5 +1,7 @@
 package hx.displays;
 
+import hx.events.KeyboardEvent;
+
 /**
  * 游戏引擎舞台
  */
@@ -71,4 +73,13 @@ class Stage extends DisplayObjectContainer {
 	 * @param event 
 	 */
 	public function handleTouchEvent(event:hx.events.TouchEvent):Void {}
+
+	/**
+	 * 触发键盘事件
+	 * @param event 
+	 */
+	public function handleKeyboardEvent(event:KeyboardEvent):Void {
+		event.target = this;
+		this.dispatchEvent(event);
+	}
 }

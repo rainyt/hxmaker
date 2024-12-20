@@ -29,7 +29,10 @@ class Label extends DisplayObject implements IDataProider<String> implements IRo
 	public var data(get, set):String;
 
 	private function set_data(value:String):String {
-		__data = value;
+		if (__data != value) {
+			__data = value;
+			this.setDirty();
+		}
 		return __data;
 	}
 

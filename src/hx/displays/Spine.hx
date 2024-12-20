@@ -1,5 +1,6 @@
 package hx.displays;
 
+import hx.events.Event;
 import spine.atlas.TextureAtlasRegion;
 import spine.attachments.MeshAttachment;
 import spine.attachments.RegionAttachment;
@@ -44,6 +45,12 @@ class Spine extends Graphic {
 		skeleton = new Skeleton(data);
 		skeleton.scaleY = -1;
 		animationState = new AnimationState(new AnimationStateData(data));
+		this.addEventListener(Event.UPDATE, onUpdateEvent);
+		this.updateEnabled = true;
+	}
+
+	private function onUpdateEvent(e:Event):Void {
+		this.update(1 / 60);
 	}
 
 	override function onInit() {

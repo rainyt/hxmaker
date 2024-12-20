@@ -3,6 +3,9 @@ package hx.displays;
 import hx.utils.ContextStats;
 import hx.events.Event;
 
+/**
+ * 渲染着hxmaker的主要数据
+ */
 class FPS extends DisplayObjectContainer {
 	private var __bg:Quad;
 

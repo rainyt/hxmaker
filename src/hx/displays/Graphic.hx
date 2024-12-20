@@ -1,11 +1,14 @@
 package hx.displays;
 
+import hx.utils.ColorUtils;
 import hx.gemo.ColorTransform;
 
 /**
  * 渲染图形，用于渲染网格三角形使用
  */
 class Graphic extends DisplayObject {
+	private var __beginFill:Null<Int> = null;
+
 	/**
 	 * 图形绘制命令数据
 	 */
@@ -17,6 +20,7 @@ class Graphic extends DisplayObject {
 	 */
 	public function beginFill(color:Int):Void {
 		__graphicDrawData.draws.push(BEGIN_FILL(color));
+		__beginFill = color;
 	}
 
 	/**
@@ -26,6 +30,7 @@ class Graphic extends DisplayObject {
 	 */
 	public function beginBitmapData(bitmapData:BitmapData, smoothing:Bool = true):Void {
 		__graphicDrawData.draws.push(BEGIN_BITMAP_DATA(bitmapData, smoothing));
+		__beginFill = null;
 	}
 
 	/**
@@ -37,6 +42,10 @@ class Graphic extends DisplayObject {
 	 * @param colorTransform 颜色变换
 	 */
 	public function drawTriangles(vertices:Array<Float>, indices:Array<Int>, uvs:Array<Float>, alpha:Float = 1, ?colorTransform:ColorTransform):Void {
+		if (colorTransform == null && __beginFill != null) {
+			var color = ColorUtils.toShaderColor(__beginFill);
+			colorTransform = new ColorTransform(color.r, color.g, color.b, 1);
+		}
 		__graphicDrawData.draws.push(DRAW_TRIANGLE(vertices, indices, uvs, alpha, colorTransform));
 	}
 
@@ -56,5 +65,6 @@ class Graphic extends DisplayObject {
 	 */
 	public function clear():Void {
 		__graphicDrawData.draws = [];
+		__beginFill = null;
 	}
 }

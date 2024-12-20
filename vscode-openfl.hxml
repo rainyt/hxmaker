@@ -2,3 +2,4 @@
 --class-path src
 --class-path test
 --interp
+--library spine-haxe

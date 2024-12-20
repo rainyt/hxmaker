@@ -1,5 +1,6 @@
 package hx.utils;
 
+import hx.utils.atlas.SpineTextureAtlas;
 import hx.events.FutureErrorEvent;
 import hx.utils.atlas.Atlas;
 import haxe.io.Path;
@@ -67,6 +68,16 @@ class Assets extends Future<Assets, Dynamic> {
 	public var atlases:Map<String, Atlas> = new Map();
 
 	/**
+	 * Objects列表
+	 */
+	public var objects:Map<String, Dynamic> = new Map();
+
+	/**
+	 * String列表
+	 */
+	public var strings:Map<String, String> = new Map();
+
+	/**
 	 * 已经加载完成的数量
 	 */
 	public var loadedCounts:Int = 0;
@@ -113,6 +124,35 @@ class Assets extends Future<Assets, Dynamic> {
 			xml: xml,
 			path: path
 		}, false));
+	}
+
+	/**
+	 * 加载Spine图集资源
+	 * @param png 
+	 * @param atlas 
+	 */
+	public function loadSpineAtlas(png:String, atlas:String) {
+		pushFuture(new hx.utils.atlas.SpineTextureAtlasFuture({
+			png: png,
+			atlas: atlas,
+			path: png
+		}, false));
+	}
+
+	/**
+	 * 加载Json数据
+	 * @param path 
+	 */
+	public function loadJson(path:String) {
+		pushFuture(new hx.utils.JsonFuture(path, false));
+	}
+
+	/**
+	 * 加载字符串
+	 * @param path 
+	 */
+	public function loadString(path:String) {
+		pushFuture(new hx.utils.StringFuture(path, false));
 	}
 
 	/**
@@ -176,10 +216,16 @@ class Assets extends Future<Assets, Dynamic> {
 	private function __onCompleted(future:Future<Dynamic, Dynamic>, data:Dynamic):Void {
 		CURRENT_LOAD_COUNTS--;
 		loadedCounts++;
-		if (data is BitmapData) {
+		if (data is String) {
+			strings.set(formatName(future.getLoadData()), data);
+		} else if (data is BitmapData) {
 			bitmapDatas.set(formatName(future.getLoadData()), data);
 		} else if (data is Atlas) {
 			atlases.set(formatName(future.getLoadData()), data);
+		} else if (data is SpineTextureAtlas) {
+			atlases.set(formatName(future.getLoadData()), data);
+		} else {
+			objects.set(formatName(future.getLoadData()), data);
 		}
 		if (loadedCounts == totalCounts) {
 			this.completeValue(this);

@@ -105,6 +105,8 @@ class DisplayObject extends EventDispatcher {
 
 	private function set_width(value:Float):Float {
 		this.__width = value;
+		var bounds = __getRect();
+		this.scaleX = value / bounds.width;
 		setTransformDirty();
 		return value;
 	}
@@ -121,6 +123,14 @@ class DisplayObject extends EventDispatcher {
 		return getBounds().height;
 	}
 
+	private function set_height(value:Float):Float {
+		this.__height = value;
+		var bounds = __getRect();
+		this.scaleY = value / bounds.height;
+		setTransformDirty();
+		return value;
+	}
+
 	/**
 	 * 获得边界
 	 * @return Rectangle
@@ -133,12 +143,6 @@ class DisplayObject extends EventDispatcher {
 		} else {
 			return __getLocalBounds(__getRect());
 		}
-	}
-
-	private function set_height(value:Float):Float {
-		this.__height = value;
-		setTransformDirty();
-		return value;
 	}
 
 	@:noCompletion private function __getRect():Rectangle {

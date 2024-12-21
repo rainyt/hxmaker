@@ -69,13 +69,37 @@ class Graphic extends DisplayObject {
 	}
 
 	/**
+	 * 渲染矩形，UVs会根据 textureSize计算
+	 * @param x 
+	 * @param y 
+	 * @param width 
+	 * @param height 
+	 * @param alpha 
+	 * @param colorTransform 
+	 */
+	public function drawRectMask(x:Float, y:Float, width:Float, height:Float, textureWidth:Float, textureHeight:Float, alpha:Float = 1,
+			?colorTransform:ColorTransform):Void {
+		drawTriangles([x, y, x + width, y, x, y + height, x + width, y + height], [0, 1, 2, 1, 2, 3], [
+			x / textureWidth,
+			y / textureHeight,
+			(x + width) / textureWidth,
+			y / textureHeight,
+			x / textureWidth,
+			(y + height) / textureHeight,
+			(x + width) / textureWidth,
+			(y + height) / textureHeight
+		], alpha, colorTransform);
+		__sizeDirty = true;
+	}
+
+	/**
 	 * 渲染矩形，可提供UVs
 	 * @param x 坐标x 
 	 * @param y 坐标y
 	 * @param width 宽度
 	 * @param height 高度
 	 */
-	public function drawRectUVs(x:Float, y:Float, width:Float, height:Float, alpha:Float = 1, uvs:Array<Float>, ?colorTransform:ColorTransform):Void {
+	public function drawRectUVs(x:Float, y:Float, width:Float, height:Float, uvs:Array<Float>, alpha:Float = 1, ?colorTransform:ColorTransform):Void {
 		drawTriangles([x, y, x + width, y, x, y + height, x + width, y + height], [0, 1, 2, 1, 2, 3], uvs, alpha, colorTransform);
 		__sizeDirty = true;
 	}

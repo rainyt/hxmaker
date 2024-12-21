@@ -60,26 +60,62 @@ class Image extends DisplayObject implements IDataProider<BitmapData> implements
 				var topHeight = rect.y;
 				var bottomHeight = (this.data.data.getHeight() - rect.y - rect.height);
 				// 左上
-				__graphic.drawRect(0, 0, leftWidth, topHeight);
+				/**
+					* 
+					* [
+						0,
+						0,
+						leftWidth / rect.width,
+						0,
+						0,
+						topHeight / rect.height,
+						leftWidth / rect.width,
+						topHeight / rect.height
+					]
+				 */
+				var textureWidth = this.data.data.getWidth();
+				var textureHeight = this.data.data.getHeight();
+				__graphic.drawRectUVs(0, 0, leftWidth, topHeight, maskUVs(0, 0, leftWidth, topHeight, textureWidth, textureHeight));
 				// 右上
-				__graphic.drawRect(this.width - rightWidth, 0, rightWidth, topHeight);
+				__graphic.drawRectUVs(this.width - rightWidth, 0, rightWidth, topHeight,
+					maskUVs(rect.right, 0, rightWidth, topHeight, textureWidth, textureHeight));
 				// 左下
-				__graphic.drawRect(0, this.height - bottomHeight, leftWidth, bottomHeight);
+				__graphic.drawRectUVs(0, this.height - bottomHeight, leftWidth, bottomHeight,
+					maskUVs(0, rect.bottom, rightWidth, topHeight, textureWidth, textureHeight));
 				// 右下
-				__graphic.drawRect(this.width - rightWidth, this.height - bottomHeight, rightWidth, bottomHeight);
+				__graphic.drawRectUVs(this.width - rightWidth, this.height - bottomHeight, rightWidth, bottomHeight,
+					maskUVs(rect.right, rect.bottom, rightWidth, topHeight, textureWidth, textureHeight));
 				// 中间
-				__graphic.drawRect(rect.left, rect.top, this.width - rightWidth - rect.left, this.height - bottomHeight - rect.top);
+				__graphic.drawRectUVs(rect.left, rect.top, this.width - rightWidth - rect.left, this.height - bottomHeight - rect.top,
+					maskUVs(rect.x, rect.y, rect.width, rect.height, textureWidth, textureHeight));
 				// 左边中间
-				__graphic.drawRect(0, topHeight, leftWidth, this.height - bottomHeight - topHeight);
+				__graphic.drawRectUVs(0, topHeight, leftWidth, this.height - bottomHeight - topHeight,
+					maskUVs(0, rect.y, leftWidth, rect.height, textureWidth, textureHeight));
 				// 右边中间
-				__graphic.drawRect(this.width - rightWidth, topHeight, rightWidth, this.height - bottomHeight - topHeight);
+				__graphic.drawRectUVs(this.width - rightWidth, topHeight, rightWidth, this.height - bottomHeight - topHeight,
+					maskUVs(rect.right, rect.y, rightWidth, rect.height, textureWidth, textureHeight));
 				// 上面中间
-				__graphic.drawRect(leftWidth, 0, width - leftWidth - rightWidth, topHeight);
+				__graphic.drawRectUVs(leftWidth, 0, width - leftWidth - rightWidth, topHeight,
+					maskUVs(rect.x, 0, rect.width, topHeight, textureWidth, textureHeight));
 				// 下面中间
-				__graphic.drawRect(leftWidth, height - bottomHeight, width - leftWidth - rightWidth, bottomHeight);
+				__graphic.drawRectUVs(leftWidth, height - bottomHeight, width - leftWidth - rightWidth, bottomHeight,
+					maskUVs(rect.x, rect.bottom, rect.width, bottomHeight, textureWidth, textureHeight));
 			}
 		}
 		return __graphic;
+	}
+
+	private function maskUVs(x:Float, y:Float, w:Float, h:Float, textureWidth:Float, textureHeight:Float):Array<Float> {
+		return [
+			x / textureWidth,
+			y / textureHeight,
+			(x + w) / textureWidth,
+			y / textureHeight,
+			x / textureWidth,
+			(y + h) / textureHeight,
+			(x + w) / textureWidth,
+			(y + h) / textureHeight
+		];
 	}
 
 	private function set_scale9Grid(value:Rectangle):Rectangle {

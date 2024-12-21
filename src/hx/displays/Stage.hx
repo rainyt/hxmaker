@@ -10,6 +10,15 @@ class Stage extends DisplayObjectContainer {
 	@:noCompletion private var __stageWidth:Float = 0;
 	@:noCompletion private var __stageHeight:Float = 0;
 
+	/**
+	 * 获得当前渲染器
+	 */
+	public var renderer(get, never):IRender;
+
+	private function get_renderer():IRender {
+		return __render;
+	}
+
 	override function get_stage():Stage {
 		return this;
 	}

@@ -142,10 +142,16 @@ class Label extends DisplayObject implements IDataProider<String> implements IRo
 	}
 
 	public function getTextWidth():Float {
+		if (root == null && this.stage != null) {
+			this.stage.renderer.renderLabel(this, true);
+		}
 		return root == null ? 0 : root.getTextWidth();
 	}
 
 	public function getTextHeight():Float {
+		if (root == null && this.stage != null) {
+			this.stage.renderer.renderLabel(this, true);
+		}
 		return root == null ? 0 : root.getTextHeight();
 	}
 }

@@ -24,8 +24,9 @@ interface IRender {
 	/**
 	 * 渲染文本
 	 * @param image 
+	 * @param offScreenRender 离屏渲染，离屏后，不会渲染到画面中
 	 */
-	public function renderLabel(image:Label):Void;
+	public function renderLabel(image:Label, offScreenRender:Bool = false):Void;
 
 	/**
 	 * 渲染三角形图形

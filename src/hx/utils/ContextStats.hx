@@ -13,7 +13,7 @@ class ContextStats {
 	public static var fps(get, never):Int;
 
 	private static function get_fps():Int {
-		return __fpses.length;
+		return __fpses.length - 1;
 	}
 
 	/**

@@ -46,9 +46,37 @@ class Image extends DisplayObject implements IDataProider<BitmapData> implements
 			if (__scale9GridDirty) {
 				__scale9GridDirty = false;
 				__graphic.clear();
-				// __graphic.drawTriangles();
+				// __graphic.transform = this.transform;
+				__graphic.x = this.x;
+				__graphic.y = this.y;
+				__graphic.rotation = this.rotation;
+				__graphic.__updateTransform(this.parent);
 				__graphic.beginBitmapData(this.data);
-				__graphic.drawRect(__scale9Grid.x, __scale9Grid.y, __scale9Grid.width, __scale9Grid.height);
+				var rect = __scale9Grid;
+				trace(rect.left, rect.right, rect.width);
+
+				var rightWidth = (this.data.data.getWidth() - rect.x - rect.width);
+				var leftWidth = rect.x;
+				var topHeight = rect.y;
+				var bottomHeight = (this.data.data.getHeight() - rect.y - rect.height);
+				// 左上
+				__graphic.drawRect(0, 0, leftWidth, topHeight);
+				// 右上
+				__graphic.drawRect(this.width - rightWidth, 0, rightWidth, topHeight);
+				// 左下
+				__graphic.drawRect(0, this.height - bottomHeight, leftWidth, bottomHeight);
+				// 右下
+				__graphic.drawRect(this.width - rightWidth, this.height - bottomHeight, rightWidth, bottomHeight);
+				// 中间
+				__graphic.drawRect(rect.left, rect.top, this.width - rightWidth - rect.left, this.height - bottomHeight - rect.top);
+				// 左边中间
+				__graphic.drawRect(0, topHeight, leftWidth, this.height - bottomHeight - topHeight);
+				// 右边中间
+				__graphic.drawRect(this.width - rightWidth, topHeight, rightWidth, this.height - bottomHeight - topHeight);
+				// 上面中间
+				__graphic.drawRect(leftWidth, 0, width - leftWidth - rightWidth, topHeight);
+				// 下面中间
+				__graphic.drawRect(leftWidth, height - bottomHeight, width - leftWidth - rightWidth, bottomHeight);
 			}
 		}
 		return __graphic;
@@ -116,5 +144,10 @@ class Image extends DisplayObject implements IDataProider<BitmapData> implements
 			}
 		}
 		return super.__getRect();
+	}
+
+	override function setTransformDirty(value:Bool = true) {
+		super.setTransformDirty(value);
+		__scale9GridDirty = true;
 	}
 }

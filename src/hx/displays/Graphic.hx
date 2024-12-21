@@ -69,6 +69,18 @@ class Graphic extends DisplayObject {
 	}
 
 	/**
+	 * 渲染矩形，可提供UVs
+	 * @param x 坐标x 
+	 * @param y 坐标y
+	 * @param width 宽度
+	 * @param height 高度
+	 */
+	public function drawRectUVs(x:Float, y:Float, width:Float, height:Float, alpha:Float = 1, uvs:Array<Float>, ?colorTransform:ColorTransform):Void {
+		drawTriangles([x, y, x + width, y, x, y + height, x + width, y + height], [0, 1, 2, 1, 2, 3], uvs, alpha, colorTransform);
+		__sizeDirty = true;
+	}
+
+	/**
 	 * 清理
 	 */
 	public function clear():Void {

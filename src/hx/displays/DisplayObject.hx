@@ -57,8 +57,51 @@ class DisplayObject extends EventDispatcher {
 	}
 
 	private function set_transform(value:Matrix):Matrix {
-		__transform = value;
+		__setTransform(value.a, value.b, value.c, value.d, value.tx, value.ty);
 		return value;
+	}
+
+	@:noCompletion private function __setTransform(a:Float, b:Float, c:Float, d:Float, tx:Float, ty:Float):Void {
+		var transform = this.__transform;
+		if (transform.a == a && transform.b == b && transform.c == c && transform.d == d && transform.tx == tx && transform.ty == ty) {
+			return;
+		}
+
+		var scaleX = 0.0;
+		var scaleY = 0.0;
+
+		if (b == 0) {
+			scaleX = a;
+		} else {
+			scaleX = Math.sqrt(a * a + b * b);
+		}
+
+		if (c == 0) {
+			scaleY = d;
+		} else {
+			scaleY = Math.sqrt(c * c + d * d);
+		}
+
+		this.__scaleX = scaleX;
+		this.__scaleY = scaleY;
+
+		var rotation = (180 / Math.PI) * Math.atan2(d, c) - 90;
+
+		if (rotation != this.__rotation) {
+			this.__rotation = rotation;
+			var radians = rotation * (Math.PI / 180);
+			this.__rotationSine = Math.sin(radians);
+			this.__rotationCosine = Math.cos(radians);
+		}
+
+		transform.a = a;
+		transform.b = b;
+		transform.c = c;
+		transform.d = d;
+		transform.tx = tx;
+		transform.ty = ty;
+
+		this.setTransformDirty();
 	}
 
 	/**

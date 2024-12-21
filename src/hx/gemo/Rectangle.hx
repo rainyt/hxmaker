@@ -215,4 +215,8 @@ class Rectangle {
 	public function toString():String {
 		return "[" + x + "," + y + "," + width + "," + height + "]";
 	}
+
+	public function clone():Rectangle {
+		return new Rectangle(x, y, width, height);
+	}
 }

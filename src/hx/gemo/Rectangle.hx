@@ -219,4 +219,18 @@ class Rectangle {
 	public function clone():Rectangle {
 		return new Rectangle(x, y, width, height);
 	}
+
+	/**
+	 * 设置CSS样式
+	 * @param css 
+	 * @param width 
+	 * @param height 
+	 */
+	public function css(css:String, width:Float, height:Float):Void {
+		var arr:Array<String> = css.split(" ");
+		this.x = Std.parseFloat(arr[3]);
+		this.y = Std.parseFloat(arr[0]);
+		this.width = width - Std.parseFloat(arr[1]) - Std.parseFloat(arr[3]);
+		this.height = height - Std.parseFloat(arr[0]) - Std.parseFloat(arr[2]);
+	}
 }

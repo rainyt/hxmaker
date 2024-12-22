@@ -33,6 +33,24 @@ class BitmapData {
 
 	public function new() {}
 
+	public var uvOffsetX(get, never):Float;
+
+	private function get_uvOffsetX():Float {
+		if (this.rect == null) {
+			return 0;
+		}
+		return rect.x;
+	}
+
+	public var uvOffsetY(get, never):Float;
+
+	private function get_uvOffsetY():Float {
+		if (this.rect == null) {
+			return 0;
+		}
+		return rect.y;
+	}
+
 	/**
 	 * 切割位图
 	 * @param x 
@@ -45,5 +63,29 @@ class BitmapData {
 		var bitmapData = BitmapData.formData(this.data);
 		bitmapData.rect = new Rectangle(x, y, width, height);
 		return bitmapData;
+	}
+
+	public var width(get, never):Float;
+
+	@:noCompletion private function get_width():Float {
+		if (frameRect != null) {
+			return frameRect.width;
+		} else if (rect != null) {
+			return rect.width;
+		} else {
+			return data != null ? data.getWidth() : 0;
+		}
+	}
+
+	public var height(get, never):Float;
+
+	public function get_height():Float {
+		if (frameRect != null) {
+			return frameRect.height;
+		} else if (rect != null) {
+			return rect.height;
+		} else {
+			return data != null ? data.getHeight() : 0;
+		}
 	}
 }

@@ -53,46 +53,49 @@ class Image extends DisplayObject implements IDataProider<BitmapData> implements
 				__graphic.__updateTransform(this.parent);
 				__graphic.beginBitmapData(this.data);
 				var rect = __scale9Grid;
-				trace(rect.left, rect.right, rect.width);
 
-				var rightWidth = (this.data.data.getWidth() - rect.x - rect.width);
+				var rightWidth = (this.data.width - rect.x - rect.width);
 				var leftWidth = rect.x;
 				var topHeight = rect.y;
-				var bottomHeight = (this.data.data.getHeight() - rect.y - rect.height);
+				var bottomHeight = (this.data.height - rect.y - rect.height);
 				var textureWidth = this.data.data.getWidth();
 				var textureHeight = this.data.data.getHeight();
+				var offsetX = this.data.uvOffsetX;
+				var offsetY = this.data.uvOffsetY;
 				// 左上
-				__graphic.drawRectUVs(0, 0, leftWidth, topHeight, maskUVs(0, 0, leftWidth, topHeight, textureWidth, textureHeight));
+				__graphic.drawRectUVs(0, 0, leftWidth, topHeight, maskUVs(0, 0, leftWidth, topHeight, textureWidth, textureHeight, offsetX, offsetY));
 				// 右上
 				__graphic.drawRectUVs(this.width - rightWidth, 0, rightWidth, topHeight,
-					maskUVs(rect.right, 0, rightWidth, topHeight, textureWidth, textureHeight));
+					maskUVs(rect.right, 0, rightWidth, topHeight, textureWidth, textureHeight, offsetX, offsetY));
 				// 左下
 				__graphic.drawRectUVs(0, this.height - bottomHeight, leftWidth, bottomHeight,
-					maskUVs(0, rect.bottom, rightWidth, topHeight, textureWidth, textureHeight));
+					maskUVs(0, rect.bottom, rightWidth, bottomHeight, textureWidth, textureHeight, offsetX, offsetY));
 				// 右下
 				__graphic.drawRectUVs(this.width - rightWidth, this.height - bottomHeight, rightWidth, bottomHeight,
-					maskUVs(rect.right, rect.bottom, rightWidth, topHeight, textureWidth, textureHeight));
+					maskUVs(rect.right, rect.bottom, rightWidth, bottomHeight, textureWidth, textureHeight, offsetX, offsetY));
 				// 中间
 				__graphic.drawRectUVs(rect.left, rect.top, this.width - rightWidth - rect.left, this.height - bottomHeight - rect.top,
-					maskUVs(rect.x, rect.y, rect.width, rect.height, textureWidth, textureHeight));
+					maskUVs(rect.x, rect.y, rect.width, rect.height, textureWidth, textureHeight, offsetX, offsetY));
 				// 左边中间
 				__graphic.drawRectUVs(0, topHeight, leftWidth, this.height - bottomHeight - topHeight,
-					maskUVs(0, rect.y, leftWidth, rect.height, textureWidth, textureHeight));
+					maskUVs(0, rect.y, leftWidth, rect.height, textureWidth, textureHeight, offsetX, offsetY));
 				// 右边中间
 				__graphic.drawRectUVs(this.width - rightWidth, topHeight, rightWidth, this.height - bottomHeight - topHeight,
-					maskUVs(rect.right, rect.y, rightWidth, rect.height, textureWidth, textureHeight));
+					maskUVs(rect.right, rect.y, rightWidth, rect.height, textureWidth, textureHeight, offsetX, offsetY));
 				// 上面中间
 				__graphic.drawRectUVs(leftWidth, 0, width - leftWidth - rightWidth, topHeight,
-					maskUVs(rect.x, 0, rect.width, topHeight, textureWidth, textureHeight));
+					maskUVs(rect.x, 0, rect.width, topHeight, textureWidth, textureHeight, offsetX, offsetY));
 				// 下面中间
 				__graphic.drawRectUVs(leftWidth, height - bottomHeight, width - leftWidth - rightWidth, bottomHeight,
-					maskUVs(rect.x, rect.bottom, rect.width, bottomHeight, textureWidth, textureHeight));
+					maskUVs(rect.x, rect.bottom, rect.width, bottomHeight, textureWidth, textureHeight, offsetX, offsetY));
 			}
 		}
 		return __graphic;
 	}
 
-	private function maskUVs(x:Float, y:Float, w:Float, h:Float, textureWidth:Float, textureHeight:Float):Array<Float> {
+	private function maskUVs(x:Float, y:Float, w:Float, h:Float, textureWidth:Float, textureHeight:Float, offsetX:Float, offsetY:Float):Array<Float> {
+		x += offsetX;
+		y += offsetY;
 		return [
 			x / textureWidth,
 			y / textureHeight,

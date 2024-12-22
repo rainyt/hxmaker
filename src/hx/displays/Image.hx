@@ -59,22 +59,9 @@ class Image extends DisplayObject implements IDataProider<BitmapData> implements
 				var leftWidth = rect.x;
 				var topHeight = rect.y;
 				var bottomHeight = (this.data.data.getHeight() - rect.y - rect.height);
-				// 左上
-				/**
-					* 
-					* [
-						0,
-						0,
-						leftWidth / rect.width,
-						0,
-						0,
-						topHeight / rect.height,
-						leftWidth / rect.width,
-						topHeight / rect.height
-					]
-				 */
 				var textureWidth = this.data.data.getWidth();
 				var textureHeight = this.data.data.getHeight();
+				// 左上
 				__graphic.drawRectUVs(0, 0, leftWidth, topHeight, maskUVs(0, 0, leftWidth, topHeight, textureWidth, textureHeight));
 				// 右上
 				__graphic.drawRectUVs(this.width - rightWidth, 0, rightWidth, topHeight,

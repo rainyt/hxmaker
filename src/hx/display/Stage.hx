@@ -1,4 +1,4 @@
-package hx.displays;
+package hx.display;
 
 import hx.events.KeyboardEvent;
 

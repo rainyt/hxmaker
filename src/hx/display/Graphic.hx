@@ -1,4 +1,4 @@
-package hx.displays;
+package hx.display;
 
 import hx.gemo.Rectangle;
 import hx.utils.ColorUtils;

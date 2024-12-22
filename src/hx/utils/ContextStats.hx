@@ -52,7 +52,7 @@ class ContextStats {
 	 */
 	public static function statsFps():Void {
 		var now = Timer.stamp();
-		__fpses = __fpses.filter(f -> now - f < 1);
+		__fpses = __fpses.filter(f -> now - f <= 1);
 		__fpses.push(now);
 	}
 }

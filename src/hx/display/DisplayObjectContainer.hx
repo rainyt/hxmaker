@@ -1,4 +1,4 @@
-package hx.displays;
+package hx.display;
 
 import hx.gemo.Matrix;
 import hx.gemo.Rectangle;
@@ -6,7 +6,7 @@ import hx.gemo.Rectangle;
 /**
  * 可装载子对象的容器
  */
-@:access(hx.displays.DisplayObject)
+@:access(hx.display.DisplayObject)
 class DisplayObjectContainer extends DisplayObject {
 	/**
 	 * 该容器中的所有子对象

@@ -1,4 +1,4 @@
-package hx.displays;
+package hx.display;
 
 enum abstract HorizontalAlign(Int) {
 	var LEFT = 0;

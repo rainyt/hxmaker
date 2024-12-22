@@ -1,6 +1,6 @@
 package hx.utils.atlas;
 
-import hx.displays.BitmapData;
+import hx.display.BitmapData;
 
 /**
  * 精灵图

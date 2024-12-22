@@ -1,7 +1,7 @@
-package hx.displays;
+package hx.display;
 
 import hx.gemo.ColorTransform;
-import hx.displays.BitmapData;
+import hx.display.BitmapData;
 
 /**
  * 图形绘制数据

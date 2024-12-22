@@ -4,14 +4,14 @@ A unified game engine written in Haxe that can run on any game engine.
 # 支持
 | 功能 | 描述 | 状态 | 自动合批 |
 --- | --- | --- | ---
-| hx.displays.Image | 图片，用于渲染游戏2D画面，自动批处理实现 | ✅ | ✅ |
-| hx.displays.Label | 文本，用于渲染文字 | ✅ | ✅ |
-| hx.displays.Button | 按钮，普通的按钮 | ✅ | ✅ |
-| hx.displays.DisplayObjectContainer | 容器，用于组合其他对象 | ✅ | ✅ |
-| hx.displays.Quad | 矩形显示对象 | ✅ | ✅ |
-| hx.displays.Graphic | 矢量图形 | ✅ | ✅ |
-| hx.displays.Spine | Spine动画 | ✅ | ✅ |
-| hx.displays.Scene | 场景，用于管理对象 | ✅ | ✅ |
+| hx.display.Image | 图片，用于渲染游戏2D画面，自动批处理实现，支持九宫格图渲染 | ✅ | ✅ |
+| hx.display.Label | 文本，用于渲染文字 | ✅ | ✅ |
+| hx.display.Button | 按钮，普通的按钮 | ✅ | ✅ |
+| hx.display.DisplayObjectContainer | 容器，用于组合其他对象 | ✅ | ✅ |
+| hx.display.Quad | 矩形显示对象 | ✅ | ✅ |
+| hx.display.Graphic | 矢量图形 | ✅ | ✅ |
+| hx.display.Spine | Spine动画 | ✅ | ✅ |
+| hx.display.Scene | 场景，用于管理对象 | ✅ | ✅ |
 | hx.events.MouseEvent | 鼠标事件 | ✅ | / |
 | hx.events.KeyboardEvent | 键盘事件 | ✅ | / |
 

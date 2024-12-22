@@ -1,6 +1,6 @@
 package;
 
-import hx.displays.Quad;
+import hx.display.Quad;
 
 class Test {
 	static function main() {}

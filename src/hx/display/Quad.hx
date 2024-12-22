@@ -1,4 +1,4 @@
-package hx.displays;
+package hx.display;
 
 import hx.gemo.ColorTransform;
 import hx.utils.ColorUtils;

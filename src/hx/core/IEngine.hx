@@ -1,6 +1,6 @@
 package hx.core;
 
-import hx.displays.Stage;
+import hx.display.Stage;
 
 /**
  * 引擎接口

@@ -1,7 +1,7 @@
 package hx.utils.atlas;
 
 import hx.gemo.Rectangle;
-import hx.displays.BitmapData;
+import hx.display.BitmapData;
 
 /**
  * 使用PNG + XML解析的图集支持

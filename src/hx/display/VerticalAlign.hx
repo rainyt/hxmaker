@@ -1,4 +1,4 @@
-package hx.displays;
+package hx.display;
 
 enum abstract VerticalAlign(Int) {
 	var TOP = 0;

@@ -4,7 +4,7 @@ import hx.utils.atlas.SpineTextureAtlas;
 import hx.events.FutureErrorEvent;
 import hx.utils.atlas.Atlas;
 import haxe.io.Path;
-import hx.displays.BitmapData;
+import hx.display.BitmapData;
 
 /**
  * 资源管理器

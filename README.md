@@ -12,6 +12,7 @@ A unified game engine written in Haxe that can run on any game engine.
 | hx.display.Graphic | 矢量图形 | ✅ | ✅ |
 | hx.display.Spine | Spine动画 | ✅ | ✅ |
 | hx.display.Scene | 场景，用于管理对象 | ✅ | ✅ |
+| hx.display.MovieClip | 动画剪辑，用于播放帧动画支持 | ✅ | ✅ |
 | hx.events.MouseEvent | 鼠标事件 | ✅ | / |
 | hx.events.KeyboardEvent | 键盘事件 | ✅ | / |
 | hx.utils.Assets | 资源加载器 | ✅ | / |

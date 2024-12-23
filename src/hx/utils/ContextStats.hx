@@ -47,11 +47,14 @@ class ContextStats {
 		return __vertexCount;
 	}
 
+	public static function statsCpuStart():Void {
+		__cpuTimer = Timer.stamp();
+	}
+
 	public static function reset():Void {
 		__drawcall = 0;
 		__visibleDisplayCounts = 0;
 		__vertexCount = 0;
-		__cpuTimer = Timer.stamp();
 	}
 
 	public static function statsDrawCall():Void {

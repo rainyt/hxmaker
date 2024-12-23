@@ -32,6 +32,12 @@ class MovieClip extends Image {
 		this.updateEnabled = true;
 	}
 
+	/**
+	 * 添加额外的帧，可选地添加声音和自定义持续时间。
+	 * @param bitmapData 
+	 * @param duration 
+	 * @param sound 
+	 */
 	public function addFrame(bitmapData:BitmapData, duration:Float = 1, sound:Dynamic = null):Void {
 		this.__frames.push({
 			bitmapData: bitmapData,

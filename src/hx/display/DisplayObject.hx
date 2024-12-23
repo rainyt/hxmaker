@@ -36,6 +36,8 @@ class DisplayObject extends EventDispatcher {
 	@:noCompletion private var __originWorldY = 0.;
 	@:noCompletion private var __colorTransform:ColorTransform;
 	@:noCompletion private var __blendMode:BlendMode = NORMAL;
+	@:noCompletion private var __colorTransformDirty = false;
+	@:noCompletion private var __uvsDirty = false;
 
 	/**
 	 * 混合模式决定了对象如何与下面的对象混合。
@@ -60,6 +62,7 @@ class DisplayObject extends EventDispatcher {
 
 	private function set_colorTransform(value:ColorTransform):ColorTransform {
 		__colorTransform.setTo(value);
+		__colorTransformDirty = true;
 		return value;
 	}
 
@@ -147,7 +150,7 @@ class DisplayObject extends EventDispatcher {
 			this.__worldTransform.translate(this.__originWorldX, this.__originWorldY);
 			this.__worldTransform.concat(parent.__worldTransform);
 		}
-		this.__transformDirty = false;
+		// this.__transformDirty = false;
 	}
 
 	/**
@@ -367,6 +370,7 @@ class DisplayObject extends EventDispatcher {
 
 	private function set_alpha(value:Float):Float {
 		__alpha = value;
+		__colorTransformDirty = true;
 		this.setDirty();
 		return value;
 	}

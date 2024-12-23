@@ -192,4 +192,11 @@ class DisplayObjectContainer extends DisplayObject {
 	private function get_numChildren():Int {
 		return __children.length;
 	}
+
+	override function setTransformDirty(value:Bool = true) {
+		super.setTransformDirty(value);
+		for (object in this.children) {
+			object.setTransformDirty();
+		}
+	}
 }

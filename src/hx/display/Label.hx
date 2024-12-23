@@ -154,4 +154,8 @@ class Label extends DisplayObject implements IDataProider<String> implements IRo
 		}
 		return root == null ? 0 : root.getTextHeight();
 	}
+
+	override function setTransformDirty(value:Bool = true) {
+		super.setTransformDirty(value);
+	}
 }

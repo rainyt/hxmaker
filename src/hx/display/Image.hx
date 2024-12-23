@@ -1,10 +1,12 @@
-package hx.display;
+package hx.displays;
 
 import hx.gemo.Rectangle;
 import hx.providers.IRootDataProvider;
 
 /**
- * 使用位图进行渲染的图像
+ * 图像是一个映射了纹理的四边形。
+ * 首先，它提供了一个方便的构造函数，可以自动将图像的大小与显示的纹理同步。
+ * 此外，它还增加了对`scale9Grid`网格的支持。这将图像分为九个区域，其角落将始终保持其原始大小。中心区域在两个方向上延伸以填充剩余空间；侧部区域将相应地在水平或垂直方向上拉伸。
  */
 @:keep
 class Image extends DisplayObject implements IDataProider<BitmapData> implements IRootDataProvider<Dynamic> {
@@ -14,6 +16,9 @@ class Image extends DisplayObject implements IDataProider<BitmapData> implements
 	@:noCompletion private var __scale9Grid:Rectangle;
 	@:noCompletion private var __scale9GridDirty:Bool = false;
 
+	/**
+	 * 不同的引擎中显示的原始对象引用
+	 */
 	public var root(get, set):Dynamic;
 
 	@:noCompletion private function get_root():Dynamic {
@@ -27,6 +32,7 @@ class Image extends DisplayObject implements IDataProider<BitmapData> implements
 
 	/**
 	 * 九宫格缩放矩形，会根据矩形的left/right/top/bottom的值来裁剪位图，并拉伸填充。
+	 * 这将图像分为九个区域，其角落将始终保持其原始大小。中心区域在两个方向上延伸以填充剩余空间；侧部区域将相应地在水平或垂直方向上拉伸。
 	 */
 	public var scale9Grid(get, set):Rectangle;
 

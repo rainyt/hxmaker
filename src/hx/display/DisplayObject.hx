@@ -35,6 +35,22 @@ class DisplayObject extends EventDispatcher {
 	@:noCompletion private var __originWorldX = 0.;
 	@:noCompletion private var __originWorldY = 0.;
 	@:noCompletion private var __colorTransform:ColorTransform;
+	@:noCompletion private var __blendMode:BlendMode = NORMAL;
+
+	/**
+	 * 混合模式决定了对象如何与下面的对象混合。
+	 */
+	public var blendMode(get, set):BlendMode;
+
+	private function get_blendMode():BlendMode {
+		return __blendMode;
+	}
+
+	private function set_blendMode(value:BlendMode):BlendMode {
+		__blendMode = value;
+		this.setDirty();
+		return value;
+	}
 
 	public var colorTransform(get, set):ColorTransform;
 

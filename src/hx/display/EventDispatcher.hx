@@ -33,6 +33,20 @@ class EventDispatcher {
 	}
 
 	/**
+	 * 删除所有具有特定类型的事件侦听器，或者如果类型为null，则删除所有事件侦听器。
+	 * @param type 
+	 */
+	public function removeEventListeners(type:String = null):Void {
+		if (type == null) {
+			__listeners = [];
+		} else {
+			if (__listeners.exists(type)) {
+				__listeners.remove(type);
+			}
+		}
+	}
+
+	/**
 	 * 调用事件
 	 * @param event 
 	 */

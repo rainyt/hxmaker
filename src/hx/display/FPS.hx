@@ -24,7 +24,7 @@ class FPS extends DisplayObjectContainer {
 
 	private function onUpdated(e:Event) {
 		this.label.data = "FPS:" + ContextStats.fps + "\ndrawCall:" + ContextStats.drawCall + "\nvertexCount:" + ContextStats.vertexCount + "\ndisplays:"
-			+ ContextStats.visibleDisplayCounts;
+			+ ContextStats.visibleDisplayCounts + "\nCPU:" + Std.int(ContextStats.cpu * 100) + "%";
 		this.__bg.width = label.getTextWidth() + 10;
 		this.__bg.height = label.getTextHeight() + 10;
 	}

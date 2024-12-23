@@ -7,6 +7,9 @@ class ContextStats {
 	private static var __vertexCount = 0;
 	private static var __fpses:Array<Float> = [];
 	private static var __visibleDisplayCounts = 0;
+	private static var __cpu:Float = 0;
+	private static var __cpuTimer:Float = 0;
+	private static var __cpus:Array<Float> = [];
 
 	/**
 	 * 帧率
@@ -48,6 +51,7 @@ class ContextStats {
 		__drawcall = 0;
 		__visibleDisplayCounts = 0;
 		__vertexCount = 0;
+		__cpuTimer = Timer.stamp();
 	}
 
 	public static function statsDrawCall():Void {
@@ -69,5 +73,27 @@ class ContextStats {
 
 	public static function statsVisibleDisplayCounts():Void {
 		__visibleDisplayCounts++;
+	}
+
+	/**
+	 * CPU使用率
+	 */
+	public static var cpu(get, never):Float;
+
+	private static function get_cpu():Float {
+		return __cpu;
+	}
+
+	public static function statsCpu():Void {
+		var now = Timer.stamp();
+		__cpus.push((now - __cpuTimer) / 0.0166);
+		if (__cpus.length > 60) {
+			__cpus.shift();
+		}
+		var all = 0.;
+		for (f in __cpus) {
+			all += f;
+		}
+		__cpu = all / __cpus.length;
 	}
 }

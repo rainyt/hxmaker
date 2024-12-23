@@ -5,6 +5,7 @@ package hx.display;
  */
 class MovieClip extends Image {
 	@:noCompletion private var __time:Float = 0;
+	@:noCompletion private var __playing:Bool = false;
 
 	private var __frames:Array<{
 		bitmapData:BitmapData,
@@ -47,6 +48,8 @@ class MovieClip extends Image {
 	}
 
 	override function onUpdate(dt:Float) {
+		if (!__playing)
+			return;
 		super.onUpdate(dt);
 		if (currentFrame >= __frames.length) {
 			currentFrame = 0;
@@ -61,5 +64,13 @@ class MovieClip extends Image {
 			__time = 0;
 		}
 		this.data = currentData.bitmapData;
+	}
+
+	public function play():Void {
+		this.__playing = true;
+	}
+
+	public function pause():Void {
+		this.__playing = false;
 	}
 }

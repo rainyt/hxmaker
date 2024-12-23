@@ -183,4 +183,13 @@ class DisplayObjectContainer extends DisplayObject {
 		}
 		return rect;
 	}
+
+	/**
+	 * 该容器内所有子对象的数量。
+	 */
+	public var numChildren(get, never):Int;
+
+	private function get_numChildren():Int {
+		return __children.length;
+	}
 }

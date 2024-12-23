@@ -10,6 +10,11 @@ class Event {
 	public inline static var UPDATE:String = "update";
 
 	/**
+	 * 尺寸调节事件
+	 */
+	public inline static var RESIZE:String = "resize";
+
+	/**
 	 * 数据
 	 */
 	public var data:Dynamic;

@@ -13,4 +13,9 @@ interface IEngine {
 	 * @param stageHeight 
 	 */
 	public function init(mainClass:Class<Stage>, stageWidth:Int, stageHeight:Int):Void;
+
+	/**
+	 * 释放引擎
+	 */
+	public function dispose():Void;
 }

@@ -2,6 +2,9 @@ package hx.display;
 
 import hx.events.Event;
 
+/**
+ * EventDispatcher类是所有调度事件的类的基类。
+ */
 class EventDispatcher {
 	/**
 	 * 所有侦听器列表

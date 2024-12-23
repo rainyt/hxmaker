@@ -53,13 +53,17 @@ class Quad extends Graphic implements IDataProider<UInt> implements IRootDataPro
 	private var __quadDirty:Bool = false;
 
 	override function set_width(value:Float):Float {
+		this.__width = value;
 		__quadDirty = true;
-		return super.set_width(value);
+		setTransformDirty();
+		return value;
 	}
 
 	override function set_height(value:Float):Float {
+		this.__height = value;
 		__quadDirty = true;
-		return super.set_height(value);
+		setTransformDirty();
+		return value;
 	}
 
 	override function __updateTransform(parent:DisplayObject) {

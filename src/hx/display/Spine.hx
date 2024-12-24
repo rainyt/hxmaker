@@ -26,6 +26,23 @@ class Spine extends Graphic {
 	 */
 	private static var quadTriangles:Array<Int> = [0, 1, 2, 2, 3, 0];
 
+	@:noCompletion private var __renderFpsTime:Float = 1 / 60;
+	@:noCompletion private var __renderCurrentTime:Float = 0.;
+
+	/**
+	 * 设置Spine渲染器的刷新帧率，默认为60FPS
+	 */
+	public var renderFps(get, set):Int;
+
+	private function get_renderFps():Int {
+		return Std.int(1 / __renderFpsTime);
+	}
+
+	private function set_renderFps(value:Int):Int {
+		__renderFpsTime = 1 / value;
+		return value;
+	}
+
 	/**
 	 * Spine骨架
 	 */
@@ -45,12 +62,15 @@ class Spine extends Graphic {
 		skeleton = new Skeleton(data);
 		skeleton.scaleY = -1;
 		animationState = new AnimationState(new AnimationStateData(data));
-		this.addEventListener(Event.UPDATE, onUpdateEvent);
 		this.updateEnabled = true;
 	}
 
-	private function onUpdateEvent(e:Event):Void {
-		this.update(1 / 60);
+	override function onUpdate(dt:Float) {
+		__renderCurrentTime += dt;
+		if (__renderCurrentTime >= __renderFpsTime) {
+			this.update(__renderCurrentTime);
+			__renderCurrentTime = 0;
+		}
 	}
 
 	override function onInit() {

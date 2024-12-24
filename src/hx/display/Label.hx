@@ -1,5 +1,6 @@
 package hx.display;
 
+import hx.core.Hxmaker;
 import hx.gemo.Matrix;
 import hx.gemo.Rectangle;
 import hx.providers.ITextFieldDataProvider;
@@ -143,14 +144,14 @@ class Label extends DisplayObject implements IDataProider<String> implements IRo
 
 	public function getTextWidth():Float {
 		if (__dirty) {
-			this.stage.renderer.renderLabel(this, true);
+			Hxmaker.engine.renderer.renderLabel(this, true);
 		}
 		return root == null ? 0 : root.getTextWidth();
 	}
 
 	public function getTextHeight():Float {
 		if (root == null && this.stage != null) {
-			this.stage.renderer.renderLabel(this, true);
+			Hxmaker.engine.renderer.renderLabel(this, true);
 		}
 		return root == null ? 0 : root.getTextHeight();
 	}

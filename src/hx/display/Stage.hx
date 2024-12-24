@@ -6,18 +6,17 @@ import hx.events.KeyboardEvent;
  * 游戏引擎舞台
  */
 class Stage extends DisplayObjectContainer {
-	@:noCompletion private var __render:IRender;
+	// @:noCompletion private var __render:IRender;
 	@:noCompletion private var __stageWidth:Float = 0;
 	@:noCompletion private var __stageHeight:Float = 0;
 
 	/**
 	 * 获得当前渲染器
 	 */
-	public var renderer(get, never):IRender;
-
-	private function get_renderer():IRender {
-		return __render;
-	}
+	// public var renderer(get, never):IRender;
+	// private function get_renderer():IRender {
+	// 	return __render;
+	// }
 
 	override function get_stage():Stage {
 		return this;
@@ -26,15 +25,15 @@ class Stage extends DisplayObjectContainer {
 	/**
 	 * 渲染舞台，当开始对舞台对象进行渲染时，会对图片进行一个性能优化处理
 	 */
-	public function render():Void {
-		if (this.__dirty) {
-			this.__updateTransform(this);
-			__render.clear();
-			__render.renderDisplayObjectContainer(this);
-			__render.endFill();
-			this.__dirty = false;
-		}
-	}
+	// public function render():Void {
+	// 	if (this.__dirty) {
+	// 		this.__updateTransform(this);
+	// 		__render.clear();
+	// 		__render.renderDisplayObjectContainer(this);
+	// 		__render.endFill();
+	// 		this.__dirty = false;
+	// 	}
+	// }
 
 	/**
 	 * 获得舞台宽度
@@ -62,7 +61,7 @@ class Stage extends DisplayObjectContainer {
 	 * 触发鼠标事件
 	 * @param event 
 	 */
-	public function handleMouseEvent(event:hx.events.MouseEvent):Void {
+	public function handleMouseEvent(event:hx.events.MouseEvent):Bool {
 		var touchList = [];
 		if (__hitTest(event.stageX, event.stageY, touchList)) {
 			var display:DisplayObject = touchList[touchList.length - 1];
@@ -75,6 +74,7 @@ class Stage extends DisplayObjectContainer {
 			event.target = this;
 			this.dispatchEvent(event);
 		}
+		return false;
 	}
 
 	/**

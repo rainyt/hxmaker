@@ -210,7 +210,7 @@ class DisplayObject extends EventDispatcher {
 		}
 	}
 
-	@:noCompletion private function __getRect():Rectangle {
+	private function __getRect():Rectangle {
 		return __rect;
 	}
 

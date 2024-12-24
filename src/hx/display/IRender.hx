@@ -29,6 +29,12 @@ interface IRender {
 	public function renderLabel(image:Label, offScreenRender:Bool = false):Void;
 
 	/**
+	 * 渲染自定义对象
+	 * @param displayObject 
+	 */
+	public function renderCustomDisplayObject(displayObject:CustomDisplayObject):Void;
+
+	/**
 	 * 渲染三角形图形
 	 * @param graphics 
 	 */

@@ -10,6 +10,7 @@ class ContextStats {
 	private static var __cpu:Float = 0;
 	private static var __cpuTimer:Float = 0;
 	private static var __cpus:Array<Float> = [];
+	private static var __memory:Int = 0;
 
 	/**
 	 * 帧率
@@ -98,5 +99,22 @@ class ContextStats {
 			all += f;
 		}
 		__cpu = all / __cpus.length;
+	}
+
+	/**
+	 * 获得内存值
+	 */
+	public static var memory(get, never):Int;
+
+	private static function get_memory():Int {
+		return __memory;
+	}
+
+	/**
+	 * 统计内存使用情况
+	 * @param memory 
+	 */
+	public static function statsMemory(memory:Int):Void {
+		__memory = memory;
 	}
 }

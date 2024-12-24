@@ -57,10 +57,13 @@ class DisplayObject extends EventDispatcher {
 	public var colorTransform(get, set):ColorTransform;
 
 	private function get_colorTransform():ColorTransform {
-		return __colorTransform.clone();
+		return __colorTransform != null ? __colorTransform.clone() : null;
 	}
 
 	private function set_colorTransform(value:ColorTransform):ColorTransform {
+		if (__colorTransform == null) {
+			__colorTransform = new ColorTransform();
+		}
 		__colorTransform.setTo(value);
 		__colorTransformDirty = true;
 		return value;
@@ -406,7 +409,7 @@ class DisplayObject extends EventDispatcher {
 		__rotationCosine = 1;
 		__scaleX = 1;
 		__scaleY = 1;
-		__colorTransform = new ColorTransform();
+		// __colorTransform = new ColorTransform();
 		__transform = new Matrix();
 		__worldTransform = new Matrix();
 		__rect = new Rectangle();

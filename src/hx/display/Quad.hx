@@ -43,7 +43,7 @@ class Quad extends Graphic implements IDataProider<UInt> implements IRootDataPro
 	 * @param height 高度
 	 * @param color 颜色
 	 */
-	public function new(width:Int = 0, height:Int = 0, color:UInt = 0x0) {
+	public function new(width:Float = 0, height:Float = 0, color:UInt = 0x0) {
 		super();
 		this.width = width;
 		this.height = height;

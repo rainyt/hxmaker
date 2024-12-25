@@ -1,5 +1,7 @@
 package hx.display;
 
+import hx.layout.LayoutData;
+import hx.layout.ILayout;
 import hx.gemo.ColorTransform;
 import hx.gemo.Matrix;
 import hx.gemo.Rectangle;
@@ -38,6 +40,21 @@ class DisplayObject extends EventDispatcher {
 	@:noCompletion private var __blendMode:BlendMode = NORMAL;
 	@:noCompletion private var __colorTransformDirty = false;
 	@:noCompletion private var __uvsDirty = false;
+	@:noCompletion private var __layoutData:LayoutData;
+
+	/**
+	 * 布局数据
+	 */
+	public var layoutData(get, set):LayoutData;
+
+	private function set_layoutData(value:LayoutData):LayoutData {
+		__layoutData = value;
+		return value;
+	}
+
+	private function get_layoutData():LayoutData {
+		return __layoutData;
+	}
 
 	/**
 	 * 混合模式决定了对象如何与下面的对象混合。

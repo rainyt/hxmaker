@@ -1,5 +1,6 @@
 package hx.display;
 
+import hx.gemo.Rectangle;
 import hx.gemo.ColorTransform;
 import hx.utils.ColorUtils;
 import hx.providers.IRootDataProvider;
@@ -66,8 +67,17 @@ class Quad extends Graphic implements IDataProider<UInt> implements IRootDataPro
 		return value;
 	}
 
+	override function __getRect():Rectangle {
+		__updateQuad();
+		return super.__getRect();
+	}
+
 	override function __updateTransform(parent:DisplayObject) {
 		super.__updateTransform(parent);
+		__updateQuad();
+	}
+
+	private function __updateQuad() {
 		if (__quadDirty) {
 			this.clear();
 			this.beginFill(this.data);

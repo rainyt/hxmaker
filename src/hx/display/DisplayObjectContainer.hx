@@ -1,5 +1,6 @@
 package hx.display;
 
+import hx.layout.ILayout;
 import hx.gemo.Matrix;
 import hx.gemo.Rectangle;
 
@@ -14,6 +15,43 @@ class DisplayObjectContainer extends DisplayObject {
 	@:noCompletion private var __children:Array<DisplayObject> = [];
 
 	@:noCompletion private var __mouseChildren:Bool = true;
+	@:noCompletion private var __layout:ILayout;
+	@:noCompletion private var __layoutDirty:Bool = false;
+
+	/**
+	 * 布局
+	 */
+	public var layout(get, set):ILayout;
+
+	private function set_layout(value:ILayout):ILayout {
+		__layout = value;
+		return value;
+	}
+
+	private function get_layout():ILayout {
+		return __layout;
+	}
+
+	private function __updateLayout() {
+		if (__layoutDirty) {
+			updateLayout();
+			__layoutDirty = false;
+		}
+	}
+
+	/**
+	 * 更新布局
+	 */
+	public function updateLayout():Void {
+		if (layout != null) {
+			layout.update(this.children);
+		}
+		for (object in this.children) {
+			if (object is DisplayObjectContainer) {
+				cast(object, DisplayObjectContainer).updateLayout();
+			}
+		}
+	}
 
 	/**
 	 * 当前显示对象是否允许子对象被触摸，如果返回false，则返回当前显示对象
@@ -71,6 +109,7 @@ class DisplayObjectContainer extends DisplayObject {
 		if (this.stage != null && child.stage == null) {
 			child.__onAddToStage(this.stage);
 		}
+		this.__layoutDirty = true;
 		this.setDirty();
 	}
 
@@ -83,6 +122,7 @@ class DisplayObjectContainer extends DisplayObject {
 		child.onRemoveToStage();
 		child.__parent = null;
 		child.__stage = null;
+		this.__layoutDirty = true;
 		this.setDirty();
 	}
 
@@ -128,6 +168,7 @@ class DisplayObjectContainer extends DisplayObject {
 
 	override function __updateTransform(parent:DisplayObject) {
 		super.__updateTransform(parent);
+		this.__updateLayout();
 		for (child in this.__children) {
 			child.__updateTransform(this);
 		}
@@ -176,6 +217,7 @@ class DisplayObjectContainer extends DisplayObject {
 		if (parent != null) {
 			parent.concat(__transform);
 		}
+		__updateLayout();
 		var rect = new Rectangle();
 		for (object in this.children) {
 			var objectRect = object.getBounds(parent ?? __transform.clone());

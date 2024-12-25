@@ -26,6 +26,7 @@ class Spine extends Graphic {
 	 */
 	private static var quadTriangles:Array<Int> = [0, 1, 2, 2, 3, 0];
 
+	@:noCompletion private var __fps = 60;
 	@:noCompletion private var __renderFpsTime:Float = 1 / 60;
 	@:noCompletion private var __renderCurrentTime:Float = 0.;
 
@@ -35,11 +36,12 @@ class Spine extends Graphic {
 	public var renderFps(get, set):Int;
 
 	private function get_renderFps():Int {
-		return Std.int(1 / __renderFpsTime);
+		return __fps;
 	}
 
 	private function set_renderFps(value:Int):Int {
 		__renderFpsTime = 1 / value;
+		__fps = value;
 		return value;
 	}
 
@@ -67,7 +69,7 @@ class Spine extends Graphic {
 
 	override function onUpdate(dt:Float) {
 		__renderCurrentTime += dt;
-		if (__renderCurrentTime >= __renderFpsTime) {
+		if (__fps >= 60 || __renderCurrentTime >= __renderFpsTime) {
 			this.update(__renderCurrentTime);
 			__renderCurrentTime = 0;
 		}

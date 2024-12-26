@@ -246,4 +246,26 @@ class Assets extends Future<Assets, Dynamic> {
 		trace(error);
 		this.errorValue(FutureErrorEvent.create(FutureErrorEvent.LOAD_ERROR, -1, "Load fail."));
 	}
+
+	/**
+	 * 获得位图数据，精灵图可以通过`精灵图:精灵名称`处理
+	 * @param name 
+	 * @return BitmapData
+	 */
+	public function getBitmapData(name:String):BitmapData {
+		if (name == null)
+			return null;
+		if (name.indexOf(":") != -1) {
+			var arr = name.split(":");
+			var atlas = atlases.get(arr[0]);
+			if (atlas == null) {
+				var bitmapData = atlas.bitmapDatas.get(arr[1]);
+				if (bitmapData != null) {
+					return bitmapData;
+				}
+			}
+		}
+		var bitmapData = bitmapDatas.get(name);
+		return bitmapData;
+	}
 }

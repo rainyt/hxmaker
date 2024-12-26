@@ -34,8 +34,8 @@ class DisplayObjectContainer extends DisplayObject {
 
 	private function __updateLayout() {
 		if (__layoutDirty) {
-			updateLayout();
 			__layoutDirty = false;
+			updateLayout();
 		}
 	}
 

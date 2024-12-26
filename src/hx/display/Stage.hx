@@ -6,7 +6,7 @@ import hx.events.KeyboardEvent;
 /**
  * 游戏引擎舞台
  */
-class Stage extends DisplayObjectContainer {
+class Stage extends Box {
 	// @:noCompletion private var __render:IRender;
 	@:noCompletion private var __stageWidth:Float = 0;
 	@:noCompletion private var __stageHeight:Float = 0;
@@ -98,5 +98,13 @@ class Stage extends DisplayObjectContainer {
 		if (event.type == Event.RESIZE) {
 			this.updateLayout();
 		}
+	}
+
+	override function get_width():Float {
+		return this.stageWidth;
+	}
+
+	override function get_height():Float {
+		return this.stageHeight;
 	}
 }

@@ -1,5 +1,6 @@
 package hx.display;
 
+import hx.events.Event;
 import hx.events.KeyboardEvent;
 
 /**
@@ -90,5 +91,12 @@ class Stage extends DisplayObjectContainer {
 	public function handleKeyboardEvent(event:KeyboardEvent):Void {
 		event.target = this;
 		this.dispatchEvent(event);
+	}
+
+	override function dispatchEvent(event:Event) {
+		super.dispatchEvent(event);
+		if (event.type == Event.RESIZE) {
+			this.updateLayout();
+		}
 	}
 }

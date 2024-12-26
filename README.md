@@ -26,6 +26,7 @@ A unified game engine written in Haxe that can run on any game engine.
 | hx.layout.FlowLayout | 流式布局 | 可通过`hx.display.Box`虚拟盒子配合布局实现流式布局 |
 | hx.layout.HorizontalLayout | 水平布局 | 水平布局 |
 | hx.layout.VerticalLayout | 垂直布局 | 垂直布局 |
+| hx.layout.AnchorLayout | 锚点布局 | 可根据`left`、`right`、`top`、`bottom`、`horizontalCenter`、`verticalCenter`属性来设置对象的位置 | 
 
 
 

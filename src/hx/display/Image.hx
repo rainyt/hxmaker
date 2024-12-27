@@ -37,7 +37,13 @@ class Image extends DisplayObject implements IDataProider<BitmapData> implements
 	public var scale9Grid(get, set):Rectangle;
 
 	private function get_scale9Grid():Rectangle {
-		return __scale9Grid;
+		if (__scale9Grid != null) {
+			return __scale9Grid;
+		}
+		if (data != null) {
+			return data.scale9Rect;
+		}
+		return null;
 	}
 
 	/**
@@ -45,6 +51,7 @@ class Image extends DisplayObject implements IDataProider<BitmapData> implements
 	 * @return Graphic
 	 */
 	private function getScale9GridGraphic():Graphic {
+		var __scale9Grid = scale9Grid;
 		if (__scale9Grid != null) {
 			if (__graphic == null) {
 				__graphic = new Graphic();

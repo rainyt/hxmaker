@@ -1,5 +1,7 @@
 package hx.ui;
 
+import hx.display.TextFormat;
+import hx.display.Label;
 import hx.layout.AnchorLayout;
 import hx.layout.AnchorLayoutData;
 import haxe.io.Path;
@@ -8,6 +10,7 @@ import hx.display.Image;
 import hx.display.DisplayObject;
 
 using hx.utils.XmlTools;
+using StringTools;
 
 class UIManager {
 	@:noCompletion private static var __instance:UIManager;
@@ -26,17 +29,30 @@ class UIManager {
 	private function new() {
 		__applyAttributes.set("default", (display:DisplayObject, xml:Xml, assets:Assets) -> {
 			// 默认行为
+			var parent = display.parent;
 			var useAnchor:Bool = false;
+			var percentWidth:Null<Float> = null;
+			var percentHeight:Null<Float> = null;
 			for (key in xml.attributes()) {
 				switch key {
 					case "x":
-						display.x = Std.parseFloat(xml.get("x"));
+						display.x = xml.getFloatValue("x");
 					case "y":
-						display.y = Std.parseFloat(xml.get("y"));
+						display.y = xml.getFloatValue("y");
 					case "width":
-						display.width = Std.parseFloat(xml.get("width"));
+						var value = xml.get("width");
+						if (value.indexOf("%") != -1) {
+							percentWidth = Std.parseFloat(value.replace("%", ""));
+						} else {
+							display.width = xml.getFloatValue("width");
+						}
 					case "height":
-						display.height = Std.parseFloat(xml.get("height"));
+						var value = xml.get("height");
+						if (value.indexOf("%") != -1) {
+							percentHeight = Std.parseFloat(value.replace("%", ""));
+						} else {
+							display.height = xml.getFloatValue("height");
+						}
 					case "alpha":
 						display.alpha = Std.parseFloat(xml.get("alpha"));
 					case "scaleX":
@@ -50,19 +66,39 @@ class UIManager {
 						useAnchor = true;
 				}
 			}
-			if (useAnchor) {
+			if (useAnchor || percentHeight != null || percentWidth != null) {
 				if (display.parent.layout == null) {
 					display.parent.layout = new AnchorLayout();
 				}
-				display.layoutData = new AnchorLayoutData(xml.getFloatValue("top"), xml.getFloatValue("right"), xml.getFloatValue("bottom"),
+				var layoutData = new AnchorLayoutData(xml.getFloatValue("top"), xml.getFloatValue("right"), xml.getFloatValue("bottom"),
 					xml.getFloatValue("left"), xml.getFloatValue("centerX"), xml.getFloatValue("centerY"));
+				display.layoutData = layoutData;
+				layoutData.percentWidth = percentWidth;
+				layoutData.percentHeight = percentHeight;
 			}
 		});
 		addAttributesParse(Image, function(obj:Image, xml:Xml, assets:Assets) {
-			if (xml.exists("data")) {
-				var data = xml.get("data");
+			if (xml.exists("src")) {
+				var data = xml.get("src");
 				data = Path.withoutDirectory(Path.withoutExtension(data));
 				obj.data = assets.getBitmapData(data);
+			}
+		});
+		addAttributesParse(Label, function(obj:Label, xml:Xml, assets:Assets) {
+			if (xml.exists("text")) {
+				obj.data = xml.get("text");
+				var color = xml.get("color");
+				var fontSize = xml.get("fontSize");
+				if (color != null || fontSize != null) {
+					var colorValue = color != null ? Std.parseInt(color) : 0x0;
+					obj.textFormat = new TextFormat(null, fontSize != null ? Std.parseInt(fontSize) : 26, colorValue);
+				}
+				if (xml.exists("hAlign")) {
+					obj.horizontalAlign = xml.get("hAlign");
+				}
+				if (xml.exists("vAlign")) {
+					obj.verticalAlign = xml.get("vAlign");
+				}
 			}
 		});
 	}

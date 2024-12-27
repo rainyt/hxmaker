@@ -37,8 +37,8 @@ class UIAssets extends Assets {
 					this.loadAtlas(path + ".png", path + ".xml");
 				case "Image":
 					// 加载图片
-					if (item.exists("data")) {
-						var url = item.get("data");
+					if (item.exists("src")) {
+						var url = item.get("src");
 						if (url.indexOf(":") == -1)
 							this.loadBitmapData(url);
 					}
@@ -66,6 +66,7 @@ class UIAssets extends Assets {
 			if (classType != null) {
 				var ui:DisplayObject = Type.createInstance(classType, []);
 				parent.addChild(ui);
+				trace("构造", ui);
 				// 应用属性
 				UIManager.getInstance().applyAttributes(ui, item, this);
 				if (ui is DisplayObjectContainer) {

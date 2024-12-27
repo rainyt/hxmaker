@@ -59,8 +59,6 @@ class Label extends DisplayObject implements IDataProider<String> implements IRo
 	public function new(?text:String) {
 		super();
 		this.data = text;
-		this.width = 200;
-		this.height = 36;
 	}
 
 	override function __updateTransform(parent:DisplayObject) {
@@ -158,5 +156,18 @@ class Label extends DisplayObject implements IDataProider<String> implements IRo
 
 	override function setTransformDirty(value:Bool = true) {
 		super.setTransformDirty(value);
+	}
+
+	override function get_width():Float {
+		if (__width == null)
+			return getTextWidth();
+		return super.get_width();
+	}
+
+	override function get_height():Float {
+		if (__height == null) {
+			return getTextHeight();
+		}
+		return super.get_height();
 	}
 }

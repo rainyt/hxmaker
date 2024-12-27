@@ -103,6 +103,15 @@ class AnchorLayoutData extends LayoutData {
 	 */
 	public var verticalCenter:Null<Float> = null;
 
+	/**
+	 * 
+	 * @param top 
+	 * @param right 
+	 * @param bottom 
+	 * @param left 
+	 * @param horizontalCenter 
+	 * @param verticalCenter 
+	 */
 	public function new(?top:Float, ?right:Float, ?bottom:Float, ?left:Float, ?horizontalCenter:Null<Float>, ?verticalCenter:Null<Float>) {
 		super();
 		this.top = top;

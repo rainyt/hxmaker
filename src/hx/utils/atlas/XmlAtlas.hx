@@ -37,6 +37,11 @@ class XmlAtlas extends Atlas {
 				var frameHeight = Std.parseInt(item.get("frameHeight"));
 				newBitmapData.frameRect = new Rectangle(frameX, frameY, frameWidth, frameHeight);
 			}
+			if (item.exists("slice9")) {
+				// 新增九宫格数据
+				newBitmapData.scale9Rect = new Rectangle();
+				newBitmapData.scale9Rect.css(item.get("slice9"), newBitmapData.width, newBitmapData.height);
+			}
 			this.bitmapDatas.set(name, newBitmapData);
 		}
 	}

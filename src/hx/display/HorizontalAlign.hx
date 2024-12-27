@@ -1,7 +1,7 @@
 package hx.display;
 
-enum abstract HorizontalAlign(Int) {
-	var LEFT = 0;
-	var CENTER = 1;
-	var RIGHT = 2;
+enum abstract HorizontalAlign(String) from String to String {
+	var LEFT = "left";
+	var CENTER = "center";
+	var RIGHT = "right";
 }

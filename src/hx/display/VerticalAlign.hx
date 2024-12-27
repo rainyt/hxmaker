@@ -1,7 +1,7 @@
 package hx.display;
 
-enum abstract VerticalAlign(Int) {
-	var TOP = 0;
-	var MIDDLE = 1;
-	var BOTTOM = 2;
+enum abstract VerticalAlign(String) from String to String {
+	var TOP = "top";
+	var MIDDLE = "center";
+	var BOTTOM = "bottom";
 }

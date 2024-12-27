@@ -18,6 +18,15 @@ class AnchorLayout extends Layout {
 		for (object in children) {
 			if (object.layoutData != null && object.layoutData is AnchorLayoutData) {
 				var layoutData:AnchorLayoutData = cast object.layoutData;
+
+				// 百分比宽高兼容
+				if (layoutData.percentWidth != null) {
+					object.width = parentWidth * layoutData.percentWidth / 100;
+				}
+				if (layoutData.percentHeight != null) {
+					object.height = parentHeight * layoutData.percentHeight / 100;
+				}
+
 				if (layoutData.left != null && layoutData.right != null) {
 					// 左右拉伸
 					object.x = layoutData.left;

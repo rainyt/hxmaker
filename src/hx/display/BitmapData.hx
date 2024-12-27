@@ -31,6 +31,11 @@ class BitmapData {
 	 */
 	public var frameRect:Rectangle;
 
+	/**
+	 * 九宫格缩放区域
+	 */
+	public var scale9Rect:Rectangle;
+
 	public function new() {}
 
 	public var uvOffsetX(get, never):Float;

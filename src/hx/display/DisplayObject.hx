@@ -229,6 +229,17 @@ class DisplayObject extends EventDispatcher {
 	}
 
 	/**
+	 * 重置尺寸
+	 * @param width 
+	 * @param height 
+	 */
+	public function resize(?width:Null<Float>, ?height:Null<Float>):Void {
+		this.__width = width;
+		this.__height = height;
+		setTransformDirty();
+	}
+
+	/**
 	 * 获得边界
 	 * @return Rectangle
 	 */

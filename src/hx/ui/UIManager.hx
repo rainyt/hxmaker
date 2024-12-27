@@ -1,9 +1,12 @@
 package hx.ui;
 
+import hx.layout.AnchorLayoutData;
 import haxe.io.Path;
 import hx.utils.Assets;
 import hx.display.Image;
 import hx.display.DisplayObject;
+
+using hx.utils.XmlTools;
 
 class UIManager {
 	@:noCompletion private static var __instance:UIManager;
@@ -22,16 +25,17 @@ class UIManager {
 	private function new() {
 		__applyAttributes.set("default", (display:DisplayObject, xml:Xml, assets:Assets) -> {
 			// 默认行为
+			var useAnchor:Bool = false;
 			for (key in xml.attributes()) {
 				switch key {
 					case "x":
-						display.x = Std.parseInt(xml.get("x"));
+						display.x = Std.parseFloat(xml.get("x"));
 					case "y":
-						display.y = Std.parseInt(xml.get("y"));
+						display.y = Std.parseFloat(xml.get("y"));
 					case "width":
-						display.width = Std.parseInt(xml.get("width"));
+						display.width = Std.parseFloat(xml.get("width"));
 					case "height":
-						display.height = Std.parseInt(xml.get("height"));
+						display.height = Std.parseFloat(xml.get("height"));
 					case "alpha":
 						display.alpha = Std.parseFloat(xml.get("alpha"));
 					case "scaleX":
@@ -40,7 +44,14 @@ class UIManager {
 						display.scaleY = Std.parseFloat(xml.get("scaleY"));
 					case "rotation":
 						display.rotation = Std.parseFloat(xml.get("rotation"));
+					case "left", "right", "top", "bottom", "centerX", "centerY":
+						// 意味着需要使用AnchorLayoutData数据
+						useAnchor = true;
 				}
+			}
+			if (useAnchor) {
+				display.layoutData = new AnchorLayoutData(xml.getFloatValue("left"), xml.getFloatValue("right"), xml.getFloatValue("top"),
+					xml.getFloatValue("bottom"), xml.getFloatValue("centerX"), xml.getFloatValue("centerY"));
 			}
 		});
 		addAttributesParse(Image, function(obj:Image, xml:Xml, assets:Assets) {

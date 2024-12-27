@@ -2,6 +2,11 @@ package hx.display;
 
 class TextFormat {
 	/**
+	 * 默认字体
+	 */
+	public static var defaultFont:String = null;
+
+	/**
 	 * 字体
 	 */
 	public var font:String = null;
@@ -27,7 +32,7 @@ class TextFormat {
 	public var outlineColor:Int = 0x0;
 
 	public function new(font:String = null, size:Int = 26, color:UInt = 0x0, outline:Int = 0, outlineColor:UInt = 0x0) {
-		this.font = font;
+		this.font = font ?? defaultFont;
 		this.size = size;
 		this.color = color;
 		this.outline = outline;

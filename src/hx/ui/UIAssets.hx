@@ -31,10 +31,17 @@ class UIAssets extends Assets {
 		for (item in xml.elements()) {
 			// 判断是否需要加载资源
 			switch item.nodeName {
+				case "atlas":
+					// 加载精灵图
+					var path = item.get("path");
+					this.loadAtlas(path + ".png", path + ".xml");
 				case "Image":
 					// 加载图片
-					if (item.exists("data"))
-						this.loadBitmapData(item.get("data"));
+					if (item.exists("data")) {
+						var url = item.get("data");
+						if (url.indexOf(":") == -1)
+							this.loadBitmapData(url);
+					}
 			}
 			parseXml(item);
 		}
@@ -50,14 +57,11 @@ class UIAssets extends Assets {
 	 */
 	public function build(parent:DisplayObjectContainer):Void {
 		var parentXml = viewXml.nodeType == Document ? viewXml.firstElement() : viewXml;
-		// for (child in parentXml.elements()) {
-		// }
 		buildUi(parentXml, parent);
 	}
 
 	public function buildUi(xml:Xml, parent:DisplayObjectContainer):Void {
 		for (item in xml.elements()) {
-			trace("开始解析", item);
 			var classType = UIManager.getInstance().getClassType(item.nodeName);
 			if (classType != null) {
 				var ui:DisplayObject = Type.createInstance(classType, []);

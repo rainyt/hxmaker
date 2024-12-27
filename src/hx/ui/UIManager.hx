@@ -1,5 +1,6 @@
 package hx.ui;
 
+import hx.layout.AnchorLayout;
 import hx.layout.AnchorLayoutData;
 import haxe.io.Path;
 import hx.utils.Assets;
@@ -18,7 +19,7 @@ class UIManager {
 		return __instance;
 	}
 
-	private var __types:Map<String, Class<Dynamic>> = [];
+	private var __types:Map<String, Class<Dynamic>> = ["atlas" => null];
 
 	private var __applyAttributes:Map<String, Dynamic->Xml->Assets->Void> = [];
 
@@ -50,8 +51,11 @@ class UIManager {
 				}
 			}
 			if (useAnchor) {
-				display.layoutData = new AnchorLayoutData(xml.getFloatValue("left"), xml.getFloatValue("right"), xml.getFloatValue("top"),
-					xml.getFloatValue("bottom"), xml.getFloatValue("centerX"), xml.getFloatValue("centerY"));
+				if (display.parent.layout == null) {
+					display.parent.layout = new AnchorLayout();
+				}
+				display.layoutData = new AnchorLayoutData(xml.getFloatValue("top"), xml.getFloatValue("right"), xml.getFloatValue("bottom"),
+					xml.getFloatValue("left"), xml.getFloatValue("centerX"), xml.getFloatValue("centerY"));
 			}
 		});
 		addAttributesParse(Image, function(obj:Image, xml:Xml, assets:Assets) {

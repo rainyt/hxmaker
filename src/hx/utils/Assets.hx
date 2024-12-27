@@ -258,7 +258,7 @@ class Assets extends Future<Assets, Dynamic> {
 		if (name.indexOf(":") != -1) {
 			var arr = name.split(":");
 			var atlas = atlases.get(arr[0]);
-			if (atlas == null) {
+			if (atlas != null) {
 				var bitmapData = atlas.bitmapDatas.get(arr[1]);
 				if (bitmapData != null) {
 					return bitmapData;

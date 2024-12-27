@@ -159,6 +159,20 @@ class DisplayObjectContainer extends DisplayObject {
 		return this.__children[index];
 	}
 
+	/**
+	 * 根据名称获得子对象
+	 * @param name 
+	 * @return DisplayObject
+	 */
+	public function getChildByName(name:String):DisplayObject {
+		for (object in this.__children) {
+			if (object.name == name) {
+				return object;
+			}
+		}
+		return null;
+	}
+
 	override function __onAddToStage(stage:Stage):Void {
 		super.__onAddToStage(stage);
 		for (child in this.__children) {

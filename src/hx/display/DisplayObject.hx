@@ -41,6 +41,21 @@ class DisplayObject extends EventDispatcher {
 	@:noCompletion private var __colorTransformDirty = false;
 	@:noCompletion private var __uvsDirty = false;
 	@:noCompletion private var __layoutData:LayoutData;
+	@:noCompletion private var __name:String;
+
+	/**
+	 * 显示对象名称，可通过`getChildByName`方法获取
+	 */
+	public var name(get, set):String;
+
+	private function get_name():String {
+		return __name;
+	}
+
+	private function set_name(value:String):String {
+		__name = value;
+		return value;
+	}
 
 	/**
 	 * 布局数据

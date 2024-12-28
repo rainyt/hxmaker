@@ -1,5 +1,7 @@
 package hx.ui;
 
+import hx.display.HBox;
+import hx.display.VBox;
 import hx.display.Button;
 import hx.display.TextFormat;
 import hx.display.Label;
@@ -112,6 +114,16 @@ class UIManager {
 				if (xml.exists("vAlign")) {
 					obj.verticalAlign = xml.get("vAlign");
 				}
+			}
+		});
+		addAttributesParse(VBox, function(obj:VBox, xml:Xml, assets:Assets) {
+			if (xml.exists("gap")) {
+				obj.gap = xml.getFloatValue("gap");
+			}
+		});
+		addAttributesParse(HBox, function(obj:HBox, xml:Xml, assets:Assets) {
+			if (xml.exists("gap")) {
+				obj.gap = xml.getFloatValue("gap");
 			}
 		});
 	}

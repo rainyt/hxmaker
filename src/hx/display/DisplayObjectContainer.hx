@@ -229,12 +229,14 @@ class DisplayObjectContainer extends DisplayObject {
 
 	override function getBounds(parent:Matrix = null):Rectangle {
 		if (parent != null) {
-			parent.concat(__transform);
+			var t = __transform.clone();
+			t.concat(parent);
+			parent = t;
 		}
 		__updateLayout();
 		var rect = new Rectangle();
 		for (object in this.children) {
-			var objectRect = object.getBounds(parent ?? __transform.clone());
+			var objectRect = object.getBounds(parent != null ? parent : __transform.clone());
 			rect.expand(objectRect.x, objectRect.y, objectRect.width, objectRect.height);
 		}
 		return rect;

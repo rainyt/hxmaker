@@ -245,8 +245,8 @@ class DisplayObject extends EventDispatcher {
 	 */
 	public function getBounds(parent:Matrix = null):Rectangle {
 		if (parent != null) {
-			var t = parent.clone();
-			t.concat(__transform);
+			var t = __transform.clone();
+			t.concat(parent);
 			return __getLocalBounds(__getRect(), t);
 		} else {
 			return __getLocalBounds(__getRect());

@@ -123,22 +123,22 @@ class Label extends DisplayObject implements IDataProider<String> implements IRo
 	}
 
 	override function __getRect():Rectangle {
-		__rect.x = -__originWorldX;
-		__rect.y = -__originWorldY;
-		__rect.width = this.__width;
-		__rect.height = this.__height;
+		// __rect.x = -__originWorldX;
+		// __rect.y = -__originWorldY;
+		__rect.width = this.width;
+		__rect.height = this.height;
 		return super.__getRect();
 	}
 
-	override function getBounds(parent:Matrix = null):Rectangle {
-		if (parent != null) {
-			var t = parent.clone();
-			t.concat(__transform);
-			return __getLocalBounds(new Rectangle(0, 0, this.width, this.height), t);
-		} else {
-			return __getLocalBounds(new Rectangle(0, 0, this.width, this.height));
-		}
-	}
+	// override function getBounds(parent:Matrix = null):Rectangle {
+	// 	if (parent != null) {
+	// 		var t = parent.clone();
+	// 		t.concat(__transform);
+	// 		return __getLocalBounds(new Rectangle(0, 0, this.width, this.height), t);
+	// 	} else {
+	// 		return __getLocalBounds(new Rectangle(0, 0, this.width, this.height));
+	// 	}
+	// }
 
 	public function getTextWidth():Float {
 		if (__dirty) {

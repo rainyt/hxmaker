@@ -17,14 +17,9 @@ class UIBuilder {
 		var fileds = Context.getBuildFields();
 		// 将在该布局中新增ids的字段，以便访问
 		fileds.push({
-			name: "__ids",
-			kind: FVar(macro :Map<String, hx.display.DisplayObject>, macro []),
-			meta: [
-				{
-					name: ":noCompletion",
-					pos: Context.currentPos()
-				}
-			],
+			name: "uiAssets",
+			kind: FVar(macro :hx.ui.UIAssets, macro new hx.ui.UIAssets($v{path})),
+			meta: [],
 			pos: Context.currentPos()
 		});
 		// 新增一个通过ids访问控件的函数
@@ -38,14 +33,7 @@ class UIBuilder {
 					}
 				],
 				expr: macro {
-					var display = __ids.get(id);
-					if (display == null) {
-						display = this.getChildByName(id);
-					}
-					if (display != null) {
-						__ids.set(id, display);
-					}
-					return display;
+					return uiAssets.ids.get(id);
 				}
 			}),
 			pos: Context.currentPos(),

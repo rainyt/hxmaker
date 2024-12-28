@@ -1,11 +1,13 @@
 package hx.display;
 
+import hx.layout.AnchorLayoutData;
+import hx.layout.AnchorLayout;
 import hx.events.MouseEvent;
 
 /**
  * 按钮
  */
-class Button extends DisplayObjectContainer {
+class Button extends Box {
 	/**
 	 * 按钮的容器
 	 */
@@ -50,6 +52,8 @@ class Button extends DisplayObjectContainer {
 		__img.data = skin != null ? skin.up : null;
 		__label.width = __img.width;
 		__label.height = __img.height;
+		this.width = __img.width;
+		this.height = __img.height;
 		return skin;
 	}
 
@@ -74,6 +78,9 @@ class Button extends DisplayObjectContainer {
 		this.addChild(__label);
 		this.skin = skin;
 		this.mouseChildren = false;
+		this.layout = new AnchorLayout();
+		__img.layoutData = AnchorLayoutData.fill();
+		__label.layoutData = AnchorLayoutData.fill();
 	}
 
 	override function onStageInit() {

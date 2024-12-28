@@ -1,5 +1,6 @@
 package hx.utils;
 
+import haxe.io.Path;
 import hx.display.DisplayObject;
 
 using StringTools;
@@ -21,5 +22,12 @@ class XmlTools {
 			return Std.parseFloat(value.replace("%", ""));
 		}
 		return Std.parseFloat(xml.get(key));
+	}
+
+	public static function getStringId(xml:Xml, key:String):String {
+		if (xml.exists(key) == false) {
+			return null;
+		}
+		return Path.withoutDirectory(Path.withoutExtension(xml.get(key)));
 	}
 }

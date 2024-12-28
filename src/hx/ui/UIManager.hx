@@ -1,5 +1,6 @@
 package hx.ui;
 
+import hx.display.Button;
 import hx.display.TextFormat;
 import hx.display.Label;
 import hx.layout.AnchorLayout;
@@ -35,6 +36,8 @@ class UIManager {
 			var percentHeight:Null<Float> = null;
 			for (key in xml.attributes()) {
 				switch key {
+					case "id":
+						display.name = xml.get("id");
 					case "x":
 						display.x = xml.getFloatValue("x");
 					case "y":
@@ -77,6 +80,18 @@ class UIManager {
 				layoutData.percentHeight = percentHeight;
 			}
 		});
+		addAttributesParse(Button, function(obj:Button, xml:Xml, assets:Assets) {
+			if (xml.exists("src")) {
+				obj.skin = {
+					up: assets.getBitmapData(xml.getStringId("src"))
+				};
+			}
+			obj.text = xml.get("text");
+			var textformat = createTextformat(xml);
+			if (textformat != null) {
+				obj.textFormat = textformat;
+			}
+		});
 		addAttributesParse(Image, function(obj:Image, xml:Xml, assets:Assets) {
 			if (xml.exists("src")) {
 				var data = xml.get("src");
@@ -87,11 +102,9 @@ class UIManager {
 		addAttributesParse(Label, function(obj:Label, xml:Xml, assets:Assets) {
 			if (xml.exists("text")) {
 				obj.data = xml.get("text");
-				var color = xml.get("color");
-				var fontSize = xml.get("fontSize");
-				if (color != null || fontSize != null) {
-					var colorValue = color != null ? Std.parseInt(color) : 0x0;
-					obj.textFormat = new TextFormat(null, fontSize != null ? Std.parseInt(fontSize) : 26, colorValue);
+				var textformat = createTextformat(xml);
+				if (textformat != null) {
+					obj.textFormat = textformat;
 				}
 				if (xml.exists("hAlign")) {
 					obj.horizontalAlign = xml.get("hAlign");
@@ -101,6 +114,17 @@ class UIManager {
 				}
 			}
 		});
+	}
+
+	public function createTextformat(xml:Xml):TextFormat {
+		var color = xml.get("color");
+		var fontSize = xml.get("fontSize");
+		if (color != null || fontSize != null) {
+			var colorValue = color != null ? Std.parseInt(color) : 0x0;
+			var textFormat = new TextFormat(null, fontSize != null ? Std.parseInt(fontSize) : 26, colorValue);
+			return textFormat;
+		}
+		return null;
 	}
 
 	/**

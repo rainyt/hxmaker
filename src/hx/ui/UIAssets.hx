@@ -60,6 +60,8 @@ class UIAssets extends Assets {
 		buildUi(parentXml, parent);
 	}
 
+	public var ids:Map<String, DisplayObject> = new Map();
+
 	public function buildUi(xml:Xml, parent:DisplayObjectContainer):Void {
 		for (item in xml.elements()) {
 			var classType = UIManager.getInstance().getClassType(item.nodeName);
@@ -69,6 +71,9 @@ class UIAssets extends Assets {
 				trace("构造", ui);
 				// 应用属性
 				UIManager.getInstance().applyAttributes(ui, item, this);
+				if (ui.name != null) {
+					ids.set(ui.name, ui);
+				}
 				if (ui is DisplayObjectContainer) {
 					buildUi(item, cast ui);
 				}

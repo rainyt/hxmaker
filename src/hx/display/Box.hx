@@ -18,11 +18,13 @@ class Box extends DisplayObjectContainer {
 
 	override function set_width(value:Float):Float {
 		__width = value;
+		__layoutDirty = true;
 		return value;
 	}
 
 	override function set_height(value:Float):Float {
 		__height = value;
+		__layoutDirty = true;
 		return value;
 	}
 }

@@ -255,4 +255,14 @@ class DisplayObjectContainer extends DisplayObject {
 			object.setTransformDirty();
 		}
 	}
+
+	override function set_width(value:Float):Float {
+		__layoutDirty = true;
+		return super.set_width(value);
+	}
+
+	override function set_height(value:Float):Float {
+		__layoutDirty = true;
+		return super.set_height(value);
+	}
 }

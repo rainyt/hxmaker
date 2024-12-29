@@ -3,3 +3,4 @@
 --class-path test
 --interp
 --library spine-haxe
+--library actuate

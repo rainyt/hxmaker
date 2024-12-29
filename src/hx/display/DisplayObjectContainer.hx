@@ -1,5 +1,6 @@
 package hx.display;
 
+import hx.ui.UIManager;
 import hx.layout.ILayout;
 import hx.gemo.Matrix;
 import hx.gemo.Rectangle;
@@ -68,6 +69,11 @@ class DisplayObjectContainer extends DisplayObject {
 	}
 
 	public function new() {
+		// 检测是否存在__ui_id__，如果存在则需要通过UIManager进行构造
+		var __ui_id__ = Reflect.getProperty(this, "__ui_id__");
+		if (__ui_id__ != null) {
+			UIManager.getInstance().buildUi(__ui_id__, this);
+		}
 		super();
 		this.updateEnabled = true;
 	}

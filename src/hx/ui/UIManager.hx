@@ -1,5 +1,6 @@
 package hx.ui;
 
+import hx.display.DisplayObjectContainer;
 import hx.display.BitmapData;
 import hx.display.HBox;
 import hx.display.VBox;
@@ -205,5 +206,20 @@ class UIManager {
 			parser(ui, attributes, assets);
 		}
 		__applyAttributes.get("default")(ui, attributes, assets);
+	}
+
+	/**
+	 * 构造UI
+	 * @param id 
+	 * @param parent 
+	 */
+	public function buildUi(id:String, parent:DisplayObjectContainer):Void {
+		var id = Path.withoutDirectory(Path.withoutExtension(id));
+		for (assets in assetsList) {
+			if (assets.uiAssetses.exists(id)) {
+				assets.uiAssetses.get(id).build(parent);
+				break;
+			}
+		}
 	}
 }

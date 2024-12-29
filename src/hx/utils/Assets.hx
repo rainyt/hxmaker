@@ -1,5 +1,6 @@
 package hx.utils;
 
+import hx.ui.UIAssets;
 import hx.utils.atlas.SpineTextureAtlas;
 import hx.events.FutureErrorEvent;
 import hx.utils.atlas.Atlas;
@@ -76,6 +77,16 @@ class Assets extends Future<Assets, Dynamic> {
 	 * String列表
 	 */
 	public var strings:Map<String, String> = new Map();
+
+	/**
+	 * XML列表
+	 */
+	public var xmls:Map<String, Xml> = new Map();
+
+	/**
+	 * UI资源列表
+	 */
+	public var uiAssetses:Map<String, UIAssets> = new Map();
 
 	/**
 	 * 已经加载完成的数量
@@ -156,6 +167,22 @@ class Assets extends Future<Assets, Dynamic> {
 	}
 
 	/**
+	 * 加载xml数据
+	 * @param path 
+	 */
+	public function loadXml(path:String) {
+		pushFuture(new hx.utils.XmlFuture(path, false));
+	}
+
+	/**
+	 * 加载UI资源
+	 * @param path 
+	 */
+	public function loadUIAssets(path:String) {
+		pushFuture(new hx.utils.UIAssetsFuture(path, false));
+	}
+
+	/**
 	 * 追加到加载队列
 	 * @param future 
 	 */
@@ -216,7 +243,11 @@ class Assets extends Future<Assets, Dynamic> {
 	private function __onCompleted(future:Future<Dynamic, Dynamic>, data:Dynamic):Void {
 		CURRENT_LOAD_COUNTS--;
 		loadedCounts++;
-		if (data is String) {
+		if (data is UIAssets) {
+			uiAssetses.set(formatName(future.getLoadData()), data);
+		} else if (data is Xml) {
+			xmls.set(formatName(future.getLoadData()), data);
+		} else if (data is String) {
 			strings.set(formatName(future.getLoadData()), data);
 		} else if (data is BitmapData) {
 			bitmapDatas.set(formatName(future.getLoadData()), data);
@@ -266,6 +297,15 @@ class Assets extends Future<Assets, Dynamic> {
 			}
 		}
 		var bitmapData = bitmapDatas.get(name);
+		if (bitmapData == null) {
+			// 如果仍然没有，则从加载的资源列表中获得
+			for (assets in uiAssetses) {
+				var bmd = assets.getBitmapData(name);
+				if (bmd != null) {
+					return bmd;
+				}
+			}
+		}
 		return bitmapData;
 	}
 }

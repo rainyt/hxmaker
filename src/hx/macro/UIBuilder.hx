@@ -1,5 +1,7 @@
 package hx.macro;
 
+import haxe.macro.TypeTools;
+import haxe.macro.Type.ClassType;
 import haxe.macro.Expr.ComplexType;
 import haxe.macro.Expr.Var;
 import sys.io.File;
@@ -14,13 +16,32 @@ class UIBuilder {
 	 * @return Array<Field>
 	 */
 	public static function build(path:String):Array<Field> {
+		// 绑定继承类
+		var localClass = Context.getLocalClass().get();
 		var fileds = Context.getBuildFields();
 		// 将在该布局中新增ids的字段，以便访问
 		fileds.push({
-			name: "uiAssets",
-			kind: FVar(macro :hx.ui.UIAssets, macro new hx.ui.UIAssets($v{path})),
-			meta: [],
+			name: "ids",
+			kind: FVar(macro :Map<String, hx.display.DisplayObject>, macro new Map()),
+			meta: [
+				{
+					name: ":noCompletion",
+					pos: Context.currentPos()
+				}
+			],
 			pos: Context.currentPos()
+		});
+		// 追加一个__ui_id__属性，记录path
+		fileds.push({
+			name: "__ui_id__",
+			kind: FVar(macro :String, macro $v{path}),
+			meta: [
+				{
+					name: ":noCompletion",
+					pos: Context.currentPos()
+				}
+			],
+			pos: Context.currentPos(),
 		});
 		// 新增一个通过ids访问控件的函数
 		fileds.push({
@@ -33,7 +54,7 @@ class UIBuilder {
 					}
 				],
 				expr: macro {
-					return uiAssets.ids.get(id);
+					return this.ids.get(id);
 				}
 			}),
 			pos: Context.currentPos(),

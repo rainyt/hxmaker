@@ -57,12 +57,10 @@ class UIAssets extends Assets {
 	 */
 	public function build(parent:DisplayObjectContainer):Void {
 		var parentXml = viewXml.nodeType == Document ? viewXml.firstElement() : viewXml;
-		buildUi(parentXml, parent);
+		buildUi(parentXml, parent, Reflect.getProperty(parent, "ids"));
 	}
 
-	public var ids:Map<String, DisplayObject> = new Map();
-
-	public function buildUi(xml:Xml, parent:DisplayObjectContainer):Void {
+	public function buildUi(xml:Xml, parent:DisplayObjectContainer, ids:Map<String, DisplayObject>):Void {
 		for (item in xml.elements()) {
 			var classType = UIManager.getInstance().getClassType(item.nodeName);
 			if (classType != null) {
@@ -75,7 +73,7 @@ class UIAssets extends Assets {
 					ids.set(ui.name, ui);
 				}
 				if (ui is DisplayObjectContainer) {
-					buildUi(item, cast ui);
+					buildUi(item, cast ui, ids);
 				}
 			}
 		}

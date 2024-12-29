@@ -1,5 +1,6 @@
 package hx.ui;
 
+import hx.display.BitmapData;
 import hx.display.HBox;
 import hx.display.VBox;
 import hx.display.Button;
@@ -16,6 +17,34 @@ using hx.utils.XmlTools;
 using StringTools;
 
 class UIManager {
+	/**
+	 * 资源列表
+	 */
+	private static var assetsList:Array<Assets> = [];
+
+	/**
+	 * 绑定资源
+	 * @param assets 
+	 */
+	public static function bindAssets(assets:Assets) {
+		assetsList.push(assets);
+	}
+
+	/**
+	 * 获得位图资源
+	 * @param id 
+	 * @return BitmapData
+	 */
+	public static function getBitmapData(id:String):BitmapData {
+		for (assets in assetsList) {
+			var bitmapData = assets.getBitmapData(id);
+			if (bitmapData != null) {
+				return bitmapData;
+			}
+		}
+		return null;
+	}
+
 	@:noCompletion private static var __instance:UIManager;
 
 	public static function getInstance() {
@@ -26,7 +55,6 @@ class UIManager {
 	}
 
 	private var __types:Map<String, Class<Dynamic>> = ["atlas" => null];
-
 	private var __applyAttributes:Map<String, Dynamic->Xml->Assets->Void> = [];
 
 	private function new() {

@@ -18,6 +18,7 @@ class FPS extends DisplayObjectContainer {
 		__bg.alpha = 0.8;
 		this.addChild(__bg);
 		this.label = new Label();
+		label.textFormat = new TextFormat(null, 26, 0xffffff);
 		this.addChild(label);
 		this.addEventListener(Event.UPDATE, onUpdated);
 	}

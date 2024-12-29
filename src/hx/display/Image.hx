@@ -81,7 +81,7 @@ class Image extends DisplayObject implements IDataProider<BitmapData> implements
 					maskUVs(rect.right, 0, rightWidth, topHeight, textureWidth, textureHeight, offsetX, offsetY));
 				// 左下
 				__graphic.drawRectUVs(0, this.height - bottomHeight, leftWidth, bottomHeight,
-					maskUVs(0, rect.bottom, rightWidth, bottomHeight, textureWidth, textureHeight, offsetX, offsetY));
+					maskUVs(0, rect.bottom, leftWidth, bottomHeight, textureWidth, textureHeight, offsetX, offsetY));
 				// 右下
 				__graphic.drawRectUVs(this.width - rightWidth, this.height - bottomHeight, rightWidth, bottomHeight,
 					maskUVs(rect.right, rect.bottom, rightWidth, bottomHeight, textureWidth, textureHeight, offsetX, offsetY));

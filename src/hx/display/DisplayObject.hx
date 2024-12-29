@@ -44,6 +44,36 @@ class DisplayObject extends EventDispatcher {
 	@:noCompletion private var __name:String;
 
 	/**
+	 * 原点偏移X，单位为像素
+	 */
+	public var originX(get, set):Float;
+
+	private function set_originX(value:Float):Float {
+		__originWorldX = value;
+		this.setTransformDirty();
+		return value;
+	}
+
+	private function get_originX():Float {
+		return __originWorldX;
+	}
+
+	/**
+	 * 原点偏移Y，单位为像素
+	 */
+	public var originY(get, set):Float;
+
+	private function set_originY(value:Float):Float {
+		__originWorldY = value;
+		this.setTransformDirty();
+		return value;
+	}
+
+	private function get_originY():Float {
+		return __originWorldY;
+	}
+
+	/**
 	 * 显示对象名称，可通过`getChildByName`方法获取
 	 */
 	public var name(get, set):String;

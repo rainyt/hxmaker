@@ -15,6 +15,9 @@ A unified game engine written in Haxe that can run on any game engine.
 | hx.display.MovieClip | 动画剪辑，用于播放帧动画支持 | ✅ | ✅ |
 | hx.display.FPS | 显示游戏的各种状态，如drawCall、顶点数量、CPU使用率等 | ✅ | ✅ |
 | hx.display.Box | 虚拟盒子，该容器的width/height均不会影响到子容器 | ✅ | ✅ |
+| hx.display.VBox | 竖向布局的虚拟盒子 | ✅ | ✅ |
+| hx.display.HBox | 横向布局的虚拟盒子 | ✅ | ✅ |
+| hx.display.Scroll | 滚动容器，用于实现滚动 | ⚠️ | ✅ |
 | hx.display.CustomDisplayObject | 自定义显示对象，使用它进行渲染必然会产生1次绘制 | ✅ | ❌ |
 | hx.events.MouseEvent | 鼠标事件 | ✅ | / |
 | hx.events.KeyboardEvent | 键盘事件 | ✅ | / |

@@ -42,6 +42,21 @@ class DisplayObject extends EventDispatcher {
 	@:noCompletion private var __uvsDirty = false;
 	@:noCompletion private var __layoutData:LayoutData;
 	@:noCompletion private var __name:String;
+	@:noCompletion private var __makRect:Rectangle;
+
+	/**
+	 * 遮罩居中
+	 */
+	public var makeRect(get, set):Rectangle;
+
+	private function set_makeRect(value:Rectangle):Rectangle {
+		__makRect = value;
+		return value;
+	}
+
+	private function get_makeRect():Rectangle {
+		return __makRect;
+	}
 
 	/**
 	 * 原点偏移X，单位为像素

@@ -10,10 +10,12 @@ import hx.gemo.Rectangle;
  * 滚动遮罩支持的容器
  */
 class Scroll extends Box {
+	public var quad = new Quad();
+
 	public var box:Box = new Box();
 
 	override function addChildAt(child:DisplayObject, index:Int) {
-		if (child == box) {
+		if (child == box || child == quad) {
 			super.addChildAt(child, index);
 		} else {
 			box.addChildAt(child, index);
@@ -54,6 +56,9 @@ class Scroll extends Box {
 
 	override function onInit() {
 		super.onInit();
+		this.addChild(quad);
+		quad.alpha = 0;
+		quad.layoutData = AnchorLayoutData.fill();
 		this.addChild(box);
 		this.layout = new AnchorLayout();
 		box.layoutData = AnchorLayoutData.fill();
@@ -114,14 +119,33 @@ class Scroll extends Box {
 	}
 
 	private function onMouseUp(e:MouseEvent) {
-		__down = false;
-		if (__lastStepX != 0 || __lastStepY != 0) {
-			var time = 0.5;
-			Actuate.tween(this, time, {
-				scrollX: scrollX - __lastStepX / time,
-				scrollY: scrollY - __lastStepY / time
-			});
+		if (__down) {
+			__down = false;
+			if (__lastStepX != 0 || __lastStepY != 0) {
+				var time = 0.5;
+				Actuate.tween(this, time, getMoveingToData({
+					scrollX: scrollX - __lastStepX / time * 4,
+					scrollY: scrollY - __lastStepY / time * 4
+				}));
+			}
 		}
+	}
+
+	private function getMoveingToData(data:{scrollX:Float, scrollY:Float}):{scrollX:Float, scrollY:Float} {
+		var ret = box.getBounds();
+		var maxWidth = ret.width - this.width;
+		var maxHeight = ret.height - this.height;
+		if (data.scrollX < -maxWidth) {
+			data.scrollX = -maxWidth;
+		} else if (data.scrollX > 0) {
+			data.scrollX = 0;
+		}
+		if (data.scrollY < -maxHeight) {
+			data.scrollY = -maxHeight;
+		} else if (data.scrollY > 0) {
+			data.scrollY = 0;
+		}
+		return data;
 	}
 
 	private function onMouseMove(e:MouseEvent) {

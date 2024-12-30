@@ -1,5 +1,7 @@
 package hx.macro;
 
+import sys.FileSystem;
+import haxe.io.Path;
 import haxe.macro.TypeTools;
 import haxe.macro.Type.ClassType;
 import haxe.macro.Expr.ComplexType;
@@ -59,10 +61,25 @@ class UIBuilder {
 			}),
 			pos: Context.currentPos(),
 		});
-		var xml:Xml = Xml.parse(File.getContent(path));
+		var xml:Xml = Xml.parse(File.getContent(getPath(path)));
 		var array = parseXmlFields(xml);
 		fileds = fileds.concat(array);
 		return fileds;
+	}
+
+	private static function getPath(path:String):String {
+		if (FileSystem.exists(path))
+			return path;
+		var current = Sys.getCwd();
+		for (i in 0...6) {
+			var path = Path.join([current, path]);
+			if (FileSystem.exists(path)) {
+				return path;
+			} else {
+				current = Path.directory(current);
+			}
+		}
+		return path;
 	}
 
 	/**

@@ -1,5 +1,6 @@
 package hx.utils;
 
+import hx.ui.UIManager;
 import hx.ui.UIAssets;
 import hx.utils.atlas.SpineTextureAtlas;
 import hx.events.FutureErrorEvent;
@@ -121,7 +122,11 @@ class Assets extends Future<Assets, Dynamic> {
 	 * @return Future<BitmapData>
 	 */
 	public function loadBitmapData(path:String) {
-		pushFuture(new hx.utils.BitmapDataFuture(path, false));
+		if (UIManager.getBitmapData(formatName(path)) == null) {
+			pushFuture(new hx.utils.BitmapDataFuture(path, false));
+		} else {
+			trace("已经加载了", path);
+		}
 	}
 
 	/**
@@ -202,6 +207,13 @@ class Assets extends Future<Assets, Dynamic> {
 	public function start():Void {
 		if (loading)
 			return;
+		if (futures.length == 0) {
+			// 无资产需要加载，直接完成
+			this.completeValue(this);
+			__assets.remove(this);
+			this.stop();
+			return;
+		}
 		loading = true;
 		this.totalCounts = futures.length;
 		this.loadedCounts = 0;

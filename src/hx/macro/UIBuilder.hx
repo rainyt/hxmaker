@@ -74,7 +74,7 @@ class UIBuilder {
 		var array:Array<Field> = [];
 		for (item in xml.elements()) {
 			if (item.exists("id")) {
-				trace("create field", item);
+				// trace("create field", item);
 				var type = Context.getType("hx.display." + item.nodeName);
 				var typePath:Dynamic = null;
 				if (type != null) {

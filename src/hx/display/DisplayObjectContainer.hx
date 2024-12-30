@@ -68,12 +68,19 @@ class DisplayObjectContainer extends DisplayObject {
 		return __mouseChildren;
 	}
 
-	public function new() {
+	/**
+	 * 构造UI
+	 */
+	private function __buildUi():Void {
 		// 检测是否存在__ui_id__，如果存在则需要通过UIManager进行构造
 		var __ui_id__ = Reflect.getProperty(this, "__ui_id__");
 		if (__ui_id__ != null) {
 			UIManager.getInstance().buildUi(__ui_id__, this);
 		}
+	}
+
+	public function new() {
+		__buildUi();
 		super();
 		this.updateEnabled = true;
 	}

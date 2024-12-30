@@ -43,6 +43,7 @@ class UIManager {
 				return bitmapData;
 			}
 		}
+		trace("无法读取", id);
 		return null;
 	}
 
@@ -113,8 +114,9 @@ class UIManager {
 		});
 		addAttributesParse(Button, function(obj:Button, xml:Xml, assets:Assets) {
 			if (xml.exists("src")) {
+				var id = xml.getStringId("src");
 				obj.skin = {
-					up: assets.getBitmapData(xml.getStringId("src"))
+					up: getBitmapData(id) ?? assets.getBitmapData(id)
 				};
 			}
 			obj.text = xml.get("text");
@@ -127,7 +129,7 @@ class UIManager {
 			if (xml.exists("src")) {
 				var data = xml.get("src");
 				data = Path.withoutDirectory(Path.withoutExtension(data));
-				obj.data = assets.getBitmapData(data);
+				obj.data = getBitmapData(data) ?? assets.getBitmapData(data);
 			}
 		});
 		addAttributesParse(Label, function(obj:Label, xml:Xml, assets:Assets) {

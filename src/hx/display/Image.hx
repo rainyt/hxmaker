@@ -167,6 +167,24 @@ class Image extends DisplayObject implements IDataProider<BitmapData> implements
 		}
 	}
 
+	/**
+	 * 更新tranform
+	 * @param parent 如果提供了parent，则会根据parent更新worldTransform
+	 */
+	override private function __updateTransform(parent:DisplayObject):Void {
+		if (parent != null) {
+			this.__worldAlpha = parent.__worldAlpha * this.__alpha;
+			// 世界矩阵
+			this.__worldTransform.identity();
+			if (this.data != null && this.data.frameRect != null) {
+				this.__worldTransform.translate(-this.data.frameRect.x, -this.data.frameRect.y);
+			}
+			this.__worldTransform.concat(__transform);
+			this.__worldTransform.translate(this.__originWorldX, this.__originWorldY);
+			this.__worldTransform.concat(parent.__worldTransform);
+		}
+	}
+
 	override function __getRect():Rectangle {
 		if (data != null) {
 			if (data.frameRect != null) {

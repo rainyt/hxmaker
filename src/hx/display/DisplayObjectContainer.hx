@@ -280,4 +280,11 @@ class DisplayObjectContainer extends DisplayObject {
 		__layoutDirty = true;
 		return super.set_height(value);
 	}
+
+	override public function dispose():Void {
+		super.dispose();
+		for (child in this.__children) {
+			child.dispose();
+		}
+	}
 }

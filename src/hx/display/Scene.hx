@@ -13,4 +13,9 @@ class Scene extends Box {
 	override function get_height():Float {
 		return Hxmaker.engine.stageHeight;
 	}
+
+	override function dispose() {
+		super.dispose();
+		this.parent.removeChild(this);
+	}
 }

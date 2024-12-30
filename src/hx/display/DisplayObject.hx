@@ -614,4 +614,9 @@ class DisplayObject extends EventDispatcher {
 	public function getType():String {
 		return Type.getClassName(Type.getClass(this));
 	}
+
+	/**
+	 * 销毁所有有关显示对象的资源引用
+	 */
+	public function dispose():Void {}
 }

@@ -66,7 +66,7 @@ class UIAssets extends Assets {
 			if (classType != null) {
 				var ui:DisplayObject = Type.createInstance(classType, []);
 				parent.addChild(ui);
-				trace("构造", ui);
+				// trace("构造", ui);
 				// 应用属性
 				UIManager.getInstance().applyAttributes(ui, item, this);
 				if (ui.name != null) {

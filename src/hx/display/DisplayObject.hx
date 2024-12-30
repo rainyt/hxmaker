@@ -42,20 +42,20 @@ class DisplayObject extends EventDispatcher {
 	@:noCompletion private var __uvsDirty = false;
 	@:noCompletion private var __layoutData:LayoutData;
 	@:noCompletion private var __name:String;
-	@:noCompletion private var __makRect:Rectangle;
+	@:noCompletion private var __maskRect:Rectangle;
 
 	/**
 	 * 遮罩居中
 	 */
-	public var makeRect(get, set):Rectangle;
+	public var maskRect(get, set):Rectangle;
 
-	private function set_makeRect(value:Rectangle):Rectangle {
-		__makRect = value;
+	private function set_maskRect(value:Rectangle):Rectangle {
+		__maskRect = value;
 		return value;
 	}
 
-	private function get_makeRect():Rectangle {
-		return __makRect;
+	private function get_maskRect():Rectangle {
+		return __maskRect;
 	}
 
 	/**
@@ -582,6 +582,13 @@ class DisplayObject extends EventDispatcher {
 	 * @return Bool
 	 */
 	public function hitTestWorldPoint(x:Float, y:Float):Bool {
+		if (maskRect != null) {
+			// 必须命中在maskRect之内的区域
+			var rect = this.__getWorldLocalBounds(maskRect);
+			if (!rect.containsPoint(x, y)) {
+				return false;
+			}
+		}
 		var rect = this.__getWorldLocalBounds(__getRect());
 		if (rect.containsPoint(x, y)) {
 			return true;
@@ -599,6 +606,13 @@ class DisplayObject extends EventDispatcher {
 	private function __hitTest(x:Float, y:Float, stacks:Array<DisplayObject>):Bool {
 		if (!mouseEnabled || !this.visible) {
 			return false;
+		}
+		if (maskRect != null) {
+			// 必须命中在maskRect之内的区域
+			var rect = this.__getWorldLocalBounds(maskRect);
+			if (!rect.containsPoint(x, y)) {
+				return false;
+			}
 		}
 		if (hitTestWorldPoint(x, y)) {
 			stacks.push(this);

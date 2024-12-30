@@ -211,6 +211,13 @@ class DisplayObjectContainer extends DisplayObject {
 	}
 
 	override function hitTestWorldPoint(x:Float, y:Float):Bool {
+		if (maskRect != null) {
+			// 必须命中在maskRect之内的区域
+			var rect = this.__getWorldLocalBounds(maskRect);
+			if (!rect.containsPoint(x, y)) {
+				return false;
+			}
+		}
 		var i = this.children.length;
 		while (i-- > 0) {
 			var display = this.children[i];
@@ -224,6 +231,13 @@ class DisplayObjectContainer extends DisplayObject {
 	override function __hitTest(x:Float, y:Float, stacks:Array<DisplayObject>):Bool {
 		if (!mouseEnabled || !this.visible) {
 			return false;
+		}
+		if (maskRect != null) {
+			// 必须命中在maskRect之内的区域
+			var rect = this.__getWorldLocalBounds(maskRect);
+			if (!rect.containsPoint(x, y)) {
+				return false;
+			}
 		}
 		var i = this.children.length;
 		stacks.push(this);

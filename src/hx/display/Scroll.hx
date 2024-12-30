@@ -62,18 +62,18 @@ class Scroll extends Box {
 		this.addChild(box);
 		this.layout = new AnchorLayout();
 		// box.layoutData = AnchorLayoutData.fill();
-		this.makeRect = new Rectangle(0, 0, 100, 100);
+		this.maskRect = new Rectangle(0, 0, 100, 100);
 		this.width = 100;
 		this.height = 100;
 	}
 
 	override function set_width(value:Float):Float {
-		this.makeRect.width = value;
+		this.maskRect.width = value;
 		return super.set_width(value);
 	}
 
 	override function set_height(value:Float):Float {
-		this.makeRect.height = value;
+		this.maskRect.height = value;
 		return super.set_height(value);
 	}
 

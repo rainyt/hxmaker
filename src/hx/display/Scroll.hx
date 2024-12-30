@@ -61,7 +61,7 @@ class Scroll extends Box {
 		quad.layoutData = AnchorLayoutData.fill();
 		this.addChild(box);
 		this.layout = new AnchorLayout();
-		box.layoutData = AnchorLayoutData.fill();
+		// box.layoutData = AnchorLayoutData.fill();
 		this.makeRect = new Rectangle(0, 0, 100, 100);
 		this.width = 100;
 		this.height = 100;

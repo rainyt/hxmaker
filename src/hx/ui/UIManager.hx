@@ -1,5 +1,6 @@
 package hx.ui;
 
+import hx.utils.atlas.Atlas;
 import hx.display.DisplayObjectContainer;
 import hx.display.BitmapData;
 import hx.display.HBox;
@@ -41,6 +42,22 @@ class UIManager {
 			var bitmapData = assets.getBitmapData(id);
 			if (bitmapData != null) {
 				return bitmapData;
+			}
+		}
+		trace("无法读取", id);
+		return null;
+	}
+
+	/**
+	 * 读取纹理图集
+	 * @param id 
+	 * @return Atlas
+	 */
+	public static function getAtlas(id:String):Atlas {
+		for (assets in assetsList) {
+			var atlas = assets.atlases.get(id);
+			if (atlas != null) {
+				return atlas;
 			}
 		}
 		trace("无法读取", id);

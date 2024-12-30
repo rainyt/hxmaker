@@ -25,6 +25,7 @@ class XmlAtlas extends Atlas {
 		while (items.hasNext()) {
 			var item = items.next();
 			var name = item.get("name");
+			this.names.push(name);
 			var x = Std.parseInt(item.get("x"));
 			var y = Std.parseInt(item.get("y"));
 			var width = Std.parseInt(item.get("width"));

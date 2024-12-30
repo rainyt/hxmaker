@@ -16,6 +16,8 @@ class Atlas {
 	 */
 	public var bitmapDatas:Map<String, BitmapData> = [];
 
+	public var names:Array<String> = [];
+
 	public function new(bitmapData:BitmapData) {
 		this.bitmapData = bitmapData;
 	}
@@ -32,9 +34,9 @@ class Atlas {
 	 */
 	public function getBitmapDatasByName(name:String):Array<BitmapData> {
 		var array = [];
-		for (key => value in bitmapDatas) {
-			if (key.indexOf(name) != -1) {
-				array.push(value);
+		for (s in names) {
+			if (s.indexOf(name) != -1) {
+				array.push(bitmapDatas.get(s));
 			}
 		}
 		return array;

@@ -12,6 +12,7 @@ A unified game engine written in Haxe that can run on any game engine.
 | hx.display.Graphic | 矢量图形 | ✅ | ✅ |
 | hx.display.Spine | Spine动画 | ✅ | ✅ |
 | hx.display.Scene | 场景，用于管理对象 | ✅ | ✅ |
+| hx.display.UILoadScene | 自动加载UI资源的场景，大多数用于界面打开使用 | ✅ | ✅ |
 | hx.display.MovieClip | 动画剪辑，用于播放帧动画支持 | ✅ | ✅ |
 | hx.display.FPS | 显示游戏的各种状态，如drawCall、顶点数量、CPU使用率等 | ✅ | ✅ |
 | hx.display.Box | 虚拟盒子，该容器的width/height均不会影响到子容器 | ✅ | ✅ |

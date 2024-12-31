@@ -90,6 +90,11 @@ class Assets extends Future<Assets, Dynamic> {
 	public var uiAssetses:Map<String, UIAssets> = new Map();
 
 	/**
+	 * 音乐列表
+	 */
+	public var sounds:Map<String, Sound> = new Map();
+
+	/**
 	 * 已经加载完成的数量
 	 */
 	public var loadedCounts:Int = 0;
@@ -125,6 +130,14 @@ class Assets extends Future<Assets, Dynamic> {
 	 */
 	public function new() {
 		super(null, false);
+	}
+
+	/**
+	 * 加载音乐资源
+	 * @param path 
+	 */
+	public function loadSound(path:String):Void {
+		pushFuture(new hx.assets.SoundFuture(path, false));
 	}
 
 	/**
@@ -266,7 +279,9 @@ class Assets extends Future<Assets, Dynamic> {
 	private function __onCompleted(future:Future<Dynamic, Dynamic>, data:Dynamic):Void {
 		CURRENT_LOAD_COUNTS--;
 		loadedCounts++;
-		if (data is UIAssets) {
+		if (data is Sound) {
+			sounds.set(formatName(future.getLoadData()), data);
+		} else if (data is UIAssets) {
 			uiAssetses.set(formatName(future.getLoadData()), data);
 		} else if (data is Xml) {
 			xmls.set(formatName(future.getLoadData()), data);

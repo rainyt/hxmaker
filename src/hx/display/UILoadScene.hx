@@ -24,7 +24,6 @@ class UILoadScene extends Scene {
 				uiAssets = new UIAssets(__ui_id__);
 				UIManager.bindAssets(uiAssets);
 				uiAssets.onComplete((e) -> {
-					trace("加载完成");
 					uiAssets.build(this);
 					this.onLoaded();
 				}).onError(err -> {});

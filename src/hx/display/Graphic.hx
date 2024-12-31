@@ -68,6 +68,104 @@ class Graphic extends DisplayObject {
 		__sizeDirty = true;
 	}
 
+	private var __lineSize:Float = 1;
+
+	private var __lineColor:Int = 0x000000;
+
+	/**
+	 * 准备线段的颜色长度
+	 * @param line 
+	 */
+	public function beginLineStyle(color:UInt, line:Float):Void {
+		this.beginFill(color);
+		this.__lineColor = color;
+		this.__lineSize = line;
+	}
+
+	private var __posX:Float = 0;
+	private var __posY:Float = 0;
+	private var __lineDrawing = false;
+	private var __lastVertices:Array<Float>;
+
+	/**
+	 * 移动到指定的坐标进行开始绘制线条
+	 * @param x 
+	 * @param y 
+	 */
+	public function moveTo(x:Float, y:Float):Void {
+		__posX = x;
+		__posY = y;
+		__lineDrawing = false;
+		__lastVertices = null;
+	}
+
+	/**
+	 * 开始绘制到指定为止的现象，请注意，多次调用lineTo方法，会补充线段的连接处的断点
+	 * @param x 
+	 * @param y 
+	 */
+	public function lineTo(x:Float, y:Float):Void {
+		var nextVertices = __mathLine(__posX, __posY, x, y);
+		if (__lineDrawing && __lastVertices != null) {
+			// 补充断成
+			var vertices = [
+				__lastVertices[2],
+				__lastVertices[3],
+				nextVertices[0],
+				nextVertices[1],
+				__lastVertices[6],
+				__lastVertices[7],
+				nextVertices[4],
+				nextVertices[5]
+			];
+			this.drawTriangles(vertices, [0, 1, 2, 1, 2, 3], [0, 0, 1, 0, 0, 1, 1, 1]);
+		}
+		__lastVertices = nextVertices;
+		this.drawTriangles(nextVertices, [0, 1, 2, 1, 2, 3], [0, 0, 1, 0, 0, 1, 1, 1]);
+		__posX = x;
+		__posY = y;
+		__lineDrawing = true;
+	}
+
+	/**
+	 * 绘制线段
+	 * @param x1 起点坐标x
+	 * @param y1 起点坐标y
+	 * @param x2 结束坐标x
+	 * @param y2 结束坐标y
+	 * @param alpha 透明度
+	 * @param colorTransform 颜色
+	 */
+	public function drawLine(x1:Float, y1:Float, x2:Float, y2:Float, alpha:Float = 1, ?colorTransform:ColorTransform):Void {
+		this.drawTriangles(__mathLine(x1, y1, x2, y2), [0, 1, 2, 1, 2, 3], [0, 0, 1, 0, 0, 1, 1, 1], alpha, colorTransform);
+	}
+
+	private function __mathLine(x1:Float, y1:Float, x2:Float, y2:Float):Array<Float> {
+		// 计算出线段长度
+		var dx = x2 - x1;
+		var dy = y2 - y1;
+		var length = Math.sqrt(dx * dx + dy * dy);
+		// 计算出线段弧度
+		var radian = Math.atan2(dy, dx);
+		var cos:Float = Math.cos(radian);
+		var sin:Float = Math.sin(radian);
+		// 绘制线段
+		var vertices = [];
+		var offsetX1 = x1 + sin * 0.5 * __lineSize;
+		var offsetY1 = y1 - cos * 0.5 * __lineSize;
+		var offsetX2 = x1 - sin * 0.5 * __lineSize;
+		var offsetY2 = y1 + cos * 0.5 * __lineSize;
+		vertices.push(offsetX1);
+		vertices.push(offsetY1);
+		vertices.push(offsetX1 + cos * length);
+		vertices.push(offsetY1 + sin * length);
+		vertices.push(offsetX2);
+		vertices.push(offsetY2);
+		vertices.push(offsetX2 + cos * length);
+		vertices.push(offsetY2 + sin * length);
+		return vertices;
+	}
+
 	/**
 	 * 渲染矩形，UVs会根据 textureSize计算
 	 * @param x 

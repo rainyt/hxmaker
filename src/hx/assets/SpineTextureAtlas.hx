@@ -1,4 +1,4 @@
-package hx.utils.atlas;
+package hx.assets;
 
 import spine.SkeletonData;
 import spine.SkeletonBinary;

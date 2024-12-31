@@ -1,4 +1,4 @@
-package hx.utils.atlas;
+package hx.assets;
 
 import hx.gemo.Rectangle;
 import hx.display.BitmapData;

@@ -1,9 +1,9 @@
-package hx.utils.atlas;
+package hx.assets;
 
 import spine.SkeletonJson;
 import spine.attachments.AtlasAttachmentLoader;
 import spine.atlas.TextureAtlas;
-import hx.utils.LoadData;
+import hx.assets.LoadData;
 
 /**
  * Spine纹理图集资源加载

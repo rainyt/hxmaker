@@ -1,10 +1,10 @@
-package hx.utils;
+package hx.assets;
 
 import hx.ui.UIManager;
 import hx.ui.UIAssets;
-import hx.utils.atlas.SpineTextureAtlas;
+import hx.assets.SpineTextureAtlas;
 import hx.events.FutureErrorEvent;
-import hx.utils.atlas.Atlas;
+import hx.assets.Atlas;
 import haxe.io.Path;
 import hx.display.BitmapData;
 
@@ -105,6 +105,17 @@ class Assets extends Future<Assets, Dynamic> {
 	public var loading:Bool = false;
 
 	/**
+	 * 资源是否共享绑定，默认为`false`，如果该Assets可以被`UIManager`读取，则该值会为`true`
+	 */
+	public var isBindAssets(get, never):Bool;
+
+	private var __isBindAssets:Bool = false;
+
+	private function get_isBindAssets():Bool {
+		return this.__isBindAssets;
+	}
+
+	/**
 	 * 目前加载的索引
 	 */
 	private var __loadIndex:Int = 0;
@@ -122,8 +133,8 @@ class Assets extends Future<Assets, Dynamic> {
 	 * @return Future<BitmapData>
 	 */
 	public function loadBitmapData(path:String) {
-		if (UIManager.getBitmapData(formatName(path)) == null) {
-			pushFuture(new hx.utils.BitmapDataFuture(path, false));
+		if (!isBindAssets || UIManager.getBitmapData(formatName(path)) == null) {
+			pushFuture(new hx.assets.BitmapDataFuture(path, false));
 		} else {
 			trace("已经加载了", path);
 		}
@@ -135,7 +146,7 @@ class Assets extends Future<Assets, Dynamic> {
 	 * @param xml 
 	 */
 	public function loadAtlas(path:String, xml:String) {
-		pushFuture(new hx.utils.TextureAtlasFuture({
+		pushFuture(new hx.assets.TextureAtlasFuture({
 			png: path,
 			xml: xml,
 			path: path
@@ -148,7 +159,7 @@ class Assets extends Future<Assets, Dynamic> {
 	 * @param atlas 
 	 */
 	public function loadSpineAtlas(png:String, atlas:String) {
-		pushFuture(new hx.utils.atlas.SpineTextureAtlasFuture({
+		pushFuture(new hx.assets.SpineTextureAtlasFuture({
 			png: png,
 			atlas: atlas,
 			path: png
@@ -160,7 +171,7 @@ class Assets extends Future<Assets, Dynamic> {
 	 * @param path 
 	 */
 	public function loadJson(path:String) {
-		pushFuture(new hx.utils.JsonFuture(path, false));
+		pushFuture(new hx.assets.JsonFuture(path, false));
 	}
 
 	/**
@@ -168,7 +179,7 @@ class Assets extends Future<Assets, Dynamic> {
 	 * @param path 
 	 */
 	public function loadString(path:String) {
-		pushFuture(new hx.utils.StringFuture(path, false));
+		pushFuture(new hx.assets.StringFuture(path, false));
 	}
 
 	/**
@@ -176,7 +187,7 @@ class Assets extends Future<Assets, Dynamic> {
 	 * @param path 
 	 */
 	public function loadXml(path:String) {
-		pushFuture(new hx.utils.XmlFuture(path, false));
+		pushFuture(new hx.assets.XmlFuture(path, false));
 	}
 
 	/**
@@ -184,7 +195,7 @@ class Assets extends Future<Assets, Dynamic> {
 	 * @param path 
 	 */
 	public function loadUIAssets(path:String) {
-		pushFuture(new hx.utils.UIAssetsFuture(path, false));
+		pushFuture(new hx.assets.UIAssetsFuture(path, false));
 	}
 
 	/**

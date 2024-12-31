@@ -2,8 +2,8 @@ package hx.ui;
 
 import haxe.io.Path;
 import hx.display.DisplayObject;
-import hx.utils.StringFuture;
-import hx.utils.Assets;
+import hx.assets.StringFuture;
+import hx.assets.Assets;
 import hx.display.DisplayObjectContainer;
 
 class UIAssets extends Assets {

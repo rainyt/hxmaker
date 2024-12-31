@@ -1,6 +1,6 @@
-package hx.utils;
+package hx.assets;
 
-import hx.utils.atlas.XmlAtlas;
+import hx.assets.XmlAtlas;
 
 #if openfl
 typedef TextureAtlasFuture = hx.core.TextureAtlasFuture;

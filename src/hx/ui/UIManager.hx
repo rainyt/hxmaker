@@ -1,6 +1,6 @@
 package hx.ui;
 
-import hx.utils.atlas.Atlas;
+import hx.assets.Atlas;
 import hx.display.DisplayObjectContainer;
 import hx.display.BitmapData;
 import hx.display.HBox;
@@ -11,7 +11,7 @@ import hx.display.Label;
 import hx.layout.AnchorLayout;
 import hx.layout.AnchorLayoutData;
 import haxe.io.Path;
-import hx.utils.Assets;
+import hx.assets.Assets;
 import hx.display.Image;
 import hx.display.DisplayObject;
 
@@ -29,7 +29,21 @@ class UIManager {
 	 * @param assets 
 	 */
 	public static function bindAssets(assets:Assets) {
-		assetsList.push(assets);
+		if (assets != null) {
+			assetsList.push(assets);
+			@:privateAccess assets.__isBindAssets = true;
+		}
+	}
+
+	/**
+	 * 解除绑定资源
+	 * @param assets 
+	 */
+	public static function unbindAssets(assets:Assets) {
+		if (assets != null) {
+			assetsList.remove(assets);
+			@:privateAccess assets.__isBindAssets = false;
+		}
 	}
 
 	/**

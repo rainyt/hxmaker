@@ -1,4 +1,4 @@
-package hx.utils;
+package hx.assets;
 
 /**
  * XML资源解析器

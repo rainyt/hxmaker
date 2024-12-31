@@ -1,4 +1,4 @@
-package hx.utils;
+package hx.assets;
 
 #if openfl
 typedef BitmapDataFuture = hx.core.BitmapDataFuture;

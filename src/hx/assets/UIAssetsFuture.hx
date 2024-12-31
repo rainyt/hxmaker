@@ -1,4 +1,4 @@
-package hx.utils;
+package hx.assets;
 
 import hx.ui.UIAssets;
 

@@ -1,4 +1,4 @@
-package hx.utils;
+package hx.assets;
 
 import haxe.Json;
 import hx.events.FutureErrorEvent;

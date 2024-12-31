@@ -1,4 +1,4 @@
-package hx.utils;
+package hx.assets;
 
 typedef LoadData = {
 	var path:String;

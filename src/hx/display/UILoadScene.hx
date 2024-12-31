@@ -1,5 +1,6 @@
 package hx.display;
 
+import hx.ui.UIManager;
 import hx.ui.UIAssets;
 
 /**
@@ -21,6 +22,7 @@ class UILoadScene extends Scene {
 			var __ui_id__ = Reflect.getProperty(this, "__ui_id__");
 			if (__ui_id__ != null) {
 				uiAssets = new UIAssets(__ui_id__);
+				UIManager.bindAssets(uiAssets);
 				uiAssets.onComplete((e) -> {
 					trace("加载完成");
 					uiAssets.build(this);
@@ -32,4 +34,9 @@ class UILoadScene extends Scene {
 	}
 
 	public function onLoaded():Void {}
+
+	override function dispose() {
+		super.dispose();
+		UIManager.unbindAssets(uiAssets);
+	}
 }

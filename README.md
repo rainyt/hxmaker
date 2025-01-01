@@ -25,7 +25,7 @@ At present, the game engine is still under development and cannot be fully put i
 | hx.display.CustomDisplayObject | 自定义显示对象，使用它进行渲染必然会产生1次绘制 | ✅ | ❌ |
 | hx.events.MouseEvent | 鼠标事件 | ✅ | / |
 | hx.events.KeyboardEvent | 键盘事件 | ✅ | / |
-| hx.utils.Assets | 资源加载器 | ✅ | / |
+| hx.assets.Assets | 资源加载器 | ✅ | / |
 
 # 布局支持
 | 布局 | 名称 | 描述 |
@@ -34,7 +34,6 @@ At present, the game engine is still under development and cannot be fully put i
 | hx.layout.HorizontalLayout | 水平布局 | 水平布局 |
 | hx.layout.VerticalLayout | 垂直布局 | 垂直布局 |
 | hx.layout.AnchorLayout | 锚点布局 | 可根据`left`、`right`、`top`、`bottom`、`horizontalCenter`、`verticalCenter`属性来设置对象的位置 | 
-
 
 
 # 底层引擎支持

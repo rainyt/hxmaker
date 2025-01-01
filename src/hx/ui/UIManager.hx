@@ -1,5 +1,6 @@
 package hx.ui;
 
+import hx.assets.Sound;
 import hx.assets.Atlas;
 import hx.display.DisplayObjectContainer;
 import hx.display.BitmapData;
@@ -72,6 +73,22 @@ class UIManager {
 			var atlas = assets.atlases.get(id);
 			if (atlas != null) {
 				return atlas;
+			}
+		}
+		trace("无法读取", id);
+		return null;
+	}
+
+	/**
+	 * 读取声音
+	 * @param id 
+	 * @return Sound
+	 */
+	public static function getSound(id:String):Sound {
+		for (assets in assetsList) {
+			var sound = assets.sounds.get(id);
+			if (sound != null) {
+				return sound;
 			}
 		}
 		trace("无法读取", id);

@@ -1,5 +1,6 @@
 package hx.display;
 
+import hx.utils.SoundManager;
 import hx.layout.AnchorLayoutData;
 import hx.layout.AnchorLayout;
 import hx.events.MouseEvent;
@@ -8,6 +9,11 @@ import hx.events.MouseEvent;
  * 按钮
  */
 class Button extends Box {
+	/**
+	 * 点击音效ID
+	 */
+	public static var clickSoundEffectId:String;
+
 	/**
 	 * 按钮的容器
 	 */
@@ -105,6 +111,9 @@ class Button extends Box {
 				this.scaleY = 0.94;
 				this.__originWorldX = this.width * 0.03;
 				this.__originWorldY = this.height * 0.03;
+				if (clickSoundEffectId != null) {
+					SoundManager.getInstance().playEffect(clickSoundEffectId);
+				}
 			case MouseEvent.MOUSE_UP:
 				this.scaleX = 1;
 				this.scaleY = 1;

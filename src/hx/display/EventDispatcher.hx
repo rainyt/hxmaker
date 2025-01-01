@@ -5,7 +5,7 @@ import hx.events.Event;
 /**
  * EventDispatcher类是所有调度事件的类的基类。
  */
-class EventDispatcher {
+class EventDispatcher implements IEventDispatcher {
 	/**
 	 * 所有侦听器列表
 	 */

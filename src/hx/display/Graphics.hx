@@ -7,7 +7,7 @@ import hx.gemo.ColorTransform;
 /**
  * 渲染图形，用于渲染网格三角形使用
  */
-class Graphic extends DisplayObject {
+class Graphics extends DisplayObject {
 	private var __beginFill:Null<Int> = null;
 
 	@:noCompletion private var __sizeDirty:Bool = false;
@@ -16,14 +16,14 @@ class Graphic extends DisplayObject {
 	/**
 	 * 图形绘制命令数据
 	 */
-	private var __graphicDrawData:GraphicDrawData = new GraphicDrawData();
+	private var __graphicsDrawData:GraphicsDrawData = new GraphicsDrawData();
 
 	/**
 	 * 纯色块渲染
 	 * @param color 
 	 */
 	public function beginFill(color:Int):Void {
-		__graphicDrawData.draws.push(BEGIN_FILL(color));
+		__graphicsDrawData.draws.push(BEGIN_FILL(color));
 		__beginFill = color;
 		__sizeDirty = true;
 	}
@@ -34,7 +34,7 @@ class Graphic extends DisplayObject {
 	 * @param smoothing 
 	 */
 	public function beginBitmapData(bitmapData:BitmapData, smoothing:Bool = true):Void {
-		__graphicDrawData.draws.push(BEGIN_BITMAP_DATA(bitmapData, smoothing));
+		__graphicsDrawData.draws.push(BEGIN_BITMAP_DATA(bitmapData, smoothing));
 		__beginFill = null;
 		__sizeDirty = true;
 	}
@@ -52,7 +52,7 @@ class Graphic extends DisplayObject {
 			var color = ColorUtils.toShaderColor(__beginFill);
 			colorTransform = new ColorTransform(color.r, color.g, color.b, 1);
 		}
-		__graphicDrawData.draws.push(DRAW_TRIANGLE(vertices, indices, uvs, alpha, colorTransform));
+		__graphicsDrawData.draws.push(DRAW_TRIANGLE(vertices, indices, uvs, alpha, colorTransform));
 		__sizeDirty = true;
 	}
 
@@ -206,7 +206,7 @@ class Graphic extends DisplayObject {
 	 * 清理
 	 */
 	public function clear():Void {
-		__graphicDrawData.draws = [];
+		__graphicsDrawData.draws = [];
 		__beginFill = null;
 		__sizeDirty = true;
 	}
@@ -219,7 +219,7 @@ class Graphic extends DisplayObject {
 	override function __getRect():Rectangle {
 		if (__sizeDirty) {
 			// 这里对Graphic的尺寸进行重新测量
-			for (draw in this.__graphicDrawData.draws) {
+			for (draw in this.__graphicsDrawData.draws) {
 				switch draw {
 					case DRAW_TRIANGLE(vertices, indices, uvs, alpha, colorTransform):
 						var len = Std.int(vertices.length / 2);

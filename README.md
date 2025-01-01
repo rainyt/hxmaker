@@ -12,7 +12,7 @@ At present, the game engine is still under development and cannot be fully put i
 | hx.display.Button | 按钮，普通的按钮 | ✅ | ✅ |
 | hx.display.Sprite | 容器，用于组合其他对象 | ✅ | ✅ |
 | hx.display.Quad | 矩形显示对象 | ✅ | ✅ |
-| hx.display.Graphic | 矢量图形 | ✅ | ✅ |
+| hx.display.Graphics | 矢量图形 | ✅ | ✅ |
 | hx.display.Spine | Spine动画 | ✅ | ✅ |
 | hx.display.Scene | 场景，用于管理对象 | ✅ | ✅ |
 | hx.display.UILoadScene | 自动加载UI资源的场景，大多数用于界面打开使用 | ✅ | ✅ |

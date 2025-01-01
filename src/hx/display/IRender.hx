@@ -38,7 +38,7 @@ interface IRender {
 	 * 渲染三角形图形
 	 * @param graphics 
 	 */
-	public function renderGraphics(graphics:Graphic):Void;
+	public function renderGraphics(graphics:Graphics):Void;
 
 	public function endFill():Void;
 }

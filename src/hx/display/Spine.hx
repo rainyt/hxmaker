@@ -15,7 +15,7 @@ import spine.Skeleton;
 /**
  * Spine渲染器支持，它依赖`spine-haxe4.2`版本
  */
-class Spine extends Graphic {
+class Spine extends Graphics {
 	/**
 	 * 剪切工具
 	 */

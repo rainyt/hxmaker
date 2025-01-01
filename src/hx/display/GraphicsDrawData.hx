@@ -6,7 +6,7 @@ import hx.display.BitmapData;
 /**
  * 图形绘制数据
  */
-class GraphicDrawData {
+class GraphicsDrawData {
 	/**
 	 * 渲染命令列表
 	 */

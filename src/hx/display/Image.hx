@@ -12,7 +12,7 @@ import hx.providers.IRootDataProvider;
 class Image extends DisplayObject implements IDataProider<BitmapData> implements IRootDataProvider<Dynamic> {
 	@:noCompletion private var __bitmapData:BitmapData;
 	@:noCompletion private var __smoothing:Bool = true;
-	@:noCompletion private var __graphic:Graphic;
+	@:noCompletion private var __graphic:Graphics;
 	@:noCompletion private var __scale9Grid:Rectangle;
 	@:noCompletion private var __scale9GridDirty:Bool = false;
 
@@ -50,11 +50,11 @@ class Image extends DisplayObject implements IDataProider<BitmapData> implements
 	 * 获得九宫格图已渲染的图形
 	 * @return Graphic
 	 */
-	private function getScale9GridGraphic():Graphic {
+	private function getScale9GridGraphic():Graphics {
 		var __scale9Grid = scale9Grid;
 		if (__scale9Grid != null) {
 			if (__graphic == null) {
-				__graphic = new Graphic();
+				__graphic = new Graphics();
 			}
 			if (__scale9GridDirty) {
 				__scale9GridDirty = false;

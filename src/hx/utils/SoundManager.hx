@@ -61,12 +61,15 @@ class SoundManager {
 
 	private var __bgmSoundChannel:ISoundChannel;
 
+	private var __bgmid:String;
+
 	/**
 	 * 播放背景音乐，整个生命周期，只会生效一个BGM
 	 * @param id 
 	 * @return ISoundChannel
 	 */
 	public function playBGMSound(id:String):ISoundChannel {
+		__bgmid = id;
 		if (__bgmSoundChannel != null) {
 			__bgmSoundChannel.stop();
 		}
@@ -80,14 +83,30 @@ class SoundManager {
 	/**
 	 * 停止背景音乐
 	 */
-	public function stopBGMSound():Void {
+	public function stopBGMSound(canResume:Bool = true):Void {
 		if (__bgmSoundChannel != null) {
 			__bgmSoundChannel.stop();
 		}
 		__bgmSoundChannel = null;
+		if (!canResume)
+			__bgmid = null;
 	}
 
 	public function stopAllSound():Void {
 		stopBGMSound();
+		stopAllEffectSound();
+	}
+
+	public function stopAllEffectSound():Void {
+		for (channel in __effectSoundChannel) {
+			channel.stop();
+		}
+		__effectSoundChannel = [];
+	}
+
+	public function resumeBGMSound():Void {
+		if (__bgmid != null) {
+			this.playBGMSound(__bgmid);
+		}
 	}
 }

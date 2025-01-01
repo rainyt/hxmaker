@@ -268,8 +268,8 @@ class Assets extends Future<Assets, Dynamic> {
 			trace("开始加载：", future.getLoadData());
 			future.post();
 			__loadIndex++;
+			loadNext();
 		}
-		loadNext();
 	}
 
 	/**

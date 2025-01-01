@@ -516,6 +516,8 @@ class DisplayObject extends EventDispatcher {
 			this.onStageInit();
 		}
 		this.onAddToStage();
+		if (this.hasEventListener(Event.ADDED_TO_STAGE))
+			this.dispatchEvent(new Event(Event.ADDED_TO_STAGE));
 	}
 
 	/**

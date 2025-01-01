@@ -14,6 +14,20 @@ class Event {
 	 */
 	public inline static var RESIZE:String = "resize";
 
+	public inline static var ADDED_TO_STAGE:String = "addedToStage";
+
+	public inline static var REMOVED_FROM_STAGE:String = "removedFromStage";
+
+	/**
+	 * 
+	 */
+	public inline static var ACTIVATE:String = "activete";
+
+	/**
+	 * 
+	 */
+	public inline static var DEACTIVATE:String = "deactivate";
+
 	/**
 	 * 数据
 	 */

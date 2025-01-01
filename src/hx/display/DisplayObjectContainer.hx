@@ -1,5 +1,6 @@
 package hx.display;
 
+import hx.events.Event;
 import hx.ui.UIManager;
 import hx.layout.ILayout;
 import hx.gemo.Matrix;
@@ -133,6 +134,8 @@ class DisplayObjectContainer extends DisplayObject {
 	public function removeChild(child:DisplayObject):Void {
 		this.__children.remove(child);
 		child.onRemoveToStage();
+		if (child.hasEventListener(Event.REMOVED_FROM_STAGE))
+			child.dispatchEvent(new Event(Event.REMOVED_FROM_STAGE));
 		child.__parent = null;
 		child.__stage = null;
 		this.__layoutDirty = true;

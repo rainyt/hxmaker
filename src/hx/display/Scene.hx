@@ -1,5 +1,6 @@
 package hx.display;
 
+import hx.utils.SceneManager;
 import hx.core.Hxmaker;
 
 /**
@@ -14,8 +15,11 @@ class Scene extends Box {
 		return Hxmaker.engine.stageHeight;
 	}
 
-	override function dispose() {
-		super.dispose();
-		this.parent.removeChild(this);
+	public function releaseScene():Void {
+		SceneManager.getInstance().releaseScene(this);
+	}
+
+	public function replaceScene(scene:Scene, releaseOldScene:Bool = false):Void {
+		SceneManager.getInstance().replaceScene(scene, releaseOldScene);
 	}
 }

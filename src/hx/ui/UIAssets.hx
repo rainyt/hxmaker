@@ -58,9 +58,23 @@ class UIAssets extends Assets {
 								this.loadBitmapData(url);
 						}
 				}
+				if (item.exists("style")) {
+					var style = item.get("style");
+					if (style.indexOf(":") != -1) {
+						this.loadStyle(Path.join([__dirPath, style.split(":")[0] + ".xml"]));
+					}
+				}
 			}
 			parseXml(item);
 		}
+	}
+
+	/**
+	 * 加载样式
+	 * @param xml 
+	 */
+	public function loadStyle(xml:String):Void {
+		pushFuture(new hx.assets.StyleFuture(xml, false));
 	}
 
 	private function __start() {

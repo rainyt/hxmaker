@@ -66,6 +66,22 @@ class UIManager {
 	}
 
 	/**
+	 * 获得样式xml
+	 * @param id 
+	 * @return Xml
+	 */
+	public static function getStyle(id:String):Xml {
+		for (assets in assetsList) {
+			var style = assets.styles.get(id);
+			if (style != null) {
+				return style;
+			}
+		}
+		trace("无法读取", id);
+		return null;
+	}
+
+	/**
 	 * 读取纹理图集
 	 * @param id 
 	 * @return Atlas
@@ -268,6 +284,18 @@ class UIManager {
 	 * @param attributes 
 	 */
 	public function applyAttributes(ui:DisplayObject, attributes:Xml, assets:Assets):Void {
+		// 应用样式
+		if (attributes.exists("style")) {
+			var id = attributes.get("style");
+			var xml = UIManager.getStyle(id);
+			if (xml != null) {
+				for (key in xml.attributes()) {
+					if (!attributes.exists(key)) {
+						attributes.set(key, xml.get(key));
+					}
+				}
+			}
+		}
 		var name = Type.getClassName(Type.getClass(ui));
 		var parser = __applyAttributes.get(name);
 		if (parser != null) {

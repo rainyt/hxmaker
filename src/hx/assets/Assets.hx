@@ -6,6 +6,7 @@ import hx.assets.SpineTextureAtlas;
 import hx.events.FutureErrorEvent;
 import hx.assets.Atlas;
 import haxe.io.Path;
+import hx.assets.StyleFuture;
 import hx.display.BitmapData;
 
 /**
@@ -97,6 +98,11 @@ class Assets extends Future<Assets, Dynamic> {
 	 * 音乐列表
 	 */
 	public var sounds:Map<String, Sound> = new Map();
+
+	/**
+	 * 样式配置
+	 */
+	public var styles:Map<String, Xml> = new Map();
 
 	/**
 	 * 已经加载完成的数量
@@ -279,6 +285,55 @@ class Assets extends Future<Assets, Dynamic> {
 		return false;
 	}
 
+	public function pushAssets(assets:Assets):Void {
+		for (key => value in assets.bitmapDatas) {
+			this.bitmapDatas.set(key, value);
+		}
+		for (key => value in assets.sounds) {
+			this.sounds.set(key, value);
+		}
+		for (key => value in assets.xmls) {
+			this.xmls.set(key, value);
+		}
+		for (key => value in assets.objects) {
+			this.objects.set(key, value);
+		}
+		for (key => value in assets.styles) {
+			this.styles.set(key, value);
+		}
+		for (key => value in assets.atlases) {
+			this.atlases.set(key, value);
+		}
+		for (key => value in assets.sounds) {
+			this.sounds.set(key, value);
+		}
+		for (key => value in assets.uiAssetses) {
+			this.uiAssetses.set(key, value);
+		}
+		for (key => value in assets.strings) {
+			this.strings.set(key, value);
+		}
+	}
+
+	public function clean(dispose:Bool = true):Void {
+		if (dispose) {
+			for (data in this.bitmapDatas) {
+				// TODO 应该清理
+			}
+			for (assets in this.uiAssetses) {
+				assets.clean();
+			}
+		}
+		this.bitmapDatas.clear();
+		this.atlases.clear();
+		this.sounds.clear();
+		this.uiAssetses.clear();
+		this.objects.clear();
+		this.styles.clear();
+		this.xmls.clear();
+		this.strings.clear();
+	}
+
 	/**
 	 * 加成完成时触发
 	 * @param future 
@@ -286,7 +341,11 @@ class Assets extends Future<Assets, Dynamic> {
 	private function __onCompleted(future:Future<Dynamic, Dynamic>, data:Dynamic):Void {
 		CURRENT_LOAD_COUNTS--;
 		loadedCounts++;
-		if (data is Sound) {
+		if (data is StyleAssets) {
+			var style:StyleAssets = cast data;
+			this.pushAssets(style);
+			style.clean(false);
+		} else if (data is Sound) {
 			sounds.set(formatName(future.getLoadData()), data);
 		} else if (data is UIAssets) {
 			uiAssetses.set(formatName(future.getLoadData()), data);

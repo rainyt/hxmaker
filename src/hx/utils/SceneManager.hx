@@ -60,8 +60,10 @@ class SceneManager {
 				}
 			}
 			if (defaultSceneExchangeEffect == null) {
+				showScene(scene);
 				removeScene();
 			} else {
+				showScene(scene);
 				var exchange:ISceneExchangeEffect = Type.createInstance(defaultSceneExchangeEffect, []);
 				Hxmaker.topView.addChild(cast exchange);
 				exchange.onReadyExchange(scene, () -> {
@@ -70,8 +72,9 @@ class SceneManager {
 				});
 				scene.visible = false;
 			}
+		} else {
+			showScene(scene);
 		}
-		showScene(scene);
 	}
 
 	/**

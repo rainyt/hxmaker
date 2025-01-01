@@ -25,7 +25,7 @@ At present, the game engine is still under development and cannot be fully put i
 | hx.display.CustomDisplayObject | 自定义显示对象，使用它进行渲染必然会产生1次绘制 | ✅ | ❌ |
 | hx.events.MouseEvent | 鼠标事件 | ✅ | / |
 | hx.events.KeyboardEvent | 键盘事件 | ✅ | / |
-| hx.assets.Assets | 资源加载器 | ✅ | / |
+| hx.assets.Assets | 资源加载器，支持图片、音频、精灵图、XML、JSON等常见资源格式加载 | ✅ | / |
 
 # 布局支持
 | 布局 | 名称 | 描述 |
@@ -37,9 +37,9 @@ At present, the game engine is still under development and cannot be fully put i
 
 
 # 底层引擎支持
-| 引擎 | 支持情况 |
-| --- | ---
-| [OpenFL](https://github.com/rainyt/hxmaker-openfl) | ✅ |
+| 引擎 | 支持情况 | 多纹理渲染 |
+| --- | --- | --- |
+| [OpenFL](https://github.com/rainyt/hxmaker-openfl) | ✅ | ✅ |
 
 # 多纹理渲染
 该游戏引擎可以多纹理渲染，减少大量的drawcall调用。

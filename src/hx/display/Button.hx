@@ -1,5 +1,6 @@
 package hx.display;
 
+import hx.gemo.Rectangle;
 import hx.utils.SoundManager;
 import hx.layout.AnchorLayoutData;
 import hx.layout.AnchorLayout;
@@ -123,5 +124,16 @@ class Button extends Box {
 					clickEvent();
 				}
 		}
+	}
+
+	public var scale9Grid(get, set):Rectangle;
+
+	private function set_scale9Grid(value:Rectangle):Rectangle {
+		this.__img.scale9Grid = value;
+		return value;
+	}
+
+	private function get_scale9Grid():Rectangle {
+		return this.__img.scale9Grid;
 	}
 }

@@ -1,5 +1,7 @@
 package hx.ui;
 
+import hx.gemo.Rectangle;
+import hx.utils.ScaleUtils;
 import hx.assets.Sound;
 import hx.assets.Atlas;
 import hx.display.DisplayObjectContainer;
@@ -172,12 +174,28 @@ class UIManager {
 			if (textformat != null) {
 				obj.textFormat = textformat;
 			}
+			if (xml.exists("scale9Grid")) {
+				var rect = xml.get("scale9Grid");
+				var rects = rect.split(" ");
+				var grid = new Rectangle(Std.parseFloat(rects[0]), Std.parseFloat(rects[1]), Std.parseFloat(rects[2]), Std.parseFloat(rects[3]));
+				obj.scale9Grid = grid;
+			}
 		});
 		addAttributesParse(Image, function(obj:Image, xml:Xml, assets:Assets) {
 			if (xml.exists("src")) {
 				var data = xml.get("src");
 				data = Path.withoutDirectory(Path.withoutExtension(data));
 				obj.data = getBitmapData(data) ?? assets.getBitmapData(data);
+			}
+			if (xml.get("fill") == "true") {
+				var scale = ScaleUtils.mathScale(obj.stage.stageWidth, obj.stage.stageHeight, obj.width, obj.height);
+				obj.scaleX = obj.scaleY = scale;
+			}
+			if (xml.exists("scale9Grid")) {
+				var rect = xml.get("scale9Grid");
+				var rects = rect.split(" ");
+				var grid = new Rectangle(Std.parseFloat(rects[0]), Std.parseFloat(rects[1]), Std.parseFloat(rects[2]), Std.parseFloat(rects[3]));
+				obj.scale9Grid = grid;
 			}
 		});
 		addAttributesParse(Label, function(obj:Label, xml:Xml, assets:Assets) {

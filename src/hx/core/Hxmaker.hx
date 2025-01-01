@@ -1,5 +1,7 @@
 package hx.core;
 
+import hx.display.Stage;
+
 class Hxmaker {
 	private static var __engine:IEngine;
 
@@ -7,6 +9,8 @@ class Hxmaker {
 	 * 引擎对象，整个生命周期中，只需要一个引擎对象
 	 */
 	public static var engine(get, never):IEngine;
+
+	public static var topView:Stage = new Stage();
 
 	private static function get_engine():IEngine {
 		return __engine;
@@ -21,6 +25,7 @@ class Hxmaker {
 	public static function init<T:IEngine>(classes:Class<T>, stageWidth:Int, stageHeight:Int):T {
 		__engine = Type.createInstance(classes, []);
 		__engine.init(stageWidth, stageHeight);
+		__engine.stages.push(topView);
 		return cast __engine;
 	}
 }

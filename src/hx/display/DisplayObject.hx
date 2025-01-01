@@ -1,5 +1,6 @@
 package hx.display;
 
+import hx.core.Hxmaker;
 import hx.layout.LayoutData;
 import hx.layout.ILayout;
 import hx.gemo.ColorTransform;
@@ -635,4 +636,13 @@ class DisplayObject extends EventDispatcher {
 	 * 销毁所有有关显示对象的资源引用
 	 */
 	public function dispose():Void {}
+
+	/**
+	 * 获得顶部渲染层
+	 */
+	public var topView(get, never):Stage;
+
+	private function get_topView():Stage {
+		return Hxmaker.topView;
+	}
 }

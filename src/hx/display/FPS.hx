@@ -13,6 +13,7 @@ class FPS extends DisplayObjectContainer {
 
 	override function onInit() {
 		super.onInit();
+		this.mouseEnabled = false;
 		this.updateEnabled = true;
 		__bg = new Quad(0, 0, 0x0);
 		__bg.alpha = 0.8;
@@ -28,5 +29,8 @@ class FPS extends DisplayObjectContainer {
 			+ ContextStats.visibleDisplayCounts + "\nCPU:" + Std.int(ContextStats.cpu * 100) + "%\nMemory:" + Std.int(ContextStats.memory / 1024 / 1024) + "mb";
 		this.__bg.width = label.width + 10;
 		this.__bg.height = label.height + 10;
+		if (this.parent != null && this.parent.children[this.parent.children.length - 1] != this) {
+			this.parent.addChild(this);
+		}
 	}
 }

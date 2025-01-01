@@ -77,6 +77,7 @@ class Button extends Box {
 
 	public function new(text:String = null, skin:ButtonSkin = null) {
 		super();
+
 		__img = new Image();
 		this.addChild(__img);
 		__label = new Label(text);
@@ -84,8 +85,11 @@ class Button extends Box {
 		__label.verticalAlign = MIDDLE;
 		this.addChild(__label);
 		this.skin = skin;
+		__box = new Box();
+		this.addChild(__box);
 		this.mouseChildren = false;
 		this.layout = new AnchorLayout();
+		__box.layoutData = AnchorLayoutData.fill();
 		__img.layoutData = AnchorLayoutData.fill();
 		__label.layoutData = AnchorLayoutData.fill();
 	}
@@ -110,16 +114,16 @@ class Button extends Box {
 			case MouseEvent.MOUSE_DOWN:
 				this.scaleX = 0.94;
 				this.scaleY = 0.94;
-				this.__originWorldX = this.width * 0.03;
-				this.__originWorldY = this.height * 0.03;
+				this.originX = this.width * 0.03;
+				this.originY = this.height * 0.03;
 				if (clickSoundEffectId != null) {
 					SoundManager.getInstance().playEffect(clickSoundEffectId);
 				}
 			case MouseEvent.MOUSE_UP:
 				this.scaleX = 1;
 				this.scaleY = 1;
-				this.__originWorldX = 0;
-				this.__originWorldY = 0;
+				this.originX = 0;
+				this.originY = 0;
 				if (e.target == this && clickEvent != null) {
 					clickEvent();
 				}

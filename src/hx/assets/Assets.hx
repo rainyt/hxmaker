@@ -21,9 +21,13 @@ class Assets extends Future<Assets, Dynamic> {
 	 * 重新再请求加载下一个
 	 */
 	private static function readyLoadNext():Void {
-		var asset:Assets = __assets.shift();
-		if (asset != null) {
-			asset.loadNext();
+		trace("尝试下一个加载");
+		for (assets in __assets) {
+			if (assets != null) {
+				if (assets.loadNext()) {
+					break;
+				}
+			}
 		}
 	}
 
@@ -257,19 +261,22 @@ class Assets extends Future<Assets, Dynamic> {
 	/**
 	 * 准备加载下一个
 	 */
-	private function loadNext():Void {
+	private function loadNext():Bool {
 		var future = futures[__loadIndex];
 		if (future == null) {
-			trace("停止");
-			return;
+			return false;
 		}
+		trace("CURRENT_LOAD_COUNTS", CURRENT_LOAD_COUNTS);
+		trace("剩余", future.getLoadData());
 		if (CURRENT_LOAD_COUNTS < MAX_ASSETS_LOAD_COUNTS) {
 			CURRENT_LOAD_COUNTS++;
 			trace("开始加载：", future.getLoadData());
 			future.post();
 			__loadIndex++;
 			loadNext();
+			return true;
 		}
+		return false;
 	}
 
 	/**
@@ -296,6 +303,7 @@ class Assets extends Future<Assets, Dynamic> {
 		} else {
 			objects.set(formatName(future.getLoadData()), data);
 		}
+		trace("Assets: loaded ", loadedCounts, totalCounts, __loadIndex);
 		if (loadedCounts == totalCounts) {
 			this.completeValue(this);
 			__assets.remove(this);

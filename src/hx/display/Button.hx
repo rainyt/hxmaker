@@ -18,7 +18,13 @@ class Button extends Box {
 	/**
 	 * 按钮的容器
 	 */
-	private var __box:DisplayObjectContainer;
+	private var __box:Box;
+
+	public var container(get, never):Box;
+
+	private function get_container():Box {
+		return __box;
+	}
 
 	/**
 	 * 按钮的皮肤
@@ -61,6 +67,8 @@ class Button extends Box {
 		__label.height = __img.height;
 		this.width = __img.width;
 		this.height = __img.height;
+		__box.width = __img.width;
+		__box.height = __img.height;
 		return skin;
 	}
 
@@ -84,12 +92,12 @@ class Button extends Box {
 		__label.horizontalAlign = CENTER;
 		__label.verticalAlign = MIDDLE;
 		this.addChild(__label);
-		this.skin = skin;
 		__box = new Box();
 		this.addChild(__box);
+		this.skin = skin;
 		this.mouseChildren = false;
 		this.layout = new AnchorLayout();
-		__box.layoutData = AnchorLayoutData.fill();
+		// __box.layoutData = AnchorLayoutData.fill();
 		__img.layoutData = AnchorLayoutData.fill();
 		__label.layoutData = AnchorLayoutData.fill();
 	}

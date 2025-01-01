@@ -267,7 +267,8 @@ class DisplayObjectContainer extends DisplayObject {
 		var rect = new Rectangle();
 		for (object in this.children) {
 			var objectRect = object.getBounds(parent != null ? parent : __transform.clone());
-			rect.expand(objectRect.x, objectRect.y, objectRect.width, objectRect.height);
+			if (objectRect.width > 0 && objectRect.height > 0)
+				rect.expand(objectRect.x, objectRect.y, objectRect.width, objectRect.height);
 		}
 		return rect;
 	}

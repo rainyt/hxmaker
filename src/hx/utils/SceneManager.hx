@@ -1,5 +1,6 @@
 package hx.utils;
 
+import hx.display.ISceneExchangeEffect;
 import hx.core.Hxmaker;
 import hx.display.Scene;
 
@@ -39,17 +40,35 @@ class SceneManager {
 	}
 
 	/**
+	 * 默认的场景切换效果
+	 */
+	public var defaultSceneExchangeEffect:Class<ISceneExchangeEffect>;
+
+	/**
 	 * 更换场景
 	 * @param scene 
 	 */
 	public function replaceScene(scene:Scene, releaseOldScene:Bool = false) {
 		if (scenes.length > 0) {
 			var oldScene = scenes[scenes.length - 1];
-			if (releaseOldScene) {
-				this.releaseScene(oldScene);
+			function removeScene():Void {
+				if (releaseOldScene) {
+					this.releaseScene(oldScene);
+				} else {
+					// 如果不释放，则简单移除场景
+					oldScene.parent?.removeChild(oldScene);
+				}
+			}
+			if (defaultSceneExchangeEffect == null) {
+				removeScene();
 			} else {
-				// 如果不释放，则简单移除场景
-				oldScene.parent?.removeChild(oldScene);
+				var exchange:ISceneExchangeEffect = Type.createInstance(defaultSceneExchangeEffect, []);
+				Hxmaker.topView.addChild(cast exchange);
+				exchange.onReadyExchange(scene, () -> {
+					removeScene();
+					scene.visible = true;
+				});
+				scene.visible = false;
 			}
 		}
 		showScene(scene);

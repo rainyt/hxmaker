@@ -107,14 +107,20 @@ class Button extends Box {
 		this.addEventListener(MouseEvent.MOUSE_DOWN, this.onMouseEvent);
 	}
 
+	private var __listenerStage:Bool = false;
+
 	override function onAddToStage() {
 		super.onAddToStage();
-		this.stage.addEventListener(MouseEvent.MOUSE_UP, this.onMouseEvent);
+		if (!__listenerStage)
+			this.stage.addEventListener(MouseEvent.MOUSE_UP, this.onMouseEvent);
+		__listenerStage = true;
 	}
 
 	override function onRemoveToStage() {
 		super.onRemoveToStage();
-		this.stage.removeEventListener(MouseEvent.MOUSE_UP, this.onMouseEvent);
+		if (__listenerStage)
+			this.stage.removeEventListener(MouseEvent.MOUSE_UP, this.onMouseEvent);
+		__listenerStage = false;
 	}
 
 	private function onMouseEvent(e:MouseEvent) {

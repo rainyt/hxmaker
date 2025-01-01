@@ -49,6 +49,7 @@ class Stage extends Box {
 				event.target = display;
 				object.dispatchEvent(event);
 			}
+			return true;
 		} else {
 			// 舞台要触发事件
 			event.target = this;

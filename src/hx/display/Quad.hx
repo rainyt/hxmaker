@@ -82,7 +82,7 @@ class Quad extends Graphics implements IDataProider<UInt> implements IRootDataPr
 			this.clear();
 			this.beginFill(this.data);
 			var color = ColorUtils.toShaderColor(this.data);
-			this.drawRect(0, 0, this.width, this.height, this.alpha, new ColorTransform(color.r, color.g, color.b, 1));
+			this.drawRect(0, 0, this.width, this.height, 1, new ColorTransform(color.r, color.g, color.b, 1));
 			__quadDirty = false;
 		}
 	}

@@ -27,12 +27,12 @@ class SceneManager {
 	 * 释放场景
 	 * @param scene 
 	 */
-	public function releaseScene(scene:Scene, showOldScene:Bool = true) {
+	public function releaseScene(scene:Scene) {
 		scene.dispose();
-		scenes.remove(scene);
+		var has = scenes.remove(scene);
 		scene.parent?.removeChild(scene);
 		// 如果仍然存在场景，则返回到之前的场景上
-		if (showOldScene && scenes.length > 0) {
+		if (has && scenes.length > 0) {
 			var lastScene = scenes[scenes.length - 1];
 			showScene(lastScene);
 		}
@@ -43,9 +43,14 @@ class SceneManager {
 	 * @param scene 
 	 */
 	public function replaceScene(scene:Scene, releaseOldScene:Bool = false) {
-		if (scenes.length > 0 && releaseOldScene) {
+		if (scenes.length > 0) {
 			var oldScene = scenes[scenes.length - 1];
-			this.releaseScene(oldScene, false);
+			if (releaseOldScene) {
+				this.releaseScene(oldScene);
+			} else {
+				// 如果不释放，则简单移除场景
+				oldScene.parent?.removeChild(oldScene);
+			}
 		}
 		showScene(scene);
 	}

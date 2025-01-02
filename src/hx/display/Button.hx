@@ -45,8 +45,17 @@ class Button extends Box {
 	private function set_labelOffsetPoint(value:Point):Point {
 		labelOffsetPoint = value;
 		var layoutData:AnchorLayoutData = cast __label.layoutData;
-		layoutData.left = value.x;
-		layoutData.top = value.y;
+		layoutData.right = layoutData.left = layoutData.top = layoutData.bottom = 0;
+		if (value.x < 0)
+			layoutData.right = -value.x;
+		else {
+			layoutData.left = value.x;
+		}
+		if (value.y < 0)
+			layoutData.bottom = -value.y;
+		else {
+			layoutData.top = value.y;
+		}
 		__label.layoutData = layoutData;
 		return value;
 	}

@@ -88,7 +88,7 @@ class UIAssets extends Assets {
 		var parentXml = viewXml.nodeType == Document ? viewXml.firstElement() : viewXml;
 		var ids = Reflect.getProperty(parent, "ids");
 		if (createRoot) {
-			var display = buildItem(parentXml, parent, ids);
+			var display = buildItem(parentXml, parent, ids, false);
 			if (display is DisplayObjectContainer) {
 				parent = cast display;
 			} else {
@@ -101,7 +101,7 @@ class UIAssets extends Assets {
 		return parent;
 	}
 
-	public function buildItem(item:Xml, parent:DisplayObjectContainer, ids:Map<String, DisplayObject>):DisplayObject {
+	public function buildItem(item:Xml, parent:DisplayObjectContainer, ids:Map<String, DisplayObject>, autoBuildUi:Bool = true):DisplayObject {
 		var classType = UIManager.getInstance().getClassType(item.nodeName);
 		if (classType != null) {
 			var ui:DisplayObject = Type.createInstance(classType, []);
@@ -112,21 +112,21 @@ class UIAssets extends Assets {
 			if (ui.name != null && ids != null) {
 				ids.set(ui.name, ui);
 			}
-			if (ui is DisplayObjectContainer) {
+			if (autoBuildUi && ui is DisplayObjectContainer) {
 				buildUi(item, cast ui, ids);
 			}
 			return ui;
 		} else {
 			// 检查是否为xml:配置格式
 			if (item.nodeName.indexOf("xml:") == 0) {
-				trace("属于配置文件");
 				var ui = StringTools.replace(item.nodeName, "xml:", "");
 				for (key => assets in this.uiAssetses) {
 					if (key == ui) {
-						var parent = assets.build(parent);
+						var parent = assets.build(parent, true);
 						if (parent is DisplayObjectContainer) {
 							buildUi(item, cast parent, ids);
 						}
+						UIManager.getInstance().applyAttributes(parent, item, this);
 						return parent;
 					}
 				}

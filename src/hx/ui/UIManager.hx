@@ -168,7 +168,7 @@ class UIManager {
 				}
 			}
 			if (useAnchor || percentHeight != null || percentWidth != null) {
-				if (display.parent.layout == null) {
+				if (display.parent != null && display.parent.layout == null) {
 					display.parent.layout = new AnchorLayout();
 				}
 				var layoutData = new AnchorLayoutData(xml.getFloatValue("top"), xml.getFloatValue("right"), xml.getFloatValue("bottom"),

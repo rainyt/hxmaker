@@ -1,5 +1,6 @@
 package hx.display;
 
+import hx.gemo.Point;
 import hx.core.Hxmaker;
 import hx.layout.LayoutData;
 import hx.layout.ILayout;
@@ -14,6 +15,7 @@ using hx.utils.MathUtils;
  * 唯一统一的渲染对象
  */
 @:keep
+@:access(hx.gemo.Matrix)
 class DisplayObject extends EventDispatcher {
 	@:noCompletion private var __scaleX:Float = 1;
 	@:noCompletion private var __scaleY:Float = 1;
@@ -644,5 +646,33 @@ class DisplayObject extends EventDispatcher {
 
 	private function get_topView():Stage {
 		return Hxmaker.topView;
+	}
+
+	/**
+	 * 本地坐标转换为世界坐标
+	 * @param point 
+	 * @return Point
+	 */
+	public function localToGlobal(point:Point):Point {
+		if (this.__transformDirty)
+			stage.__updateTransform(null);
+		var p = point.clone();
+		p.x = __worldTransform.__transformX(p.x, p.y);
+		p.y = __worldTransform.__transformY(p.x, p.y);
+		return p;
+	}
+
+	/**
+	 * 世界坐标转换为本地坐标
+	 * @param point 
+	 * @return Point
+	 */
+	public function globalToLocal(point:Point):Point {
+		if (this.__transformDirty)
+			stage.__updateTransform(null);
+		var p = point.clone();
+		p.x = __worldTransform.__transformInverseX(p.x, p.y);
+		p.y = __worldTransform.__transformInverseY(p.x, p.y);
+		return p;
 	}
 }

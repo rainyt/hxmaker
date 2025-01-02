@@ -154,4 +154,24 @@ class Matrix {
 	private inline function __transformY(px:Float, py:Float):Float {
 		return px * b + py * d + ty;
 	}
+
+	private inline function __transformInverseX(px:Float, py:Float):Float {
+		var norm = a * d - b * c;
+
+		if (norm == 0) {
+			return -tx;
+		} else {
+			return (1.0 / norm) * (c * (ty - py) + d * (px - tx));
+		}
+	}
+
+	private inline function __transformInverseY(px:Float, py:Float):Float {
+		var norm = a * d - b * c;
+
+		if (norm == 0) {
+			return -ty;
+		} else {
+			return (1.0 / norm) * (a * (py - ty) + b * (tx - px));
+		}
+	}
 }

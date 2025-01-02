@@ -96,6 +96,8 @@ class UIAssets extends Assets {
 				return parent;
 			}
 		}
+		// 对父节点进行属性绑定
+		UIManager.getInstance().applyAttributes(parent, parentXml, this);
 		buildUi(parentXml, parent, ids);
 		return parent;
 	}

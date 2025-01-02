@@ -23,6 +23,13 @@ class UIAssets extends Assets {
 	}
 
 	override function start() {
+		var id = Assets.formatName(__path);
+		if (strings.exists(id)) {
+			viewXml = Xml.parse(strings.get(id));
+			parseXml(viewXml);
+			__start();
+			return;
+		}
 		// 这里需要解析这个xml所需要的所有资源
 		new StringFuture(__path).onComplete((xml:String) -> {
 			viewXml = Xml.parse(xml);

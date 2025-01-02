@@ -117,10 +117,11 @@ class DisplayObjectContainer extends DisplayObject {
 		if (child.parent != null) {
 			child.parent.removeChild(child);
 		}
+		var isOneAddToStage = child.__parent == null;
 		this.__children.insert(index, child);
 		child.__parent = this;
 		// 追加舞台处理
-		if (this.stage != null && child.stage == null) {
+		if (isOneAddToStage && this.stage != null && child.stage == null) {
 			child.__onAddToStage(this.stage);
 		}
 		this.__layoutDirty = true;
@@ -133,7 +134,8 @@ class DisplayObjectContainer extends DisplayObject {
 	 */
 	public function removeChild(child:DisplayObject):Void {
 		this.__children.remove(child);
-		child.onRemoveToStage();
+		if (child.__parent != null)
+			child.onRemoveToStage();
 		if (child.hasEventListener(Event.REMOVED_FROM_STAGE))
 			child.dispatchEvent(new Event(Event.REMOVED_FROM_STAGE));
 		child.__parent = null;

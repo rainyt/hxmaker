@@ -35,7 +35,8 @@ class SceneManager {
 		// 如果仍然存在场景，则返回到之前的场景上
 		if (has && scenes.length > 0) {
 			var lastScene = scenes[scenes.length - 1];
-			showScene(lastScene);
+			if (lastScene.parent == null)
+				showScene(lastScene);
 		}
 	}
 

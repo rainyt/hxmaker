@@ -1,5 +1,6 @@
 package hx.display;
 
+import hx.gemo.Point;
 import hx.gemo.Rectangle;
 import hx.utils.SoundManager;
 import hx.layout.AnchorLayoutData;
@@ -35,6 +36,20 @@ class Button extends Box {
 	 * 文字渲染器
 	 */
 	private var __label:Label;
+
+	/**
+	 * 设置文本偏移点
+	 */
+	public var labelOffsetPoint(default, set):Point;
+
+	private function set_labelOffsetPoint(value:Point):Point {
+		labelOffsetPoint = value;
+		var layoutData:AnchorLayoutData = cast __label.layoutData;
+		layoutData.left = value.x;
+		layoutData.top = value.y;
+		__label.layoutData = layoutData;
+		return value;
+	}
 
 	/**
 	 * 皮肤数据

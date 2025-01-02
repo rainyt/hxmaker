@@ -1,5 +1,6 @@
 package hx.ui;
 
+import hx.gemo.Point;
 import hx.gemo.Rectangle;
 import hx.utils.ScaleUtils;
 import hx.assets.Sound;
@@ -179,22 +180,29 @@ class UIManager {
 			}
 		});
 		addAttributesParse(Button, function(obj:Button, xml:Xml, assets:Assets) {
-			if (xml.exists("src")) {
-				var id = xml.getStringId("src");
-				obj.skin = {
-					up: getBitmapData(id) ?? assets.getBitmapData(id)
-				};
-			}
-			obj.text = xml.get("text");
 			var textformat = createTextformat(xml);
 			if (textformat != null) {
 				obj.textFormat = textformat;
 			}
-			if (xml.exists("scale9Grid")) {
-				var rect = xml.get("scale9Grid");
-				var rects = rect.split(" ");
-				var grid = new Rectangle(Std.parseFloat(rects[0]), Std.parseFloat(rects[1]), Std.parseFloat(rects[2]), Std.parseFloat(rects[3]));
-				obj.scale9Grid = grid;
+			for (key in xml.attributes()) {
+				switch key {
+					case "src":
+						var id = xml.getStringId("src");
+						obj.skin = {
+							up: getBitmapData(id) ?? assets.getBitmapData(id)
+						};
+					case "text":
+						obj.text = xml.get("text");
+					case "scale9Grid":
+						var rect = xml.get("scale9Grid");
+						var rects = rect.split(" ");
+						var grid = new Rectangle(Std.parseFloat(rects[0]), Std.parseFloat(rects[1]), Std.parseFloat(rects[2]), Std.parseFloat(rects[3]));
+						obj.scale9Grid = grid;
+					case "labelOffsetPoint":
+						var point = xml.get("labelOffsetPoint");
+						var points = point.split(" ");
+						obj.labelOffsetPoint = new Point(Std.parseFloat(points[0]), Std.parseFloat(points[1]));
+				}
 			}
 		});
 		addAttributesParse(Image, function(obj:Image, xml:Xml, assets:Assets) {

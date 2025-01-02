@@ -69,14 +69,6 @@ class UIAssets extends Assets {
 		}
 	}
 
-	/**
-	 * 加载样式
-	 * @param xml 
-	 */
-	public function loadStyle(xml:String):Void {
-		pushFuture(new hx.assets.StyleFuture(xml, false));
-	}
-
 	private function __start() {
 		super.start();
 	}
@@ -107,10 +99,10 @@ class UIAssets extends Assets {
 		if (classType != null) {
 			var ui:DisplayObject = Type.createInstance(classType, []);
 			parent.addChild(ui);
-			// trace("构造", ui);
+			trace("构造", ui);
 			// 应用属性
 			UIManager.getInstance().applyAttributes(ui, item, this);
-			if (ui.name != null) {
+			if (ui.name != null && ids != null) {
 				ids.set(ui.name, ui);
 			}
 			if (ui is DisplayObjectContainer) {

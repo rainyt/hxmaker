@@ -1,5 +1,6 @@
 package hx.ui;
 
+import hx.display.Scene;
 import hx.gemo.Point;
 import hx.gemo.Rectangle;
 import hx.utils.ScaleUtils;
@@ -27,6 +28,13 @@ class UIManager {
 	 * 资源列表
 	 */
 	private static var assetsList:Array<Assets> = [];
+
+	public static function clean():Void {
+		for (assets in assetsList) {
+			assets.clean();
+		}
+		assetsList = [];
+	}
 
 	/**
 	 * 绑定资源
@@ -247,6 +255,7 @@ class UIManager {
 				obj.gap = xml.getFloatValue("gap");
 			}
 		});
+		addAttributesParse(Scene, function(obj:Scene, xml:Xml, assets:Assets) {});
 	}
 
 	public function createTextformat(xml:Xml):TextFormat {

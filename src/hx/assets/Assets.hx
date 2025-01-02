@@ -14,6 +14,11 @@ import hx.display.BitmapData;
  */
 class Assets extends Future<Assets, Dynamic> {
 	/**
+	 * 原生路径
+	 */
+	public var nativePath:String = "";
+
+	/**
 	 * 正在加载的资源管理器
 	 */
 	private static var __assets:Array<Assets> = [];
@@ -142,11 +147,19 @@ class Assets extends Future<Assets, Dynamic> {
 		super(null, false);
 	}
 
+	public function getNativePath(path:String):String {
+		if (path.toLowerCase().indexOf(nativePath.toLowerCase()) == -1) {
+			return Path.join([nativePath, path]);
+		}
+		return path;
+	}
+
 	/**
 	 * 加载音乐资源
 	 * @param path 
 	 */
 	public function loadSound(path:String):Void {
+		path = getNativePath(path);
 		pushFuture(new hx.assets.SoundFuture(path, false));
 	}
 
@@ -156,6 +169,7 @@ class Assets extends Future<Assets, Dynamic> {
 	 * @return Future<BitmapData>
 	 */
 	public function loadBitmapData(path:String) {
+		path = getNativePath(path);
 		if (!isBindAssets || UIManager.getBitmapData(formatName(path)) == null) {
 			pushFuture(new hx.assets.BitmapDataFuture(path, false));
 		} else {
@@ -169,6 +183,8 @@ class Assets extends Future<Assets, Dynamic> {
 	 * @param xml 
 	 */
 	public function loadAtlas(path:String, xml:String) {
+		path = getNativePath(path);
+		xml = getNativePath(xml);
 		pushFuture(new hx.assets.TextureAtlasFuture({
 			png: path,
 			xml: xml,
@@ -182,6 +198,8 @@ class Assets extends Future<Assets, Dynamic> {
 	 * @param atlas 
 	 */
 	public function loadSpineAtlas(png:String, atlas:String) {
+		png = getNativePath(png);
+		atlas = getNativePath(atlas);
 		pushFuture(new hx.assets.SpineTextureAtlasFuture({
 			png: png,
 			atlas: atlas,
@@ -194,6 +212,7 @@ class Assets extends Future<Assets, Dynamic> {
 	 * @param path 
 	 */
 	public function loadJson(path:String) {
+		path = getNativePath(path);
 		pushFuture(new hx.assets.JsonFuture(path, false));
 	}
 
@@ -202,6 +221,7 @@ class Assets extends Future<Assets, Dynamic> {
 	 * @param path 
 	 */
 	public function loadString(path:String) {
+		path = getNativePath(path);
 		pushFuture(new hx.assets.StringFuture(path, false));
 	}
 
@@ -210,6 +230,7 @@ class Assets extends Future<Assets, Dynamic> {
 	 * @param path 
 	 */
 	public function loadXml(path:String) {
+		path = getNativePath(path);
 		pushFuture(new hx.assets.XmlFuture(path, false));
 	}
 
@@ -218,7 +239,21 @@ class Assets extends Future<Assets, Dynamic> {
 	 * @param path 
 	 */
 	public function loadUIAssets(path:String) {
-		pushFuture(new hx.assets.UIAssetsFuture(path, false));
+		path = getNativePath(path);
+		var loader = new hx.assets.UIAssetsFuture(path, false);
+		loader.nativePath = this.nativePath;
+		pushFuture(loader);
+	}
+
+	/**
+	 * 加载样式
+	 * @param xml 
+	 */
+	public function loadStyle(xml:String):Void {
+		xml = getNativePath(xml);
+		var loader = new hx.assets.StyleFuture(xml, false);
+		loader.nativePath = nativePath;
+		pushFuture(loader);
 	}
 
 	/**

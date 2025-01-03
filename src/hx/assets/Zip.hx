@@ -66,7 +66,6 @@ class Zip {
 		#if lime
 		entry.data = entry.compressed ? Deflate.decompress(entry.data) : entry.data;
 		entry.compressed = false;
-		trace("lime unzip");
 		return entry.data;
 		#elseif deflatex
 		if (entry.compressed) {

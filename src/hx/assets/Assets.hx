@@ -110,6 +110,11 @@ class Assets extends Future<Assets, Dynamic> {
 	public var styles:Map<String, Xml> = new Map();
 
 	/**
+	 * 资源压缩包
+	 */
+	public var zips:Map<String, Zip> = new Map();
+
+	/**
 	 * 已经加载完成的数量
 	 */
 	public var loadedCounts:Int = 0;
@@ -152,6 +157,14 @@ class Assets extends Future<Assets, Dynamic> {
 			return Path.join([nativePath, path]);
 		}
 		return path;
+	}
+
+	/**
+	 * 加载zip包文件
+	 * @param path 
+	 */
+	public function loadZip(path:String):Void {
+		pushFuture(new hx.assets.ZipFuture(path, false));
 	}
 
 	/**
@@ -378,7 +391,10 @@ class Assets extends Future<Assets, Dynamic> {
 	private function __onCompleted(future:Future<Dynamic, Dynamic>, data:Dynamic):Void {
 		CURRENT_LOAD_COUNTS--;
 		loadedCounts++;
-		if (data is StyleAssets) {
+		if (data is Zip) {
+			var zip:Zip = cast data;
+			this.zips.set(formatName(future.getLoadData()), zip);
+		} else if (data is StyleAssets) {
 			var style:StyleAssets = cast data;
 			this.pushAssets(style);
 			style.clean(false);

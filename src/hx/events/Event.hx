@@ -29,6 +29,11 @@ class Event {
 	public inline static var DEACTIVATE:String = "deactivate";
 
 	/**
+	 * 完成统一事件
+	 */
+	public inline static var COMPLETE:String = "complete";
+
+	/**
 	 * 数据
 	 */
 	public var data:Dynamic;

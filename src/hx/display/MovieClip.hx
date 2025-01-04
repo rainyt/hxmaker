@@ -1,5 +1,7 @@
 package hx.display;
 
+import hx.events.Event;
+
 /**
  * MovieClip是一种显示由纹理列表描绘的动画的简单方法。
  */
@@ -16,7 +18,17 @@ class MovieClip extends Image {
 	/**
 	 * 获得当前选择的帧
 	 */
-	public var currentFrame:Int = 0;
+	public var currentFrame(default, set):Int = 0;
+
+	private function set_currentFrame(value:Int):Int {
+		this.currentFrame = value;
+		var currentData = __frames[currentFrame];
+		if (currentData == null) {
+			return value;
+		}
+		this.data = currentData.bitmapData;
+		return value;
+	}
 
 	/**
 	 * 根据提供的纹理和指定的默认帧速率创建电影剪辑。
@@ -62,8 +74,12 @@ class MovieClip extends Image {
 		if (__time >= currentData.duration) {
 			currentFrame++;
 			__time = 0;
+			if (currentFrame >= __frames.length) {
+				// 播放完成事件
+				if (this.hasEventListener(Event.COMPLETE))
+					this.dispatchEvent(new Event(Event.COMPLETE));
+			}
 		}
-		this.data = currentData.bitmapData;
 	}
 
 	public function play():Void {

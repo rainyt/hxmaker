@@ -141,6 +141,11 @@ class DisplayObject extends EventDispatcher {
 	}
 
 	private function set_colorTransform(value:ColorTransform):ColorTransform {
+		if (value == null) {
+			this.__colorTransform = null;
+			__colorTransformDirty = true;
+			return value;
+		}
 		if (__colorTransform == null) {
 			__colorTransform = new ColorTransform();
 		}

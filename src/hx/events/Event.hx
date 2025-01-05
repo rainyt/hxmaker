@@ -34,6 +34,11 @@ class Event {
 	public inline static var COMPLETE:String = "complete";
 
 	/**
+	 * 变化
+	 */
+	public inline static var CHANGE:String = "change";
+
+	/**
 	 * 数据
 	 */
 	public var data:Dynamic;

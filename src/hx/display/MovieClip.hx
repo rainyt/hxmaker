@@ -1,5 +1,6 @@
 package hx.display;
 
+import hx.assets.Sound;
 import hx.events.Event;
 
 /**
@@ -12,7 +13,7 @@ class MovieClip extends Image {
 	private var __frames:Array<{
 		bitmapData:BitmapData,
 		duration:Float,
-		sound:Dynamic
+		sound:Sound
 	}> = [];
 
 	/**
@@ -51,7 +52,7 @@ class MovieClip extends Image {
 	 * @param duration 
 	 * @param sound 
 	 */
-	public function addFrame(bitmapData:BitmapData, duration:Float = 1, sound:Dynamic = null):Void {
+	public function addFrame(bitmapData:BitmapData, duration:Float = 1, sound:Sound = null):Void {
 		this.__frames.push({
 			bitmapData: bitmapData,
 			duration: duration,
@@ -78,6 +79,14 @@ class MovieClip extends Image {
 				// 播放完成事件
 				if (this.hasEventListener(Event.COMPLETE))
 					this.dispatchEvent(new Event(Event.COMPLETE));
+			}
+			// 帧发生变化时处理
+			if (this.hasEventListener(Event.CHANGE))
+				this.dispatchEvent(new Event(Event.CHANGE));
+			// 音效播放支持
+			currentData = __frames[currentFrame];
+			if (currentData != null && currentData.sound != null) {
+				currentData.sound.root.play();
 			}
 		}
 	}

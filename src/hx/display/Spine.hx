@@ -166,7 +166,7 @@ class Spine extends Graphics {
 						bitmapData = atlasRegion.texture;
 						this.beginBitmapData(bitmapData);
 					}
-					this.drawTriangles(_tempVerticesArray, _triangles, _uvs);
+					this.drawTriangles(_tempVerticesArray, _triangles, _uvs, slot.color.a);
 				}
 				if (clipper.isClipping()) {
 					clipper.clipEndWithSlot(slot);

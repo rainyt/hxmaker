@@ -208,7 +208,8 @@ class DisplayObjectContainer extends DisplayObject {
 
 	override function onUpdate(dt:Float) {
 		super.onUpdate(dt);
-		for (child in this.__children) {
+		var copyChildren = this.__children.copy();
+		for (child in copyChildren) {
 			if (child.updateEnabled) {
 				child.onUpdate(dt);
 			}

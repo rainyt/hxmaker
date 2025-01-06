@@ -44,5 +44,5 @@ enum Draw {
 	/**
 	 * 渲染三角形
 	 */
-	DRAW_TRIANGLE(vertices:Array<Float>, indices:Array<Int>, uvs:Array<Float>, alpha:Float, colorTransform:ColorTransform);
+	DRAW_TRIANGLE(vertices:Array<Float>, indices:Array<Int>, uvs:Array<Float>, alpha:Float, colorTransform:ColorTransform, applyBlendAddMode:Bool);
 }

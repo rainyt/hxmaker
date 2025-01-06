@@ -46,13 +46,15 @@ class Graphics extends DisplayObject {
 	 * @param uvs 纹理坐标
 	 * @param alpha 本次绘制的透明度
 	 * @param colorTransform 颜色变换
+	 * @param applyBlendAddMode 是否应用ADD混合模式
 	 */
-	public function drawTriangles(vertices:Array<Float>, indices:Array<Int>, uvs:Array<Float>, alpha:Float = 1, ?colorTransform:ColorTransform):Void {
+	public function drawTriangles(vertices:Array<Float>, indices:Array<Int>, uvs:Array<Float>, alpha:Float = 1, ?colorTransform:ColorTransform,
+			applyBlendAddMode:Bool = false):Void {
 		if (colorTransform == null && __beginFill != null) {
 			var color = ColorUtils.toShaderColor(__beginFill);
 			colorTransform = new ColorTransform(color.r, color.g, color.b, 1);
 		}
-		__graphicsDrawData.draws.push(DRAW_TRIANGLE(vertices, indices, uvs, alpha, colorTransform));
+		__graphicsDrawData.draws.push(DRAW_TRIANGLE(vertices, indices, uvs, alpha, colorTransform, applyBlendAddMode));
 		__sizeDirty = true;
 	}
 
@@ -221,7 +223,7 @@ class Graphics extends DisplayObject {
 			// 这里对Graphic的尺寸进行重新测量
 			for (draw in this.__graphicsDrawData.draws) {
 				switch draw {
-					case DRAW_TRIANGLE(vertices, indices, uvs, alpha, colorTransform):
+					case DRAW_TRIANGLE(vertices, indices, uvs, alpha, colorTransform, applyBlendAddMode):
 						var len = Std.int(vertices.length / 2);
 						__sizeRect.setTo(vertices[0], vertices[1], 0, 0);
 						for (i in 0...len) {

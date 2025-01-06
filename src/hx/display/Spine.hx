@@ -1,5 +1,7 @@
 package hx.display;
 
+import hx.utils.ObjectPool;
+import hx.gemo.ColorTransform;
 import hx.events.Event;
 import spine.atlas.TextureAtlasRegion;
 import spine.attachments.MeshAttachment;
@@ -29,6 +31,13 @@ class Spine extends Graphics {
 	@:noCompletion private var __fps = 60;
 	@:noCompletion private var __renderFpsTime:Float = 1 / 60;
 	@:noCompletion private var __renderCurrentTime:Float = 0.;
+
+	/**
+	 * 对象池
+	 */
+	public var pool:ObjectPool<ColorTransform> = new ObjectPool(() -> {
+		return new ColorTransform();
+	}, (color) -> {});
 
 	/**
 	 * 设置Spine渲染器的刷新帧率，默认为60FPS
@@ -107,6 +116,14 @@ class Spine extends Graphics {
 		var _triangles:Array<Int> = [];
 		var atlasRegion:TextureAtlasRegion = null;
 		var bitmapData:BitmapData = null;
+		@:privateAccess for (draw in this.__graphicsDrawData.draws) {
+			switch draw {
+				case BEGIN_FILL(color):
+				case BEGIN_BITMAP_DATA(bitmapData, smoothing):
+				case DRAW_TRIANGLE(vertices, indices, uvs, alpha, colorTransform, applyBlendAddMode):
+					pool.release(colorTransform);
+			}
+		}
 		this.clear();
 		for (slot in skeleton.drawOrder) {
 			if (slot.attachment != null) {
@@ -166,7 +183,12 @@ class Spine extends Graphics {
 						bitmapData = atlasRegion.texture;
 						this.beginBitmapData(bitmapData);
 					}
-					this.drawTriangles(_tempVerticesArray, _triangles, _uvs, slot.color.a);
+					// TODO 需要支持darkColor
+					var c = pool.get();
+					c.redMultiplier = slot.color.r;
+					c.greenMultiplier = slot.color.g;
+					c.blueMultiplier = slot.color.b;
+					this.drawTriangles(_tempVerticesArray, _triangles, _uvs, slot.color.a, c, slot.data.blendMode == spine.BlendMode.additive);
 				}
 				if (clipper.isClipping()) {
 					clipper.clipEndWithSlot(slot);

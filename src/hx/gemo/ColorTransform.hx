@@ -1,5 +1,7 @@
 package hx.gemo;
 
+import hx.utils.ObjectPool;
+
 /**
  * 颜色转换器
  */

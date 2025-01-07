@@ -13,4 +13,9 @@ class Point {
 	public function clone():Point {
 		return new Point(x, y);
 	}
+
+	public function set(x:Float, y:Float):Void {
+		this.x = x;
+		this.y = y;
+	}
 }

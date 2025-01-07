@@ -106,21 +106,28 @@ class Graphics extends DisplayObject {
 	 * @param x 
 	 * @param y 
 	 */
-	public function lineTo(x:Float, y:Float):Void {
+	public function lineTo(x:Float, y:Float, smoothing:Bool = true):Void {
 		var nextVertices = __mathLine(__posX, __posY, x, y);
 		if (__lineDrawing && __lastVertices != null) {
 			// 补充断成
-			var vertices = [
-				__lastVertices[2],
-				__lastVertices[3],
-				nextVertices[0],
-				nextVertices[1],
-				__lastVertices[6],
-				__lastVertices[7],
-				nextVertices[4],
-				nextVertices[5]
-			];
-			this.drawTriangles(vertices, [0, 1, 2, 1, 2, 3], [0, 0, 1, 0, 0, 1, 1, 1]);
+			if (!smoothing) {
+				__lastVertices[2] = nextVertices[0];
+				__lastVertices[3] = nextVertices[1];
+				__lastVertices[6] = nextVertices[4];
+				__lastVertices[7] = nextVertices[5];
+			} else {
+				var vertices = [
+					__lastVertices[2],
+					__lastVertices[3],
+					nextVertices[0],
+					nextVertices[1],
+					__lastVertices[6],
+					__lastVertices[7],
+					nextVertices[4],
+					nextVertices[5]
+				];
+				this.drawTriangles(vertices, [0, 1, 2, 1, 2, 3], [0, 0, 1, 0, 0, 1, 1, 1]);
+			}
 		}
 		__lastVertices = nextVertices;
 		this.drawTriangles(nextVertices, [0, 1, 2, 1, 2, 3], [0, 0, 1, 0, 0, 1, 1, 1]);

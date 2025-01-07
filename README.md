@@ -4,6 +4,9 @@ A unified game engine written in Haxe that can run on any game engine.
 # Stats
 At present, the game engine is still under development and cannot be fully put into use.
 
+# 什么内容可以进行批处理
+所有常用的显示对象（请参阅下面的列表），以及BlendMode.ADD混合模式也可以进行自动合批处理。
+
 # 支持
 | 功能 | 描述 | 状态 | 自动合批 |
 --- | --- | --- | ---

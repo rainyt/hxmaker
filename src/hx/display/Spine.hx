@@ -197,4 +197,14 @@ class Spine extends Graphics {
 		}
 		this.setTransformDirty();
 	}
+
+	/**
+	 * 播放动画
+	 * @param name 
+	 * @param index 
+	 * @param isLoop 
+	 */
+	public function play(name:String, index:Int = 0, isLoop:Bool = true):Void {
+		this.animationState.setAnimationByName(index, name, isLoop);
+	}
 }

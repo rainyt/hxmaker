@@ -205,6 +205,9 @@ class Spine extends Graphics {
 	 * @param isLoop 
 	 */
 	public function play(name:String, index:Int = 0, isLoop:Bool = true):Void {
+		var t = this.animationState.getCurrent(index);
+		if (t != null && t.animation.name == name)
+			return;
 		this.animationState.setAnimationByName(index, name, isLoop);
 	}
 }

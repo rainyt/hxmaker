@@ -1,5 +1,7 @@
 package hx.assets;
 
+import spine.SkeletonData;
+import hx.display.Spine;
 import hx.ui.UIManager;
 import hx.ui.UIAssets;
 import hx.assets.SpineTextureAtlas;
@@ -434,6 +436,23 @@ class Assets extends Future<Assets, Dynamic> {
 		CURRENT_LOAD_COUNTS--;
 		trace(error);
 		this.errorValue(FutureErrorEvent.create(FutureErrorEvent.LOAD_ERROR, -1, "Load fail."));
+	}
+
+	/**
+	 * 获得SkeletonData数据
+	 * @param name spine名称
+	 * @param json 如果不提供，则自动以name为命名获得
+	 * @return SkeletonData
+	 */
+	public function getSkeletonData(name:String, json:String = null):SkeletonData {
+		if (json == null)
+			json = name;
+		var atlas:Atlas = atlases.get(name);
+		if (atlas is SpineTextureAtlas) {
+			var spineAtlas:SpineTextureAtlas = cast atlas;
+			return spineAtlas.createSkeletonData(strings.get(json));
+		}
+		return null;
 	}
 
 	/**

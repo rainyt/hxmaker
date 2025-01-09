@@ -1,5 +1,6 @@
 package hx.ui;
 
+import spine.SkeletonData;
 import hx.display.Scene;
 import hx.gemo.Point;
 import hx.gemo.Rectangle;
@@ -71,6 +72,22 @@ class UIManager {
 			}
 		}
 		trace("无法读取", id);
+		return null;
+	}
+
+	/**
+	 * 获得SkeletonData数据
+	 * @param name spine名称
+	 * @param json 如果不提供，则自动以name为命名获得
+	 * @return SkeletonData
+	 */
+	public static function getSkeletonData(name:String, json:String = null):SkeletonData {
+		for (assets in assetsList) {
+			var data = assets.getSkeletonData(name, json);
+			if (data != null) {
+				return data;
+			}
+		}
 		return null;
 	}
 

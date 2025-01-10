@@ -109,6 +109,9 @@ class DisplayObjectContainer extends DisplayObject {
 	 * @param index 
 	 */
 	public function addChildAt(child:DisplayObject, index:Int):Void {
+		if (child == null){
+			throw "ArgumentError: child is null.";
+		}
 		if (index < 0) {
 			index = 0;
 		} else if (index > this.__children.length) {

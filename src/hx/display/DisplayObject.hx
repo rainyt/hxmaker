@@ -680,4 +680,26 @@ class DisplayObject extends EventDispatcher {
 		p.y = __worldTransform.__transformInverseY(p.x, p.y);
 		return p;
 	}
+
+	/**
+	 * 获得相对当前对象的触摸坐标X
+	 */
+	public var touchX(get, never):Float;
+
+	private function get_touchX():Float {
+		if (this.__transformDirty)
+			stage.__updateTransform(null);
+		return this.__worldTransform.__transformInverseX(Hxmaker.engine.touchX, Hxmaker.engine.touchY);
+	}
+
+	/**
+	 * 获得相对当前对象的触摸坐标Y
+	 */
+	public var touchY(get, never):Float;
+
+	private function get_touchY():Float {
+		if (this.__transformDirty)
+			stage.__updateTransform(null);
+		return this.__worldTransform.__transformInverseY(Hxmaker.engine.touchX, Hxmaker.engine.touchY);
+	}
 }

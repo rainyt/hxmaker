@@ -20,6 +20,16 @@ interface IEngine {
 	public var stages:Array<Stage>;
 
 	/**
+	 * 触摸坐标X
+	 */
+	public var touchX:Float;
+
+	/**
+	 * 触摸坐标Y
+	 */
+	public var touchY:Float;
+
+	/**
 	 * 添加舞台
 	 * @param stage 
 	 */

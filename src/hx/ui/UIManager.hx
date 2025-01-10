@@ -1,5 +1,6 @@
 package hx.ui;
 
+import hx.display.BitmapLabel;
 import spine.SkeletonData;
 import hx.display.Scene;
 import hx.gemo.Point;
@@ -245,6 +246,22 @@ class UIManager {
 				var rects = rect.split(" ");
 				var grid = new Rectangle(Std.parseFloat(rects[0]), Std.parseFloat(rects[1]), Std.parseFloat(rects[2]), Std.parseFloat(rects[3]));
 				obj.scale9Grid = grid;
+			}
+		});
+		addAttributesParse(BitmapLabel, function(obj:BitmapLabel, xml:Xml, assets:Assets) {
+			if (xml.exists("src")) {
+				var data = xml.get("src");
+				data = Path.withoutDirectory(Path.withoutExtension(data));
+				obj.atlas = getAtlas(data) ?? assets.atlases.get(data);
+			}
+			if (xml.exists("text")) {
+				obj.data = xml.get("text");
+			}
+			if (xml.exists("fontName")) {
+				obj.fontName = xml.get("fontName");
+			}
+			if (xml.exists("space")) {
+				obj.space = Std.parseFloat(xml.get("space"));
 			}
 		});
 		addAttributesParse(Label, function(obj:Label, xml:Xml, assets:Assets) {

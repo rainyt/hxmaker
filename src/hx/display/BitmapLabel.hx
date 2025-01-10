@@ -24,8 +24,13 @@ class BitmapLabel extends Box implements IDataProider<String> {
 		return value;
 	}
 
-	public function new() {
+	/**
+	 * 构造一个位图纹理显示对象
+	 * @param atlas 精灵图
+	 */
+	public function new(?atlas:Atlas) {
 		super();
+		this.atlas = atlas;
 		this.updateEnabled = true;
 	}
 
@@ -40,7 +45,7 @@ class BitmapLabel extends Box implements IDataProider<String> {
 				var offestY = 0.;
 				for (i in 0...chars.length) {
 					var c = chars[i];
-					var img = new Image(atlas.bitmapDatas.get(c));
+					var img = new Image(atlas.bitmapDatas.get(fontName + c));
 					this.addChild(img);
 					img.x = offestX;
 					img.y = offestY;
@@ -73,6 +78,11 @@ class BitmapLabel extends Box implements IDataProider<String> {
 	 * 字符的左右间距
 	 */
 	public var space(default, set):Float = 0;
+
+	/**
+	 * 字符名称
+	 */
+	public var fontName:String = "";
 
 	private function set_space(value:Float):Float {
 		this.space = value;

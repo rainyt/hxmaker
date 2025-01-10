@@ -54,10 +54,6 @@ class VirtualTouchKey extends Box {
 		super();
 		_isAutoListener = isAutoListener;
 		_touchEvent = touchEvent;
-
-		var quad = new Quad(100, 100, 0xff0000);
-		this.addChild(quad);
-
 		this.width = this.height = 1;
 	}
 
@@ -212,12 +208,6 @@ class VirtualTouchKey extends Box {
 		if (e != null) {
 			_mouseX = this.touchX;
 			_mouseY = this.touchY;
-			trace("触摸坐标：", _mouseX, _mouseY);
-			var quad = new Quad(10, 10, 0xff0000);
-			this.addChild(quad);
-			quad.x = _mouseX;
-			quad.y = _mouseY;
-
 			if (_touchEvent) {
 				_touchEventId = cast(e, TouchEvent).touchPointID;
 			}

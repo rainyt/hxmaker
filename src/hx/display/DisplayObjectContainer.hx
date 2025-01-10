@@ -109,7 +109,7 @@ class DisplayObjectContainer extends DisplayObject {
 	 * @param index 
 	 */
 	public function addChildAt(child:DisplayObject, index:Int):Void {
-		if (child == null){
+		if (child == null) {
 			throw "ArgumentError: child is null.";
 		}
 		if (index < 0) {
@@ -165,9 +165,9 @@ class DisplayObjectContainer extends DisplayObject {
 	 */
 	public function removeChildren(start:Int = 0, end:Int = -1):Void {
 		var len = end == -1 ? this.__children.length : end;
-		while (start < len) {
-			removeChildAt(start);
-			start++;
+		while (len > start) {
+			len--;
+			removeChildAt(len);
 		}
 	}
 

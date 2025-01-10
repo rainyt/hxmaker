@@ -1,5 +1,7 @@
 package hx.gemo;
 
+import hx.utils.ObjectPool;
+
 /**
 	* Matrix类表示一个转换矩阵，它决定了如何
 	将点从一个坐标空间映射到另一个。您可以执行各种
@@ -14,6 +16,11 @@ package hx.gemo;
 	在变换时，使平行线保持平行。
  */
 class Matrix {
+	/**
+	 * 回收池
+	 */
+	public static var pool:ObjectPool<Matrix> = new ObjectPool(() -> new Matrix(), (m) -> m.identity());
+
 	/**
 		影响像素沿_x_轴定位的值当缩放或旋转图像时。
 	**/

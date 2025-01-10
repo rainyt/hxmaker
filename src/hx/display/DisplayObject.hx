@@ -234,10 +234,11 @@ class DisplayObject extends EventDispatcher {
 			this.__worldAlpha = parent.__worldAlpha * this.__alpha;
 			// 世界矩阵
 			this.__worldTransform.identity();
-			this.__worldTransform.concat(__transform);
 			this.__worldTransform.translate(this.__originWorldX, this.__originWorldY);
+			this.__worldTransform.concat(__transform);
 			this.__worldTransform.concat(parent.__worldTransform);
 		}
+
 		// this.__transformDirty = false;
 	}
 

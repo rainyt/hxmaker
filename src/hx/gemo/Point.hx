@@ -44,9 +44,8 @@ class Point {
 	 * @return Float
 	 */
 	public static function radianByFloat(x1:Float, y1:Float, x2:Float, y2:Float):Float {
-		var dx = x1 - x2;
-		var dy = y1 - y2;
-		return Math.atan2(dy, dx);
+		var radian:Float = Math.atan2((y2 - y1), (x2 - x1));
+		return radian;
 	}
 
 	public static function rotation(p1:Point, p2:Point):Float {
@@ -54,8 +53,25 @@ class Point {
 	}
 
 	public static function rotationByFloat(x1:Float, y1:Float, x2:Float, y2:Float):Float {
-		var angle = radianByFloat(x1, y1, x2, y2);
-		return angle * 180 / Math.PI;
+		return radianToRotation(radianByFloat(x1, y1, x2, y2));
+	}
+
+	/**
+	 * 角度转弧度
+	 * @param angle
+	 * @return Float
+	 */
+	public static function rotationToRadian(angle:Float):Float {
+		return angle * (Math.PI / 180);
+	}
+
+	/**
+	 * 弧度转角度
+	 * @param radian
+	 * @return Float
+	 */
+	public static function radianToRotation(radian:Float):Float {
+		return radian * (180 / Math.PI);
 	}
 
 	public var x:Float = 0;

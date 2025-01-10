@@ -179,8 +179,8 @@ class Image extends DisplayObject implements IDataProider<BitmapData> implements
 			if (this.data != null && this.data.frameRect != null) {
 				this.__worldTransform.translate(-this.data.frameRect.x, -this.data.frameRect.y);
 			}
-			this.__worldTransform.concat(__transform);
 			this.__worldTransform.translate(this.__originWorldX, this.__originWorldY);
+			this.__worldTransform.concat(__transform);
 			this.__worldTransform.concat(parent.__worldTransform);
 		}
 	}

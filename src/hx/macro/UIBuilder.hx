@@ -13,11 +13,20 @@ import haxe.macro.Expr.Field;
 #if macro
 class UIBuilder {
 	/**
+	 * 模块组件
+	 */
+	public static var moudle:UIMoudle;
+
+	/**
 	 * 构造一个XML布局
 	 * @param xmlid 
 	 * @return Array<Field>
 	 */
 	public static function build(path:String):Array<Field> {
+		// 构造模块组件
+		if (moudle == null && FileSystem.exists("./moudle.xml")) {
+			moudle = new UIMoudle(Xml.parse(File.getContent("./moudle.xml")));
+		}
 		// 绑定继承类
 		var localClass = Context.getLocalClass().get();
 		var fileds = Context.getBuildFields();
@@ -92,12 +101,15 @@ class UIBuilder {
 		for (item in xml.elements()) {
 			if (item.exists("id")) {
 				// trace("create field", item);
-				var type = Context.getType("hx.display." + item.nodeName);
+				var classPkgName = moudle != null ? moudle.getType(item.nodeName) : "hx.display." + item.nodeName;
+				var type = Context.getType(classPkgName);
 				var typePath:Dynamic = null;
 				if (type != null) {
+					var pkgs = classPkgName.split(".");
+					var className = pkgs.pop();
 					typePath = ComplexType.TPath({
-						name: item.nodeName,
-						pack: ["hx", "display"]
+						name: className,
+						pack: pkgs
 					});
 				} else {
 					typePath = ComplexType.TPath({

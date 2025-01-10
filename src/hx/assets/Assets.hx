@@ -199,8 +199,8 @@ class Assets extends Future<Assets, Dynamic> {
 	 * @param path 
 	 * @param xml 
 	 */
-	public function loadAtlas(path:String, xml:String) {
-		path = getNativePath(path);
+	public function loadAtlas(png:String, xml:String) {
+		var path = getNativePath(png);
 		xml = getNativePath(xml);
 		pushFuture(new hx.assets.TextureAtlasFuture({
 			png: path,

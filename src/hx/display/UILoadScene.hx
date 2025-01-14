@@ -16,7 +16,7 @@ class UILoadScene extends Scene {
 	/**
 	 * 构造UI
 	 */
-	override private function __buildUi():Void {
+	override private function onBuildUI():Void {
 		if (uiAssets == null) {
 			// 检测是否存在__ui_id__，如果存在则需要通过UIManager进行构造
 			var __ui_id__ = Reflect.getProperty(this, "__ui_id__");

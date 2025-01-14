@@ -510,8 +510,11 @@ class DisplayObject extends EventDispatcher {
 		__transform = new Matrix();
 		__worldTransform = new Matrix();
 		__rect = new Rectangle();
+		this.onBuildUI();
 		this.onInit();
 	}
+
+	private function onBuildUI():Void {}
 
 	/**
 	 * 当对象被创建时调用，一般用于初始化对象

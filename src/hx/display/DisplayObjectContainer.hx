@@ -72,7 +72,7 @@ class DisplayObjectContainer extends DisplayObject {
 	/**
 	 * 构造UI
 	 */
-	private function __buildUi():Void {
+	override private function onBuildUI():Void {
 		// 检测是否存在__ui_id__，如果存在则需要通过UIManager进行构造
 		var __ui_id__ = Reflect.getProperty(this, "__ui_id__");
 		if (__ui_id__ != null) {
@@ -81,7 +81,6 @@ class DisplayObjectContainer extends DisplayObject {
 	}
 
 	public function new() {
-		__buildUi();
 		super();
 		this.updateEnabled = true;
 	}

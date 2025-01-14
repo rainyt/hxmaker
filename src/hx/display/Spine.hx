@@ -1,5 +1,6 @@
 package hx.display;
 
+import spine.animation.TrackEntry;
 import hx.utils.ObjectPool;
 import hx.gemo.ColorTransform;
 import hx.events.Event;
@@ -37,7 +38,10 @@ class Spine extends Graphics {
 	 */
 	public var pool:ObjectPool<ColorTransform> = new ObjectPool(() -> {
 		return new ColorTransform();
-	}, (color) -> {});
+	}, (color) -> {
+		color.alphaMultiplier = color.redMultiplier = color.blueMultiplier = color.greenMultiplier = 1;
+		color.alphaOffset = color.redOffset = color.blueOffset = color.greenOffset = 0;
+	});
 
 	/**
 	 * 设置Spine渲染器的刷新帧率，默认为60FPS
@@ -204,10 +208,10 @@ class Spine extends Graphics {
 	 * @param index 
 	 * @param isLoop 
 	 */
-	public function play(name:String, index:Int = 0, isLoop:Bool = true):Void {
+	public function play(name:String, index:Int = 0, isLoop:Bool = true):TrackEntry {
 		var t = this.animationState.getCurrent(index);
 		if (t != null && t.animation.name == name)
-			return;
-		this.animationState.setAnimationByName(index, name, isLoop);
+			return t;
+		return this.animationState.setAnimationByName(index, name, isLoop);
 	}
 }

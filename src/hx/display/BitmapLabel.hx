@@ -156,6 +156,7 @@ class BitmapLabel extends Box implements IDataProider<String> {
 	}
 
 	override function __updateTransform(parent:DisplayObject) {
+		__onUpdateText();
 		this.updateAlignTranform();
 		super.__updateTransform(parent);
 	}

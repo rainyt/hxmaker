@@ -3,7 +3,11 @@ package hx.macro;
 class UIMoudle {
 	public var classed:Map<String, String> = [];
 
-	public function new(xml:Xml) {
+	public function new(content:String) {
+		if (content == null) {
+			return;
+		}
+		var xml = Xml.parse(content);
 		for (item in xml.firstElement().elements()) {
 			classed.set(item.nodeName, item.get("classed"));
 		}

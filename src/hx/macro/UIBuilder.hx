@@ -25,7 +25,7 @@ class UIBuilder {
 	public static function build(path:String):Array<Field> {
 		// 构造模块组件
 		if (moudle == null && FileSystem.exists("./moudle.xml")) {
-			moudle = new UIMoudle(Xml.parse(File.getContent("./moudle.xml")));
+			moudle = new UIMoudle(File.getContent("./moudle.xml"));
 		}
 		// 绑定继承类
 		var localClass = Context.getLocalClass().get();

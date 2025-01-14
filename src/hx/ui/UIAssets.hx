@@ -1,5 +1,7 @@
 package hx.ui;
 
+import hx.macro.MacroTools;
+import hx.macro.UIMoudle;
 import haxe.io.Path;
 import hx.display.DisplayObject;
 import hx.assets.StringFuture;
@@ -7,6 +9,11 @@ import hx.assets.Assets;
 import hx.display.DisplayObjectContainer;
 
 class UIAssets extends Assets {
+	/**
+	 * 模块映射
+	 */
+	public static var moudle:UIMoudle = new UIMoudle(MacroTools.readContent("./moudle.xml"));
+
 	private var __path:String;
 
 	private var __dirPath:String;
@@ -120,14 +127,25 @@ class UIAssets extends Assets {
 			// 检查是否为xml:配置格式
 			if (item.nodeName.indexOf("xml:") == 0) {
 				var ui = StringTools.replace(item.nodeName, "xml:", "");
-				for (key => assets in this.uiAssetses) {
-					if (key == ui) {
-						var parent = assets.build(parent, true);
-						if (parent is DisplayObjectContainer) {
-							buildUi(item, cast parent, ids);
+				if (moudle.classed.exists(ui)) {
+					var type = Type.resolveClass(moudle.classed.get(ui));
+					var uiDisplay:DisplayObject = Type.createInstance(type, []);
+					parent.addChild(uiDisplay);
+					UIManager.getInstance().applyAttributes(uiDisplay, item, this);
+					if (uiDisplay.name != null && ids != null) {
+						ids.set(uiDisplay.name, uiDisplay);
+					}
+				} else {
+					// 需要检查moudle模块
+					for (key => assets in this.uiAssetses) {
+						if (key == ui) {
+							var parent = assets.build(parent, true);
+							if (parent is DisplayObjectContainer) {
+								buildUi(item, cast parent, ids);
+							}
+							UIManager.getInstance().applyAttributes(parent, item, this);
+							return parent;
 						}
-						UIManager.getInstance().applyAttributes(parent, item, this);
-						return parent;
 					}
 				}
 			}

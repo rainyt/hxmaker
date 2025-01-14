@@ -263,6 +263,12 @@ class UIManager {
 			if (xml.exists("space")) {
 				obj.space = Std.parseFloat(xml.get("space"));
 			}
+			if (xml.exists("hAlign")) {
+				obj.horizontalAlign = xml.get("hAlign");
+			}
+			if (xml.exists("vAlign")) {
+				obj.verticalAlign = xml.get("vAlign");
+			}
 		});
 		addAttributesParse(Label, function(obj:Label, xml:Xml, assets:Assets) {
 			if (xml.exists("text")) {
@@ -271,12 +277,12 @@ class UIManager {
 				if (textformat != null) {
 					obj.textFormat = textformat;
 				}
-				if (xml.exists("hAlign")) {
-					obj.horizontalAlign = xml.get("hAlign");
-				}
-				if (xml.exists("vAlign")) {
-					obj.verticalAlign = xml.get("vAlign");
-				}
+			}
+			if (xml.exists("hAlign")) {
+				obj.horizontalAlign = xml.get("hAlign");
+			}
+			if (xml.exists("vAlign")) {
+				obj.verticalAlign = xml.get("vAlign");
 			}
 		});
 		addAttributesParse(VBox, function(obj:VBox, xml:Xml, assets:Assets) {
@@ -363,10 +369,24 @@ class UIManager {
 	public function buildUi(id:String, parent:DisplayObjectContainer):Void {
 		var id = Path.withoutDirectory(Path.withoutExtension(id));
 		for (assets in assetsList) {
-			if (assets.uiAssetses.exists(id)) {
-				assets.uiAssetses.get(id).build(parent);
+			var uiAssets = getUIAssets(assets, id);
+			if (uiAssets != null) {
+				uiAssets.build(parent);
 				break;
 			}
 		}
+	}
+
+	public function getUIAssets(assets:Assets, id:String):UIAssets {
+		if (assets.uiAssetses.exists(id)) {
+			return assets.uiAssetses.get(id);
+		}
+		for (assets in assets.uiAssetses) {
+			var uiAssets = getUIAssets(assets, id);
+			if (uiAssets != null) {
+				return uiAssets;
+			}
+		}
+		return null;
 	}
 }

@@ -192,6 +192,8 @@ class UIManager {
 					case "left", "right", "top", "bottom", "centerX", "centerY":
 						// 意味着需要使用AnchorLayoutData数据
 						useAnchor = true;
+					case "blendMode":
+						display.blendMode = xml.get("blendMode");
 				}
 			}
 			if (useAnchor || percentHeight != null || percentWidth != null) {

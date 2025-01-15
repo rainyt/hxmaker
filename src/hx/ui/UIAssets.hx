@@ -56,6 +56,10 @@ class UIAssets extends Assets {
 				this.loadUIAssets(Path.join([__dirPath, nodeName + ".xml"]));
 			} else {
 				switch item.nodeName {
+					case "bitmapData":
+						// 加载位图
+						var path = item.get("path");
+						this.loadBitmapData(path);
 					case "sound":
 						// 加载音频
 						var path = item.get("path");

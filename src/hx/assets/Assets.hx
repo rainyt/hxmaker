@@ -102,6 +102,11 @@ class Assets extends Future<Assets, Dynamic> {
 	public var uiAssetses:Map<String, UIAssets> = new Map();
 
 	/**
+	 * 父节点资源节点
+	 */
+	public var parent:Assets;
+
+	/**
 	 * 音乐列表
 	 */
 	public var sounds:Map<String, Sound> = new Map();
@@ -159,6 +164,20 @@ class Assets extends Future<Assets, Dynamic> {
 			return Path.join([nativePath, path]);
 		}
 		return path;
+	}
+
+	/**
+	 * 判断此项资源是否已加载
+	 * @param future 
+	 * @return Bool
+	 */
+	public function hasLoading(future:Future<Dynamic, Dynamic>):Bool {
+		for (f in futures) {
+			if (f.path == future.path) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -280,6 +299,8 @@ class Assets extends Future<Assets, Dynamic> {
 	public function pushFuture(future:Future<Dynamic, Dynamic>) {
 		if (loading)
 			throw "Assets: can't push future when loading";
+		if (hasLoading(future))
+			return;
 		futures.push(future);
 		future.onComplete((data) -> {
 			__onCompleted(future, data);

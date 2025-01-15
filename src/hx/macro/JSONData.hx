@@ -1,8 +1,8 @@
 package hx.macro;
 
+import haxe.io.Path;
 import haxe.macro.TypeTools;
 import haxe.Exception;
-import zygame.utils.StringUtils;
 import haxe.macro.Context;
 import haxe.macro.Expr;
 #if macro
@@ -15,20 +15,6 @@ import haxe.Json;
  */
 class JSONData {
 	/**
-	 * 内嵌一个JSON动态类型，但不会进行解析类
-	 * @param jsonPath 
-	 */
-	public macro static function embed(jsonPath:String) {
-		var rootJsonPath = jsonPath;
-		var project:ZProjectData = AutoBuilder.firstProjectData;
-		jsonPath = project.assetsPath.get(StringUtils.getName(jsonPath) + ".json");
-		if (jsonPath == null)
-			jsonPath = rootJsonPath;
-		var data = File.getContent(jsonPath);
-		return macro $v{haxe.Json.parse(data)};
-	}
-
-	/**
 	 * 创建一个自定义JSON类型：{data:[obj,obj,obj]}，会自动解析第一层，以及数组的第二层数据
 	 * @param jsonPath json文件路径
 	 * @param indexNames 索引名，支持多索引名，可用于快速查找
@@ -37,19 +23,16 @@ class JSONData {
 	 */
 	public macro static function create(jsonPath:String, indexNames:Array<String> = null, typeNames:Array<String> = null, embed:Bool = true) {
 		var rootJsonPath = jsonPath;
-		var project:ZProjectData = AutoBuilder.firstProjectData;
-		jsonPath = project.assetsPath.get(StringUtils.getName(jsonPath) + ".json");
-		if (jsonPath == null)
-			jsonPath = rootJsonPath;
+		jsonPath = rootJsonPath;
 		var data:Dynamic = haxe.Json.parse(File.getContent(jsonPath));
-		var name = StringUtils.getName(jsonPath);
+		var name = Path.withoutDirectory(Path.withoutExtension(jsonPath));
 		var className = name.charAt(0).toUpperCase() + name.substr(1).toLowerCase();
 		name = "AutoJson" + className;
 		var c = macro class $name {
-			/**
-			 * 数据验证器
-			 */
-			public var validate:zygame.jsondata.IJsonDataValidate;
+			// /**
+			//  * 数据验证器
+			//  */
+			public var validate:Dynamic;
 
 			public function new() {}
 		}

@@ -100,4 +100,17 @@ class Future<T, DATA> {
 			cb();
 		}
 	}
+
+	/**
+	 * 获得路径
+	 */
+	public var path(get, never):String;
+
+	private function get_path():String {
+		var data:Dynamic = __data;
+		if (data is String) {
+			return data;
+		}
+		return data.path;
+	}
 }

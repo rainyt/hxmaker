@@ -1,5 +1,6 @@
 package hx.macro;
 
+import haxe.Exception;
 import sys.FileSystem;
 import haxe.io.Path;
 import haxe.macro.TypeTools;
@@ -102,7 +103,12 @@ class UIBuilder {
 			if (item.exists("id")) {
 				// trace("create field", item);
 				var classPkgName = moudle != null ? moudle.getType(item.nodeName) : "hx.display." + item.nodeName;
-				var type = Context.getType(classPkgName);
+				var type:haxe.macro.Type = null;
+				try {
+					type = Context.getType(classPkgName);
+				} catch (e:Exception) {
+					type = null;
+				}
 				var typePath:Dynamic = null;
 				if (type != null) {
 					var pkgs = classPkgName.split(".");

@@ -151,15 +151,15 @@ class Scroll extends Box {
 		var ret = box.getBounds();
 		var maxWidth = ret.width - this.width;
 		var maxHeight = ret.height - this.height;
-		if (data.scrollX < -maxWidth) {
-			data.scrollX = -maxWidth;
-		} else if (data.scrollX > 0) {
+		if (data.scrollX > 0 || maxWidth < 0) {
 			data.scrollX = 0;
+		} else if (data.scrollX < -maxWidth) {
+			data.scrollX = -maxWidth;
 		}
-		if (data.scrollY < -maxHeight) {
-			data.scrollY = -maxHeight;
-		} else if (data.scrollY > 0) {
+		if (data.scrollY > 0 || maxHeight < 0) {
 			data.scrollY = 0;
+		} else if (data.scrollY < -maxHeight) {
+			data.scrollY = -maxHeight;
 		}
 		return data;
 	}
@@ -177,20 +177,20 @@ class Scroll extends Box {
 
 		this.scrollX -= __lastStepX;
 		var maxWidth = ret.width - this.width;
-		if (this.scrollX < -maxWidth) {
-			this.scrollX = -maxWidth;
-			this.__lastStepX = 0;
-		} else if (this.scrollX > 0) {
+		if (this.scrollX > 0 || maxWidth < 0) {
 			this.scrollX = 0;
+			this.__lastStepX = 0;
+		} else if (this.scrollX < -maxWidth) {
+			this.scrollX = -maxWidth;
 			this.__lastStepX = 0;
 		}
 		this.scrollY -= __lastStepY;
 		var maxHeight = ret.height - this.height;
-		if (this.scrollY < -maxHeight) {
-			this.scrollY = -maxHeight;
-			this.__lastStepY = 0;
-		} else if (this.scrollY > 0) {
+		if (this.scrollY > 0 || maxHeight < 0) {
 			this.scrollY = 0;
+			this.__lastStepY = 0;
+		} else if (this.scrollY < -maxHeight) {
+			this.scrollY = -maxHeight;
 			this.__lastStepY = 0;
 		}
 	}

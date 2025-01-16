@@ -1,5 +1,7 @@
 package hx.ui;
 
+import hx.display.ListView;
+import hx.display.Scroll;
 import hx.display.BitmapLabel;
 import spine.SkeletonData;
 import hx.display.Scene;
@@ -298,6 +300,8 @@ class UIManager {
 			}
 		});
 		addAttributesParse(Scene, function(obj:Scene, xml:Xml, assets:Assets) {});
+		addAttributesParse(Scroll, function(obj:Scroll, xml:Xml, assets:Assets) {});
+		addAttributesParse(ListView, function(obj:ListView, xml:Xml, assets:Assets) {});
 	}
 
 	public function createTextformat(xml:Xml):TextFormat {

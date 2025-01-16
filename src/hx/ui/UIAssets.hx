@@ -113,6 +113,8 @@ class UIAssets extends Assets {
 	}
 
 	public function buildItem(item:Xml, parent:DisplayObjectContainer, ids:Map<String, DisplayObject>, autoBuildUi:Bool = true):DisplayObject {
+		if (item.get("load") == "true")
+			return null;
 		var classType = UIManager.getInstance().getClassType(item.nodeName);
 		if (classType != null) {
 			var ui:DisplayObject = Type.createInstance(classType, []);

@@ -22,6 +22,10 @@ class Scroll extends Box {
 		}
 	}
 
+	override function get_children():Array<DisplayObject> {
+		return box.children;
+	}
+
 	override function removeChild(child:DisplayObject) {
 		box.removeChild(child);
 	}

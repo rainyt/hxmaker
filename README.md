@@ -24,8 +24,9 @@ At present, the game engine is still under development and cannot be fully put i
 | hx.display.Box | 虚拟盒子，该容器的width/height均不会影响到子容器 | ✅ | ✅ |
 | hx.display.VBox | 竖向布局的虚拟盒子 | ✅ | ✅ |
 | hx.display.HBox | 横向布局的虚拟盒子 | ✅ | ✅ |
-| hx.display.Scroll | 滚动容器，用于实现滚动 | ✅ | ✅ |
+| hx.display.Scroll | 滚动容器，用于实现滚动，需要遮罩因此需要消耗drawcall | ✅ | ❌ |
 | hx.display.BitmapLabel | 位图纹理支持 | ✅ | ✅ |
+| hx.display.ListView | 列表视图，用于实现列表，需要遮罩因此需要消耗drawcall | ✅ | ❌ |
 | hx.display.CustomDisplayObject | 自定义显示对象，使用它进行渲染必然会产生1次绘制 | ✅ | ❌ |
 | hx.events.MouseEvent | 鼠标事件 | ✅ | / |
 | hx.events.KeyboardEvent | 键盘事件 | ✅ | / |

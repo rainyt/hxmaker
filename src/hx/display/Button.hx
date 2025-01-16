@@ -141,9 +141,12 @@ class Button extends Box {
 		this.stage.removeEventListener(MouseEvent.MOUSE_UP, this.onMouseEvent);
 	}
 
+	private var __isDown:Bool = false;
+
 	private function onMouseEvent(e:MouseEvent) {
 		switch e.type {
 			case MouseEvent.MOUSE_DOWN:
+				__isDown = true;
 				this.scaleX = 0.94;
 				this.scaleY = 0.94;
 				this.originX = this.width * 0.03;
@@ -156,9 +159,10 @@ class Button extends Box {
 				this.scaleY = 1;
 				this.originX = 0;
 				this.originY = 0;
-				if (e.target == this && clickEvent != null) {
+				if (__isDown && e.target == this && clickEvent != null) {
 					clickEvent();
 				}
+				__isDown = false;
 		}
 	}
 

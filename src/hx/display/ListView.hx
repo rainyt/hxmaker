@@ -27,6 +27,8 @@ class ListView extends Scroll implements IDataProider<ArrayCollection> {
 
 	private var __dataDirty:Bool = false;
 
+	private var __selectedIndexDirty:Bool = false;
+
 	public function set_data(value:ArrayCollection):ArrayCollection {
 		this.__data = value;
 		this.__dataDirty = true;
@@ -65,6 +67,7 @@ class ListView extends Scroll implements IDataProider<ArrayCollection> {
 	private function set_selectedIndex(value:Int):Int {
 		this.selectedIndex = value;
 		this.__dataDirty = true;
+		this.__selectedIndexDirty = true;
 		this.dispatchEvent(new Event(Event.CHANGE));
 		return value;
 	}
@@ -108,6 +111,20 @@ class ListView extends Scroll implements IDataProider<ArrayCollection> {
 					if (itemRenderer is ISelectProider) {
 						var proider:ISelectProider = cast itemRenderer;
 						proider.selected = selectedIndex == i;
+					}
+				}
+				if (__selectedIndexDirty && this.selectedIndex >= 0) {
+					this.updateLayout();
+					var itemRenderer = this.getChildAt(this.selectedIndex);
+					if (itemRenderer != null) {
+						this.scrollX = -itemRenderer.x;
+						this.scrollY = -itemRenderer.y;
+						var data = this.getMoveingToData({
+							scrollX: this.scrollX,
+							scrollY: this.scrollY
+						});
+						this.scrollX = data.scrollX;
+						this.scrollY = data.scrollY;
 					}
 				}
 			}

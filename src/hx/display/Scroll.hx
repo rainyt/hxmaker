@@ -30,6 +30,10 @@ class Scroll extends Box {
 		}
 	}
 
+	override function getChildAt(index:Int):DisplayObject {
+		return box.getChildAt(index);
+	}
+
 	override function getChildIndexAt(child:DisplayObject):Int {
 		return box.getChildIndexAt(child);
 	}

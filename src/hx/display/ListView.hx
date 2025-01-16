@@ -40,6 +40,34 @@ class ListView extends Scroll implements IDataProider<ArrayCollection> {
 		this.layout = new hx.layout.VerticalLayout();
 	}
 
+	/**
+	 * 当前选择的数据索引
+	 */
+	public var selectedIndex(default, set):Int = -1;
+
+	private function set_selectedIndex(value:Int):Int {
+		this.selectedIndex = value;
+		this.__dataDirty = true;
+		return value;
+	}
+
+	/**
+	 * 当前选择的数据
+	 */
+	public var selectedItem(get, set):Dynamic;
+
+	private function get_selectedItem():Dynamic {
+		if (this.selectedIndex >= 0 && this.selectedIndex < this.__data.source.length) {
+			return this.__data.source[this.selectedIndex];
+		}
+		return null;
+	}
+
+	private function set_selectedItem(value:Dynamic):Dynamic {
+		this.selectedIndex = this.__data.source.indexOf(value);
+		return value;
+	}
+
 	override function onUpdate(dt:Float) {
 		super.onUpdate(dt);
 		if (this.__dataDirty) {
@@ -57,6 +85,10 @@ class ListView extends Scroll implements IDataProider<ArrayCollection> {
 					if (itemRenderer is IDataProider) {
 						var proider:IDataProider<Dynamic> = cast itemRenderer;
 						proider.data = __data.source[i];
+					}
+					if (itemRenderer is ISelectProider) {
+						var proider:ISelectProider = cast itemRenderer;
+						proider.selected = selectedIndex == i;
 					}
 					this.addChild(itemRenderer);
 				}

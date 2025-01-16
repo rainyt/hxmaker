@@ -22,6 +22,18 @@ class Scroll extends Box {
 		}
 	}
 
+	override function addChild(child:DisplayObject) {
+		if (child == box || child == quad) {
+			super.addChild(child);
+		} else {
+			box.addChild(child);
+		}
+	}
+
+	override function getChildIndexAt(child:DisplayObject):Int {
+		return box.getChildIndexAt(child);
+	}
+
 	override function get_children():Array<DisplayObject> {
 		return box.children;
 	}

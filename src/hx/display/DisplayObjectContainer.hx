@@ -180,6 +180,20 @@ class DisplayObjectContainer extends DisplayObject {
 	}
 
 	/**
+	 * 获得显示对象索引
+	 * @param child 
+	 * @return Int
+	 */
+	public function getChildIndexAt(child:DisplayObject):Int {
+		for (i in 0...this.__children.length) {
+			if (this.__children[i] == child) {
+				return i;
+			}
+		}
+		return -1;
+	}
+
+	/**
 	 * 根据名称获得子对象
 	 * @param name 
 	 * @return DisplayObject

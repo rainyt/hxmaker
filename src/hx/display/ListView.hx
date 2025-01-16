@@ -1,5 +1,8 @@
 package hx.display;
 
+import hx.events.MouseEvent;
+import hx.events.Event;
+
 /**
  * 数据列表渲染器
  */
@@ -38,6 +41,20 @@ class ListView extends Scroll implements IDataProider<ArrayCollection> {
 		super.onInit();
 		this.itemRendererRecycler = DisplayObjectRecycler.withClass(DefaultItemRenderer);
 		this.layout = new hx.layout.VerticalLayout();
+		this.addEventListener(MouseEvent.CLICK, onSelectedItem);
+	}
+
+	private function onSelectedItem(e:MouseEvent) {
+		var child:DisplayObject = cast e.target;
+		var itemRenderer = __getItemRendererByChild(child);
+		this.selectedIndex = this.getChildIndexAt(itemRenderer);
+	}
+
+	private function __getItemRendererByChild(child:DisplayObject):DisplayObject {
+		if (child.parent != null && child.parent != box) {
+			return __getItemRendererByChild(child.parent);
+		}
+		return child;
 	}
 
 	/**
@@ -48,6 +65,7 @@ class ListView extends Scroll implements IDataProider<ArrayCollection> {
 	private function set_selectedIndex(value:Int):Int {
 		this.selectedIndex = value;
 		this.__dataDirty = true;
+		this.dispatchEvent(new Event(Event.CHANGE));
 		return value;
 	}
 
@@ -81,7 +99,8 @@ class ListView extends Scroll implements IDataProider<ArrayCollection> {
 			// 重新创建所有容器
 			if (__data != null) {
 				for (i in 0...__data.source.length) {
-					var itemRenderer = itemRendererRecycler.create();
+					var itemRenderer:DisplayObject = itemRendererRecycler.create();
+					this.addChild(itemRenderer);
 					if (itemRenderer is IDataProider) {
 						var proider:IDataProider<Dynamic> = cast itemRenderer;
 						proider.data = __data.source[i];
@@ -90,7 +109,6 @@ class ListView extends Scroll implements IDataProider<ArrayCollection> {
 						var proider:ISelectProider = cast itemRenderer;
 						proider.selected = selectedIndex == i;
 					}
-					this.addChild(itemRenderer);
 				}
 			}
 			this.__dataDirty = false;

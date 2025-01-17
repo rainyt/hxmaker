@@ -56,6 +56,11 @@ class UIAssets extends Assets {
 				this.loadUIAssets(Path.join([__dirPath, nodeName + ".xml"]));
 			} else {
 				switch item.nodeName {
+					case "spine":
+						// 加载Spine动画
+						var path = item.get("path");
+						this.loadSpineAtlas(path + ".png", path + ".atlas");
+						this.loadString(path + ".json");
 					case "bitmapData":
 						// 加载位图
 						var path = item.get("path");
@@ -117,7 +122,7 @@ class UIAssets extends Assets {
 			return null;
 		var classType = UIManager.getInstance().getClassType(item.nodeName);
 		if (classType != null) {
-			var ui:DisplayObject = Type.createInstance(classType, []);
+			var ui:DisplayObject = UIManager.getInstance().createInstance(classType, item);
 			parent.addChild(ui);
 			trace("构造", ui);
 			// 应用属性
@@ -135,7 +140,7 @@ class UIAssets extends Assets {
 				var ui = StringTools.replace(item.nodeName, "xml:", "");
 				if (moudle.classed.exists(ui)) {
 					var type = Type.resolveClass(moudle.classed.get(ui));
-					var uiDisplay:DisplayObject = Type.createInstance(type, []);
+					var uiDisplay:DisplayObject = UIManager.getInstance().createInstance(type, item);
 					parent.addChild(uiDisplay);
 					UIManager.getInstance().applyAttributes(uiDisplay, item, this);
 					if (uiDisplay.name != null && ids != null) {

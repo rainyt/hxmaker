@@ -1,5 +1,6 @@
 package hx.ui;
 
+import hx.display.Spine;
 import hx.display.ListView;
 import hx.display.Scroll;
 import hx.display.BitmapLabel;
@@ -153,6 +154,7 @@ class UIManager {
 
 	private var __types:Map<String, Class<Dynamic>> = ["atlas" => null];
 	private var __applyAttributes:Map<String, Dynamic->Xml->Assets->Void> = [];
+	private var __createInstance:Map<String, Xml->DisplayObject> = [];
 
 	private function new() {
 		__applyAttributes.set("default", (display:DisplayObject, xml:Xml, assets:Assets) -> {
@@ -302,6 +304,29 @@ class UIManager {
 		addAttributesParse(Scene, function(obj:Scene, xml:Xml, assets:Assets) {});
 		addAttributesParse(Scroll, function(obj:Scroll, xml:Xml, assets:Assets) {});
 		addAttributesParse(ListView, function(obj:ListView, xml:Xml, assets:Assets) {});
+		addCreateInstance(Spine, function(xml:Xml):Spine {
+			var id = xml.getStringId("src");
+			var spine = new Spine(UIManager.getSkeletonData(id));
+			return spine;
+		});
+		addAttributesParse(Spine, function(obj:Spine, xml:Xml, assets:Assets) {
+			if (xml.exists("action")) {
+				var id = xml.getStringId("action");
+				obj.play(id);
+			}
+		});
+	}
+
+	/**
+	 * 创建单例
+	 * @param classType 
+	 * @param xml 
+	 * @return Dynamic
+	 */
+	public function createInstance(classType:Class<Dynamic>, xml:Xml):Dynamic {
+		var name = Type.getClassName(classType);
+		var ui:DisplayObject = __createInstance.exists(name) ? __createInstance.get(name)(xml) : Type.createInstance(classType, []);
+		return ui;
 	}
 
 	public function createTextformat(xml:Xml):TextFormat {
@@ -323,6 +348,11 @@ class UIManager {
 	public function addAttributesParse<T>(c:Class<T>, func:T->Xml->Assets->Void):Void {
 		var name = Type.getClassName(c);
 		__applyAttributes.set(name, cast func);
+	}
+
+	public function addCreateInstance<T>(c:Class<T>, func:Xml->T):Void {
+		var name = Type.getClassName(c);
+		__createInstance.set(name, cast func);
 	}
 
 	/**

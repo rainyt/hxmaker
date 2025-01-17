@@ -10,7 +10,7 @@ import hx.events.MouseEvent;
 /**
  * 按钮
  */
-class Button extends Box {
+class Button extends BoxContainer {
 	/**
 	 * 点击音效ID
 	 */
@@ -147,18 +147,18 @@ class Button extends Box {
 		switch e.type {
 			case MouseEvent.MOUSE_DOWN:
 				__isDown = true;
-				this.scaleX = 0.94;
-				this.scaleY = 0.94;
-				this.originX = this.width * 0.03;
-				this.originY = this.height * 0.03;
+				this.box.scaleX = 0.94;
+				this.box.scaleY = 0.94;
+				this.box.originX = this.width * 0.03;
+				this.box.originY = this.height * 0.03;
 				if (clickSoundEffectId != null) {
 					SoundManager.getInstance().playEffect(clickSoundEffectId);
 				}
 			case MouseEvent.MOUSE_UP:
-				this.scaleX = 1;
-				this.scaleY = 1;
-				this.originX = 0;
-				this.originY = 0;
+				this.box.scaleX = 1;
+				this.box.scaleY = 1;
+				this.box.originX = 0;
+				this.box.originY = 0;
 				if (__isDown && e.target == this && clickEvent != null) {
 					clickEvent();
 				}

@@ -66,9 +66,6 @@ class AnchorLayout extends Layout {
 					// 上位移
 					object.y = layoutData.top;
 				} else if (layoutData.bottom != null) {
-					if (object.name == "hbox") {
-						trace(parentHeight, object.height, layoutData.bottom);
-					}
 					object.y = parentHeight - object.height - layoutData.bottom;
 				} else if (layoutData.verticalCenter != null) {
 					object.y = parentHeight / 2 - object.height / 2 + layoutData.verticalCenter;

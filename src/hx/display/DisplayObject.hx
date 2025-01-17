@@ -249,7 +249,7 @@ class DisplayObject extends EventDispatcher {
 
 	private function get_width():Float {
 		if (__width != null) {
-			return __width;
+			return __width * this.scaleX;
 		}
 		return getBounds().width;
 	}
@@ -257,7 +257,10 @@ class DisplayObject extends EventDispatcher {
 	private function set_width(value:Float):Float {
 		this.__width = value;
 		var bounds = __getRect();
-		this.scaleX = value / bounds.width;
+		if (bounds.width == 0)
+			this.scaleX = 1;
+		else
+			this.scaleX = value / bounds.width;
 		setTransformDirty();
 		return value;
 	}
@@ -269,7 +272,7 @@ class DisplayObject extends EventDispatcher {
 
 	private function get_height():Float {
 		if (__height != null) {
-			return __height;
+			return __height * this.scaleY;
 		}
 		return getBounds().height;
 	}
@@ -277,7 +280,10 @@ class DisplayObject extends EventDispatcher {
 	private function set_height(value:Float):Float {
 		this.__height = value;
 		var bounds = __getRect();
-		this.scaleY = value / bounds.height;
+		if (bounds.height == 0)
+			this.scaleY = 1;
+		else
+			this.scaleY = value / bounds.height;
 		setTransformDirty();
 		return value;
 	}

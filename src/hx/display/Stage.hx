@@ -44,6 +44,12 @@ class Stage extends Box {
 	public function handleMouseEvent(event:hx.events.MouseEvent):Bool {
 		var touchList = [];
 		if (__hitTest(event.stageX, event.stageY, touchList)) {
+			for (index => object in touchList) {
+				if (object.parent != null && !object.parent.mouseChildren) {
+					touchList.splice(index, touchList.length - index);
+					break;
+				}
+			}
 			var display:DisplayObject = touchList[touchList.length - 1];
 			for (object in touchList) {
 				event.target = display;

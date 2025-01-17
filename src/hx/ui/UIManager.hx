@@ -1,5 +1,6 @@
 package hx.ui;
 
+import hx.display.MovieClip;
 import hx.display.Spine;
 import hx.display.ListView;
 import hx.display.Scroll;
@@ -313,6 +314,18 @@ class UIManager {
 			if (xml.exists("action")) {
 				var id = xml.getStringId("action");
 				obj.play(id);
+			}
+		});
+		addAttributesParse(MovieClip, function(obj:MovieClip, xml:Xml, assets:Assets) {
+			if (xml.exists("src")) {
+				var id = xml.getStringId("src");
+				var atlas = getAtlas(id);
+				if (atlas != null) {
+					var fps = xml.exists("fps") ? Std.parseInt(xml.get("fps")) : 12;
+					var animate = xml.exists("action") ? xml.get("action") : "";
+					obj.setBitmapDatas(atlas.getBitmapDatasByName(animate), fps);
+					obj.play();
+				}
 			}
 		});
 	}

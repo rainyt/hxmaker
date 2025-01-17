@@ -47,6 +47,18 @@ class MovieClip extends Image {
 	}
 
 	/**
+	 * 设置动画列表
+	 * @param bitmapDatas 
+	 */
+	public function setBitmapDatas(bitmapDatas:Array<BitmapData>, fps:Float = 12):Void {
+		this.__frames = [];
+		if (bitmapDatas != null)
+			for (data in bitmapDatas) {
+				addFrame(data, 1 / fps);
+			}
+	}
+
+	/**
 	 * 添加额外的帧，可选地添加声音和自定义持续时间。
 	 * @param bitmapData 
 	 * @param duration 

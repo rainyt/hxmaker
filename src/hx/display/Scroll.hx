@@ -9,42 +9,8 @@ import hx.gemo.Rectangle;
 /**
  * 滚动遮罩支持的容器
  */
-class Scroll extends Box {
+class Scroll extends BoxContainer {
 	public var quad = new Quad();
-
-	public var box:Box = new Box();
-
-	override function addChildAt(child:DisplayObject, index:Int) {
-		if (child == box || child == quad) {
-			super.addChildAt(child, index);
-		} else {
-			box.addChildAt(child, index);
-		}
-	}
-
-	override function addChild(child:DisplayObject) {
-		if (child == box || child == quad) {
-			super.addChild(child);
-		} else {
-			box.addChild(child);
-		}
-	}
-
-	override function getChildAt(index:Int):DisplayObject {
-		return box.getChildAt(index);
-	}
-
-	override function getChildIndexAt(child:DisplayObject):Int {
-		return box.getChildIndexAt(child);
-	}
-
-	override function get_children():Array<DisplayObject> {
-		return box.children;
-	}
-
-	override function removeChild(child:DisplayObject) {
-		box.removeChild(child);
-	}
 
 	private var __scrollX:Float = 0;
 
@@ -76,10 +42,9 @@ class Scroll extends Box {
 
 	override function onInit() {
 		super.onInit();
-		this.addChild(quad);
+		this.superAddChildAt(quad, 0);
 		quad.alpha = 0;
 		quad.layoutData = AnchorLayoutData.fill();
-		this.addChild(box);
 		this.layout = new AnchorLayout();
 		// box.layoutData = AnchorLayoutData.fill();
 		this.maskRect = new Rectangle(0, 0, 100, 100);

@@ -14,6 +14,10 @@ class BoxContainer extends Box {
 		super.addChildAt(box, 0);
 	}
 
+	private function superAddChildAt(display:DisplayObject, index:Int):Void {
+		super.addChildAt(display, index);
+	}
+
 	override function addChild(child:DisplayObject) {
 		box.addChild(child);
 	}
@@ -44,5 +48,9 @@ class BoxContainer extends Box {
 
 	override function removeChildren(start:Int = 0, end:Int = -1) {
 		box.removeChildren(start, end);
+	}
+
+	override function get_children():Array<DisplayObject> {
+		return box.children;
 	}
 }

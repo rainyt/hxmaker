@@ -1,5 +1,6 @@
 package hx.ui;
 
+import hx.display.Quad;
 import hx.display.MovieClip;
 import hx.display.Spine;
 import hx.display.ListView;
@@ -332,6 +333,13 @@ class UIManager {
 					obj.setBitmapDatas(atlas.getBitmapDatasByName(animate), fps);
 					obj.play();
 				}
+			}
+		});
+		addAttributesParse(Quad, function(obj:Quad, xml:Xml, assets:Assets) {
+			// color
+			if (xml.exists("color")) {
+				var color = xml.get("color");
+				obj.data = Std.parseInt(color);
 			}
 		});
 	}

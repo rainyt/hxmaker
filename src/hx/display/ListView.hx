@@ -115,20 +115,23 @@ class ListView extends Scroll implements IDataProider<ArrayCollection> {
 				}
 				if (__selectedIndexDirty && this.selectedIndex >= 0) {
 					this.updateLayout();
-					var itemRenderer = this.getChildAt(this.selectedIndex);
-					if (itemRenderer != null) {
-						this.scrollX = -itemRenderer.x;
-						this.scrollY = -itemRenderer.y;
-						var data = this.getMoveingToData({
-							scrollX: this.scrollX,
-							scrollY: this.scrollY
-						});
-						this.scrollX = data.scrollX;
-						this.scrollY = data.scrollY;
-					}
 				}
 			}
 			this.__dataDirty = false;
+		}
+	}
+
+	public function scrollToCurrentSelectedItem():Void {
+		var itemRenderer = this.getChildAt(this.selectedIndex);
+		if (itemRenderer != null) {
+			this.scrollX = -itemRenderer.x;
+			this.scrollY = -itemRenderer.y;
+			var data = this.getMoveingToData({
+				scrollX: this.scrollX,
+				scrollY: this.scrollY
+			});
+			this.scrollX = data.scrollX;
+			this.scrollY = data.scrollY;
 		}
 	}
 }

@@ -199,6 +199,12 @@ class UIManager {
 						useAnchor = true;
 					case "blendMode":
 						display.blendMode = xml.get("blendMode");
+					default:
+						var classType = UIAssets.moudle.getClassType(display);
+						if (classType != null) {
+							if (classType.attributes.exists(key))
+								classType.attributes.get(key).setValue(display, xml.get(key));
+						}
 				}
 			}
 			if (useAnchor || percentHeight != null || percentWidth != null) {

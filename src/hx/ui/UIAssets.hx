@@ -143,7 +143,7 @@ class UIAssets extends Assets {
 			if (item.nodeName.indexOf("xml:") == 0) {
 				var ui = StringTools.replace(item.nodeName, "xml:", "");
 				if (moudle.classed.exists(ui)) {
-					var type = Type.resolveClass(moudle.classed.get(ui));
+					var type = Type.resolveClass(moudle.classed.get(ui).className);
 					var uiDisplay:DisplayObject = UIManager.getInstance().createInstance(type, item);
 					parent.addChild(uiDisplay);
 					UIManager.getInstance().applyAttributes(uiDisplay, item, this);

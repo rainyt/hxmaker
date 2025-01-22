@@ -43,4 +43,15 @@ class MouseEvent extends Event {
 	 * 鼠标按下的位置Y
 	 */
 	public var stageY:Float = 0;
+
+	/**
+	 * 
+	 * 指示用户旋转的每个单位应滚动多少行
+	 * 鼠标滚轮。正的增量值表示向上滚动；一
+	 * 负值表示向下滚动。典型值为1至3，但
+	 * 更快的旋转可能会产生更大的值。此设置取决于
+	 * 设备和操作系统，通常可由用户配置。这个
+	 * 属性仅适用于`MouseEvent.mouseWheel`事件。
+	 */
+	public var delta:Float = 0;
 }

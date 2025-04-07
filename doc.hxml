@@ -1,0 +1,18 @@
+--define doc-gen
+--class-path src
+--class-path test
+--library spine-haxe
+--library hxmaker-openfl
+--library actuate
+--library openfl
+--library lime
+-D lime
+-D openfl
+--main Test
+--xml bin/types.xml
+--interp
+
+--next
+
+# 生成api文档
+--cmd haxelib run dox -i bin -o api_docs -in hx --toplevel-package hx

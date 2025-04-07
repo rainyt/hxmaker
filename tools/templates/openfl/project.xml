@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project>
+	
+	<meta title="::project_name::" package="com.sample.::project_name::" version="1.0.0" company="Company Name" />
+	<app main="Main" path="Export" file="::project_name::" />
+	
+	<source path="Source" />
+	
+	<haxelib name="hxmaker-openfl" />
+	<haxelib name="actuate"/>
+	
+	<assets path="Assets" rename="assets" embed="false" />
+	
+</project>

@@ -4,3 +4,6 @@
 --interp
 --library spine-haxe
 --library actuate
+--library openfl
+--library lime
+--library hxmaker-openfl

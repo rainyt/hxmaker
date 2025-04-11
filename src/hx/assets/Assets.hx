@@ -411,7 +411,7 @@ class Assets extends Future<Assets, Dynamic> {
 	 * 加成完成时触发
 	 * @param future 
 	 */
-	public function onCompleted(future:Future<Dynamic, Dynamic>, data:Dynamic):Void {
+	private function onCompleted(future:Future<Dynamic, Dynamic>, data:Dynamic):Void {
 		CURRENT_LOAD_COUNTS--;
 		loadedCounts++;
 		if (data is Zip) {

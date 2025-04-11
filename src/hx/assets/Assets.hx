@@ -303,7 +303,7 @@ class Assets extends Future<Assets, Dynamic> {
 			return;
 		futures.push(future);
 		future.onComplete((data) -> {
-			__onCompleted(future, data);
+			onCompleted(future, data);
 		});
 		future.onError(__onError);
 	}
@@ -411,7 +411,7 @@ class Assets extends Future<Assets, Dynamic> {
 	 * 加成完成时触发
 	 * @param future 
 	 */
-	private function __onCompleted(future:Future<Dynamic, Dynamic>, data:Dynamic):Void {
+	public function onCompleted(future:Future<Dynamic, Dynamic>, data:Dynamic):Void {
 		CURRENT_LOAD_COUNTS--;
 		loadedCounts++;
 		if (data is Zip) {

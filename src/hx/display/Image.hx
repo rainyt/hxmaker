@@ -135,6 +135,7 @@ class Image extends DisplayObject implements IDataProider<BitmapData> implements
 	private function set_data(value:BitmapData):BitmapData {
 		__bitmapData = value;
 		__uvsDirty = true;
+		this.setDirty();
 		return value;
 	}
 

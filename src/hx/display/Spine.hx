@@ -174,7 +174,7 @@ class Spine extends Graphics {
 					#if spine_haxe
 					_uvs = region.uvs;
 					_triangles = region.triangles.copy();
-					atlasRegion = cast region.region
+					atlasRegion = cast region.region;
 					#else
 					_uvs = region.getUVs();
 					_triangles = region.getTriangles();

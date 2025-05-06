@@ -249,4 +249,14 @@ class Spine extends Graphics {
 			return t;
 		return this.animationState.setAnimationByName(index, name, isLoop);
 	}
+
+	public function setSkinByName(name:String):Void {
+		#if spine_haxe
+		this.skeleton.skinName = name;
+		#else
+		this.skeleton.setSkinByName(name);
+		#end
+		this.skeleton.setBonesToSetupPose();
+		this.skeleton.setSlotsToSetupPose();
+	}
 }

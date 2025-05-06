@@ -2,7 +2,11 @@ package hx.assets;
 
 import spine.SkeletonJson;
 import spine.attachments.AtlasAttachmentLoader;
+#if spine_haxe
 import spine.atlas.TextureAtlas;
+#else
+import spine.support.graphics.TextureAtlas;
+#end
 import hx.assets.LoadData;
 
 /**

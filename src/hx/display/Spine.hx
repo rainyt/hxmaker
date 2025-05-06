@@ -1,17 +1,25 @@
 package hx.display;
 
+#if spine_hx
+import spine.AnimationState.TrackEntry;
+import spine.utils.SkeletonClipping;
+import spine.AnimationState;
+import spine.AnimationStateData;
+import spine.support.graphics.TextureAtlas.AtlasRegion as TextureAtlasRegion;
+#else
 import spine.animation.TrackEntry;
-import hx.utils.ObjectPool;
-import hx.gemo.ColorTransform;
-import hx.events.Event;
 import spine.atlas.TextureAtlasRegion;
-import spine.attachments.MeshAttachment;
-import spine.attachments.RegionAttachment;
-import spine.attachments.ClippingAttachment;
 import spine.SkeletonClipping;
 import spine.Physics;
 import spine.animation.AnimationStateData;
 import spine.animation.AnimationState;
+#end
+import hx.utils.ObjectPool;
+import hx.gemo.ColorTransform;
+import hx.events.Event;
+import spine.attachments.MeshAttachment;
+import spine.attachments.RegionAttachment;
+import spine.attachments.ClippingAttachment;
 import spine.SkeletonData;
 import spine.Skeleton;
 
@@ -111,7 +119,11 @@ class Spine extends Graphics {
 		animationState.update(delta);
 		animationState.apply(skeleton);
 		skeleton.update(delta);
+		#if spine_haxe
 		skeleton.updateWorldTransform(Physics.update);
+		#else
+		skeleton.updateWorldTransform();
+		#end
 		this.onUpdateWorldTransformAfter();
 		// 清理遮罩数据
 		clipper.clipEnd();
@@ -144,29 +156,47 @@ class Spine extends Graphics {
 					// 如果是矩形
 					var region:RegionAttachment = cast slot.attachment;
 					_tempVerticesArray = [];
+					#if spine_haxe
 					region.computeWorldVertices(slot, _tempVerticesArray, 0, 2);
 					_uvs = region.uvs;
-					_triangles = quadTriangles.copy();
 					atlasRegion = cast region.region;
+					#else
+					region.computeWorldVertices(slot.bone, _tempVerticesArray, 0, 2);
+					_uvs = region.getUVs();
+					atlasRegion = cast region.getRegion();
+					#end
+					_triangles = quadTriangles.copy();
 				} else if (Std.isOfType(slot.attachment, MeshAttachment)) {
 					// 如果是网格
 					var region:MeshAttachment = cast slot.attachment;
 					_tempVerticesArray = [];
 					region.computeWorldVertices(slot, 0, region.worldVerticesLength, _tempVerticesArray, 0, 2);
+					#if spine_haxe
 					_uvs = region.uvs;
 					_triangles = region.triangles.copy();
-					atlasRegion = cast region.region;
+					atlasRegion = cast region.region
+					#else
+					_uvs = region.getUVs();
+					_triangles = region.getTriangles();
+					_triangles = _triangles.copy();
+					atlasRegion = cast region.getRegion();
+					#end
 				}
 				// 裁剪实现
 				if (clipper.isClipping()) {
 					if (_triangles == null)
 						continue;
+					#if spine_haxe
 					clipper.clipTriangles(_tempVerticesArray, _triangles, _triangles.length, _uvs);
-					if (clipper.clippedTriangles.length == 0) {
+					var clippedVertices = clipper.clippedTriangles;
+					#else
+					clipper.clipTriangles(_tempVerticesArray, _tempVerticesArray.length, _triangles, _triangles.length, _uvs, 1, 1, true);
+					var clippedVertices = clipper.getClippedTriangles();
+					#end
+					if (clippedVertices.length == 0) {
 						clipper.clipEndWithSlot(slot);
 						continue;
 					} else {
-						var clippedVertices = clipper.clippedVertices;
 						_tempVerticesArray = [];
 						_uvs = [];
 						var i = 0;
@@ -179,12 +209,17 @@ class Spine extends Graphics {
 							if (i >= clippedVertices.length)
 								break;
 						}
-						_triangles = clipper.clippedTriangles;
+						_triangles = clippedVertices;
 					}
 				}
 				if (atlasRegion != null) {
-					if (bitmapData != atlasRegion.texture) {
-						bitmapData = atlasRegion.texture;
+					#if spine_haxe
+					var texture = atlasRegion.texture;
+					#else
+					var texture = atlasRegion.rendererObject;
+					#end
+					if (bitmapData != texture) {
+						bitmapData = texture;
 						this.beginBitmapData(bitmapData);
 					}
 					// TODO 需要支持darkColor

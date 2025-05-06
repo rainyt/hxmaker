@@ -121,6 +121,7 @@ class Button extends BoxContainer {
 		this.skin = skin;
 		this.mouseChildren = false;
 		this.layout = new AnchorLayout();
+		// this.box.layoutData = AnchorLayoutData.fill();
 		// __box.layoutData = AnchorLayoutData.fill();
 		__img.layoutData = AnchorLayoutData.fill();
 		__label.layoutData = AnchorLayoutData.fill();

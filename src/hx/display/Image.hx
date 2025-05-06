@@ -208,4 +208,18 @@ class Image extends DisplayObject implements IDataProider<BitmapData> implements
 		super.setTransformDirty(value);
 		__scale9GridDirty = true;
 	}
+
+	override private function get_width():Float {
+		if (scale9Grid != null) {
+			return __width;
+		}
+		return super.get_width();
+	}
+
+	override private function get_height():Float {
+		if (scale9Grid != null) {
+			return __height;
+		}
+		return super.get_height();
+	}
 }

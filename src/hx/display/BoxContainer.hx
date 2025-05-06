@@ -53,4 +53,14 @@ class BoxContainer extends Box {
 	override function get_children():Array<DisplayObject> {
 		return box.children;
 	}
+
+	override function set_width(value:Float):Float {
+		box.width = value;
+		return super.set_width(value);
+	}
+
+	override function set_height(value:Float):Float {
+		box.height = value;
+		return super.set_height(value);
+	}
 }

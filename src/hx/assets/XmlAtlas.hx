@@ -12,6 +12,7 @@ class XmlAtlas extends Atlas {
 	public function new(bitmapData:BitmapData, xml:Xml) {
 		super(bitmapData);
 		__xml = xml;
+		this.parser();
 	}
 
 	override function parser() {

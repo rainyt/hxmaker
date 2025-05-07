@@ -11,6 +11,16 @@ class Stage extends Box {
 	@:noCompletion private var __stageWidth:Float = 0;
 	@:noCompletion private var __stageHeight:Float = 0;
 
+	/**
+	 * 是否为自定义渲染，如果为自定义渲染，引擎则只生效触摸事件，但不会进行额外渲染
+	 */
+	public var customRender(default, set):Bool = false;
+
+	private function set_customRender(value:Bool):Bool {
+		this.customRender = value;
+		return value;
+	}
+
 	override function get_stage():Stage {
 		return this;
 	}

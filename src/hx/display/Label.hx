@@ -56,9 +56,11 @@ class Label extends DisplayObject implements IDataProider<String> implements IRo
 		return value;
 	}
 
-	public function new(?text:String) {
+	public function new(?text:String, ?textFormat:TextFormat) {
 		super();
 		this.data = text;
+		if (textFormat != null)
+			this.textFormat = textFormat;
 	}
 
 	override function __updateTransform(parent:DisplayObject) {

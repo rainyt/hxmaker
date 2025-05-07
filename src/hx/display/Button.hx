@@ -107,9 +107,8 @@ class Button extends BoxContainer {
 		return text;
 	}
 
-	public function new(text:String = null, skin:ButtonSkin = null) {
+	public function new(text:String = null, skin:ButtonSkin = null, textFormat:TextFormat = null) {
 		super();
-
 		__img = new Image();
 		this.addChild(__img);
 		__label = new Label(text);
@@ -125,6 +124,7 @@ class Button extends BoxContainer {
 		// __box.layoutData = AnchorLayoutData.fill();
 		__img.layoutData = AnchorLayoutData.fill();
 		__label.layoutData = AnchorLayoutData.fill();
+		this.textFormat = textFormat;
 	}
 
 	override function onStageInit() {

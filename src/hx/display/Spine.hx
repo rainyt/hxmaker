@@ -189,9 +189,11 @@ class Spine extends Graphics {
 					#if spine_haxe
 					clipper.clipTriangles(_tempVerticesArray, _triangles, _triangles.length, _uvs);
 					var clippedVertices = clipper.clippedTriangles;
+					var cliptriangles = clipper.clippedTriangles;
 					#else
 					clipper.clipTriangles(_tempVerticesArray, _tempVerticesArray.length, _triangles, _triangles.length, _uvs, 1, 1, true);
-					var clippedVertices = clipper.getClippedTriangles();
+					var clippedVertices:Array<Float> = clipper.getClippedVertices();
+					var cliptriangles:Array<Int> = clipper.getClippedTriangles();
 					#end
 					if (clippedVertices.length == 0) {
 						clipper.clipEndWithSlot(slot);
@@ -209,7 +211,7 @@ class Spine extends Graphics {
 							if (i >= clippedVertices.length)
 								break;
 						}
-						_triangles = clippedVertices;
+						_triangles = cliptriangles;
 					}
 				}
 				if (atlasRegion != null) {

@@ -222,4 +222,18 @@ class Image extends DisplayObject implements IDataProider<BitmapData> implements
 		}
 		return super.get_height();
 	}
+
+	override private function set_width(value:Float):Float {
+		super.set_width(value);
+		if (scale9Grid == null)
+			this.__width = null;
+		return value;
+	}
+
+	override private function set_height(value:Float):Float {
+		super.set_height(value);
+		if (scale9Grid == null)
+			this.__height = null;
+		return value;
+	}
 }

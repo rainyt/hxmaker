@@ -10,7 +10,7 @@ import hx.gemo.Rectangle;
  * 滚动遮罩支持的容器
  */
 class Scroll extends BoxContainer {
-	public var quad = new Quad();
+	public var quad = new Quad(0, 0, 0xffffff);
 
 	private var __scrollX:Float = 0;
 
@@ -40,10 +40,40 @@ class Scroll extends BoxContainer {
 		return value;
 	}
 
+	/**
+	 * 背景颜色
+	 */
+	public var backgroundColor(get, set):Int;
+
+	private function get_backgroundColor():Int {
+		return quad.data;
+	}
+
+	private function set_backgroundColor(value:Int):Int {
+		quad.data = value;
+		return value;
+	}
+
+	/**
+	 * 背景透明度
+	 */
+	public var backgroundAlpha(get, set):Float;
+
+	private function get_backgroundAlpha():Float {
+		return quad.alpha;
+	}
+
+	private function set_backgroundAlpha(value:Float):Float {
+		quad.alpha = value;
+		return value;
+	}
+
 	override function onInit() {
 		super.onInit();
 		this.superAddChildAt(quad, 0);
+		#if !zide
 		quad.alpha = 0;
+		#end
 		quad.layoutData = AnchorLayoutData.fill();
 		this.layout = new AnchorLayout();
 		// box.layoutData = AnchorLayoutData.fill();

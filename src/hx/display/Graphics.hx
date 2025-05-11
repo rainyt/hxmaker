@@ -254,4 +254,13 @@ class Graphics extends DisplayObject {
 		}
 		return __sizeRect;
 	}
+
+	private var __graphicsDirty:Bool = false;
+
+	/**
+	 * 当发生脏数据时，直接更新形状数据
+	 */
+	private function updateGraphics():Void {
+		__graphicsDirty = false;
+	}
 }

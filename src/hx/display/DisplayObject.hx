@@ -46,6 +46,25 @@ class DisplayObject extends EventDispatcher {
 	@:noCompletion private var __layoutData:LayoutData;
 	@:noCompletion private var __name:String;
 	@:noCompletion private var __maskRect:Rectangle;
+	@:noCompletion private var __background:DisplayObject;
+
+	/**
+	 * 背景显示对象
+	 */
+	public var background(get, set):DisplayObject;
+
+	private function set_background(value:DisplayObject):DisplayObject {
+		__background = value;
+		if (value != null) {
+			value.setTransformDirty();
+			value.setDirty();
+		}
+		return value;
+	}
+
+	private function get_background():DisplayObject {
+		return __background;
+	}
 
 	/**
 	 * 遮罩居中

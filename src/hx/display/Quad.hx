@@ -33,7 +33,7 @@ class Quad extends Graphics implements IDataProider<UInt> implements IRootDataPr
 
 	public function set_data(value:UInt):UInt {
 		_data = value;
-		__quadDirty = true;
+		__graphicsDirty = true;
 		return value;
 	}
 
@@ -48,42 +48,46 @@ class Quad extends Graphics implements IDataProider<UInt> implements IRootDataPr
 		this.width = width;
 		this.height = height;
 		this.data = color;
-		__quadDirty = true;
+		__graphicsDirty = true;
 	}
 
-	private var __quadDirty:Bool = false;
+	override function set_alpha(value:Float):Float {
+		this.__graphicsDirty = true;
+		return super.set_alpha(value);
+	}
 
 	override function set_width(value:Float):Float {
 		this.__width = value;
-		__quadDirty = true;
+		__graphicsDirty = true;
 		setTransformDirty();
 		return value;
 	}
 
 	override function set_height(value:Float):Float {
 		this.__height = value;
-		__quadDirty = true;
+		__graphicsDirty = true;
 		setTransformDirty();
 		return value;
 	}
 
 	override function __getRect():Rectangle {
-		__updateQuad();
+		updateGraphics();
 		return super.__getRect();
 	}
 
 	override function __updateTransform(parent:DisplayObject) {
 		super.__updateTransform(parent);
-		__updateQuad();
+		updateGraphics();
 	}
 
-	private function __updateQuad() {
-		if (__quadDirty) {
+	override private function updateGraphics() {
+		if (__graphicsDirty) {
+			super.updateGraphics();
 			this.clear();
 			this.beginFill(this.data);
 			var color = ColorUtils.toShaderColor(this.data);
 			this.drawRect(0, 0, this.width, this.height, 1, new ColorTransform(color.r, color.g, color.b, 1));
-			__quadDirty = false;
+			__graphicsDirty = false;
 		}
 	}
 }

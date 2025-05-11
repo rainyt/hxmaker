@@ -70,25 +70,26 @@ class Scroll extends BoxContainer {
 
 	override function onInit() {
 		super.onInit();
-		this.superAddChildAt(quad, 0);
 		#if !zide
 		quad.alpha = 0;
 		#end
-		quad.layoutData = AnchorLayoutData.fill();
 		this.layout = new AnchorLayout();
 		// box.layoutData = AnchorLayoutData.fill();
 		this.maskRect = new Rectangle(0, 0, 100, 100);
 		this.width = 100;
 		this.height = 100;
+		this.background = quad;
 	}
 
 	override function set_width(value:Float):Float {
 		this.maskRect.width = value;
+		this.quad.width = value;
 		return super.set_width(value);
 	}
 
 	override function set_height(value:Float):Float {
 		this.maskRect.height = value;
+		this.quad.height = value;
 		return super.set_height(value);
 	}
 

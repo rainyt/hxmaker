@@ -217,6 +217,9 @@ class DisplayObjectContainer extends DisplayObject {
 	override function __updateTransform(parent:DisplayObject) {
 		super.__updateTransform(parent);
 		this.__updateLayout();
+		if (this.background != null) {
+			this.background.__updateTransform(this);
+		}
 		for (child in this.__children) {
 			child.__updateTransform(this);
 		}

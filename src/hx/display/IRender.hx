@@ -15,6 +15,8 @@ interface IRender {
 	 */
 	public function renderDisplayObjectContainer(container:DisplayObjectContainer):Void;
 
+	public function renderDisplayObject(object:DisplayObject):Void;
+
 	/**
 	 * 渲染图片
 	 * @param image 

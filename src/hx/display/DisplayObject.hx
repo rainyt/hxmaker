@@ -47,6 +47,25 @@ class DisplayObject extends EventDispatcher {
 	@:noCompletion private var __name:String;
 	@:noCompletion private var __maskRect:Rectangle;
 	@:noCompletion private var __background:DisplayObject;
+	@:noCompletion private var __shader:Shader;
+
+	/**
+	 * 着色器设置
+	 * - OpenFL目标：使用的着色器是GraphicsShader，请依赖GraphicsShader来实现自定义的Shader。
+	 */
+	public var shader(get, set):Shader;
+
+	private function get_shader():Shader {
+		return __shader;
+	}
+
+	private function set_shader(value:Shader):Shader {
+		if (__shader != value) {
+			__shader = value;
+			this.setDirty();
+		}
+		return value;
+	}
 
 	/**
 	 * 背景显示对象

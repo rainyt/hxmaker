@@ -127,9 +127,15 @@ class Label extends DisplayObject implements IDataProider<String> implements IRo
 	override function __getRect():Rectangle {
 		// __rect.x = -__originWorldX;
 		// __rect.y = -__originWorldY;
-		__rect.width = this.width;
-		__rect.height = this.height;
-		return super.__getRect();
+		if (__width == null)
+			__rect.width = getTextWidth();
+		else
+			__rect.width = __width;
+		if (__height == null)
+			__rect.height = getTextHeight();
+		else
+			__rect.height = __height;
+		return __rect;
 	}
 
 	// override function getBounds(parent:Matrix = null):Rectangle {

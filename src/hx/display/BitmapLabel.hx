@@ -168,16 +168,20 @@ class BitmapLabel extends Box implements IDataProider<String> {
 		switch __verticalAlign {
 			case TOP:
 			case MIDDLE:
-				__originWorldY = (this.height - this.getTextHeight()) / 2;
+				if (__height != null)
+					__originWorldY = (this.__height - this.getTextHeight()) / 2;
 			case BOTTOM:
-				__originWorldY = (this.height - this.getTextHeight());
+				if (__height != null)
+					__originWorldY = (this.__height - this.getTextHeight());
 		}
 		switch __horizontalAlign {
 			case LEFT:
 			case CENTER:
-				__originWorldX = (this.width - this.getTextWidth()) / 2;
+				if (__width != null)
+					__originWorldX = (this.__width - this.getTextWidth()) / 2;
 			case RIGHT:
-				__originWorldX = (this.width - this.getTextWidth());
+				if (__width != null)
+					__originWorldX = (this.__width - this.getTextWidth());
 		}
 	}
 

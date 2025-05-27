@@ -32,4 +32,8 @@ class FutureErrorEvent extends Event {
 	 * 错误信息
 	 */
 	public var error:String;
+
+	public function toString():String {
+		return "FutureErrorEvent[errorCode=" + errorCode + ", error=" + error + "]";
+	}
 }

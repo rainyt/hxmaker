@@ -2,6 +2,7 @@ package hx.display;
 
 import hx.utils.ObjectPool;
 
+@:keep
 class DisplayObjectRecycler<T> {
 	public static function withClass<T>(c:Class<T>):DisplayObjectRecycler<T> {
 		var recycler = new DisplayObjectRecycler(c);

@@ -6,6 +6,7 @@ import hx.events.Event;
 /**
  * 数据列表渲染器
  */
+@:keep
 class ListView extends Scroll implements IDataProider<ArrayCollection> {
 	/**
 	 * 数据列表

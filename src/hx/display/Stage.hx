@@ -61,7 +61,9 @@ class Stage extends Box {
 				}
 			}
 			var display:DisplayObject = touchList[touchList.length - 1];
-			for (object in touchList) {
+			var i = touchList.length;
+			while (i-- > 0) {
+				var object = touchList[i];
 				event.target = display;
 				object.dispatchEvent(event);
 			}

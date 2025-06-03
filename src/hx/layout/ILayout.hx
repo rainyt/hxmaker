@@ -8,4 +8,9 @@ interface ILayout {
 	 * @param children 
 	 */
 	public function update(children:Array<DisplayObject>):Void;
+
+	/**
+	 * 父节点
+	 */
+	public var parent:DisplayObject;
 }

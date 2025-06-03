@@ -9,6 +9,7 @@ import hx.providers.IRootDataProvider;
 /**
  * 文本渲染器
  */
+@:keep
 class Label extends DisplayObject implements IDataProider<String> implements IRootDataProvider<ITextFieldDataProvider> {
 	@:noCompletion private var __data:String;
 	@:noCompletion private var __textFormat:TextFormat = new TextFormat();

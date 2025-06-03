@@ -9,6 +9,7 @@ import hx.gemo.Rectangle;
 /**
  * 可装载子对象的容器
  */
+@:keep
 @:access(hx.display.DisplayObject)
 class DisplayObjectContainer extends DisplayObject {
 	/**
@@ -27,6 +28,9 @@ class DisplayObjectContainer extends DisplayObject {
 
 	private function set_layout(value:ILayout):ILayout {
 		__layout = value;
+		if (__layout != null) {
+			__layout.parent = this;
+		}
 		return value;
 	}
 

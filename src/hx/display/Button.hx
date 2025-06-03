@@ -10,6 +10,7 @@ import hx.events.MouseEvent;
 /**
  * 按钮
  */
+@:keep
 class Button extends BoxContainer {
 	/**
 	 * 点击音效ID

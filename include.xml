@@ -1,3 +1,4 @@
 <project>
     <haxelib name="actuate"/>
+    <haxeflag name='--macro keep("hx.display.*")' />
 </project>

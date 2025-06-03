@@ -6,6 +6,7 @@ import hx.events.Event;
 /**
  * MovieClip是一种显示由纹理列表描绘的动画的简单方法。
  */
+@:keep
 class MovieClip extends Image {
 	@:noCompletion private var __time:Float = 0;
 	@:noCompletion private var __playing:Bool = false;

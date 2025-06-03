@@ -1,5 +1,6 @@
 package hx.display;
 
+@:keep
 class HBox extends Box {
 	override function onInit() {
 		super.onInit();

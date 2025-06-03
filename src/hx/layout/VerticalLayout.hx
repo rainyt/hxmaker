@@ -11,7 +11,9 @@ class VerticalLayout extends Layout {
 	override function update(children:Array<DisplayObject>) {
 		super.update(children);
 		var offestY:Float = 0;
+		var width:Float = parent.width;
 		for (object in children) {
+			object.width = width;
 			object.y = offestY;
 			offestY += object.height + gap;
 		}

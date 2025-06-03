@@ -8,6 +8,7 @@ import hx.providers.IRootDataProvider;
 /**
  * 矩形渲染显示对象
  */
+@:keep
 class Quad extends Graphics implements IDataProider<UInt> implements IRootDataProvider<Dynamic> {
 	public var root(get, set):Dynamic;
 

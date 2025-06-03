@@ -111,4 +111,9 @@ class MovieClip extends Image {
 	public function pause():Void {
 		this.__playing = false;
 	}
+
+	public function stopAt(frame:Int):Void {
+		currentFrame = frame;
+		this.pause();
+	}
 }

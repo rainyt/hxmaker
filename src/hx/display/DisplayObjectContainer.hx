@@ -150,6 +150,13 @@ class DisplayObjectContainer extends DisplayObject {
 		this.setDirty();
 	}
 
+	override function onRemoveToStage() {
+		super.onRemoveToStage();
+		for (child in this.__children) {
+			child.onRemoveToStage();
+		}
+	}
+
 	/**
 	 * 删除指定索引的显示对象
 	 * @param index 

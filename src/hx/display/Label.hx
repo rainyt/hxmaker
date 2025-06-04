@@ -25,6 +25,12 @@ class Label extends DisplayObject implements IDataProider<String> implements IRo
 		return __root;
 	}
 
+	override function onRemoveToStage() {
+		super.onRemoveToStage();
+		// if (root != null)
+		// this.root.release();
+	}
+
 	/**
 	 * 文本内容
 	 */

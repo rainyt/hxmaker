@@ -15,4 +15,9 @@ interface ITextFieldDataProvider {
 	 * @return Float
 	 */
 	public function getTextHeight():Float;
+
+	/**
+	 * 释放文本
+	 */
+	public function release():Void;
 }

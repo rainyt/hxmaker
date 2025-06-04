@@ -1,9 +1,11 @@
 --main Test
 --class-path src
 --class-path test
---interp
+# --interp
 --library spine-hx
 --library actuate
 --library openfl
 --library lime
 --library hxmaker-openfl
+--js bin/main.js
+--no-output

@@ -67,6 +67,10 @@ class InputLabel extends Box implements IDataProider<String> {
 		if (!line.visible) {
 			if (stage.focus == this) {
 				line.visible = true;
+				line.x = getTextWidth() + 2;
+				line.height = textFormat.size + 2;
+				line.alpha = 1;
+				__dt = 0;
 			}
 		} else if (line.visible) {
 			if (stage.focus != this) {

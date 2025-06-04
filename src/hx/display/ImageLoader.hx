@@ -1,5 +1,6 @@
 package hx.display;
 
+import hx.ui.UIManager;
 import hx.assets.BitmapDataFuture;
 
 /**
@@ -17,10 +18,15 @@ class ImageLoader extends Box implements IDataProider<Dynamic> {
 	public function set_data(v:Dynamic):Dynamic {
 		__data = v;
 		if (__data is String) {
-			new BitmapDataFuture(__data, true).onComplete((data) -> {
-				if (__data == v)
-					image.data = data;
-			});
+			var bitmapData = UIManager.getBitmapData(v);
+			if (bitmapData != null) {
+				image.data = bitmapData;
+			} else {
+				new BitmapDataFuture(__data, true).onComplete((data) -> {
+					if (__data == v)
+						image.data = data;
+				});
+			}
 		} else if (__data is BitmapData) {
 			image.data = __data;
 		}
@@ -29,9 +35,11 @@ class ImageLoader extends Box implements IDataProider<Dynamic> {
 
 	public var image:Image = new Image();
 
-	public function new(data:Dynamic) {
+	public function new(data:Dynamic = null) {
 		super();
 		this.addChild(image);
+		if (data != null)
+			this.data = data;
 	}
 
 	override function set_width(value:Float):Float {

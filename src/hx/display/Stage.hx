@@ -1,5 +1,6 @@
 package hx.display;
 
+import hx.events.MouseEvent;
 import hx.utils.SoundManager;
 import hx.events.Event;
 import hx.events.KeyboardEvent;
@@ -10,6 +11,11 @@ import hx.events.KeyboardEvent;
 class Stage extends Box {
 	@:noCompletion private var __stageWidth:Float = 0;
 	@:noCompletion private var __stageHeight:Float = 0;
+
+	/**
+	 * 舞台的焦点对象
+	 */
+	public var focus:DisplayObject;
 
 	/**
 	 * 是否为自定义渲染，如果为自定义渲染，引擎则只生效触摸事件，但不会进行额外渲染
@@ -95,6 +101,8 @@ class Stage extends Box {
 		super.dispatchEvent(event);
 		if (event.type == Event.RESIZE) {
 			this.updateLayout();
+		} else if (event.type == MouseEvent.CLICK) {
+			focus = event.target;
 		}
 	}
 

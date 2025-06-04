@@ -50,6 +50,8 @@ class InputLabel extends Box implements IDataProider<String> {
 		this.layout = new AnchorLayout();
 		this.label.layoutData = AnchorLayoutData.fill();
 		this.addChild(this.label);
+		this.addChild(line);
+		this.mouseChildren = false;
 	}
 
 	private function onClick(event:MouseEvent):Void {
@@ -57,7 +59,24 @@ class InputLabel extends Box implements IDataProider<String> {
 		TextInputUtils.openInput(this);
 	}
 
+	private var __dt:Float = 0;
+
 	override function onUpdate(dt:Float) {
 		super.onUpdate(dt);
+		__dt += dt;
+		if (!line.visible) {
+			if (stage.focus == this) {
+				line.visible = true;
+			}
+		} else if (line.visible) {
+			if (stage.focus != this) {
+				line.visible = false;
+			} else {
+				// 闪缩
+				line.x = getTextWidth() + 2;
+				line.height = textFormat.size + 2;
+				line.alpha = __dt % 1 < 0.5 ? 1 : 0;
+			}
+		}
 	}
 }

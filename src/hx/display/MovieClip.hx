@@ -11,11 +11,35 @@ class MovieClip extends Image {
 	@:noCompletion private var __time:Float = 0;
 	@:noCompletion private var __playing:Bool = false;
 
+	/**
+	 * 是否启用声音
+	 * 默认值为true
+	 */
+	public var enableSound:Bool = true;
+
 	private var __frames:Array<{
 		bitmapData:BitmapData,
 		duration:Float,
 		sound:Sound
 	}> = [];
+
+	/**
+	 * 获取总帧数
+	 */
+	public var totalFrame(get, never):Int;
+
+	private function get_totalFrame():Int {
+		return __frames.length;
+	}
+
+	/**
+	 * 获取当前是否正在播放动画
+	 */
+	public var playing(get, never):Bool;
+
+	private function get_playing():Bool {
+		return __playing;
+	}
 
 	/**
 	 * 获得当前选择的帧
@@ -98,7 +122,7 @@ class MovieClip extends Image {
 				this.dispatchEvent(new Event(Event.CHANGE));
 			// 音效播放支持
 			currentData = __frames[currentFrame];
-			if (currentData != null && currentData.sound != null) {
+			if (enableSound && currentData != null && currentData.sound != null) {
 				currentData.sound.root.play();
 			}
 		}

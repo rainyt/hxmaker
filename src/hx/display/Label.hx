@@ -52,6 +52,8 @@ class Label extends DisplayObject implements IDataProider<String> implements IRo
 	}
 
 	private function set_textFormat(value:TextFormat):TextFormat {
+		if (value == null)
+			return null;
 		__textFormat.setTo(value);
 		setDirty();
 		return value;

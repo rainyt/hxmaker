@@ -95,6 +95,9 @@ class MovieClip extends Image {
 			duration: duration,
 			sound: sound
 		});
+		if (data == null) {
+			this.currentFrame = 0;
+		}
 	}
 
 	override function onUpdate(dt:Float) {

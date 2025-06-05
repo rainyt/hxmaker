@@ -1,5 +1,7 @@
 package hx.display;
 
+import hx.gemo.Rectangle;
+import hx.gemo.Point;
 import hx.layout.AnchorLayoutData;
 import hx.layout.AnchorLayout;
 import hx.utils.TextInputUtils;
@@ -12,6 +14,35 @@ class InputLabel extends Box implements IDataProider<String> {
 	public var line:Quad = new Quad(1, 1, 0xffffff);
 
 	private var label:Label = new Label();
+
+	/**
+	 * 当前选中的起始位置
+	 */
+	public var selectionStart(default, set):Int = 0;
+
+	private function set_selectionStart(value:Int):Int {
+		selectionStart = value;
+		this.updateSelection();
+		return value;
+	}
+
+	/**
+	 * 当前选中的结束位置
+	 */
+	public var selectionEnd(default, set):Int = 0;
+
+	private function set_selectionEnd(value:Int):Int {
+		selectionEnd = value;
+		this.updateSelection();
+		return value;
+	}
+
+	private var __startRect:Rectangle;
+
+	private function updateSelection():Void {
+		__startRect = this.label.root.getChatBounds(selectionStart);
+		__dt = 0;
+	}
 
 	public var data(get, set):String;
 
@@ -55,6 +86,32 @@ class InputLabel extends Box implements IDataProider<String> {
 	}
 
 	private function onClick(event:MouseEvent):Void {
+		// 确定光标位置
+		var movePoint = this.globalToLocal(new Point(event.stageX, event.stageY));
+		this.selectionStart = this.selectionEnd = this.label.data.length;
+		var charRect:Rectangle = new Rectangle();
+		for (i in 0...this.label.data.length) {
+			var rect = this.label.root.getChatBounds(i);
+			if (rect == null) {
+				continue;
+			}
+			rect.transform(charRect, @:privateAccess this.label.__worldTransform);
+			if (charRect.containsPoint(event.stageX, event.stageY)) {
+				// var quad = new Quad(charRect.width, charRect.height, 0xff0000);
+				// quad.alpha = 0.5;
+				// this.topView.addChild(quad);
+				// quad.x = charRect.x;
+				// quad.y = charRect.y;
+				if (movePoint.x - rect.x < rect.width / 2) {
+					// 如果点击位置在字符左边，则光标在左边
+					this.selectionStart = this.selectionEnd = i;
+				} else {
+					// 如果点击位置在字符右边，则光标在右边
+					this.selectionStart = this.selectionEnd = i + 1;
+				}
+				break;
+			}
+		}
 		// 触发点击事件时，设置焦点到输入框
 		TextInputUtils.openInput(this);
 	}
@@ -67,8 +124,9 @@ class InputLabel extends Box implements IDataProider<String> {
 		if (!line.visible) {
 			if (stage.focus == this) {
 				line.visible = true;
-				line.x = getTextWidth() + 2;
-				line.height = textFormat.size + 2;
+				line.x = __startRect == null ? (selectionStart == 0 ? 0 : getTextWidth() + 2) : __startRect.x;
+				line.y = __startRect == null ? 0 : __startRect.y;
+				line.height = __startRect == null ? textFormat.size + 2 : __startRect.height;
 				line.alpha = 1;
 				__dt = 0;
 			}
@@ -77,8 +135,8 @@ class InputLabel extends Box implements IDataProider<String> {
 				line.visible = false;
 			} else {
 				// 闪缩
-				line.x = getTextWidth() + 2;
-				line.height = textFormat.size + 2;
+				line.x = __startRect == null ? (selectionStart == 0 ? 0 : getTextWidth() + 2) : __startRect.x;
+				line.height = __startRect == null ? textFormat.size + 2 : __startRect.height;
 				line.alpha = __dt % 1 < 0.5 ? 1 : 0;
 			}
 		}

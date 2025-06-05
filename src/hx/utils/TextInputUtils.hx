@@ -1,5 +1,6 @@
 package hx.utils;
 
+import hx.events.Event;
 import hx.gemo.Point;
 import hx.display.InputLabel;
 import js.html.TextAreaElement;
@@ -33,12 +34,15 @@ class TextInputUtils {
 			// if (Lib.isPc())
 			textureArea.style.zIndex = "-1";
 			textureArea.oninput = onInput;
+			textureArea.onkeyup = onInput;
 			Browser.document.getElementsByTagName("html")[0].appendChild(textureArea);
 			// 侦听窗口变化
 			Browser.document.onresize = onResize;
 		}
 		textureArea.value = zinput.data;
 		textureArea.style.visibility = "visible";
+		textureArea.selectionStart = input.selectionStart;
+		textureArea.selectionEnd = input.selectionEnd;
 		textureArea.focus();
 	}
 
@@ -64,6 +68,10 @@ class TextInputUtils {
 		if (zinput == null)
 			return;
 		zinput.data = textureArea.value.substr(0, 9999);
+		zinput.getTextWidth();
+		zinput.selectionStart = textureArea.selectionStart;
+		zinput.selectionEnd = textureArea.selectionEnd;
+		zinput.dispatchEvent(new Event(Event.CHANGE));
 	}
 
 	/**

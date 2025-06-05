@@ -11,6 +11,10 @@ class MovieClip extends Image {
 	@:noCompletion private var __time:Float = 0;
 	@:noCompletion private var __playing:Bool = false;
 
+	public function reset():Void {
+		__time = 0;
+	}
+
 	/**
 	 * 是否启用声音
 	 * 默认值为true
@@ -100,12 +104,26 @@ class MovieClip extends Image {
 		}
 	}
 
+	private var __currentFrame:Int = -1;
+
+	public var duration(get, never):Float;
+
+	private function get_duration():Float {
+		var duration = 0;
+		var currentData = __frames[currentFrame];
+		if (currentData == null) {
+			return duration;
+		}
+		return currentData.duration;
+	}
+
 	override function onUpdate(dt:Float) {
 		if (!__playing)
 			return;
 		super.onUpdate(dt);
 		if (currentFrame >= __frames.length) {
 			currentFrame = 0;
+			__time = 0;
 		}
 		var currentData = __frames[currentFrame];
 		if (currentData == null) {
@@ -113,20 +131,24 @@ class MovieClip extends Image {
 		}
 		__time += dt;
 		if (__time >= currentData.duration) {
-			currentFrame++;
-			__time = 0;
-			if (currentFrame >= __frames.length) {
-				// 播放完成事件
-				if (this.hasEventListener(Event.COMPLETE))
-					this.dispatchEvent(new Event(Event.COMPLETE));
-			}
-			// 帧发生变化时处理
-			if (this.hasEventListener(Event.CHANGE))
-				this.dispatchEvent(new Event(Event.CHANGE));
-			// 音效播放支持
-			currentData = __frames[currentFrame];
-			if (enableSound && currentData != null && currentData.sound != null) {
-				currentData.sound.root.play();
+			// currentFrame++;
+			currentFrame = Math.floor(__time / currentData.duration);
+			if (__currentFrame != currentFrame) {
+				__currentFrame = currentFrame;
+				// __time -= currentData.duration;
+				if (currentFrame >= __frames.length) {
+					// 播放完成事件
+					if (this.hasEventListener(Event.COMPLETE))
+						this.dispatchEvent(new Event(Event.COMPLETE));
+				}
+				// 帧发生变化时处理
+				if (this.hasEventListener(Event.CHANGE))
+					this.dispatchEvent(new Event(Event.CHANGE));
+				// 音效播放支持
+				currentData = __frames[currentFrame];
+				if (enableSound && currentData != null && currentData.sound != null) {
+					currentData.sound.root.play();
+				}
 			}
 		}
 	}

@@ -129,7 +129,6 @@ class MovieClip extends Image {
 		if (currentData == null) {
 			return;
 		}
-		__time += dt;
 		if (__time >= currentData.duration) {
 			// currentFrame++;
 			currentFrame = Math.floor(__time / currentData.duration);
@@ -151,6 +150,7 @@ class MovieClip extends Image {
 				}
 			}
 		}
+		__time += dt;
 	}
 
 	public function play():Void {

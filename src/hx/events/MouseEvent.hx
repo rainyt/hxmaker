@@ -35,6 +35,11 @@ class MouseEvent extends Event {
 	public inline static var MOUSE_OVER:String = "mouseOver";
 
 	/**
+	 * 鼠标离开事件
+	 */
+	public inline static var MOUSE_OUT:String = "mouseOut";
+
+	/**
 	 * 鼠标按下的位置X
 	 */
 	public var stageX:Float = 0;

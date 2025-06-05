@@ -750,4 +750,13 @@ class DisplayObject extends EventDispatcher {
 			stage.__updateTransform(null);
 		return this.__worldTransform.__transformInverseY(Hxmaker.engine.touchX, Hxmaker.engine.touchY);
 	}
+
+	override function dispatchEvent(event:Event) {
+		super.dispatchEvent(event);
+		if (event.bubbling) {
+			if (this.parent != null) {
+				this.parent.dispatchEvent(event);
+			}
+		}
+	}
 }

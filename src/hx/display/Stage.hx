@@ -53,6 +53,8 @@ class Stage extends Box {
 		super();
 	}
 
+	private static var __overDisplayObject:DisplayObject;
+
 	/**
 	 * 触发鼠标事件
 	 * @param event 
@@ -72,6 +74,21 @@ class Stage extends Box {
 				var object = touchList[i];
 				event.target = display;
 				object.dispatchEvent(event);
+			}
+			if (event.type == MouseEvent.MOUSE_MOVE) {
+				// 需要触发MOUSE_OVER和 MOUSE_OUT事件
+				if (__overDisplayObject != display) {
+					if (__overDisplayObject != null) {
+						var event = new MouseEvent(MouseEvent.MOUSE_OUT, false, true);
+						event.target = __overDisplayObject;
+						__overDisplayObject.dispatchEvent(event);
+						__overDisplayObject = null;
+					}
+					__overDisplayObject = display;
+					var event = new MouseEvent(MouseEvent.MOUSE_OVER, false, true);
+					event.target = __overDisplayObject;
+					__overDisplayObject.dispatchEvent(event);
+				}
 			}
 			return true;
 		} else {

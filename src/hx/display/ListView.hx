@@ -24,6 +24,10 @@ class ListView extends Scroll implements IDataProider<ArrayCollection> {
 		return value;
 	}
 
+	public function updateAllData():Void {
+		__dataDirty = true;
+	}
+
 	private var __data:ArrayCollection;
 
 	private var __dataDirty:Bool = false;

@@ -130,24 +130,20 @@ class MovieClip extends Image {
 			return;
 		}
 		if (__time >= currentData.duration) {
-			// currentFrame++;
-			currentFrame = Math.floor(__time / currentData.duration);
-			if (__currentFrame != currentFrame) {
-				__currentFrame = currentFrame;
-				// __time -= currentData.duration;
-				if (currentFrame >= __frames.length) {
-					// 播放完成事件
-					if (this.hasEventListener(Event.COMPLETE))
-						this.dispatchEvent(new Event(Event.COMPLETE));
-				}
-				// 帧发生变化时处理
-				if (this.hasEventListener(Event.CHANGE))
-					this.dispatchEvent(new Event(Event.CHANGE));
-				// 音效播放支持
-				currentData = __frames[currentFrame];
-				if (enableSound && currentData != null && currentData.sound != null) {
-					currentData.sound.root.play();
-				}
+			currentFrame++;
+			__time -= currentData.duration;
+			if (currentFrame >= __frames.length) {
+				// 播放完成事件
+				if (this.hasEventListener(Event.COMPLETE))
+					this.dispatchEvent(new Event(Event.COMPLETE));
+			}
+			// 帧发生变化时处理
+			if (this.hasEventListener(Event.CHANGE))
+				this.dispatchEvent(new Event(Event.CHANGE));
+			// 音效播放支持
+			currentData = __frames[currentFrame];
+			if (enableSound && currentData != null && currentData.sound != null) {
+				currentData.sound.root.play();
 			}
 		}
 		__time += dt;

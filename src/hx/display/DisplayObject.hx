@@ -342,6 +342,8 @@ class DisplayObject extends EventDispatcher {
 	 * @return Rectangle
 	 */
 	public function getBounds(targetCoordinateSpace:DisplayObject = null):Rectangle {
+		if (this.__transformDirty && stage != null)
+			stage.__updateTransform(null);
 		var matrix = new Matrix();
 		if (targetCoordinateSpace != null && targetCoordinateSpace != this) {
 			matrix.copyFrom(this.__worldTransform);
@@ -722,7 +724,7 @@ class DisplayObject extends EventDispatcher {
 	 * @return Point
 	 */
 	public function localToGlobal(point:Point):Point {
-		if (this.__transformDirty)
+		if (this.__transformDirty && stage != null)
 			stage.__updateTransform(null);
 		var p = point.clone();
 		p.x = __worldTransform.__transformX(p.x, p.y);
@@ -736,7 +738,7 @@ class DisplayObject extends EventDispatcher {
 	 * @return Point
 	 */
 	public function globalToLocal(point:Point):Point {
-		if (this.__transformDirty)
+		if (this.__transformDirty && stage != null)
 			stage.__updateTransform(null);
 		var p = point.clone();
 		p.x = __worldTransform.__transformInverseX(p.x, p.y);

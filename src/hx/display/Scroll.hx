@@ -148,7 +148,7 @@ class Scroll extends BoxContainer {
 	}
 
 	private function getMoveingToData(data:{scrollX:Float, scrollY:Float}):{scrollX:Float, scrollY:Float} {
-		var ret = box.getBounds();
+		var ret = box.__getBounds();
 		var maxWidth = ret.width - this.width;
 		var maxHeight = ret.height - this.height;
 		if (data.scrollX > 0 || maxWidth < 0) {
@@ -168,7 +168,7 @@ class Scroll extends BoxContainer {
 		if (!__down)
 			return;
 
-		var ret = box.getBounds();
+		var ret = box.__getBounds();
 
 		this.__lastStepX = this.startX - e.stageX;
 		this.__lastStepY = this.startY - e.stageY;

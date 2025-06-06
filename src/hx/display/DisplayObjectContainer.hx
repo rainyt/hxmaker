@@ -301,6 +301,17 @@ class DisplayObjectContainer extends DisplayObject {
 		return rect;
 	}
 
+	override private function __getBounds(parent:Matrix = null):Rectangle {
+		__updateLayout();
+		var rect = new Rectangle();
+		for (object in this.children) {
+			var objectRect = object.__getBounds(parent != null ? parent : __transform.clone());
+			if (objectRect.width > 0 && objectRect.height > 0)
+				rect.expand(objectRect.x, objectRect.y, objectRect.width, objectRect.height);
+		}
+		return rect;
+	}
+
 	/**
 	 * 该容器内所有子对象的数量。
 	 */

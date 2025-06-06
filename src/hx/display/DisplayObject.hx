@@ -289,7 +289,7 @@ class DisplayObject extends EventDispatcher {
 		if (__width != null) {
 			return __width * this.scaleX;
 		}
-		return getBounds().width;
+		return __getBounds().width;
 	}
 
 	private function set_width(value:Float):Float {
@@ -312,7 +312,7 @@ class DisplayObject extends EventDispatcher {
 		if (__height != null) {
 			return __height * this.scaleY;
 		}
-		return getBounds().height;
+		return __getBounds().height;
 	}
 
 	private function set_height(value:Float):Float {
@@ -358,6 +358,16 @@ class DisplayObject extends EventDispatcher {
 
 	private function __getRect():Rectangle {
 		return __rect;
+	}
+
+	private function __getBounds(parent:Matrix = null):Rectangle {
+		if (parent != null) {
+			var t = __transform.clone();
+			t.concat(parent);
+			return __getLocalBounds(__getRect(), t);
+		} else {
+			return __getLocalBounds(__getRect());
+		}
 	}
 
 	/**

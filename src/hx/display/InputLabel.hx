@@ -97,11 +97,6 @@ class InputLabel extends Box implements IDataProider<String> {
 			}
 			rect.transform(charRect, @:privateAccess this.label.__worldTransform);
 			if (charRect.containsPoint(event.stageX, event.stageY)) {
-				// var quad = new Quad(charRect.width, charRect.height, 0xff0000);
-				// quad.alpha = 0.5;
-				// this.topView.addChild(quad);
-				// quad.x = charRect.x;
-				// quad.y = charRect.y;
 				if (movePoint.x - rect.x < rect.width / 2) {
 					// 如果点击位置在字符左边，则光标在左边
 					this.selectionStart = this.selectionEnd = i;

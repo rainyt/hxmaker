@@ -34,7 +34,7 @@ class TextInputUtils {
 			// if (Lib.isPc())
 			textureArea.style.zIndex = "-1";
 			textureArea.oninput = onInput;
-			textureArea.onkeyup = onInput;
+			textureArea.onkeyup = onKeyUp;
 			Browser.document.getElementsByTagName("html")[0].appendChild(textureArea);
 			// 侦听窗口变化
 			Browser.document.onresize = onResize;
@@ -59,6 +59,11 @@ class TextInputUtils {
 				}
 			});
 		}
+	}
+
+	public static function onKeyUp():Void {
+		zinput.selectionStart = textureArea.selectionStart;
+		zinput.selectionEnd = textureArea.selectionEnd;
 	}
 
 	/**

@@ -341,14 +341,19 @@ class DisplayObject extends EventDispatcher {
 	 * 获得边界
 	 * @return Rectangle
 	 */
-	public function getBounds(parent:Matrix = null):Rectangle {
-		if (parent != null) {
-			var t = __transform.clone();
-			t.concat(parent);
-			return __getLocalBounds(__getRect(), t);
-		} else {
-			return __getLocalBounds(__getRect());
+	public function getBounds(targetCoordinateSpace:DisplayObject = null):Rectangle {
+		var matrix = new Matrix();
+		if (targetCoordinateSpace != null && targetCoordinateSpace != this) {
+			matrix.copyFrom(this.__worldTransform);
+			var targetMatrix = targetCoordinateSpace.__worldTransform.clone();
+			targetMatrix.invert();
+			matrix.concat(targetMatrix);
 		}
+
+		var bounds = __getRect();
+		var rect = new Rectangle();
+		bounds.transform(rect, matrix);
+		return rect;
 	}
 
 	private function __getRect():Rectangle {

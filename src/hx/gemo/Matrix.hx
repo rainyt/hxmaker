@@ -181,4 +181,35 @@ class Matrix {
 			return (1.0 / norm) * (a * (py - ty) + b * (tx - px));
 		}
 	}
+
+	/**
+		Performs the opposite transformation of the original matrix. You can apply
+		an inverted matrix to an object to undo the transformation performed when
+		applying the original matrix.
+
+	**/
+	public function invert():Matrix {
+		var norm = a * d - b * c;
+
+		if (norm == 0) {
+			a = b = c = d = 0;
+			tx = -tx;
+			ty = -ty;
+		} else {
+			norm = 1.0 / norm;
+			var a1 = d * norm;
+			d = a * norm;
+			a = a1;
+			b *= -norm;
+			c *= -norm;
+
+			var tx1 = -a * tx - c * ty;
+			ty = -b * tx - d * ty;
+			tx = tx1;
+		}
+
+		// __cleanValues ();
+
+		return this;
+	}
 }

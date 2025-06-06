@@ -17,6 +17,11 @@ class Image extends DisplayObject implements IDataProider<BitmapData> implements
 	@:noCompletion private var __scale9GridDirty:Bool = false;
 
 	/**
+	 * 如果纹理存在frameRect时，则使用frameRect的宽高作为位图的宽高，否则使用切割图的宽高作为位图的宽高，默认值为`true`
+	 */
+	public var useFrameRect:Bool = true;
+
+	/**
 	 * 不同的引擎中显示的原始对象引用
 	 */
 	public var root(get, set):Dynamic;
@@ -188,7 +193,7 @@ class Image extends DisplayObject implements IDataProider<BitmapData> implements
 
 	override function __getRect():Rectangle {
 		if (data != null) {
-			if (data.frameRect != null) {
+			if (useFrameRect && data.frameRect != null) {
 				__rect.x = data.frameRect.x;
 				__rect.y = data.frameRect.y;
 				__rect.width = data.frameRect.width;

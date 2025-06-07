@@ -70,9 +70,9 @@ class Stage extends Box {
 	 * 触发鼠标事件
 	 * @param event 
 	 */
-	public function handleMouseEvent(event:hx.events.MouseEvent):Bool {
+	public function handleMouseEvent(event:hx.events.MouseEvent, needHitTest:Bool):Bool {
 		var touchList = [];
-		if (__hitTest(event.stageX, event.stageY, touchList)) {
+		if (needHitTest && __hitTest(event.stageX, event.stageY, touchList)) {
 			for (index => object in touchList) {
 				if (object.parent != null && !object.parent.mouseChildren) {
 					touchList.splice(index, touchList.length - index);

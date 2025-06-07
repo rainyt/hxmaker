@@ -15,7 +15,18 @@ class Stage extends Box {
 	/**
 	 * 舞台的焦点对象
 	 */
-	public var focus:DisplayObject;
+	public var focus(get, set):DisplayObject;
+
+	private static var __focus:DisplayObject;
+
+	private function set_focus(value:DisplayObject):DisplayObject {
+		__focus = value;
+		return __focus;
+	}
+
+	private function get_focus():DisplayObject {
+		return __focus;
+	}
 
 	/**
 	 * 是否为自定义渲染，如果为自定义渲染，引擎则只生效触摸事件，但不会进行额外渲染

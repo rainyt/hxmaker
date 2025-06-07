@@ -60,6 +60,11 @@ class DisplayObjectContainer extends DisplayObject {
 	}
 
 	/**
+	 * 是否容器也可以被点击，当容器内的对象无法正常点击时，该值为`true`时，则可以触发容器的点击事件，默认值为`false`
+	 */
+	public var mouseClickEnabled:Bool = false;
+
+	/**
 	 * 当前显示对象是否允许子对象被触摸，如果返回false，则返回当前显示对象
 	 */
 	public var mouseChildren(get, set):Bool;
@@ -285,6 +290,9 @@ class DisplayObjectContainer extends DisplayObject {
 				}
 				return true;
 			}
+		}
+		if (mouseClickEnabled) {
+			return true;
 		}
 		stacks.pop();
 		return false;

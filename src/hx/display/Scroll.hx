@@ -79,6 +79,7 @@ class Scroll extends BoxContainer {
 		this.width = 100;
 		this.height = 100;
 		this.background = quad;
+		this.mouseClickEnabled = true;
 	}
 
 	override function set_width(value:Float):Float {
@@ -121,6 +122,16 @@ class Scroll extends BoxContainer {
 
 	private var __down:Bool = false;
 
+	/**
+	 * 横向滑动
+	 */
+	public var scrollXEnable:Bool = true;
+
+	/**
+	 * 纵向滑动
+	 */
+	public var scrollYEnable:Bool = true;
+
 	private function stopScroll():Void {
 		Actuate.stop(this);
 	}
@@ -151,12 +162,12 @@ class Scroll extends BoxContainer {
 		var ret = box.__getBounds();
 		var maxWidth = ret.width - this.width;
 		var maxHeight = ret.height - this.height;
-		if (data.scrollX > 0 || maxWidth < 0) {
+		if (!scrollXEnable || data.scrollX > 0 || maxWidth < 0) {
 			data.scrollX = 0;
 		} else if (data.scrollX < -maxWidth) {
 			data.scrollX = -maxWidth;
 		}
-		if (data.scrollY > 0 || maxHeight < 0) {
+		if (!scrollYEnable || data.scrollY > 0 || maxHeight < 0) {
 			data.scrollY = 0;
 		} else if (data.scrollY < -maxHeight) {
 			data.scrollY = -maxHeight;
@@ -169,6 +180,11 @@ class Scroll extends BoxContainer {
 			return;
 
 		var ret = box.__getBounds();
+		if (!scrollYEnable) {
+			ret.height = 0;
+		}
+		if (!scrollXEnable)
+			ret.width = 0;
 
 		this.__lastStepX = this.startX - e.stageX;
 		this.__lastStepY = this.startY - e.stageY;

@@ -119,26 +119,36 @@ class InputLabel extends Box implements IDataProider<String> {
 		if (!line.visible) {
 			if (stage.focus == this) {
 				line.visible = true;
-				line.x = __startRect == null ? (selectionStart == 0 ? 0 : getTextWidth() + 1) : __startRect.x;
-				line.y = __startRect == null ? 0 : __startRect.y;
-				line.height = __startRect == null ? textFormat.size + 2 : __startRect.height;
-				line.alpha = 1;
-				__dt = 0;
-				line.x += @:privateAccess label.__originWorldX;
-				line.y += @:privateAccess label.__originWorldY;
+				this.updateLine(1);
 			}
 		} else if (line.visible) {
 			if (stage.focus != this) {
 				line.visible = false;
 			} else {
 				// 闪缩
-				line.x = __startRect == null ? (selectionStart == 0 ? 0 : getTextWidth() + 1) : __startRect.x;
-				line.y = __startRect == null ? 0 : __startRect.y;
-				line.height = __startRect == null ? textFormat.size + 2 : __startRect.height;
-				line.alpha = __dt % 1 < 0.5 ? 1 : 0;
-				line.x += @:privateAccess label.__originWorldX;
-				line.y += @:privateAccess label.__originWorldY;
+				this.updateLine(__dt % 1 < 0.5 ? 1 : 0);
 			}
 		}
+	}
+
+	private function updateLine(alpha:Float):Void {
+		line.x = __startRect == null ? (selectionStart == 0 ? 0 : getTextWidth() + 1) : __startRect.x;
+		line.height = __startRect == null ? textFormat.size + 2 : __startRect.height;
+		line.alpha = alpha;
+		line.x += @:privateAccess label.__originWorldX;
+		if (__startRect != null) {
+			line.y = __startRect.y;
+			line.y += @:privateAccess label.__originWorldY;
+		} else {
+			switch label.verticalAlign {
+				case BOTTOM:
+					line.y = this.height - textFormat.size + 2;
+				case MIDDLE:
+					line.y = (this.height - textFormat.size + 2) / 2;
+				case TOP:
+					line.y = 0;
+			}
+		}
+		// line.y = __startRect == null ? 0 : __startRect.y;
 	}
 }

@@ -13,7 +13,7 @@ import hx.events.MouseEvent;
 class InputLabel extends Box implements IDataProider<String> {
 	public var line:Quad = new Quad(1, 1, 0xffffff);
 
-	private var label:Label = new Label();
+	public var label:Label = new Label();
 
 	/**
 	 * 当前选中的起始位置
@@ -119,20 +119,25 @@ class InputLabel extends Box implements IDataProider<String> {
 		if (!line.visible) {
 			if (stage.focus == this) {
 				line.visible = true;
-				line.x = __startRect == null ? (selectionStart == 0 ? 0 : getTextWidth() + 2) : __startRect.x;
+				line.x = __startRect == null ? (selectionStart == 0 ? 0 : getTextWidth() + 1) : __startRect.x;
 				line.y = __startRect == null ? 0 : __startRect.y;
 				line.height = __startRect == null ? textFormat.size + 2 : __startRect.height;
 				line.alpha = 1;
 				__dt = 0;
+				line.x += @:privateAccess label.__originWorldX;
+				line.y += @:privateAccess label.__originWorldY;
 			}
 		} else if (line.visible) {
 			if (stage.focus != this) {
 				line.visible = false;
 			} else {
 				// 闪缩
-				line.x = __startRect == null ? (selectionStart == 0 ? 0 : getTextWidth() + 2) : __startRect.x;
+				line.x = __startRect == null ? (selectionStart == 0 ? 0 : getTextWidth() + 1) : __startRect.x;
+				line.y = __startRect == null ? 0 : __startRect.y;
 				line.height = __startRect == null ? textFormat.size + 2 : __startRect.height;
 				line.alpha = __dt % 1 < 0.5 ? 1 : 0;
+				line.x += @:privateAccess label.__originWorldX;
+				line.y += @:privateAccess label.__originWorldY;
 			}
 		}
 	}

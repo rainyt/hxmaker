@@ -144,7 +144,8 @@ class Scroll extends BoxContainer {
 			scrollY: this.scrollY + e.delta * 0.1,
 			scrollX: this.scrollX
 		});
-		this.scrollY = data.scrollY;
+		// this.scrollY = data.scrollY;
+		Actuate.tween(this, 0.1, getMoveingToData(data));
 	}
 
 	private function onMouseDown(e:MouseEvent) {

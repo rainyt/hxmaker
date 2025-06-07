@@ -130,7 +130,8 @@ class Stage extends Box {
 		if (event.type == Event.RESIZE) {
 			this.updateLayout();
 		} else if (event.type == MouseEvent.CLICK) {
-			focus = event.target;
+			if (!(event.target is Stage))
+				focus = event.target;
 		}
 	}
 

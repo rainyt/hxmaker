@@ -98,6 +98,7 @@ class Scroll extends BoxContainer {
 		super.onAddToStage();
 		if (!this.hasEventListener(MouseEvent.MOUSE_DOWN)) {
 			this.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
+			this.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
 			this.stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 			this.stage.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
 		}
@@ -107,6 +108,7 @@ class Scroll extends BoxContainer {
 		super.onRemoveToStage();
 		if (this.hasEventListener(MouseEvent.MOUSE_DOWN)) {
 			this.removeEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
+			this.removeEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
 			this.stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 			this.stage.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
 		}
@@ -134,6 +136,15 @@ class Scroll extends BoxContainer {
 
 	private function stopScroll():Void {
 		Actuate.stop(this);
+	}
+
+	private function onMouseWheel(e:MouseEvent) {
+		// 鼠标滚动支持
+		var data = getMoveingToData({
+			scrollY: this.scrollY + e.delta * 0.1,
+			scrollX: this.scrollX
+		});
+		this.scrollY = data.scrollY;
 	}
 
 	private function onMouseDown(e:MouseEvent) {

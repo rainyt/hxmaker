@@ -228,6 +228,7 @@ class Graphics extends DisplayObject {
 	override function __getRect():Rectangle {
 		if (__sizeDirty) {
 			// 这里对Graphic的尺寸进行重新测量
+			__sizeRect.setTo(0, 0, 0, 0);
 			for (draw in this.__graphicsDrawData.draws) {
 				switch draw {
 					case DRAW_TRIANGLE(vertices, indices, uvs, alpha, colorTransform, applyBlendAddMode):

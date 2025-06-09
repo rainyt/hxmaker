@@ -28,6 +28,13 @@ class MovieClip extends Image {
 	}> = [];
 
 	/**
+	 * 清空所有帧数据
+	 */
+	public function cleanFrames():Void {
+		__frames = [];
+	}
+
+	/**
 	 * 获取总帧数
 	 */
 	public var totalFrame(get, never):Int;

@@ -477,6 +477,24 @@ class Assets extends Future<Assets, Dynamic> {
 	}
 
 	/**
+	 * 获得精灵图
+	 * @param name 
+	 * @return Atlas
+	 */
+	public function getAtlas(name:String):Atlas {
+		var atlas = atlases.get(name);
+		if (atlas == null) {
+			for (assets in uiAssetses) {
+				atlas = assets.getAtlas(name);
+				if (atlas != null) {
+					return atlas;
+				}
+			}
+		}
+		return atlas;
+	}
+
+	/**
 	 * 获得位图数据，精灵图可以通过`精灵图:精灵名称`处理
 	 * @param name 
 	 * @return BitmapData

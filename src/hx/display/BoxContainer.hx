@@ -14,6 +14,10 @@ class BoxContainer extends Box {
 		super.addChildAt(box, 0);
 	}
 
+	override function get_numChildren():Int {
+		return box.get_numChildren();
+	}
+
 	private function superAddChildAt(display:DisplayObject, index:Int):Void {
 		super.addChildAt(display, index);
 	}

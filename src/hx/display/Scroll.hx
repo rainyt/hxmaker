@@ -23,6 +23,7 @@ class Scroll extends BoxContainer {
 	}
 
 	private function set_scrollX(value:Float):Float {
+		this.setDirty();
 		this.__scrollX = value;
 		this.box.x = value;
 		return value;
@@ -35,6 +36,7 @@ class Scroll extends BoxContainer {
 	}
 
 	private function set_scrollY(value:Float):Float {
+		this.setDirty();
 		this.__scrollY = value;
 		this.box.y = value;
 		return value;
@@ -94,6 +96,16 @@ class Scroll extends BoxContainer {
 		return super.set_height(value);
 	}
 
+	override function addChild(child:DisplayObject) {
+		setDirty();
+		super.addChild(child);
+	}
+
+	override function addChildAt(child:DisplayObject, index:Int) {
+		setDirty();
+		super.addChildAt(child, index);
+	}
+
 	override function onAddToStage() {
 		super.onAddToStage();
 		if (!this.hasEventListener(MouseEvent.MOUSE_DOWN)) {
@@ -133,6 +145,45 @@ class Scroll extends BoxContainer {
 	 * 纵向滑动
 	 */
 	public var scrollYEnable:Bool = true;
+
+	/**
+	 * 是否自动隐藏窗口外的显示对象，该接口会自动影响显示对象的`visible`属性，默认为`false`
+	 */
+	public var autoVisible(default, set):Bool = false;
+
+	private function set_autoVisible(value:Bool):Bool {
+		this.autoVisible = value;
+		this.setDirty();
+		return value;
+	}
+
+	override function onUpdate(dt:Float) {
+		super.onUpdate(dt);
+		if (this.autoVisible && __dirty) {
+			var maskRect = new Rectangle(0, 0, this.width, this.height);
+			var counts = 0;
+			for (i in 0...this.numChildren) {
+				var child:DisplayObject = this.getChildAt(i);
+				if (child == null)
+					continue;
+				var testX = child.x + this.scrollX;
+				var testY = child.y + this.scrollY;
+				var testHeight = child.height;
+				var testWidth = child.width;
+				if (testY + testHeight <= maskRect.y
+					|| testX + testWidth <= maskRect.x
+					|| testY >= maskRect.y + maskRect.height
+					|| testX >= maskRect.x + maskRect.width) {
+					child.visible = false;
+				} else {
+					child.visible = true;
+				}
+				if (child.visible) {
+					counts++;
+				}
+			}
+		}
+	}
 
 	private function stopScroll():Void {
 		Actuate.stop(this);

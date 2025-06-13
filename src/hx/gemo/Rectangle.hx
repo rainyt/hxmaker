@@ -233,4 +233,30 @@ class Rectangle {
 		this.width = width - Std.parseFloat(arr[1]) - Std.parseFloat(arr[3]);
 		this.height = height - Std.parseFloat(arr[0]) - Std.parseFloat(arr[2]);
 	}
+
+	/**
+		Determines whether the object specified in the `toIntersect`
+		parameter intersects with this Rectangle object. This method checks the
+		`x`, `y`, `width`, and
+		`height` properties of the specified Rectangle object to see if
+		it intersects with this Rectangle object.
+
+		@param toIntersect The Rectangle object to compare against this Rectangle
+						   object.
+		@return A value of `true` if the specified object intersects
+				with this Rectangle object; otherwise `false`.
+	**/
+	public function intersects(toIntersect:Rectangle):Bool {
+		var x0 = x < toIntersect.x ? toIntersect.x : x;
+		var x1 = right > toIntersect.right ? toIntersect.right : right;
+
+		if (x1 <= x0) {
+			return false;
+		}
+
+		var y0 = y < toIntersect.y ? toIntersect.y : y;
+		var y1 = bottom > toIntersect.bottom ? toIntersect.bottom : bottom;
+
+		return y1 > y0;
+	}
 }

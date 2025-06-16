@@ -776,4 +776,12 @@ class DisplayObject extends EventDispatcher {
 			}
 		}
 	}
+
+	/**
+	 * 删除自已
+	 */
+	public function remove():Void {
+		if (this.parent != null)
+			this.parent.removeChild(this);
+	}
 }

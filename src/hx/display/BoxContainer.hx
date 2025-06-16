@@ -1,5 +1,7 @@
 package hx.display;
 
+import hx.layout.ILayout;
+
 /**
  * 容器箱子，该容器会有一个独立的box ，该box会包含所有的子元素
  */
@@ -14,12 +16,21 @@ class BoxContainer extends Box {
 		super.addChildAt(box, 0);
 	}
 
+	override function set_layout(value:ILayout):ILayout {
+		box.layout = value;
+		return super.set_layout(value);
+	}
+
 	override function get_numChildren():Int {
 		return box.get_numChildren();
 	}
 
 	private function superAddChildAt(display:DisplayObject, index:Int):Void {
 		super.addChildAt(display, index);
+	}
+
+	private function superRemoveChild(child:DisplayObject):Void {
+		super.removeChild(child);
 	}
 
 	override function addChild(child:DisplayObject) {

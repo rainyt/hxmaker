@@ -11,8 +11,12 @@ class MovieClip extends Image {
 	@:noCompletion private var __time:Float = 0;
 	@:noCompletion private var __playing:Bool = false;
 
+	/**
+	 * 重置播放时间和帧，会回到`0`帧
+	 */
 	public function reset():Void {
 		__time = 0;
+		currentFrame = 0;
 	}
 
 	/**
@@ -113,6 +117,9 @@ class MovieClip extends Image {
 
 	private var __currentFrame:Int = -1;
 
+	/**
+	 * 获得当前帧到下一帧的持续时间，单位为秒
+	 */
 	public var duration(get, never):Float;
 
 	private function get_duration():Float {
@@ -156,14 +163,24 @@ class MovieClip extends Image {
 		__time += dt;
 	}
 
+	/**
+	 * 播放动画
+	 */
 	public function play():Void {
 		this.__playing = true;
 	}
 
+	/**
+	 * 暂停动画
+	 */
 	public function pause():Void {
 		this.__playing = false;
 	}
 
+	/**
+	 * 停止到某一帧
+	 * @param frame 
+	 */
 	public function stopAt(frame:Int):Void {
 		currentFrame = frame;
 		this.pause();

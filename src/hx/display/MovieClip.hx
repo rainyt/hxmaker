@@ -73,8 +73,8 @@ class MovieClip extends Image {
 
 	/**
 	 * 根据提供的纹理和指定的默认帧速率创建电影剪辑。
-	 * @param bitmapDatas 
-	 * @param fps 
+	 * @param bitmapDatas 每帧渲染的位图数据数组
+	 * @param fps 每帧间隔的帧率，将会自动转换为`duration`值
 	 */
 	public function new(bitmapDatas:Array<BitmapData> = null, fps:Float = 12) {
 		super();
@@ -88,7 +88,8 @@ class MovieClip extends Image {
 
 	/**
 	 * 设置动画列表
-	 * @param bitmapDatas 
+	 * @param bitmapDatas 每帧渲染的位图数据数组
+	 * @param fps 每帧间隔的帧率，将会自动转换为`duration`值
 	 */
 	public function setBitmapDatas(bitmapDatas:Array<BitmapData>, fps:Float = 12):Void {
 		this.__frames = [];
@@ -100,9 +101,9 @@ class MovieClip extends Image {
 
 	/**
 	 * 添加额外的帧，可选地添加声音和自定义持续时间。
-	 * @param bitmapData 
-	 * @param duration 
-	 * @param sound 
+	 * @param bitmapData 渲染的位图数据
+	 * @param duration 该帧显示的持续时间
+	 * @param sound 播放音频
 	 */
 	public function addFrame(bitmapData:BitmapData, duration:Float = 1, sound:Sound = null):Void {
 		this.__frames.push({
@@ -179,7 +180,7 @@ class MovieClip extends Image {
 
 	/**
 	 * 停止到某一帧
-	 * @param frame 
+	 * @param frame 设置帧，由0开始计算
 	 */
 	public function stopAt(frame:Int):Void {
 		currentFrame = frame;

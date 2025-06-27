@@ -151,6 +151,28 @@ class Scroll extends BoxContainer {
 	 */
 	public var autoVisible(default, set):Bool = false;
 
+	/**
+	 * 垂直滚动条
+	 */
+	public var vScrollBar(default, set):IScrollBar;
+
+	private function set_vScrollBar(value:IScrollBar):IScrollBar {
+		this.vScrollBar = value;
+		value.scroll = this;
+		return value;
+	}
+
+	/**
+	 * 横向滚动条
+	 */
+	public var hScrollBar(default, set):IScrollBar;
+
+	private function set_hScrollBar(value:IScrollBar):IScrollBar {
+		this.hScrollBar = value;
+		value.scroll = this;
+		return value;
+	}
+
 	private function set_autoVisible(value:Bool):Bool {
 		this.autoVisible = value;
 		this.setDirty();
@@ -160,6 +182,12 @@ class Scroll extends BoxContainer {
 	override function onUpdate(dt:Float) {
 		super.onUpdate(dt);
 		if (this.autoVisible && __dirty) {
+			if (this.vScrollBar != null) {
+				this.vScrollBar.measure();
+			}
+			if (this.hScrollBar != null) {
+				this.hScrollBar.measure();
+			}
 			var maskRect = new Rectangle(0, 0, this.width, this.height);
 			var counts = 0;
 			for (i in 0...this.numChildren) {
@@ -219,6 +247,20 @@ class Scroll extends BoxContainer {
 				}));
 			}
 		}
+	}
+
+	public var contentWidth(get, never):Float;
+
+	private function get_contentWidth():Float {
+		var ret = box.__getBounds();
+		return ret.width;
+	}
+
+	public var contentHeight(get, never):Float;
+
+	private function get_contentHeight():Float {
+		var ret = box.__getBounds();
+		return ret.height;
 	}
 
 	private function getMoveingToData(data:{scrollX:Float, scrollY:Float}):{scrollX:Float, scrollY:Float} {

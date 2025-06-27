@@ -20,7 +20,7 @@ class BaseScrollBar extends Box implements IScrollBar {
 	public var backageDisplay:DisplayObject;
 
 	private var __min:Float = 0;
-	private var __max:Float = 100;
+	private var __max:Float = 1;
 	private var __value:Float = 0;
 
 	public var min(get, set):Float;

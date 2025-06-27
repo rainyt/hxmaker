@@ -75,5 +75,6 @@ class VScrollBar extends BaseScrollBar {
 		} else {
 			this.scroll.scrollY = -this.dragDisplay.y * (this.scroll.contentHeight - this.scroll.height) / (this.height - thumbHeight);
 		}
+		this.visible = thumbRation < 1;
 	}
 }

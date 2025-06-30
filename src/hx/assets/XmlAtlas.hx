@@ -18,8 +18,12 @@ class XmlAtlas extends Atlas {
 	override function parser() {
 		super.parser();
 		// 开始解析位图
-		if (__xml.firstElement().nodeType == Document) {
-			__xml = __xml.firstElement();
+		try {
+			if (__xml.firstElement().nodeType == Document) {
+				__xml = __xml.firstElement();
+			}
+		} catch (e) {
+			trace("异常", __xml);
 		}
 		__xml = __xml.firstElement();
 		var items = __xml.elements();

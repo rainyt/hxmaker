@@ -297,10 +297,12 @@ class Assets extends Future<Assets, Dynamic> {
 	 * @param future 
 	 */
 	public function pushFuture(future:Future<Dynamic, Dynamic>) {
+		future.autoPost = false;
 		if (loading)
 			throw "Assets: can't push future when loading";
-		if (hasLoading(future))
+		if (hasLoading(future)) {
 			return;
+		}
 		futures.push(future);
 		future.onComplete((data) -> {
 			onCompleted(future, data);
@@ -346,12 +348,12 @@ class Assets extends Future<Assets, Dynamic> {
 			return false;
 		}
 		trace("CURRENT_LOAD_COUNTS", CURRENT_LOAD_COUNTS);
-		trace("剩余", future.getLoadData());
+		// trace("剩余", future.getLoadData());
 		if (CURRENT_LOAD_COUNTS < MAX_ASSETS_LOAD_COUNTS) {
 			CURRENT_LOAD_COUNTS++;
 			trace("开始加载：", future.getLoadData());
-			future.post();
 			__loadIndex++;
+			future.post();
 			loadNext();
 			return true;
 		}
@@ -438,7 +440,7 @@ class Assets extends Future<Assets, Dynamic> {
 		} else {
 			objects.set(formatName(future.getLoadData()), data);
 		}
-		trace("Assets: loaded ", loadedCounts, totalCounts, __loadIndex);
+		trace("Assets: loaded ", future.path, loadedCounts, totalCounts, __loadIndex);
 		if (loadedCounts == totalCounts) {
 			this.completeValue(this);
 			__assets.remove(this);

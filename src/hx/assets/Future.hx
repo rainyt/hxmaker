@@ -14,10 +14,15 @@ class Future<T, DATA> {
 	public var isError(default, null):Bool;
 	public var value(default, null):T;
 
+	public var autoPost:Bool = true;
+
 	public function new(data:DATA, autoPost:Bool = true) {
 		__data = data;
-		if (autoPost)
-			Timer.delay(post, 16);
+		this.autoPost = autoPost;
+		Timer.delay(() -> {
+			if (this.autoPost)
+				post();
+		}, 16);
 	}
 
 	/**

@@ -19,6 +19,16 @@ class Event {
 	public inline static var REMOVED_FROM_STAGE:String = "removedFromStage";
 
 	/**
+	 * 删除事件
+	 */
+	public inline static var REMOVED:String = "removed";
+
+	/**
+	 * 添加事件
+	 */
+	public inline static var ADDED:String = "added";
+
+	/**
 	 * 
 	 */
 	public inline static var ACTIVATE:String = "activete";
@@ -57,9 +67,10 @@ class Event {
 	 * @param cannel 是否可以取消
 	 * @param bubbling 是否冒泡
 	 */
-	public function new(type:String, cannel:Bool = false, bubbling:Bool = false) {
+	public function new(type:String, cannel:Bool = false, bubbling:Bool = false, ?data:Dynamic) {
 		this.type = type;
 		this.cannel = cannel;
 		this.bubbling = bubbling;
+		this.data = data;
 	}
 }

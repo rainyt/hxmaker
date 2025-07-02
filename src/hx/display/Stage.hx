@@ -134,9 +134,10 @@ class Stage extends Box {
 	 */
 	public function handleKeyboardEvent(event:KeyboardEvent):Void {
 		event.target = this;
-		this.dispatchEvent(event);
-		if (focus != null) {
+		if (focus != null && focus.stage == this) {
 			focus.dispatchEvent(event);
+		} else {
+			this.dispatchEvent(event);
 		}
 	}
 

@@ -80,6 +80,18 @@ class Stage extends Box {
 				}
 			}
 			var display:DisplayObject = touchList[touchList.length - 1];
+
+			if (event.type == MouseEvent.CLICK) {
+				// 如果是一样的，则无需处理新的回调
+				if (focus != display) {
+					if (focus != null) {
+						focus.dispatchEvent(new Event(Event.FOCUS_OUT, false, true));
+					}
+					focus = display;
+					focus.dispatchEvent(new Event(Event.FOCUS_OVER, false, true));
+				}
+			}
+
 			var i = touchList.length;
 			while (i-- > 0) {
 				var object = touchList[i];
@@ -129,13 +141,10 @@ class Stage extends Box {
 	}
 
 	override function dispatchEvent(event:Event) {
-		super.dispatchEvent(event);
 		if (event.type == Event.RESIZE) {
 			this.updateLayout();
-		} else if (event.type == MouseEvent.CLICK) {
-			if (!(event.target is Stage))
-				focus = event.target;
 		}
+		super.dispatchEvent(event);
 	}
 
 	override function get_width():Float {

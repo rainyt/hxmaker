@@ -49,6 +49,16 @@ class Event {
 	public inline static var CHANGE:String = "change";
 
 	/**
+	 * 成为焦点
+	 */
+	public inline static var FOCUS_OVER:String = "focusOver";
+
+	/**
+	 * 失去焦点
+	 */
+	public inline static var FOCUS_OUT:String = "focusOut";
+
+	/**
 	 * 数据
 	 */
 	public var data:Dynamic;

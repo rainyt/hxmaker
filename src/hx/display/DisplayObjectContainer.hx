@@ -1,5 +1,6 @@
 package hx.display;
 
+import hx.gemo.Point;
 import hx.events.Event;
 import hx.ui.UIManager;
 import hx.layout.ILayout;
@@ -356,5 +357,21 @@ class DisplayObjectContainer extends DisplayObject {
 		for (child in this.__children) {
 			child.dispose();
 		}
+	}
+
+	public var mouseX(get, never):Float;
+
+	private function get_mouseX():Float {
+		if (stage != null)
+			return this.globalToLocal(new Point(stage.__stageX, 0)).x;
+		return 0;
+	}
+
+	public var mouseY(get, never):Float;
+
+	private function get_mouseY():Float {
+		if (stage != null)
+			return this.globalToLocal(new Point(0, stage.__stageY)).y;
+		return 0;
 	}
 }

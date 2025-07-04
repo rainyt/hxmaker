@@ -1,5 +1,7 @@
 package hx.display;
 
+import hx.utils.KeyboardTools;
+import hx.events.Keyboard;
 import hx.events.MouseEvent;
 import hx.utils.SoundManager;
 import hx.events.Event;
@@ -66,6 +68,10 @@ class Stage extends Box {
 
 	private static var __overDisplayObject:DisplayObject;
 
+	private var __stageX:Float = 0;
+
+	private var __stageY:Float = 0;
+
 	/**
 	 * 触发鼠标事件
 	 * @param event 
@@ -90,6 +96,9 @@ class Stage extends Box {
 					focus = display;
 					focus.dispatchEvent(new Event(Event.FOCUS_OVER, false, true));
 				}
+			} else if (event.type == MouseEvent.MOUSE_MOVE) {
+				__stageX = event.stageX;
+				__stageY = event.stageY;
 			}
 
 			var i = touchList.length;
@@ -134,6 +143,11 @@ class Stage extends Box {
 	 */
 	public function handleKeyboardEvent(event:KeyboardEvent):Void {
 		event.target = this;
+		if (event.type == KeyboardEvent.KEY_DOWN) {
+			@:privateAccess KeyboardTools.onKeyDown(event.keyCode);
+		} else {
+			@:privateAccess KeyboardTools.onKeyUp(event.keyCode);
+		}
 		if (focus != null && focus.stage == this) {
 			focus.dispatchEvent(event);
 		} else {

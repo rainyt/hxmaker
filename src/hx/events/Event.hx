@@ -1,5 +1,7 @@
 package hx.events;
 
+import hx.utils.KeyboardTools;
+
 /**
  * 事件
  */
@@ -82,5 +84,14 @@ class Event {
 		this.cannel = cannel;
 		this.bubbling = bubbling;
 		this.data = data;
+	}
+
+	/**
+	 * 是否按下ctrl或command键
+	 */
+	public var isCtrlOrCommand(get, never):Bool;
+
+	private function get_isCtrlOrCommand():Bool {
+		return KeyboardTools.isKeyDown(Keyboard.CONTROL) || KeyboardTools.isKeyDown(Keyboard.COMMAND);
 	}
 }

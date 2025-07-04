@@ -14,4 +14,8 @@ class KeyboardTools {
 	public static function isKeyDown(key:Int):Bool {
 		return __keys.get(key);
 	}
+
+	public static function reset():Void {
+		__keys = [];
+	}
 }

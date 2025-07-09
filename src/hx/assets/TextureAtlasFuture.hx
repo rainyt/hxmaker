@@ -6,7 +6,6 @@ class TextureAtlasFuture extends Future<XmlAtlas, TextureAtlasFutureLoadData> {
 	override function post() {
 		super.post();
 		var data:TextureAtlasFutureLoadData = getLoadData();
-		trace("加载纹理", data);
 		new BitmapDataFuture(data.png).onComplete((bitmapData) -> {
 			new StringFuture(data.xml).onComplete(xmlString -> {
 				var xml = Xml.parse(xmlString);

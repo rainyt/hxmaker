@@ -1,5 +1,6 @@
 package hx.display;
 
+import haxe.Timer;
 import hx.utils.KeyboardTools;
 import hx.events.Keyboard;
 import hx.events.MouseEvent;
@@ -72,6 +73,8 @@ class Stage extends Box {
 
 	private var __stageY:Float = 0;
 
+	private var __lastClickTime:Float = 0;
+
 	/**
 	 * 触发鼠标事件
 	 * @param event 
@@ -95,6 +98,15 @@ class Stage extends Box {
 					}
 					focus = display;
 					focus.dispatchEvent(new Event(Event.FOCUS_OVER, false, true));
+				} else {
+					// 判断上一次的点击时间
+					if (Timer.stamp() - __lastClickTime < 0.3) {
+						var event = new MouseEvent(MouseEvent.DOUBLE_CLICK, false, true);
+						event.target = focus;
+						focus.dispatchEvent(event);
+						__lastClickTime = 0;
+					} else
+						__lastClickTime = Timer.stamp();
 				}
 			} else if (event.type == MouseEvent.MOUSE_MOVE) {
 				__stageX = event.stageX;

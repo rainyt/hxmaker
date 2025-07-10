@@ -10,6 +10,11 @@ class MouseEvent extends Event {
 	public inline static var CLICK:String = "click";
 
 	/**
+	 * 鼠标双击事件
+	 */
+	public inline static var DOUBLE_CLICK:String = "doubleClick";
+
+	/**
 	 * 鼠标按下事件
 	 */
 	public inline static var MOUSE_DOWN:String = "mouseDown";

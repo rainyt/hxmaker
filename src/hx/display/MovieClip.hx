@@ -9,6 +9,7 @@ import hx.events.Event;
 @:keep
 class MovieClip extends Image {
 	@:noCompletion private var __time:Float = 0;
+	@:noCompletion private var __durationTime:Float = 0;
 	@:noCompletion private var __playing:Bool = false;
 
 	/**
@@ -16,6 +17,7 @@ class MovieClip extends Image {
 	 */
 	public function reset():Void {
 		__time = 0;
+		__durationTime = 0;
 		currentFrame = 0;
 	}
 
@@ -45,6 +47,19 @@ class MovieClip extends Image {
 
 	private function get_totalFrame():Int {
 		return __frames.length;
+	}
+
+	/**
+	 * 获取总时间
+	 */
+	public var totalTime(get, never):Float;
+
+	private function get_totalTime():Float {
+		var time:Float = 0;
+		for (frame in __frames) {
+			time += frame.duration;
+		}
+		return time;
 	}
 
 	/**
@@ -116,7 +131,7 @@ class MovieClip extends Image {
 		}
 	}
 
-	private var __currentFrame:Int = -1;
+	private var __currentFrame:Int = 0;
 
 	/**
 	 * 获得当前帧到下一帧的持续时间，单位为秒
@@ -137,16 +152,15 @@ class MovieClip extends Image {
 			return;
 		super.onUpdate(dt);
 		if (currentFrame >= __frames.length) {
-			currentFrame = 0;
-			__time = 0;
+			reset();
 		}
 		var currentData = __frames[currentFrame];
 		if (currentData == null) {
 			return;
 		}
-		if (__time >= currentData.duration) {
+		while (currentData != null && __time > __durationTime + currentData.duration) {
+			__durationTime += currentData.duration;
 			currentFrame++;
-			__time -= currentData.duration;
 			if (currentFrame >= __frames.length) {
 				// 播放完成事件
 				if (this.hasEventListener(Event.COMPLETE))

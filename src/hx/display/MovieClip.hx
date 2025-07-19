@@ -30,7 +30,8 @@ class MovieClip extends Image {
 	private var __frames:Array<{
 		bitmapData:BitmapData,
 		duration:Float,
-		sound:Sound
+		sound:Sound,
+		data:Dynamic
 	}> = [];
 
 	/**
@@ -87,6 +88,15 @@ class MovieClip extends Image {
 	}
 
 	/**
+	 * 获得当前帧的自定义数据，可能为`null`
+	 */
+	public var currentCustomData(get, never):Dynamic;
+
+	private function get_currentCustomData():Dynamic {
+		return __frames[currentFrame]?.data;
+	}
+
+	/**
 	 * 根据提供的纹理和指定的默认帧速率创建电影剪辑。
 	 * @param bitmapDatas 每帧渲染的位图数据数组
 	 * @param fps 每帧间隔的帧率，将会自动转换为`duration`值
@@ -119,12 +129,14 @@ class MovieClip extends Image {
 	 * @param bitmapData 渲染的位图数据
 	 * @param duration 该帧显示的持续时间
 	 * @param sound 播放音频
+	 * @param customData 可选的自定义数据
 	 */
-	public function addFrame(bitmapData:BitmapData, duration:Float = 1, sound:Sound = null):Void {
+	public function addFrame(bitmapData:BitmapData, duration:Float = 1, sound:Sound = null, ?customData:Dynamic):Void {
 		this.__frames.push({
 			bitmapData: bitmapData,
 			duration: duration,
-			sound: sound
+			sound: sound,
+			data: customData
 		});
 		if (data == null) {
 			this.currentFrame = 0;

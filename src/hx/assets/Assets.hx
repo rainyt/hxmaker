@@ -497,6 +497,24 @@ class Assets extends Future<Assets, Dynamic> {
 	}
 
 	/**
+	 * 获得音频
+	 * @param name 
+	 * @return Sound
+	 */
+	public function getSound(name:String):Sound {
+		var sound = sounds.get(name);
+		if (sound == null) {
+			for (assets in uiAssetses) {
+				sound = assets.getSound(name);
+				if (sound != null) {
+					return sound;
+				}
+			}
+		}
+		return sound;
+	}
+
+	/**
 	 * 获得位图数据，精灵图可以通过`精灵图:精灵名称`处理
 	 * @param name 
 	 * @return BitmapData

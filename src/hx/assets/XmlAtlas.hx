@@ -25,8 +25,7 @@ class XmlAtlas extends Atlas {
 		} catch (e) {
 			trace("异常", __xml);
 		}
-		__xml = __xml.firstElement();
-		var items = __xml.elements();
+		var items = __xml.firstElement().elements();
 		while (items.hasNext()) {
 			var item = items.next();
 			var name = item.get("name");

@@ -1,5 +1,7 @@
 package hx.assets;
 
+import hx.events.FutureErrorEvent;
+import haxe.Exception;
 import hx.assets.XmlAtlas;
 
 class TextureAtlasFuture extends Future<XmlAtlas, TextureAtlasFutureLoadData> {
@@ -8,9 +10,13 @@ class TextureAtlasFuture extends Future<XmlAtlas, TextureAtlasFutureLoadData> {
 		var data:TextureAtlasFutureLoadData = getLoadData();
 		new BitmapDataFuture(data.png).onComplete((bitmapData) -> {
 			new StringFuture(data.xml).onComplete(xmlString -> {
-				var xml = Xml.parse(xmlString);
-				var xmlAtlas = new XmlAtlas(bitmapData, xml);
-				completeValue(xmlAtlas);
+				try {
+					var xml = Xml.parse(xmlString);
+					var xmlAtlas = new XmlAtlas(bitmapData, xml);
+					completeValue(xmlAtlas);
+				} catch (e:Exception) {
+					this.errorValue(FutureErrorEvent.create(FutureErrorEvent.LOAD_ERROR, -1, "xml file " + this.path + " parse error:" + xmlString));
+				}
 			}).onError(this.errorValue);
 		}).onError(this.errorValue);
 	}

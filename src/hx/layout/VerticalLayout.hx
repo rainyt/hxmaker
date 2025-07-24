@@ -13,7 +13,8 @@ class VerticalLayout extends Layout {
 		var offestY:Float = 0;
 		var width:Float = parent.width;
 		for (object in children) {
-			object.width = width;
+			if (@:privateAccess parent.__width != null)
+				object.width = width;
 			object.y = offestY;
 			offestY += object.height + gap;
 		}

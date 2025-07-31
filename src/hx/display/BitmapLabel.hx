@@ -1,5 +1,6 @@
 package hx.display;
 
+import hx.assets.FntAtlas;
 import hx.assets.Atlas;
 
 /**
@@ -45,16 +46,30 @@ class BitmapLabel extends Box implements IDataProider<String> {
 				var chars = __text.split("");
 				var offestX = 0.;
 				var offestY = 0.;
+				var charFnt:FntChar = null;
 				__textWidth = 0;
 				__textHeight = 0;
+				var fntAtlas:FntAtlas = (atlas is FntAtlas) ? cast atlas : null;
 				for (i in 0...chars.length) {
 					var c = chars[i];
+					charFnt = null;
 					var img = new Image(atlas.bitmapDatas.get(fontName + c));
 					this.addChild(img);
-					img.x = offestX;
-					img.y = offestY;
+					if (fntAtlas != null) {
+						charFnt = fntAtlas.chars.get(c);
+					}
+					if (charFnt != null) {
+						img.x = offestX + charFnt.xoffset;
+						img.y = offestY + charFnt.yoffset;
+					} else {
+						img.x = offestX;
+						img.y = offestY;
+					}
 					if (img.data != null) {
-						offestX += (img.width + space);
+						if (charFnt != null)
+							offestX += charFnt.xadvance;
+						else
+							offestX += (img.width + space);
 						if (warpWord && w != null && offestX > w) {
 							offestX = 0.;
 							offestY += img.height;

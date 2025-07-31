@@ -214,6 +214,21 @@ class Assets extends Future<Assets, Dynamic> {
 	}
 
 	/**
+	 * 加载纹理字体资源，XML格式
+	 * @param png 
+	 * @param xml 
+	 */
+	public function loadFnt(png:String, xml:String) {
+		var path = getNativePath(png);
+		xml = getNativePath(xml);
+		pushFuture(new hx.assets.FntFuture({
+			png: png,
+			xml: xml,
+			path: path
+		}, false));
+	}
+
+	/**
 	 * 加载图集资源
 	 * @param path 
 	 * @param xml 
@@ -457,8 +472,10 @@ class Assets extends Future<Assets, Dynamic> {
 	 */
 	private function __onError(error:Dynamic):Void {
 		CURRENT_LOAD_COUNTS--;
-		trace(error);
-		this.errorValue(FutureErrorEvent.create(FutureErrorEvent.LOAD_ERROR, -1, "Load fail."));
+		if (error is FutureErrorEvent)
+			this.errorValue(error);
+		else
+			this.errorValue(FutureErrorEvent.create(FutureErrorEvent.LOAD_ERROR, -1, "Load fail:" + error));
 	}
 
 	/**

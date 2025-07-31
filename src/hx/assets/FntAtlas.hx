@@ -27,7 +27,6 @@ class FntAtlas extends Atlas {
 			var item = items.next();
 			if (item.nodeName == "chars") {
 				for (char in item.elements()) {
-					trace(char.toString());
 					var id:Int = Std.parseInt(char.get("id"));
 					var posx:Float = Std.parseFloat(char.get("x"));
 					var posy:Float = Std.parseFloat(char.get("y"));

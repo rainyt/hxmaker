@@ -164,7 +164,11 @@ class MovieClip extends Image {
 			return;
 		super.onUpdate(dt);
 		if (currentFrame >= __frames.length) {
-			reset();
+			if (loop > 0)
+				loop--;
+			if (loop == -1 || loop > 0) {
+				reset();
+			}
 		}
 		var currentData = __frames[currentFrame];
 		if (currentData == null) {
@@ -190,11 +194,15 @@ class MovieClip extends Image {
 		__time += dt;
 	}
 
+	public var loop:Int = -1;
+
 	/**
 	 * 播放动画
+	 * @param loop 循环播放次数，-1为无限循环
 	 */
-	public function play():Void {
+	public function play(loop:Int = -1):Void {
 		this.__playing = true;
+		this.loop = loop;
 	}
 
 	/**

@@ -94,4 +94,11 @@ class Event {
 	private function get_isCtrlOrCommand():Bool {
 		return KeyboardTools.isKeyDown(Keyboard.CONTROL) || KeyboardTools.isKeyDown(Keyboard.COMMAND);
 	}
+
+	/**
+	 * 阻止默认行为
+	 */
+	public function preventDefault():Void {
+		this.cannel = true;
+	}
 }

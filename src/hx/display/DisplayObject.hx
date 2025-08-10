@@ -769,6 +769,9 @@ class DisplayObject extends EventDispatcher {
 	}
 
 	override function dispatchEvent(event:Event) {
+		if (event.target == null) {
+			event.target = this;
+		}
 		super.dispatchEvent(event);
 		if (event.bubbling) {
 			if (this.parent != null) {

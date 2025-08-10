@@ -145,6 +145,8 @@ class MovieClip extends Image {
 
 	private var __currentFrame:Int = 0;
 
+	private var __frameDirt = false;
+
 	/**
 	 * 获得当前帧到下一帧的持续时间，单位为秒
 	 */
@@ -187,9 +189,11 @@ class MovieClip extends Image {
 				this.dispatchEvent(new Event(Event.CHANGE));
 			// 音效播放支持
 			currentData = __frames[currentFrame];
-			if (enableSound && currentData != null && currentData.sound != null) {
-				currentData.sound.root.play();
-			}
+			__frameDirt = true;
+		}
+		if (enableSound && currentData != null && __frameDirt && currentData.sound != null) {
+			currentData.sound.root.play();
+			__frameDirt = false;
 		}
 		__time += dt;
 	}
@@ -203,6 +207,7 @@ class MovieClip extends Image {
 	public function play(loop:Int = -1):Void {
 		this.__playing = true;
 		this.loop = loop;
+		__frameDirt = true;
 	}
 
 	/**
@@ -218,6 +223,7 @@ class MovieClip extends Image {
 	 */
 	public function stopAt(frame:Int):Void {
 		currentFrame = frame;
+		__frameDirt = true;
 		this.pause();
 	}
 }

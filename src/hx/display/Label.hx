@@ -11,6 +11,11 @@ import hx.providers.IRootDataProvider;
  */
 @:keep
 class Label extends DisplayObject implements IDataProider<String> implements IRootDataProvider<ITextFieldDataProvider> {
+	/**
+	 * 全局文本过滤实现
+	 */
+	public static var onGlobalCharFilter:String->String;
+
 	@:noCompletion private var __data:String;
 	@:noCompletion private var __textFormat:TextFormat = new TextFormat();
 

@@ -76,6 +76,7 @@ class InputLabel extends Box implements IDataProider<String> {
 
 	override function onInit() {
 		super.onInit();
+		this.label.charFilterEnabled = false;
 		this.updateEnabled = true;
 		this.addEventListener(MouseEvent.CLICK, onClick);
 		this.layout = new AnchorLayout();

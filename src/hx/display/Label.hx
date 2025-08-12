@@ -16,6 +16,11 @@ class Label extends DisplayObject implements IDataProider<String> implements IRo
 	 */
 	public static var onGlobalCharFilter:String->String;
 
+	/**
+	 * 是否启用全局文本过滤
+	 */
+	public var charFilterEnabled:Bool = true;
+
 	@:noCompletion private var __data:String;
 	@:noCompletion private var __textFormat:TextFormat = new TextFormat();
 
@@ -57,6 +62,25 @@ class Label extends DisplayObject implements IDataProider<String> implements IRo
 	 * 文本格式
 	 */
 	public var textFormat(get, set):TextFormat;
+
+	/**
+	 * 是否自动换行，默认为`true`
+	 */
+	public var wordWrap(get, set):Bool;
+
+	private var __wordWrap:Bool = true;
+
+	private function set_wordWrap(value:Bool):Bool {
+		if (__wordWrap != value) {
+			__wordWrap = value;
+			this.setDirty();
+		}
+		return __wordWrap;
+	}
+
+	private function get_wordWrap():Bool {
+		return __wordWrap;
+	}
 
 	private function get_textFormat():TextFormat {
 		return __textFormat.clone();

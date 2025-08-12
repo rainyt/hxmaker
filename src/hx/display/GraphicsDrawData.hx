@@ -1,6 +1,6 @@
 package hx.display;
 
-import hx.gemo.ColorTransform;
+import hx.geom.ColorTransform;
 import hx.display.BitmapData;
 
 /**

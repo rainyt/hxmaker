@@ -1,11 +1,11 @@
 package hx.display;
 
-import hx.gemo.Point;
+import hx.geom.Point;
 import hx.events.Event;
 import hx.ui.UIManager;
 import hx.layout.ILayout;
-import hx.gemo.Matrix;
-import hx.gemo.Rectangle;
+import hx.geom.Matrix;
+import hx.geom.Rectangle;
 
 /**
  * 可装载子对象的容器

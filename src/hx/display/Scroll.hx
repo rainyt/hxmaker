@@ -4,7 +4,7 @@ import motion.Actuate;
 import hx.layout.AnchorLayoutData;
 import hx.layout.AnchorLayout;
 import hx.events.MouseEvent;
-import hx.gemo.Rectangle;
+import hx.geom.Rectangle;
 
 /**
  * 滚动遮罩支持的容器

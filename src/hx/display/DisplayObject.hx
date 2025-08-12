@@ -1,12 +1,13 @@
 package hx.display;
 
-import hx.gemo.Point;
+import hx.geom.Matrix3D;
+import hx.geom.Point;
 import hx.core.Hxmaker;
 import hx.layout.LayoutData;
 import hx.layout.ILayout;
-import hx.gemo.ColorTransform;
-import hx.gemo.Matrix;
-import hx.gemo.Rectangle;
+import hx.geom.ColorTransform;
+import hx.geom.Matrix;
+import hx.geom.Rectangle;
 import hx.events.Event;
 
 using hx.utils.MathUtils;
@@ -15,7 +16,7 @@ using hx.utils.MathUtils;
  * 唯一统一的渲染对象
  */
 @:keep
-@:access(hx.gemo.Matrix)
+@:access(hx.geom.Matrix)
 class DisplayObject extends EventDispatcher {
 	@:noCompletion private var __scaleX:Float = 1;
 	@:noCompletion private var __scaleY:Float = 1;
@@ -34,6 +35,8 @@ class DisplayObject extends EventDispatcher {
 	@:noCompletion private var __height:Null<Float> = null;
 	@:noCompletion private var __transform:Matrix;
 	@:noCompletion private var __worldTransform:Matrix;
+	@:noCompletion private var __transformMatrix3D:Matrix3D;
+	@:noCompletion private var __worldTransformMatrix3D:Matrix3D;
 	@:noCompletion private var __rect:Rectangle;
 	@:noCompletion private var __stageInit:Bool = false;
 	@:noCompletion private var __mouseEnabled:Bool = true;
@@ -190,6 +193,20 @@ class DisplayObject extends EventDispatcher {
 		__colorTransform.setTo(value);
 		__colorTransformDirty = true;
 		return value;
+	}
+
+	/**
+	 * 设置3D矩阵
+	 */
+	public var transformMatrix3D(get, set):hx.geom.Matrix3D;
+
+	private function set_transformMatrix3D(value:hx.geom.Matrix3D):hx.geom.Matrix3D {
+		this.__transformMatrix3D = value;
+		return value;
+	}
+
+	private function get_transformMatrix3D():hx.geom.Matrix3D {
+		return this.__transformMatrix3D;
 	}
 
 	/**

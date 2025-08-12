@@ -1,6 +1,6 @@
 package hx.display;
 
-import hx.gemo.Rectangle;
+import hx.geom.Rectangle;
 import hx.providers.IRootDataProvider;
 
 /**

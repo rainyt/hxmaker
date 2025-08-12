@@ -15,7 +15,7 @@ import spine.animation.AnimationStateData;
 import spine.animation.AnimationState;
 #end
 import hx.utils.ObjectPool;
-import hx.gemo.ColorTransform;
+import hx.geom.ColorTransform;
 import hx.events.Event;
 import spine.attachments.MeshAttachment;
 import spine.attachments.RegionAttachment;

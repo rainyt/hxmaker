@@ -1,8 +1,8 @@
 package hx.display;
 
-import hx.gemo.Rectangle;
+import hx.geom.Rectangle;
 import hx.utils.ColorUtils;
-import hx.gemo.ColorTransform;
+import hx.geom.ColorTransform;
 
 /**
  * 渲染图形，用于渲染网格三角形使用

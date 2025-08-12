@@ -1,6 +1,6 @@
 package hx.assets;
 
-import hx.gemo.Rectangle;
+import hx.geom.Rectangle;
 import hx.display.BitmapData;
 
 /**

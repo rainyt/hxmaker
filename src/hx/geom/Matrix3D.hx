@@ -1,7 +1,5 @@
 package hx.geom;
 
-import openfl.Vector;
-
 /**
 	The Matrix3D class represents a transformation matrix that determines the position and
 	orientation of a three-dimensional (3D) display object. The matrix can perform
@@ -50,8 +48,7 @@ import openfl.Vector;
 @:fileXml('tags="haxe,release"')
 @:noDebug
 #end
-class Matrix3D
-{
+class Matrix3D {
 	/**
 		A Number that determines whether a matrix is invertible.
 
@@ -83,11 +80,10 @@ class Matrix3D
 		invertible. The Matrix3D object must be invertible. If a non-invertible matrix is
 		needed, create a subclass of the Matrix3D object.
 	**/
-	public var rawData:Vector<Float>;
+	public var rawData:Array<Float>;
 
 	#if openfljs
-	@:noCompletion private static function __init__()
-	{
+	@:noCompletion private static function __init__() {
 		untyped Object.defineProperties(Matrix3D.prototype, {
 			"determinant": {
 				get: untyped #if haxe4 js.Syntax.code #else __js__ #end ("function () { return this.get_determinant (); }"),
@@ -101,15 +97,11 @@ class Matrix3D
 	}
 	#end
 
-	public function new(v:Vector<Float> = null)
-	{
-		if (v != null && v.length == 16)
-		{
-			rawData = v.concat();
-		}
-		else
-		{
-			rawData = new Vector<Float>([1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0]);
+	public function new(v:Array<Float> = null) {
+		if (v != null && v.length == 16) {
+			rawData = v.copy();
+		} else {
+			rawData = [1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0];
 		}
 	}
 
@@ -120,8 +112,7 @@ class Matrix3D
 		invertible. The Matrix3D object must be invertible. If a non-invertible matrix is
 		needed, create a subclass of the Matrix3D object.
 	**/
-	public function append(lhs:Matrix3D):Void
-	{
+	public function append(lhs:Matrix3D):Void {
 		var m111:Float = this.rawData[0],
 			m121:Float = this.rawData[4],
 			m131:Float = this.rawData[8],
@@ -227,13 +218,11 @@ class Matrix3D
 		@param	pivotPoint	A point that determines the center of an object's rotation.
 		The default pivot point for an object is its registration point.
 	**/
-	public function appendRotation(degrees:Float, axis:Vector3D, pivotPoint:Vector3D = null):Void
-	{
+	public function appendRotation(degrees:Float, axis:Vector3D, pivotPoint:Vector3D = null):Void {
 		var tx:Float, ty:Float, tz:Float;
 		tx = ty = tz = 0;
 
-		if (pivotPoint != null)
-		{
+		if (pivotPoint != null) {
 			tx = pivotPoint.x;
 			ty = pivotPoint.y;
 			tz = pivotPoint.z;
@@ -248,8 +237,7 @@ class Matrix3D
 		var y2 = y * y;
 		var z2 = z * z;
 		var ls = x2 + y2 + z2;
-		if (ls != 0)
-		{
+		if (ls != 0) {
 			var l = Math.sqrt(ls);
 			x /= l;
 			y /= l;
@@ -303,11 +291,10 @@ class Matrix3D
 		@param	yScale	A multiplier used to scale the object along the y axis.
 		@param	zScale	A multiplier used to scale the object along the z axis.
 	**/
-	public function appendScale(xScale:Float, yScale:Float, zScale:Float):Void
-	{
-		this.append(new Matrix3D(new Vector<Float>([
+	public function appendScale(xScale:Float, yScale:Float, zScale:Float):Void {
+		this.append(new Matrix3D([
 			xScale, 0.0, 0.0, 0.0, 0.0, yScale, 0.0, 0.0, 0.0, 0.0, zScale, 0.0, 0.0, 0.0, 0.0, 1.0
-		])));
+		]));
 	}
 
 	/**
@@ -333,8 +320,7 @@ class Matrix3D
 		@param	y	An incremental translation along the y axis.
 		@param	z	An incremental translation along the z axis.
 	**/
-	public function appendTranslation(x:Float, y:Float, z:Float):Void
-	{
+	public function appendTranslation(x:Float, y:Float, z:Float):Void {
 		rawData[12] += x;
 		rawData[13] += y;
 		rawData[14] += z;
@@ -346,8 +332,7 @@ class Matrix3D
 		@returns	A new Matrix3D object that is an exact copy of the current Matrix3D
 		object.
 	**/
-	public function clone():Matrix3D
-	{
+	public function clone():Matrix3D {
 		return new Matrix3D(this.rawData.copy());
 	}
 
@@ -357,10 +342,8 @@ class Matrix3D
 		@param	column	The destination column of the copy.
 		@param	vector3D	The Vector3D object from which to copy the data.
 	**/
-	public function copyColumnFrom(column:Int, vector3D:Vector3D):Void
-	{
-		switch (column)
-		{
+	public function copyColumnFrom(column:Int, vector3D:Vector3D):Void {
+		switch (column) {
 			case 0:
 				rawData[0] = vector3D.x;
 				rawData[1] = vector3D.y;
@@ -395,10 +378,8 @@ class Matrix3D
 		@param	column	The column from which to copy the data.
 		@param	vector3D	The destination Vector3D object of the copy.
 	**/
-	public function copyColumnTo(column:Int, vector3D:Vector3D):Void
-	{
-		switch (column)
-		{
+	public function copyColumnTo(column:Int, vector3D:Vector3D):Void {
+		switch (column) {
 			case 0:
 				vector3D.x = rawData[0];
 				vector3D.y = rawData[1];
@@ -433,8 +414,7 @@ class Matrix3D
 
 		@param	sourceMatrix3D	The Matrix3D object from which to copy the data.
 	**/
-	public function copyFrom(other:Matrix3D):Void
-	{
+	public function copyFrom(other:Matrix3D):Void {
 		rawData = other.rawData.copy();
 	}
 
@@ -447,22 +427,18 @@ class Matrix3D
 		@param	index
 		@param	transpose
 	**/
-	public function copyRawDataFrom(vector:Vector<Float>, index:UInt = 0, transpose:Bool = false):Void
-	{
-		if (transpose)
-		{
+	public function copyRawDataFrom(vector:Array<Float>, index:UInt = 0, transpose:Bool = false):Void {
+		if (transpose) {
 			this.transpose();
 		}
 
 		var length = vector.length - index;
 
-		for (i in 0...length)
-		{
+		for (i in 0...length) {
 			rawData[i] = vector[i + index];
 		}
 
-		if (transpose)
-		{
+		if (transpose) {
 			this.transpose();
 		}
 	}
@@ -476,20 +452,16 @@ class Matrix3D
 		@param	index
 		@param	transpose
 	**/
-	public function copyRawDataTo(vector:Vector<Float>, index:UInt = 0, transpose:Bool = false):Void
-	{
-		if (transpose)
-		{
+	public function copyRawDataTo(vector:Array<Float>, index:UInt = 0, transpose:Bool = false):Void {
+		if (transpose) {
 			this.transpose();
 		}
 
-		for (i in 0...rawData.length)
-		{
+		for (i in 0...rawData.length) {
 			vector[i + index] = rawData[i];
 		}
 
-		if (transpose)
-		{
+		if (transpose) {
 			this.transpose();
 		}
 	}
@@ -500,10 +472,8 @@ class Matrix3D
 		@param	row	The row from which to copy the data to.
 		@param	vector3D	The Vector3D object from which to copy the data.
 	**/
-	public function copyRowFrom(row:UInt, vector3D:Vector3D):Void
-	{
-		switch (row)
-		{
+	public function copyRowFrom(row:UInt, vector3D:Vector3D):Void {
+		switch (row) {
 			case 0:
 				rawData[0] = vector3D.x;
 				rawData[4] = vector3D.y;
@@ -538,10 +508,8 @@ class Matrix3D
 		@param	row	The row from which to copy the data from.
 		@param	vector3D	The Vector3D object to copy the data into.
 	**/
-	public function copyRowTo(row:Int, vector3D:Vector3D):Void
-	{
-		switch (row)
-		{
+	public function copyRowTo(row:Int, vector3D:Vector3D):Void {
+		switch (row) {
 			case 0:
 				vector3D.x = rawData[0];
 				vector3D.y = rawData[4];
@@ -573,37 +541,48 @@ class Matrix3D
 	/**
 		@param	other
 	**/
-	public function copyToMatrix3D(other:Matrix3D):Void
-	{
+	public function copyToMatrix3D(other:Matrix3D):Void {
 		other.rawData = rawData.copy();
 	}
 
 	@SuppressWarnings("checkstyle:FieldDocComment")
-	@:dox(hide) @:noCompletion public static function create2D(x:Float, y:Float, scale:Float = 1, rotation:Float = 0):Matrix3D
-	{
+	@:dox(hide) @:noCompletion public static function create2D(x:Float, y:Float, scale:Float = 1, rotation:Float = 0):Matrix3D {
 		var theta = rotation * Math.PI / 180.0;
 		var c = Math.cos(theta);
 		var s = Math.sin(theta);
 
-		return new Matrix3D(new Vector<Float>([c * scale, -s * scale, 0, 0, s * scale, c * scale, 0, 0, 0, 0, 1, 0, x, y, 0, 1]));
+		return new Matrix3D([c * scale, -s * scale, 0, 0, s * scale, c * scale, 0, 0, 0, 0, 1, 0, x, y, 0, 1]);
 	}
 
 	@SuppressWarnings("checkstyle:FieldDocComment")
-	@:dox(hide) @:noCompletion public static function createABCD(a:Float, b:Float, c:Float, d:Float, tx:Float, ty:Float):Matrix3D
-	{
-		return new Matrix3D(new Vector<Float>([a, b, 0, 0, c, d, 0, 0, 0, 0, 1, 0, tx, ty, 0, 1]));
+	@:dox(hide) @:noCompletion public static function createABCD(a:Float, b:Float, c:Float, d:Float, tx:Float, ty:Float):Matrix3D {
+		return new Matrix3D([a, b, 0, 0, c, d, 0, 0, 0, 0, 1, 0, tx, ty, 0, 1]);
 	}
 
 	@SuppressWarnings("checkstyle:FieldDocComment")
-	@:dox(hide) @:noCompletion public static function createOrtho(x0:Float, x1:Float, y0:Float, y1:Float, zNear:Float, zFar:Float):Matrix3D
-	{
+	@:dox(hide) @:noCompletion public static function createOrtho(x0:Float, x1:Float, y0:Float, y1:Float, zNear:Float, zFar:Float):Matrix3D {
 		var sx = 1.0 / (x1 - x0);
 		var sy = 1.0 / (y1 - y0);
 		var sz = 1.0 / (zFar - zNear);
 
-		return new Matrix3D(new Vector<Float>([
-			2.0 * sx, 0, 0, 0, 0, 2.0 * sy, 0, 0, 0, 0, -2.0 * sz, 0, -(x0 + x1) * sx, -(y0 + y1) * sy, -(zNear + zFar) * sz, 1
-		]));
+		return new Matrix3D([
+			2.0 * sx,
+			0,
+			0,
+			0,
+			0,
+			2.0 * sy,
+			0,
+			0,
+			0,
+			0,
+			-2.0 * sz,
+			0,
+			-(x0 + x1) * sx,
+			-(y0 + y1) * sy,
+			-(zNear + zFar) * sz,
+			1
+		]);
 	}
 
 	/**
@@ -644,9 +623,8 @@ class Matrix3D
 		@returns	A Vector of three Vector3D objects, each holding the translation,
 		rotation, and scale settings, respectively.
 	**/
-	public function decompose(orientationStyle:Orientation3D = EULER_ANGLES):Vector<Vector3D>
-	{
-		var vec = new Vector<Vector3D>();
+	public function decompose(orientationStyle:Orientation3D = EULER_ANGLES):Array<Vector3D> {
+		var vec = [];
 		var m = clone();
 		var mr = m.rawData.copy();
 
@@ -661,8 +639,7 @@ class Matrix3D
 		scale.y = Math.sqrt(mr[4] * mr[4] + mr[5] * mr[5] + mr[6] * mr[6]);
 		scale.z = Math.sqrt(mr[8] * mr[8] + mr[9] * mr[9] + mr[10] * mr[10]);
 
-		if (mr[0] * (mr[5] * mr[10] - mr[6] * mr[9]) - mr[1] * (mr[4] * mr[10] - mr[6] * mr[8]) + mr[2] * (mr[4] * mr[9] - mr[5] * mr[8]) < 0)
-		{
+		if (mr[0] * (mr[5] * mr[10] - mr[6] * mr[9]) - mr[1] * (mr[4] * mr[10] - mr[6] * mr[8]) + mr[2] * (mr[4] * mr[9] - mr[5] * mr[8]) < 0) {
 			scale.z = -scale.z;
 		}
 
@@ -678,53 +655,42 @@ class Matrix3D
 
 		var rot = new Vector3D();
 
-		switch (orientationStyle)
-		{
+		switch (orientationStyle) {
 			case Orientation3D.AXIS_ANGLE:
 				rot.w = Math.acos((mr[0] + mr[5] + mr[10] - 1) / 2);
 
 				var len = Math.sqrt((mr[6] - mr[9]) * (mr[6] - mr[9]) + (mr[8] - mr[2]) * (mr[8] - mr[2]) + (mr[1] - mr[4]) * (mr[1] - mr[4]));
 
-				if (len != 0)
-				{
+				if (len != 0) {
 					rot.x = (mr[6] - mr[9]) / len;
 					rot.y = (mr[8] - mr[2]) / len;
 					rot.z = (mr[1] - mr[4]) / len;
-				}
-				else
-				{
+				} else {
 					rot.x = rot.y = rot.z = 0;
 				}
 
 			case Orientation3D.QUATERNION:
 				var tr = mr[0] + mr[5] + mr[10];
 
-				if (tr > 0)
-				{
+				if (tr > 0) {
 					rot.w = Math.sqrt(1 + tr) / 2;
 
 					rot.x = (mr[6] - mr[9]) / (4 * rot.w);
 					rot.y = (mr[8] - mr[2]) / (4 * rot.w);
 					rot.z = (mr[1] - mr[4]) / (4 * rot.w);
-				}
-				else if ((mr[0] > mr[5]) && (mr[0] > mr[10]))
-				{
+				} else if ((mr[0] > mr[5]) && (mr[0] > mr[10])) {
 					rot.x = Math.sqrt(1 + mr[0] - mr[5] - mr[10]) / 2;
 
 					rot.w = (mr[6] - mr[9]) / (4 * rot.x);
 					rot.y = (mr[1] + mr[4]) / (4 * rot.x);
 					rot.z = (mr[8] + mr[2]) / (4 * rot.x);
-				}
-				else if (mr[5] > mr[10])
-				{
+				} else if (mr[5] > mr[10]) {
 					rot.y = Math.sqrt(1 + mr[5] - mr[0] - mr[10]) / 2;
 
 					rot.x = (mr[1] + mr[4]) / (4 * rot.y);
 					rot.w = (mr[8] - mr[2]) / (4 * rot.y);
 					rot.z = (mr[6] + mr[9]) / (4 * rot.y);
-				}
-				else
-				{
+				} else {
 					rot.z = Math.sqrt(1 + mr[10] - mr[0] - mr[5]) / 2;
 
 					rot.x = (mr[8] + mr[2]) / (4 * rot.z);
@@ -735,13 +701,10 @@ class Matrix3D
 			case Orientation3D.EULER_ANGLES:
 				rot.y = Math.asin(-mr[2]);
 
-				if (mr[2] != 1 && mr[2] != -1)
-				{
+				if (mr[2] != 1 && mr[2] != -1) {
 					rot.x = Math.atan2(mr[6], mr[10]);
 					rot.z = Math.atan2(mr[1], mr[0]);
-				}
-				else
-				{
+				} else {
 					rot.z = 0;
 					rot.x = Math.atan2(mr[4], mr[5]);
 				}
@@ -779,8 +742,7 @@ class Matrix3D
 		transformed.
 		@returns	Vector3D	A Vector3D object with the transformed coordinates.
 	**/
-	public function deltaTransformVector(v:Vector3D):Vector3D
-	{
+	public function deltaTransformVector(v:Vector3D):Vector3D {
 		var x:Float = v.x, y:Float = v.y, z:Float = v.z;
 
 		return new Vector3D((x * rawData[0] + y * rawData[4] + z * rawData[8]), (x * rawData[1] + y * rawData[5] + z * rawData[9]),
@@ -802,9 +764,8 @@ class Matrix3D
 		In other words, if a matrix is multiplied by an identity matrix, the result is a
 		matrix that is the same as (identical to) the original matrix.
 	**/
-	public function identity():Void
-	{
-		rawData = new Vector<Float>([1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0]);
+	public function identity():Void {
+		rawData = [1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0];
 	}
 
 	/**
@@ -840,12 +801,10 @@ class Matrix3D
 		applied to the this display object, the object moves the specified percent closer
 		to the target object.
 	**/
-	public static function interpolate(thisMat:Matrix3D, toMat:Matrix3D, percent:Float):Matrix3D
-	{
+	public static function interpolate(thisMat:Matrix3D, toMat:Matrix3D, percent:Float):Matrix3D {
 		var m = new Matrix3D();
 
-		for (i in 0...16)
-		{
+		for (i in 0...16) {
 			m.rawData[i] = thisMat.rawData[i] + (toMat.rawData[i] - thisMat.rawData[i]) * percent;
 		}
 
@@ -884,10 +843,8 @@ class Matrix3D
 		the display object is to its current position. The closer the value is to 0, the
 		closer the display object is to the target.
 	**/
-	public function interpolateTo(toMat:Matrix3D, percent:Float):Void
-	{
-		for (i in 0...16)
-		{
+	public function interpolateTo(toMat:Matrix3D, percent:Float):Void {
+		for (i in 0...16) {
 			rawData[i] = rawData[i] + (toMat.rawData[i] - rawData[i]) * percent;
 		}
 	}
@@ -918,13 +875,11 @@ class Matrix3D
 
 		@returns	Returns `true` if the matrix was successfully inverted.
 	**/
-	public function invert():Bool
-	{
+	public function invert():Bool {
 		var d = determinant;
 		var invertable = Math.abs(d) > 0.00000000001;
 
-		if (invertable)
-		{
+		if (invertable) {
 			d = 1 / d;
 
 			var m11:Float = rawData[0];
@@ -998,8 +953,7 @@ class Matrix3D
 		the object's own frame of reference and coordinate system. Default value is the
 		+z-axis (0,0,1).
 	**/
-	public function pointAt(pos:Vector3D, at:Vector3D = null, up:Vector3D = null):Void
-	{
+	public function pointAt(pos:Vector3D, at:Vector3D = null, up:Vector3D = null):Void {
 		/**
 
 			TODO: Need to fix this method
@@ -1092,13 +1046,11 @@ class Matrix3D
 
 		/** **/
 
-		if (at == null)
-		{
+		if (at == null) {
 			at = new Vector3D(0, 0, -1);
 		}
 
-		if (up == null)
-		{
+		if (up == null) {
 			up = new Vector3D(0, -1, 0);
 		}
 
@@ -1114,18 +1066,12 @@ class Matrix3D
 
 		vup = vup.subtract(dir2);
 
-		if (vup.length > 0)
-		{
+		if (vup.length > 0) {
 			vup.normalize();
-		}
-		else
-		{
-			if (dir.x != 0)
-			{
+		} else {
+			if (dir.x != 0) {
 				vup = new Vector3D(-dir.y, dir.x, 0);
-			}
-			else
-			{
+			} else {
 				vup = new Vector3D(1, 0, 0);
 			}
 		}
@@ -1175,8 +1121,7 @@ class Matrix3D
 		@param	rhs	A right-hand-side of the matrix by which the current Matrix3D is
 		multiplied.
 	**/
-	public function prepend(rhs:Matrix3D):Void
-	{
+	public function prepend(rhs:Matrix3D):Void {
 		var m111:Float = rhs.rawData[0],
 			m121:Float = rhs.rawData[4],
 			m131:Float = rhs.rawData[8],
@@ -1276,12 +1221,10 @@ class Matrix3D
 		@param	pivotPoint	A point that determines the center of rotation. The default
 		pivot point for an object is its registration point.
 	**/
-	public function prependRotation(degrees:Float, axis:Vector3D, pivotPoint:Vector3D = null):Void
-	{
+	public function prependRotation(degrees:Float, axis:Vector3D, pivotPoint:Vector3D = null):Void {
 		var tx:Float, ty:Float, tz:Float;
 		tx = ty = tz = 0;
-		if (pivotPoint != null)
-		{
+		if (pivotPoint != null) {
 			tx = pivotPoint.x;
 			ty = pivotPoint.y;
 			tz = pivotPoint.z;
@@ -1296,8 +1239,7 @@ class Matrix3D
 		var y2 = y * y;
 		var z2 = z * z;
 		var ls = x2 + y2 + z2;
-		if (ls != 0)
-		{
+		if (ls != 0) {
 			var l = Math.sqrt(ls);
 			x /= l;
 			y /= l;
@@ -1353,11 +1295,10 @@ class Matrix3D
 		@param	yScale	A multiplier used to scale the object along the y axis.
 		@param	zScale	A multiplier used to scale the object along the z axis.
 	**/
-	public function prependScale(xScale:Float, yScale:Float, zScale:Float):Void
-	{
-		this.prepend(new Matrix3D(new Vector<Float>([
+	public function prependScale(xScale:Float, yScale:Float, zScale:Float):Void {
+		this.prepend(new Matrix3D([
 			xScale, 0.0, 0.0, 0.0, 0.0, yScale, 0.0, 0.0, 0.0, 0.0, zScale, 0.0, 0.0, 0.0, 0.0, 1.0
-		])));
+		]));
 	}
 
 	/**
@@ -1389,8 +1330,7 @@ class Matrix3D
 		@param	y	An incremental translation along the y axis.
 		@param	z	An incremental translation along the z axis.
 	**/
-	public function prependTranslation(x:Float, y:Float, z:Float):Void
-	{
+	public function prependTranslation(x:Float, y:Float, z:Float):Void {
 		var m = new Matrix3D();
 		m.position = new Vector3D(x, y, z);
 		this.prepend(m);
@@ -1433,10 +1373,8 @@ class Matrix3D
 		@returns	Returns `false` if any of the Vector3D elements of the components
 		Vector do not exist or are `null`.
 	**/
-	public function recompose(components:Vector<Vector3D>, orientationStyle:Orientation3D = EULER_ANGLES):Bool
-	{
-		if (components.length < 3 || components[2].x == 0 || components[2].y == 0 || components[2].z == 0)
-		{
+	public function recompose(components:Array<Vector3D>, orientationStyle:Orientation3D = EULER_ANGLES):Bool {
+		if (components.length < 3 || components[2].x == 0 || components[2].y == 0 || components[2].z == 0) {
 			return false;
 		}
 
@@ -1447,8 +1385,7 @@ class Matrix3D
 		scale[4] = scale[5] = scale[6] = components[2].y;
 		scale[8] = scale[9] = scale[10] = components[2].z;
 
-		switch (orientationStyle)
-		{
+		switch (orientationStyle) {
 			case Orientation3D.EULER_ANGLES:
 				var cx = Math.cos(components[1].x);
 				var cy = Math.cos(components[1].y);
@@ -1480,8 +1417,7 @@ class Matrix3D
 				var z = components[1].z;
 				var w = components[1].w;
 
-				if (orientationStyle == Orientation3D.AXIS_ANGLE)
-				{
+				if (orientationStyle == Orientation3D.AXIS_ANGLE) {
 					x *= Math.sin(w / 2);
 					y *= Math.sin(w / 2);
 					z *= Math.sin(w / 2);
@@ -1506,18 +1442,15 @@ class Matrix3D
 				rawData[15] = 1;
 		}
 
-		if (components[2].x == 0)
-		{
+		if (components[2].x == 0) {
 			rawData[0] = 1e-15;
 		}
 
-		if (components[2].y == 0)
-		{
+		if (components[2].y == 0) {
 			rawData[5] = 1e-15;
 		}
 
-		if (components[2].z == 0)
-		{
+		if (components[2].z == 0) {
 			rawData[10] = 1e-15;
 		}
 
@@ -1541,8 +1474,7 @@ class Matrix3D
 		transformed.
 		@returns	A Vector3D object with the transformed coordinates.
 	**/
-	public function transformVector(v:Vector3D):Vector3D
-	{
+	public function transformVector(v:Vector3D):Vector3D {
 		var x = v.x;
 		var y = v.y;
 		var z = v.z;
@@ -1566,13 +1498,11 @@ class Matrix3D
 		@param	vout	A Vector of Floats, where every three Numbers are a 3D
 		transformed coordinate (x,y,z).
 	**/
-	public function transformVectors(vin:Vector<Float>, vout:Vector<Float>):Void
-	{
+	public function transformVectors(vin:Array<Float>, vout:Array<Float>):Void {
 		var i = 0;
 		var x, y, z;
 
-		while (i + 3 <= vin.length)
-		{
+		while (i + 3 <= vin.length) {
 			x = vin[i];
 			y = vin[i + 1];
 			z = vin[i + 2];
@@ -1600,8 +1530,7 @@ class Matrix3D
 
 		An orthogonal matrix is a square matrix whose transpose is equal to its inverse.
 	**/
-	public function transpose():Void
-	{
+	public function transpose():Void {
 		var oRawData = rawData.copy();
 		rawData[1] = oRawData[4];
 		rawData[2] = oRawData[8];
@@ -1617,8 +1546,7 @@ class Matrix3D
 		rawData[14] = oRawData[11];
 	}
 
-	@:noCompletion private static function __getAxisRotation(x:Float, y:Float, z:Float, degrees:Float):Matrix3D
-	{
+	@:noCompletion private static function __getAxisRotation(x:Float, y:Float, z:Float, degrees:Float):Matrix3D {
 		var m = new Matrix3D();
 
 		var a1 = new Vector3D(x, y, z);
@@ -1648,8 +1576,7 @@ class Matrix3D
 	}
 
 	// Getters & Setters
-	private function get_determinant():Float
-	{
+	private function get_determinant():Float {
 		return 1 * ((rawData[0] * rawData[5] - rawData[4] * rawData[1]) * (rawData[10] * rawData[15] - rawData[14] * rawData[11])
 			- (rawData[0] * rawData[9] - rawData[8] * rawData[1]) * (rawData[6] * rawData[15] - rawData[14] * rawData[7])
 			+ (rawData[0] * rawData[13] - rawData[12] * rawData[1]) * (rawData[6] * rawData[11] - rawData[10] * rawData[7])
@@ -1658,13 +1585,11 @@ class Matrix3D
 			+ (rawData[8] * rawData[13] - rawData[12] * rawData[9]) * (rawData[2] * rawData[7] - rawData[6] * rawData[3]));
 	}
 
-	private function get_position():Vector3D
-	{
+	private function get_position():Vector3D {
 		return new Vector3D(rawData[12], rawData[13], rawData[14]);
 	}
 
-	private function set_position(val:Vector3D):Vector3D
-	{
+	private function set_position(val:Vector3D):Vector3D {
 		rawData[12] = val.x;
 		rawData[13] = val.y;
 		rawData[14] = val.z;

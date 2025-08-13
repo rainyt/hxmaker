@@ -36,7 +36,7 @@ class DisplayObject extends EventDispatcher {
 	@:noCompletion private var __transform:Matrix;
 	@:noCompletion private var __worldTransform:Matrix;
 	@:noCompletion private var __transformMatrix3D:Matrix3D;
-	@:noCompletion private var __worldTransformMatrix3D:Matrix3D;
+	// @:noCompletion private var __worldTransformMatrix3D:Matrix3D;
 	@:noCompletion private var __rect:Rectangle;
 	@:noCompletion private var __stageInit:Bool = false;
 	@:noCompletion private var __mouseEnabled:Bool = true;
@@ -587,6 +587,7 @@ class DisplayObject extends EventDispatcher {
 		// __colorTransform = new ColorTransform();
 		__transform = new Matrix();
 		__worldTransform = new Matrix();
+		// __worldTransformMatrix3D = new Matrix3D();
 		__rect = new Rectangle();
 		this.onBuildUI();
 		this.onInit();

@@ -559,8 +559,7 @@ class Matrix3D {
 		return new Matrix3D([a, b, 0, 0, c, d, 0, 0, 0, 0, 1, 0, tx, ty, 0, 1]);
 	}
 
-	@SuppressWarnings("checkstyle:FieldDocComment")
-	@:dox(hide) @:noCompletion public static function createOrtho(x0:Float, x1:Float, y0:Float, y1:Float, zNear:Float, zFar:Float):Matrix3D {
+	public static function createOrtho(x0:Float, x1:Float, y0:Float, y1:Float, zNear:Float, zFar:Float):Matrix3D {
 		var sx = 1.0 / (x1 - x0);
 		var sy = 1.0 / (y1 - y0);
 		var sz = 1.0 / (zFar - zNear);

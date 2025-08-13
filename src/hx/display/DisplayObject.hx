@@ -223,15 +223,26 @@ class DisplayObject extends EventDispatcher {
 		return this.__transformMatrix3D.center3DVector;
 	}
 
-	public var projection(get, set):PerspectiveProjection;
+	// public var projection(get, set):PerspectiveProjection;
 
-	private function set_projection(value:PerspectiveProjection):PerspectiveProjection {
-		this.__transformMatrix3D.projection = value;
+	// private function set_projection(value:PerspectiveProjection):PerspectiveProjection {
+	// 	this.__transformMatrix3D.projection = value;
+	// 	return value;
+	// }
+
+	// private function get_projection():PerspectiveProjection {
+	// 	return this.__transformMatrix3D.projection;
+	// }
+
+	public var projectionMatrix3D(get, set):Matrix3D;
+
+	private function set_projectionMatrix3D(value:Matrix3D):Matrix3D {
+		this.__transformMatrix3D.projectionMatrix3D = value;
 		return value;
 	}
 
-	private function get_projection():PerspectiveProjection {
-		return this.__transformMatrix3D.projection;
+	private function get_projectionMatrix3D():Matrix3D {
+		return this.__transformMatrix3D.projectionMatrix3D;
 	}
 
 	/**

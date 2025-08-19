@@ -224,16 +224,13 @@ class DisplayObject extends EventDispatcher {
 	}
 
 	// public var projection(get, set):PerspectiveProjection;
-
 	// private function set_projection(value:PerspectiveProjection):PerspectiveProjection {
 	// 	this.__transformMatrix3D.projection = value;
 	// 	return value;
 	// }
-
 	// private function get_projection():PerspectiveProjection {
 	// 	return this.__transformMatrix3D.projection;
 	// }
-
 	public var projectionMatrix3D(get, set):Matrix3D;
 
 	private function set_projectionMatrix3D(value:Matrix3D):Matrix3D {
@@ -646,6 +643,13 @@ class DisplayObject extends EventDispatcher {
 		this.onAddToStage();
 		if (this.hasEventListener(Event.ADDED_TO_STAGE))
 			this.dispatchEvent(new Event(Event.ADDED_TO_STAGE));
+	}
+
+	private function __onRemoveFromStage():Void {
+		if (this.hasEventListener(Event.REMOVED_FROM_STAGE))
+			this.dispatchEvent(new Event(Event.REMOVED_FROM_STAGE));
+		this.onRemoveToStage();
+		this.__stage = null;
 	}
 
 	/**

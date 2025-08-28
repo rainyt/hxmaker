@@ -23,6 +23,11 @@ class UIAssets extends Assets {
 	 */
 	public var viewXml:Xml;
 
+	/**
+	 * 动画配置列表
+	 */
+	public var aniamtes:Array<UIAniamte> = [];
+
 	public function new(path:String) {
 		super();
 		__path = path;
@@ -101,6 +106,15 @@ class UIAssets extends Assets {
 	}
 
 	/**
+	 * 开始播放动画
+	 */
+	public function startAniamte():Void {
+		for (aniamte in this.aniamtes) {
+			aniamte.start();
+		}
+	}
+
+	/**
 	 * 开始构造布局
 	 * @param parent 
 	 */
@@ -118,12 +132,24 @@ class UIAssets extends Assets {
 		// 对父节点进行属性绑定
 		UIManager.getInstance().applyAttributes(parent, parentXml, this);
 		buildUi(parentXml, parent, ids);
+		this.startAniamte();
 		return parent;
 	}
 
 	public function buildItem(item:Xml, parent:DisplayObjectContainer, ids:Map<String, DisplayObject>, autoBuildUi:Bool = true):DisplayObject {
 		if (item.get("load") == "true")
 			return null;
+
+		if (item.nodeName == "aniamte") {
+			var target = item.get("target");
+			var display = target == "this" ? parent : ids.get(target);
+			if (display != null) {
+				var aniamte = new UIAniamte(display, item);
+				this.aniamtes.push(aniamte);
+			}
+			return null;
+		}
+
 		var classType = UIManager.getInstance().getClassType(item.nodeName);
 		if (classType != null) {
 			var ui:DisplayObject = UIManager.getInstance().createInstance(classType, item);
@@ -182,6 +208,12 @@ class UIAssets extends Assets {
 		return null;
 	}
 
+	/**
+	 * 遍历节点进行构造组件
+	 * @param xml 
+	 * @param parent 父节点容器 
+	 * @param ids 映射表
+	 */
 	public function buildUi(xml:Xml, parent:DisplayObjectContainer, ids:Map<String, DisplayObject>):Void {
 		for (item in xml.elements()) {
 			buildItem(item, parent, ids);

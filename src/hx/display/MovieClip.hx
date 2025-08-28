@@ -161,10 +161,7 @@ class MovieClip extends Image {
 		return currentData.duration;
 	}
 
-	override function onUpdate(dt:Float) {
-		if (!__playing)
-			return;
-		super.onUpdate(dt);
+	private function __frameReset():Void {
 		if (currentFrame >= __frames.length) {
 			if (loop > 0)
 				loop--;
@@ -172,6 +169,13 @@ class MovieClip extends Image {
 				reset();
 			}
 		}
+	}
+
+	override function onUpdate(dt:Float) {
+		if (!__playing)
+			return;
+		super.onUpdate(dt);
+		__frameReset();
 		var currentData = __frames[currentFrame];
 		if (currentData == null) {
 			return;
@@ -181,6 +185,7 @@ class MovieClip extends Image {
 			currentFrame++;
 			if (currentFrame >= __frames.length) {
 				// 播放完成事件
+				__frameReset();
 				if (this.hasEventListener(Event.COMPLETE))
 					this.dispatchEvent(new Event(Event.COMPLETE));
 			}

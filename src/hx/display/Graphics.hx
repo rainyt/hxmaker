@@ -106,7 +106,7 @@ class Graphics extends DisplayObject {
 	 * @param x 
 	 * @param y 
 	 */
-	public function lineTo(x:Float, y:Float, smoothing:Bool = true):Void {
+	public function lineTo(x:Float, y:Float, smoothing:Bool = true, alpha:Float = 1):Void {
 		var nextVertices = __mathLine(__posX, __posY, x, y);
 		if (__lineDrawing && __lastVertices != null) {
 			// 补充断成
@@ -126,11 +126,11 @@ class Graphics extends DisplayObject {
 					nextVertices[4],
 					nextVertices[5]
 				];
-				this.drawTriangles(vertices, [0, 1, 2, 1, 2, 3], [0, 0, 1, 0, 0, 1, 1, 1]);
+				this.drawTriangles(vertices, [0, 1, 2, 1, 2, 3], [0, 0, 1, 0, 0, 1, 1, 1], alpha);
 			}
 		}
 		__lastVertices = nextVertices;
-		this.drawTriangles(nextVertices, [0, 1, 2, 1, 2, 3], [0, 0, 1, 0, 0, 1, 1, 1]);
+		this.drawTriangles(nextVertices, [0, 1, 2, 1, 2, 3], [0, 0, 1, 0, 0, 1, 1, 1], alpha);
 		__posX = x;
 		__posY = y;
 		__lineDrawing = true;

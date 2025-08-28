@@ -128,7 +128,6 @@ class UIAssets extends Assets {
 		if (classType != null) {
 			var ui:DisplayObject = UIManager.getInstance().createInstance(classType, item);
 			parent.addChild(ui);
-			// trace("构造", ui);
 			// 应用属性
 			UIManager.getInstance().applyAttributes(ui, item, this);
 			if (ui.name != null && ids != null) {
@@ -159,6 +158,9 @@ class UIAssets extends Assets {
 								buildUi(item, cast parent, ids);
 							}
 							UIManager.getInstance().applyAttributes(parent, item, this);
+							if (parent.name != null && ids != null) {
+								ids.set(parent.name, parent);
+							}
 							return parent;
 						}
 					}

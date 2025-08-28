@@ -14,11 +14,15 @@ class MoudleClassType {
 	 */
 	public var attributes:Map<String, Attributes> = [];
 
-	public function new(xml:Xml) {
-		className = xml.get("classed");
-		for (item in xml.elements()) {
-			attributes.set(item.nodeName, new Attributes(item));
+	public function new(?xml:Xml, ?className:String) {
+		if (xml != null) {
+			className = xml.get("classed");
+			for (item in xml.elements()) {
+				attributes.set(item.nodeName, new Attributes(item));
+			}
 		}
+		if (className != null)
+			this.className = className;
 	}
 }
 

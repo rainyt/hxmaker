@@ -149,6 +149,10 @@ class UIAssets extends Assets {
 					if (uiDisplay.name != null && ids != null) {
 						ids.set(uiDisplay.name, uiDisplay);
 					}
+					parent = cast uiDisplay;
+					if (parent is DisplayObjectContainer) {
+						buildUi(item, cast parent, ids);
+					}
 				} else {
 					// 需要检查moudle模块
 					for (key => assets in this.uiAssetses) {
@@ -164,6 +168,14 @@ class UIAssets extends Assets {
 							return parent;
 						}
 					}
+				}
+			} else if (item.nodeName.indexOf("child:") == 0) {
+				// 访问当前节点的子节点
+				var name = item.nodeName.split(":")[1];
+				var child = parent.getChildByName(name);
+				if (child != null && child is DisplayObjectContainer) {
+					parent = cast child;
+					buildUi(item, cast parent, ids);
 				}
 			}
 		}

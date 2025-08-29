@@ -123,7 +123,8 @@ class UIAssets extends Assets {
 	 */
 	public function build(parent:DisplayObjectContainer, createRoot:Bool = false):DisplayObject {
 		var parentXml = viewXml.nodeType == Document ? viewXml.firstElement() : viewXml;
-		var ids = Reflect.getProperty(parent, "ids");
+		var ids:Map<String, DisplayObject> = Reflect.getProperty(parent, "ids");
+		ids = ids == null ? new Map<String, DisplayObject>() : ids;
 		if (createRoot) {
 			var display = buildItem(parentXml, parent, ids, false);
 			if (display is DisplayObjectContainer) {

@@ -80,7 +80,6 @@ class UIAniamte {
 		});
 		if (ease != null)
 			actuate.ease(ease);
-		trace(startOption, endOption);
 	}
 
 	public function updateOption():Void {

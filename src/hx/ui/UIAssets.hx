@@ -110,6 +110,9 @@ class UIAssets extends Assets {
 	 */
 	public function startAniamte():Void {
 		for (aniamte in this.aniamtes) {
+			aniamte.updateOption();
+		}
+		for (aniamte in this.aniamtes) {
 			aniamte.start();
 		}
 	}
@@ -132,7 +135,7 @@ class UIAssets extends Assets {
 		// 对父节点进行属性绑定
 		UIManager.getInstance().applyAttributes(parent, parentXml, this);
 		buildUi(parentXml, parent, ids);
-		this.startAniamte();
+		hx.utils.Timer.getInstance().nextFrame(startAniamte);
 		return parent;
 	}
 
@@ -184,10 +187,10 @@ class UIAssets extends Assets {
 					for (key => assets in this.uiAssetses) {
 						if (key == ui) {
 							var parent = assets.build(parent, true);
+							UIManager.getInstance().applyAttributes(parent, item, this);
 							if (parent is DisplayObjectContainer) {
 								buildUi(item, cast parent, ids);
 							}
-							UIManager.getInstance().applyAttributes(parent, item, this);
 							if (parent.name != null && ids != null) {
 								ids.set(parent.name, parent);
 							}

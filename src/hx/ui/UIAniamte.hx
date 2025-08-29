@@ -24,6 +24,8 @@ class UIAniamte {
 	 */
 	public var target:DisplayObject;
 
+	private var xml:Xml;
+
 	/**
 	 * 动画时长
 	 */
@@ -31,21 +33,8 @@ class UIAniamte {
 
 	public function new(target:DisplayObject, xml:Xml) {
 		this.target = target;
+		this.xml = xml;
 		this.duration = Std.parseFloat(xml.get("duration"));
-		for (item in xml.elements()) {
-			trace("item", item.toString());
-			var key = item.nodeName;
-			if (item.exists("start")) {
-				startOption.setProperty(key, Std.parseFloat(item.get("start")));
-			} else {
-				startOption.setProperty(key, target.getProperty(key));
-			}
-			if (item.exists("end")) {
-				endOption.setProperty(key, Std.parseFloat(item.get("end")));
-			} else {
-				endOption.setProperty(key, target.getProperty(key));
-			}
-		}
 	}
 
 	/**
@@ -62,6 +51,23 @@ class UIAniamte {
 				target.parent.updateLayout();
 			}
 		});
+		trace(startOption, endOption);
+	}
+
+	public function updateOption():Void {
+		for (item in xml.elements()) {
+			var key = item.nodeName;
+			if (item.exists("start")) {
+				startOption.setProperty(key, Std.parseFloat(item.get("start")));
+			} else {
+				startOption.setProperty(key, target.getProperty(key));
+			}
+			if (item.exists("end")) {
+				endOption.setProperty(key, Std.parseFloat(item.get("end")));
+			} else {
+				endOption.setProperty(key, target.getProperty(key));
+			}
+		}
 		trace(startOption, endOption);
 	}
 }

@@ -2,6 +2,16 @@ package hx.ui;
 
 import motion.Actuate;
 import hx.display.DisplayObject;
+import motion.easing.Back;
+import motion.easing.Bounce;
+import motion.easing.Cubic;
+import motion.easing.Elastic;
+import motion.easing.Expo;
+import motion.easing.Linear;
+import motion.easing.Quad;
+import motion.easing.Quart;
+import motion.easing.Quint;
+import motion.easing.IEasing;
 
 using Reflect;
 
@@ -24,6 +34,9 @@ class UIAniamte {
 	 */
 	public var target:DisplayObject;
 
+	/**
+	 * 动画XML
+	 */
 	private var xml:Xml;
 
 	/**
@@ -31,10 +44,26 @@ class UIAniamte {
 	 */
 	public var duration:Float = 0;
 
+	/**
+	 * 缓动函数
+	 */
+	public var ease:IEasing;
+
 	public function new(target:DisplayObject, xml:Xml) {
 		this.target = target;
 		this.xml = xml;
 		this.duration = Std.parseFloat(xml.get("duration"));
+		var easeName:String = xml.get("ease");
+		if (easeName != null) {
+			var easeNames = easeName.split(".");
+			var className:String = easeNames[0];
+			className = className.charAt(0).toUpperCase() + className.substr(1);
+			var funcName = easeNames[1];
+			var easeClass = Type.resolveClass("motion.easing." + className);
+			if (easeClass != null) {
+				this.ease = Reflect.getProperty(easeClass, funcName);
+			}
+		}
 	}
 
 	/**
@@ -44,13 +73,13 @@ class UIAniamte {
 		for (key in startOption.fields()) {
 			target.setProperty(key, startOption.getProperty(key));
 		}
-		Actuate.tween(target, duration, endOption, false).onComplete(() -> {
-			trace("动画结束");
-		}).onUpdate(() -> {
+		var actuate = Actuate.tween(target, duration, endOption, false).onUpdate(() -> {
 			if (target.parent != null) {
 				target.parent.updateLayout();
 			}
 		});
+		if (ease != null)
+			actuate.ease(ease);
 		trace(startOption, endOption);
 	}
 

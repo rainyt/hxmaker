@@ -1,12 +1,16 @@
 package hx.display;
 
-import hx.gemo.Point;
+import hx.geom.PerspectiveProjection;
+import hx.geom.Vector3D;
+import hx.geom.TransformMatrix3D;
+import hx.geom.Matrix3D;
+import hx.geom.Point;
 import hx.core.Hxmaker;
 import hx.layout.LayoutData;
 import hx.layout.ILayout;
-import hx.gemo.ColorTransform;
-import hx.gemo.Matrix;
-import hx.gemo.Rectangle;
+import hx.geom.ColorTransform;
+import hx.geom.Matrix;
+import hx.geom.Rectangle;
 import hx.events.Event;
 
 using hx.utils.MathUtils;
@@ -15,7 +19,7 @@ using hx.utils.MathUtils;
  * 唯一统一的渲染对象
  */
 @:keep
-@:access(hx.gemo.Matrix)
+@:access(hx.geom.Matrix)
 class DisplayObject extends EventDispatcher {
 	@:noCompletion private var __scaleX:Float = 1;
 	@:noCompletion private var __scaleY:Float = 1;
@@ -34,6 +38,8 @@ class DisplayObject extends EventDispatcher {
 	@:noCompletion private var __height:Null<Float> = null;
 	@:noCompletion private var __transform:Matrix;
 	@:noCompletion private var __worldTransform:Matrix;
+	@:noCompletion private var __transformMatrix3D:TransformMatrix3D;
+	// @:noCompletion private var __worldTransformMatrix3D:Matrix3D;
 	@:noCompletion private var __rect:Rectangle;
 	@:noCompletion private var __stageInit:Bool = false;
 	@:noCompletion private var __mouseEnabled:Bool = true;
@@ -190,6 +196,50 @@ class DisplayObject extends EventDispatcher {
 		__colorTransform.setTo(value);
 		__colorTransformDirty = true;
 		return value;
+	}
+
+	/**
+	 * 设置3D矩阵
+	 */
+	public var matrix3D(get, set):hx.geom.Matrix3D;
+
+	private function set_matrix3D(value:hx.geom.Matrix3D):hx.geom.Matrix3D {
+		this.__transformMatrix3D.transform3D = value;
+		return value;
+	}
+
+	private function get_matrix3D():hx.geom.Matrix3D {
+		return this.__transformMatrix3D.transform3D;
+	}
+
+	public var center3DVector(get, set):Vector3D;
+
+	private function set_center3DVector(value:Vector3D):Vector3D {
+		this.__transformMatrix3D.center3DVector = value;
+		return value;
+	}
+
+	private function get_center3DVector():Vector3D {
+		return this.__transformMatrix3D.center3DVector;
+	}
+
+	// public var projection(get, set):PerspectiveProjection;
+	// private function set_projection(value:PerspectiveProjection):PerspectiveProjection {
+	// 	this.__transformMatrix3D.projection = value;
+	// 	return value;
+	// }
+	// private function get_projection():PerspectiveProjection {
+	// 	return this.__transformMatrix3D.projection;
+	// }
+	public var projectionMatrix3D(get, set):Matrix3D;
+
+	private function set_projectionMatrix3D(value:Matrix3D):Matrix3D {
+		this.__transformMatrix3D.projectionMatrix3D = value;
+		return value;
+	}
+
+	private function get_projectionMatrix3D():Matrix3D {
+		return this.__transformMatrix3D.projectionMatrix3D;
 	}
 
 	/**
@@ -570,7 +620,9 @@ class DisplayObject extends EventDispatcher {
 		// __colorTransform = new ColorTransform();
 		__transform = new Matrix();
 		__worldTransform = new Matrix();
+		// __worldTransformMatrix3D = new Matrix3D();
 		__rect = new Rectangle();
+		__transformMatrix3D = new TransformMatrix3D();
 		this.onBuildUI();
 		this.onInit();
 	}
@@ -591,6 +643,13 @@ class DisplayObject extends EventDispatcher {
 		this.onAddToStage();
 		if (this.hasEventListener(Event.ADDED_TO_STAGE))
 			this.dispatchEvent(new Event(Event.ADDED_TO_STAGE));
+	}
+
+	private function __onRemoveFromStage():Void {
+		if (this.hasEventListener(Event.REMOVED_FROM_STAGE))
+			this.dispatchEvent(new Event(Event.REMOVED_FROM_STAGE));
+		this.onRemoveToStage();
+		this.__stage = null;
 	}
 
 	/**

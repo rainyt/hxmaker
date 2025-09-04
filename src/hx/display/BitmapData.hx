@@ -1,6 +1,6 @@
 package hx.display;
 
-import hx.gemo.Rectangle;
+import hx.geom.Rectangle;
 
 /**
  * 位图显示对象

@@ -1,6 +1,6 @@
 package hx.display;
 
-import hx.gemo.Rectangle;
+import hx.geom.Rectangle;
 
 /**
  * 虚拟盒子容器，设置它的大小不会影响子对象的大小，如果设置了大小，则不会再读取取子对象的大小，会以当前盒子的大小为准

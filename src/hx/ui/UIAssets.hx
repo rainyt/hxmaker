@@ -23,6 +23,11 @@ class UIAssets extends Assets {
 	 */
 	public var viewXml:Xml;
 
+	/**
+	 * 动画配置列表
+	 */
+	public var aniamtes:Array<UIAniamte> = [];
+
 	public function new(path:String) {
 		super();
 		__path = path;
@@ -101,12 +106,25 @@ class UIAssets extends Assets {
 	}
 
 	/**
+	 * 开始播放动画
+	 */
+	public function startAniamte():Void {
+		for (aniamte in this.aniamtes) {
+			aniamte.updateOption();
+		}
+		for (aniamte in this.aniamtes) {
+			aniamte.start();
+		}
+	}
+
+	/**
 	 * 开始构造布局
 	 * @param parent 
 	 */
 	public function build(parent:DisplayObjectContainer, createRoot:Bool = false):DisplayObject {
 		var parentXml = viewXml.nodeType == Document ? viewXml.firstElement() : viewXml;
-		var ids = Reflect.getProperty(parent, "ids");
+		var ids:Map<String, DisplayObject> = Reflect.getProperty(parent, "ids");
+		ids = ids == null ? new Map<String, DisplayObject>() : ids;
 		if (createRoot) {
 			var display = buildItem(parentXml, parent, ids, false);
 			if (display is DisplayObjectContainer) {
@@ -118,17 +136,28 @@ class UIAssets extends Assets {
 		// 对父节点进行属性绑定
 		UIManager.getInstance().applyAttributes(parent, parentXml, this);
 		buildUi(parentXml, parent, ids);
+		hx.utils.Timer.getInstance().nextFrame(startAniamte);
 		return parent;
 	}
 
 	public function buildItem(item:Xml, parent:DisplayObjectContainer, ids:Map<String, DisplayObject>, autoBuildUi:Bool = true):DisplayObject {
 		if (item.get("load") == "true")
 			return null;
+
+		if (item.nodeName == "aniamte") {
+			var target = item.get("target");
+			var display = target == "this" ? parent : ids.get(target);
+			if (display != null) {
+				var aniamte = new UIAniamte(display, item);
+				this.aniamtes.push(aniamte);
+			}
+			return null;
+		}
+
 		var classType = UIManager.getInstance().getClassType(item.nodeName);
 		if (classType != null) {
 			var ui:DisplayObject = UIManager.getInstance().createInstance(classType, item);
 			parent.addChild(ui);
-			// trace("构造", ui);
 			// 应用属性
 			UIManager.getInstance().applyAttributes(ui, item, this);
 			if (ui.name != null && ids != null) {
@@ -150,24 +179,45 @@ class UIAssets extends Assets {
 					if (uiDisplay.name != null && ids != null) {
 						ids.set(uiDisplay.name, uiDisplay);
 					}
+					parent = cast uiDisplay;
+					if (parent is DisplayObjectContainer) {
+						buildUi(item, cast parent, ids);
+					}
 				} else {
 					// 需要检查moudle模块
 					for (key => assets in this.uiAssetses) {
 						if (key == ui) {
 							var parent = assets.build(parent, true);
+							UIManager.getInstance().applyAttributes(parent, item, this);
 							if (parent is DisplayObjectContainer) {
 								buildUi(item, cast parent, ids);
 							}
-							UIManager.getInstance().applyAttributes(parent, item, this);
+							if (parent.name != null && ids != null) {
+								ids.set(parent.name, parent);
+							}
 							return parent;
 						}
 					}
+				}
+			} else if (item.nodeName.indexOf("child:") == 0) {
+				// 访问当前节点的子节点
+				var name = item.nodeName.split(":")[1];
+				var child = parent.getChildByName(name);
+				if (child != null && child is DisplayObjectContainer) {
+					parent = cast child;
+					buildUi(item, cast parent, ids);
 				}
 			}
 		}
 		return null;
 	}
 
+	/**
+	 * 遍历节点进行构造组件
+	 * @param xml 
+	 * @param parent 父节点容器 
+	 * @param ids 映射表
+	 */
 	public function buildUi(xml:Xml, parent:DisplayObjectContainer, ids:Map<String, DisplayObject>):Void {
 		for (item in xml.elements()) {
 			buildItem(item, parent, ids);

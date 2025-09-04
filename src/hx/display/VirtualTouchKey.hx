@@ -67,7 +67,7 @@ class VirtualTouchKey extends Box {
 	public var virtualRotation(get, never):Float;
 
 	public function get_virtualRotation():Float {
-		return hx.gemo.Point.rotationByFloat(_orignPos.x, _orignPos.y, _touchPos.x, _touchPos.y);
+		return hx.geom.Point.rotationByFloat(_orignPos.x, _orignPos.y, _touchPos.x, _touchPos.y);
 	}
 
 	#if !jsapi
@@ -307,7 +307,7 @@ class VirtualTouchKey extends Box {
 		}
 		// 当虚拟机超出点击有效范围后，需要重新计算原点
 		var len = Point.distance(_touchPos, _orignPos);
-		var radian = hx.gemo.Point.radianByFloat(_orignPos.x, _orignPos.y, _touchPos.x, _touchPos.y);
+		var radian = hx.geom.Point.radianByFloat(_orignPos.x, _orignPos.y, _touchPos.x, _touchPos.y);
 		if (len > virtualTouchRadius && !fixedOrignPoint) {
 			// 弧度
 			var len2 = len - virtualTouchRadius;
@@ -315,7 +315,7 @@ class VirtualTouchKey extends Box {
 			_orignPos.y += Math.sin(radian) * len2;
 			var len3 = Point.distance(_orignPos, _mathPos);
 			if (len3 > virtualTouchOrginMaxRadius) {
-				var radian2 = hx.gemo.Point.radianByFloat(_orignPos.x, _orignPos.y, _mathPos.x, _mathPos.y);
+				var radian2 = hx.geom.Point.radianByFloat(_orignPos.x, _orignPos.y, _mathPos.x, _mathPos.y);
 				var len4 = len3 - virtualTouchOrginMaxRadius;
 				_orignPos.x += Math.cos(radian2) * len4;
 				_orignPos.y += Math.sin(radian2) * len4;
@@ -324,7 +324,7 @@ class VirtualTouchKey extends Box {
 		// 需要重新计算
 		len = Point.distance(_touchPos, _orignPos);
 		if (len > virtualTouchRadius) {
-			var radian = hx.gemo.Point.radianByFloat(_orignPos.x, _orignPos.y, _touchPos.x, _touchPos.y);
+			var radian = hx.geom.Point.radianByFloat(_orignPos.x, _orignPos.y, _touchPos.x, _touchPos.y);
 			var len2 = len - virtualTouchRadius;
 			_touchPos.x -= Math.cos(radian) * len2;
 			_touchPos.y -= Math.sin(radian) * len2;

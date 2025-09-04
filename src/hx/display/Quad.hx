@@ -1,7 +1,7 @@
 package hx.display;
 
-import hx.gemo.Rectangle;
-import hx.gemo.ColorTransform;
+import hx.geom.Rectangle;
+import hx.geom.ColorTransform;
 import hx.utils.ColorUtils;
 import hx.providers.IRootDataProvider;
 

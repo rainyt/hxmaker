@@ -1,4 +1,4 @@
-package hx.gemo;
+package hx.geom;
 
 class Point {
 	/**

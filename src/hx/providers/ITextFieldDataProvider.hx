@@ -1,6 +1,6 @@
 package hx.providers;
 
-import hx.gemo.Rectangle;
+import hx.geom.Rectangle;
 
 /**
  * 文本扩展提供数据接口，由底层引擎提供方法实现

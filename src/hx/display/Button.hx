@@ -1,7 +1,7 @@
 package hx.display;
 
-import hx.gemo.Point;
-import hx.gemo.Rectangle;
+import hx.geom.Point;
+import hx.geom.Rectangle;
 import hx.utils.SoundManager;
 import hx.layout.AnchorLayoutData;
 import hx.layout.AnchorLayout;

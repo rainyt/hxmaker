@@ -1,11 +1,11 @@
 package hx.display;
 
-import hx.gemo.Point;
+import hx.geom.Point;
 import hx.events.Event;
 import hx.ui.UIManager;
 import hx.layout.ILayout;
-import hx.gemo.Matrix;
-import hx.gemo.Rectangle;
+import hx.geom.Matrix;
+import hx.geom.Rectangle;
 
 /**
  * 可装载子对象的容器
@@ -151,7 +151,7 @@ class DisplayObjectContainer extends DisplayObject {
 		if (child.hasEventListener(Event.REMOVED_FROM_STAGE))
 			child.dispatchEvent(new Event(Event.REMOVED_FROM_STAGE));
 		child.__parent = null;
-		child.__stage = null;
+		child.__onRemoveFromStage();
 		this.__layoutDirty = true;
 		this.setDirty();
 	}
@@ -228,6 +228,13 @@ class DisplayObjectContainer extends DisplayObject {
 		super.__onAddToStage(stage);
 		for (child in this.__children) {
 			child.__onAddToStage(stage);
+		}
+	}
+
+	override function __onRemoveFromStage():Void {
+		super.__onRemoveFromStage();
+		for (child in this.__children) {
+			child.__onRemoveFromStage();
 		}
 	}
 

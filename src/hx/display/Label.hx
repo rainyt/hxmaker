@@ -1,8 +1,8 @@
 package hx.display;
 
 import hx.core.Hxmaker;
-import hx.gemo.Matrix;
-import hx.gemo.Rectangle;
+import hx.geom.Matrix;
+import hx.geom.Rectangle;
 import hx.providers.ITextFieldDataProvider;
 import hx.providers.IRootDataProvider;
 

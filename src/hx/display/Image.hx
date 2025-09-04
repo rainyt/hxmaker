@@ -1,6 +1,6 @@
 package hx.display;
 
-import hx.gemo.Rectangle;
+import hx.geom.Rectangle;
 import hx.providers.IRootDataProvider;
 
 /**
@@ -188,6 +188,9 @@ class Image extends DisplayObject implements IDataProider<BitmapData> implements
 			this.__worldTransform.translate(this.__originWorldX, this.__originWorldY);
 			this.__worldTransform.concat(__transform);
 			this.__worldTransform.concat(parent.__worldTransform);
+			// 3D世界矩阵
+			// this.__worldTransformMatrix3D.identity();
+			// this.__worldTransformMatrix3D.append(parent.__worldTransformMatrix3D);
 		}
 	}
 

@@ -160,7 +160,7 @@ class Stage extends Box {
 		} else {
 			@:privateAccess KeyboardTools.onKeyUp(event.keyCode);
 		}
-		if (focus != null && focus.stage == this) {
+		if (focus != null && focus.stage != null && focus.stage == this) {
 			focus.dispatchEvent(event);
 		} else {
 			this.dispatchEvent(event);

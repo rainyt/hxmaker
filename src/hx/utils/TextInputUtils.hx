@@ -1,7 +1,7 @@
 package hx.utils;
 
 import hx.events.Event;
-import hx.gemo.Point;
+import hx.geom.Point;
 import hx.display.InputLabel;
 import js.html.TextAreaElement;
 import js.Browser;

@@ -561,4 +561,17 @@ class Assets extends Future<Assets, Dynamic> {
 		}
 		return bitmapData;
 	}
+
+	/**
+	 * 播放指定音频
+	 * @param name 
+	 * @return ISoundChannel
+	 */
+	public function playSound(name:String):ISoundChannel {
+		var sound = this.getSound(name);
+		if (sound != null) {
+			return sound.root.play();
+		}
+		return null;
+	}
 }

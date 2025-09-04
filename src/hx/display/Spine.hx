@@ -86,8 +86,18 @@ class Spine extends Graphics {
 		skeleton = new Skeleton(data);
 		skeleton.scaleY = -1;
 		animationState = new AnimationState(new AnimationStateData(data));
+		#if !spine_hx
+		animationState.onComplete.add(onComplete);
+		#end
 		this.updateEnabled = true;
 	}
+
+	#if !spine_hx
+	private function onComplete(e:TrackEntry):Void {
+		if (hasEventListener(Event.COMPLETE))
+			this.dispatchEvent(new Event(Event.COMPLETE));
+	}
+	#end
 
 	override function onUpdate(dt:Float) {
 		__renderCurrentTime += dt;

@@ -6,6 +6,7 @@
 --library actuate
 --library openfl
 --library lime
+--library echo
 --library hxmaker-openfl
 --js bin/main.js
 --no-output

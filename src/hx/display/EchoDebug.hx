@@ -33,8 +33,15 @@ class EchoDebug extends Debug {
 
 	override public inline function draw_rect(min_x:Float, min_y:Float, width:Float, height:Float, color:Int, ?stroke:Int, alpha:Float = 1.) {
 		canvas.beginFill(color);
-		// stroke != null ? canvas.graphics.lineStyle(1, stroke, 1) : canvas.graphics.lineStyle();
 		canvas.drawRect(min_x, min_y, width, height, alpha);
+		if (stroke != null) {
+			canvas.beginLineStyle(stroke, 1);
+			canvas.moveTo(min_x, min_y);
+			canvas.lineTo(min_x + width, min_y);
+			canvas.lineTo(min_x + width, min_y + height);
+			canvas.lineTo(min_x, min_y + height);
+			canvas.lineTo(min_x, min_y);
+		}
 	}
 
 	override public inline function draw_circle(x:Float, y:Float, radius:Float, color:Int, ?stroke:Int, alpha:Float = 1.) {

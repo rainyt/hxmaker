@@ -1,5 +1,6 @@
 package hx.display;
 
+import hx.display.ISpine.ISpineDrawOrder;
 #if spine_hx
 import spine.AnimationState.TrackEntry;
 import spine.utils.SkeletonClipping;
@@ -27,7 +28,7 @@ import spine.Skeleton;
  * Spine渲染器支持，它依赖`spine-haxe4.2`版本
  */
 @:keep
-class Spine extends Graphics {
+class Spine extends Graphics implements ISpine {
 	/**
 	 * 剪切工具
 	 */
@@ -121,6 +122,15 @@ class Spine extends Graphics {
 	 */
 	dynamic public function onUpdateWorldTransformAfter():Void {}
 
+	private var __spineDrawOrder:ISpineDrawOrder;
+
+	/**
+	 * 设置渲染容器，存在容器时，则将所有渲染对象添加到容器中
+	 */
+	public function setSpineDrawOrder(container:ISpineDrawOrder):Void {
+		this.__spineDrawOrder = container;
+	}
+
 	/**
 	 * 更新骨架
 	 * @param dt 
@@ -152,7 +162,8 @@ class Spine extends Graphics {
 			}
 		}
 		this.clear();
-		for (slot in skeleton.drawOrder) {
+		var isStartDarw = true;
+		for (index => slot in skeleton.drawOrder) {
 			if (slot.attachment != null) {
 				// 不可见的情况下跳过
 				if (slot.color.a == 0) {
@@ -231,19 +242,30 @@ class Spine extends Graphics {
 					#else
 					var texture = atlasRegion.rendererObject;
 					#end
-					if (bitmapData != texture) {
-						bitmapData = texture;
-						this.beginBitmapData(bitmapData);
-					}
 					// TODO 需要支持darkColor
 					var c = pool.get();
 					c.redMultiplier = slot.color.r;
 					c.greenMultiplier = slot.color.g;
 					c.blueMultiplier = slot.color.b;
-					this.drawTriangles(_tempVerticesArray, _triangles, _uvs, slot.color.a, c, slot.data.blendMode == spine.BlendMode.additive);
+					if (__spineDrawOrder != null) {
+						__spineDrawOrder.onDrawOrder(slot, texture, _tempVerticesArray, _triangles, _uvs, slot.color.a, c,
+							slot.data.blendMode == spine.BlendMode.additive, isStartDarw);
+						isStartDarw = false;
+					} else {
+						if (bitmapData != texture) {
+							bitmapData = texture;
+							this.beginBitmapData(bitmapData);
+						}
+						this.drawTriangles(_tempVerticesArray, _triangles, _uvs, slot.color.a, c, slot.data.blendMode == spine.BlendMode.additive);
+					}
 				}
 				if (clipper.isClipping()) {
 					clipper.clipEndWithSlot(slot);
+				}
+			} else {
+				if (__spineDrawOrder != null) {
+					__spineDrawOrder.onDrawOrder(slot, null, null, null, null, 1, null, false, isStartDarw);
+					isStartDarw = false;
 				}
 			}
 		}
@@ -263,6 +285,10 @@ class Spine extends Graphics {
 		return this.animationState.setAnimationByName(index, name, isLoop);
 	}
 
+	/**
+	 * 设置骨架皮肤
+	 * @param name 
+	 */
 	public function setSkinByName(name:String):Void {
 		#if spine_haxe
 		this.skeleton.skinName = name;

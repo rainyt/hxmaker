@@ -94,8 +94,8 @@ class SpineSprite extends Sprite implements ISpineDrawOrder {
 	override function onUpdate(dt:Float) {
 		this.spine.onUpdate(dt);
 		for (object in __slotDisplay) {
-			if (object.updateEnabled) {
-				object.onUpdate(dt);
+			if (object.display.updateEnabled) {
+				object.display.onUpdate(dt);
 			}
 		}
 	}
@@ -137,15 +137,18 @@ class SpineSprite extends Sprite implements ISpineDrawOrder {
 		return __drawGraphics[i];
 	}
 
-	private var __slotDisplay:Map<String, DisplayObject> = [];
+	private var __slotDisplay:Map<String, DisplayObjectDraw> = [];
 
 	/**
 	 * 绑定显示对象到slot
 	 * @param slot 
 	 * @param display 
 	 */
-	public function bindSlot(name:String, display:DisplayObject):Void {
-		this.__slotDisplay[name] = display;
+	public function bindSlot(name:String, display:DisplayObject, ?draw:DisplayObject->Void):Void {
+		this.__slotDisplay[name] = {
+			display: display,
+			drawFunction: draw
+		};
 	}
 
 	/**
@@ -153,7 +156,7 @@ class SpineSprite extends Sprite implements ISpineDrawOrder {
 	 * @param slot 
 	 * @return 
 	 */
-	public function getBindSoltDisplay(slot:Slot):DisplayObject {
+	public function getBindSoltDisplay(slot:Slot):DisplayObjectDraw {
 		return this.__slotDisplay[slot.data.name];
 	}
 
@@ -185,7 +188,8 @@ class SpineSprite extends Sprite implements ISpineDrawOrder {
 			this.addChild(g);
 		}
 
-		var display = getBindSoltDisplay(slot);
+		var data = getBindSoltDisplay(slot);
+		var display = data == null ? null : data.display;
 		if (display != null) {
 			#if spine_hx
 			display.x = slot.bone.getWorldX();
@@ -201,7 +205,15 @@ class SpineSprite extends Sprite implements ISpineDrawOrder {
 			display.scaleY = slot.bone.worldScaleY;
 			#end
 			this.addChild(display);
+			if (data.drawFunction != null) {
+				data.drawFunction(display);
+			}
 			__drawIndex++;
 		}
 	}
+}
+
+typedef DisplayObjectDraw = {
+	display:DisplayObject,
+	drawFunction:DisplayObject->Void
 }

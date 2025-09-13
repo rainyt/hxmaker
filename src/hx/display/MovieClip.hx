@@ -178,6 +178,7 @@ class MovieClip extends Image {
 		__frameReset();
 		var currentData = __frames[currentFrame];
 		if (currentData == null) {
+			currentFrame = 0;
 			return;
 		}
 		while (currentData != null && __time > __durationTime + currentData.duration) {

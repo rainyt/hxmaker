@@ -116,6 +116,8 @@ class Log {
 				+ functionName
 				+ ":"
 				+ lineAt
+				+ ":"
+				+ errorNoneLine.length
 				+ ": "
 				+ message.substr(message.indexOf(":", 8) + 1));
 

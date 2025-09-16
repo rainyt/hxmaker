@@ -1,11 +1,10 @@
 package hx.display;
-import hx.geom.Point;
-import haxe.Timer;
-import motion.Actuate;
-import hx.layout.AnchorLayoutData;
-import hx.layout.AnchorLayout;
+
 import hx.events.MouseEvent;
+import hx.geom.Point;
 import hx.geom.Rectangle;
+import hx.layout.AnchorLayout;
+import motion.Actuate;
 
 /**
  * 滚动遮罩支持的容器
@@ -20,7 +19,7 @@ class Scroll extends BoxContainer {
 	public var scrollX(get, set):Float;
 
 	public function new(isOverScrollEnbaled:Bool = true) {
-		this.isOverScrollEnbaled = isOverScrollEnbaled; 
+		this.isOverScrollEnbaled = isOverScrollEnbaled;
 		super();
 	}
 
@@ -189,7 +188,7 @@ class Scroll extends BoxContainer {
 		super.onUpdate(dt);
 
 		updateScrollPosition();
-	 
+
 		if (this.autoVisible && __dirty) {
 			if (this.vScrollBar != null) {
 				this.vScrollBar.measure();
@@ -222,106 +221,89 @@ class Scroll extends BoxContainer {
 		}
 	}
 
-	public var isOverScrollEnbaled:Bool = true; //是否开启overscroll效果
+	public var isOverScrollEnbaled:Bool = true; // 是否开启overscroll效果
 
-	public var bounceBackTime:Float = 0.35; //回弹持续时间
-	
-	public var deceleration:Float = 0.75; //减速因子
+	public var bounceBackTime:Float = 0.35; // 回弹持续时间
 
-	private var freeSlideDecelerationAfterEnterOverScroll:Float = 0.89; //自由滑动，并且超出版边后的减速因子
+	public var deceleration:Float = 0.75; // 减速因子
 
-	private var velocity:Point; //惯性
+	private var freeSlideDecelerationAfterEnterOverScroll:Float = 0.89; // 自由滑动，并且超出版边后的减速因子
+
+	private var velocity:Point; // 惯性
 
 	private var shouldFreeSlideX:Bool;
 	private var shouldFreeSlideY:Bool;
 
-	private var freeOverScrollMaxDistanceX:Float = -1; //自由滑动，并且超出版边的最大距离x
-	private var freeOverScrollMaxDistanceY:Float = -1; //自由滑动，并且超出版边的最大距离y
+	private var freeOverScrollMaxDistanceX:Float = -1; // 自由滑动，并且超出版边的最大距离x
+	private var freeOverScrollMaxDistanceY:Float = -1; // 自由滑动，并且超出版边的最大距离y
 
 	private static inline var freeOverScrollMaxDistanceMultiplier = 2;
 
 	private function updateScrollPosition() {
-
-		if(!shouldFreeSlideX && !shouldFreeSlideY ){
+		if (!shouldFreeSlideX && !shouldFreeSlideY) {
 			return;
 		}
 
 		var maxSize = this.getMaxSize();
 
-		if(shouldFreeSlideX){
-
+		if (shouldFreeSlideX) {
 			this.scrollX -= velocity.x;
 			var overScrollSideHorizontal = tryGetOverScrollSide(maxSize.x, HORIZONTAL);
-			if(overScrollSideHorizontal == NONE){
+			if (overScrollSideHorizontal == NONE) {
 				velocity.x *= deceleration;
-			}
-			else {
-				
-				if(freeOverScrollMaxDistanceX == -1){
+			} else {
+				if (freeOverScrollMaxDistanceX == -1) {
 					freeOverScrollMaxDistanceX = Math.abs(velocity.x) * freeOverScrollMaxDistanceMultiplier;
 				}
 
-				if(this.scrollX >= freeOverScrollMaxDistanceX || Math.abs(velocity.x) < 0.001){
+				if (this.scrollX >= freeOverScrollMaxDistanceX || Math.abs(velocity.x) < 0.001) {
 					this.scrollX = freeOverScrollMaxDistanceX;
 					shouldFreeSlideX = false;
-					
-				}
-				else if(this.scrollX <= -maxSize.x - freeOverScrollMaxDistanceX || Math.abs(velocity.x) < 0.001){
+				} else if (this.scrollX <= -maxSize.x - freeOverScrollMaxDistanceX || Math.abs(velocity.x) < 0.001) {
 					this.scrollX = -maxSize.x - freeOverScrollMaxDistanceX;
 					shouldFreeSlideX = false;
-					 
 				}
 
-				if(!shouldFreeSlideX){
+				if (!shouldFreeSlideX) {
 					Actuate.tween(this, bounceBackTime, {
 						scrollX: overScrollSideHorizontal == LEFT ? 0 : -maxSize.x
 					});
 				}
 
 				velocity.x *= freeSlideDecelerationAfterEnterOverScroll;
-				 
-				
 			}
- 
-			
 		}
 
-		if(shouldFreeSlideY){
-			 
+		if (shouldFreeSlideY) {
 			this.scrollY -= velocity.y;
 			var overScrollSideVertical = tryGetOverScrollSide(maxSize.y, VERTICAL);
-			if(overScrollSideVertical == NONE){
+			if (overScrollSideVertical == NONE) {
 				velocity.y *= deceleration;
-			}
-			else {
-				if(freeOverScrollMaxDistanceY == -1){
+			} else {
+				if (freeOverScrollMaxDistanceY == -1) {
 					freeOverScrollMaxDistanceY = Math.abs(velocity.y) * 2;
 				}
 
-				if(this.scrollY >= freeOverScrollMaxDistanceY || Math.abs(velocity.y) < 0.001){
+				if (this.scrollY >= freeOverScrollMaxDistanceY || Math.abs(velocity.y) < 0.001) {
 					this.scrollY = freeOverScrollMaxDistanceY;
 					shouldFreeSlideY = false;
-				}
-				else if(this.scrollY <= -maxSize.y - freeOverScrollMaxDistanceY || Math.abs(velocity.y) < 0.001){
+				} else if (this.scrollY <= -maxSize.y - freeOverScrollMaxDistanceY || Math.abs(velocity.y) < 0.001) {
 					this.scrollY = -maxSize.y - freeOverScrollMaxDistanceY;
 					shouldFreeSlideY = false;
 				}
 
-				if(!shouldFreeSlideY){
+				if (!shouldFreeSlideY) {
 					Actuate.tween(this, bounceBackTime, {
 						scrollY: overScrollSideVertical == TOP ? 0 : -maxSize.y
 					});
 				}
 
 				velocity.y *= freeSlideDecelerationAfterEnterOverScroll;
-				 
 			}
-			
 		}
-		 
 	}
 
-	private function stopFreeSliding(){
+	private function stopFreeSliding() {
 		shouldFreeSlideX = false;
 		shouldFreeSlideY = false;
 		freeOverScrollMaxDistanceX = -1;
@@ -349,75 +331,61 @@ class Scroll extends BoxContainer {
 		this.__lastStepX = 0;
 		this.__lastStepY = 0;
 		__down = true;
-		
-		if(!isOverScrollEnbaled){
+
+		if (!isOverScrollEnbaled) {
 			this.stopScroll();
-		}
-		else{
+		} else {
 			this.stopFreeSliding();
 		}
 	}
- 
 
 	private function onMouseUp(e:MouseEvent) {
 		if (__down) {
 			__down = false;
 			if (__lastStepX != 0 || __lastStepY != 0) {
-
-				
-				if(!isOverScrollEnbaled){
+				if (!isOverScrollEnbaled) {
 					var time = 0.5;
 					Actuate.tween(this, time, getMoveingToData({
 						scrollX: scrollX - __lastStepX / time * 4,
 						scrollY: scrollY - __lastStepY / time * 4
 					}));
-				}
-				else{
- 
-					velocity = new Point(__lastStepX,__lastStepY);
-					
+				} else {
+					velocity = new Point(__lastStepX, __lastStepY);
+
 					velocity.x = Math.abs(velocity.x) <= 1.3 ? 0 : velocity.x;
 					velocity.y = Math.abs(velocity.y) <= 1.3 ? 0 : velocity.y;
 
 					var maxSize = this.getMaxSize();
-					
+
 					var overScrollSideHorizontal = tryGetOverScrollSide(maxSize.x, HORIZONTAL);
 					var overScrollSideVertical = tryGetOverScrollSide(maxSize.y, VERTICAL);
 
-					if(overScrollSideHorizontal == NONE){ //惯性
+					if (overScrollSideHorizontal == NONE) { // 惯性
 
 						shouldFreeSlideX = velocity.x != 0;
 						freeOverScrollMaxDistanceX = -1;
-					
-					}
-					else{ //弹回
- 
+					} else { // 弹回
+
 						Actuate.tween(this, bounceBackTime, {
-							scrollX:overScrollSideHorizontal == LEFT ? 0 : -maxSize.x
+							scrollX: overScrollSideHorizontal == LEFT ? 0 : -maxSize.x
 						});
 					}
 
-					if(overScrollSideVertical == NONE){ //惯性
+					if (overScrollSideVertical == NONE) { // 惯性
 
 						shouldFreeSlideY = velocity.y != 0;
 						freeOverScrollMaxDistanceY = -1;
-						 
-					}
-					else{ //弹回
+					} else { // 弹回
 
 						Actuate.tween(this, bounceBackTime, {
 							scrollY: overScrollSideVertical == TOP ? 0 : -maxSize.y
 						});
-					
 					}
- 
 				}
-				  
 			}
 		}
 	}
- 
-	 
+
 	public var contentWidth(get, never):Float;
 
 	private function get_contentWidth():Float {
@@ -452,7 +420,7 @@ class Scroll extends BoxContainer {
 	private function onMouseMove(e:MouseEvent) {
 		if (!__down)
 			return;
-		 
+
 		var maxSize = this.getMaxSize();
 		var maxWidth = maxSize.x;
 		var maxHeight = maxSize.y;
@@ -462,8 +430,8 @@ class Scroll extends BoxContainer {
 		this.startX = e.stageX;
 		this.startY = e.stageY;
 
-		if(!isOverScrollEnbaled){
-			//原本的逻辑
+		if (!isOverScrollEnbaled) {
+			// 原本的逻辑
 			this.scrollX -= __lastStepX;
 			this.scrollY -= __lastStepY;
 
@@ -474,7 +442,7 @@ class Scroll extends BoxContainer {
 				this.scrollX = -maxWidth;
 				this.__lastStepX = 0;
 			}
-			
+
 			if (this.scrollY > 0 || maxHeight < 0) {
 				this.scrollY = 0;
 				this.__lastStepY = 0;
@@ -482,67 +450,74 @@ class Scroll extends BoxContainer {
 				this.scrollY = -maxHeight;
 				this.__lastStepY = 0;
 			}
+		} else {
+			// 如果scrollXY超出版边，使用橡皮筋效果限制转移距离
+			if (maxWidth > 0 && scrollXEnable)
+				this.scrollX -= (tryGetOverScrollSide(maxWidth,
+					HORIZONTAL) != NONE) ? __lastStepX != 0 ? rubberBandDistance(__lastStepX, this.width) : 0 : __lastStepX;
+			if (maxHeight > 0 && scrollYEnable)
+				this.scrollY -= (tryGetOverScrollSide(maxHeight,
+					VERTICAL) != NONE) ? __lastStepY != 0 ? rubberBandDistance(__lastStepY, this.height) : 0 : __lastStepY;
 		}
-		else{
-			
-			//如果scrollXY超出版边，使用橡皮筋效果限制转移距离
-			this.scrollX -= (tryGetOverScrollSide(maxWidth, HORIZONTAL) !=  NONE) ? __lastStepX != 0 ? rubberBandDistance(__lastStepX, this.width) : 0 :  __lastStepX;
-			this.scrollY -= (tryGetOverScrollSide(maxHeight, VERTICAL) !=  NONE) ? __lastStepY != 0 ? rubberBandDistance(__lastStepY, this.height) : 0 : __lastStepY;
-			
-		}
-		 
 	}
 
-	//获取可活动空间大小
+	/**
+	 * 获取可活动空间大小
+	 */
 	private function getMaxSize():Point {
 		var ret = box.__getBounds();
-		if (!scrollYEnable) ret.height = 0;
-		if (!scrollXEnable) ret.width = 0;
-		return new Point(ret.width - this.width,ret.height - this.height);
+		if (!scrollYEnable)
+			ret.height = 0;
+		if (!scrollXEnable)
+			ret.width = 0;
+		return new Point(ret.width - this.width, ret.height - this.height);
 	}
 
-	//模拟橡皮筋拉动距离
-    private function rubberBandDistance(distance: Float, dimension: Float):Float {
-        var constant: Float = 0.35;
-        return (distance * constant * dimension) / (dimension + constant * Math.abs(distance));
-    }
+	/**
+	 * 模拟橡皮筋拉动距离
+	 */
+	private function rubberBandDistance(distance:Float, dimension:Float):Float {
+		var constant:Float = 0.35;
+		return (distance * constant * dimension) / (dimension + constant * Math.abs(distance));
+	}
 
-	//判断是否超出版边
-	private function tryGetOverScrollSide(maxSpace:Float,scrollDirection:ScrollDirection): OverScrollSide{
-		if(scrollDirection == HORIZONTAL){
-			if(this.scrollX > 0 || maxSpace < 0){
+	/**
+	 * 判断是否超出版边
+	 */
+	private function tryGetOverScrollSide(maxSpace:Float, scrollDirection:ScrollDirection):OverScrollSide {
+		if (scrollDirection == HORIZONTAL) {
+			if (this.scrollX > 0 || maxSpace < 0) {
 				return LEFT;
-			}else if(this.scrollX < -maxSpace){
+			} else if (this.scrollX < -maxSpace) {
 				return RIGHT;
 			}
 			return NONE;
-		}
-		else{
-
-			if(this.scrollY > 0 || maxSpace < 0 ){
+		} else {
+			if (this.scrollY > 0 || maxSpace < 0) {
 				return TOP;
-			}else if(this.scrollY < -maxSpace){
+			} else if (this.scrollY < -maxSpace) {
 				return DOWN;
 			}
-			
 		}
-		return NONE; 
+		return NONE;
 	}
-	 
 }
-//拖拽方向
-enum ScrollDirection {
 
+/**
+ * 拖拽方向
+ */
+enum ScrollDirection {
 	VERTICAL;
 	HORIZONTAL;
 }
-//超出版边的位置
-enum OverScrollSide {
 
-	TOP;  
-	LEFT; 
+/**
+ * 超出版边的位置
+ */
+enum OverScrollSide {
+	TOP;
+	LEFT;
 	RIGHT;
 	DOWN;
-	NONE; 
-
+	NONE;
 }

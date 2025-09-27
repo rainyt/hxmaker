@@ -109,7 +109,6 @@ class UIManager {
 				return style;
 			}
 		}
-		trace("无法读取", id);
 		return null;
 	}
 
@@ -120,12 +119,11 @@ class UIManager {
 	 */
 	public static function getAtlas(id:String):Atlas {
 		for (assets in assetsList) {
-			var atlas = assets.atlases.get(id);
+			var atlas = assets.getAtlas(id);
 			if (atlas != null) {
 				return atlas;
 			}
 		}
-		trace("无法读取", id);
 		return null;
 	}
 
@@ -136,12 +134,11 @@ class UIManager {
 	 */
 	public static function getSound(id:String):Sound {
 		for (assets in assetsList) {
-			var sound = assets.sounds.get(id);
+			var sound = assets.getSound(id);
 			if (sound != null) {
 				return sound;
 			}
 		}
-		trace("无法读取", id);
 		return null;
 	}
 

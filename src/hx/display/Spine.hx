@@ -210,8 +210,9 @@ class Spine extends Graphics implements ISpine {
 						continue;
 					#if spine_haxe
 					clipper.clipTriangles(_tempVerticesArray, _triangles, _triangles.length, _uvs);
-					var clippedVertices = clipper.clippedTriangles;
-					var cliptriangles = clipper.clippedTriangles;
+					var clippedVertices = clipper.clippedVertices.copy();
+					var cliptriangles = clipper.clippedTriangles.copy();
+					var usv = clipper.clippedUvs.copy();
 					#else
 					clipper.clipTriangles(_tempVerticesArray, _tempVerticesArray.length, _triangles, _triangles.length, _uvs, 1, 1, true);
 					var clippedVertices:Array<Float> = clipper.getClippedVertices();
@@ -221,6 +222,11 @@ class Spine extends Graphics implements ISpine {
 						clipper.clipEndWithSlot(slot);
 						continue;
 					} else {
+						#if spine_haxe
+						_tempVerticesArray = clippedVertices;
+						_uvs = usv;
+						_triangles = cliptriangles;
+						#else
 						_tempVerticesArray = [];
 						_uvs = [];
 						var i = 0;
@@ -234,6 +240,7 @@ class Spine extends Graphics implements ISpine {
 								break;
 						}
 						_triangles = cliptriangles;
+						#end
 					}
 				}
 				if (atlasRegion != null) {

@@ -487,10 +487,10 @@ class Assets extends Future<Assets, Dynamic> {
 	public function getSkeletonData(name:String, json:String = null):SkeletonData {
 		if (json == null)
 			json = name;
-		var atlas:Atlas = atlases.get(name);
+		var atlas:Atlas = getAtlas(name);
 		if (atlas is SpineTextureAtlas) {
 			var spineAtlas:SpineTextureAtlas = cast atlas;
-			return spineAtlas.createSkeletonData(strings.get(json));
+			return spineAtlas.createSkeletonData(this.getString(json));
 		}
 		return null;
 	}
@@ -511,6 +511,24 @@ class Assets extends Future<Assets, Dynamic> {
 			}
 		}
 		return atlas;
+	}
+
+	/**
+	 * 获得字符串
+	 * @param name 
+	 * @return String
+	 */
+	public function getString(name:String):String {
+		var str = strings.get(name);
+		if (str == null) {
+			for (assets in uiAssetses) {
+				str = assets.getString(name);
+				if (str != null) {
+					return str;
+				}
+			}
+		}
+		return str;
 	}
 
 	/**

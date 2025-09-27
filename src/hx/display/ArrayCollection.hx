@@ -12,6 +12,11 @@ class ArrayCollection extends EventDispatcher {
 		this.source = array;
 	}
 
+	/**
+	 * 删除某个元素
+	 * @param item 
+	 * @return Bool
+	 */
 	public function remove(item:Dynamic):Bool {
 		var index = source.indexOf(item);
 		if (index < 0)
@@ -21,12 +26,27 @@ class ArrayCollection extends EventDispatcher {
 		return true;
 	}
 
+	/**
+	 * 添加元素
+	 * @param item 
+	 * @return Bool
+	 */
 	public function add(item:Dynamic):Bool {
 		if (source.indexOf(item) >= 0)
 			return false;
 		source.push(item);
 		this.dispatchEvent(new Event(Event.ADDED, item));
 		return true;
+	}
+
+	/**
+	 * 清空所有元素
+	 */
+	public function clear():Void {
+		var items = source.copy();
+		for (value in items) {
+			this.remove(value);
+		}
 	}
 
 	public var length(get, null):Int;

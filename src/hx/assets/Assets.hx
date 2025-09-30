@@ -425,6 +425,14 @@ class Assets extends Future<Assets, Dynamic> {
 	}
 
 	/**
+	 * 获得已加载进度
+	 * @return Float
+	 */
+	public function getProgress():Float {
+		return loadedCounts / totalCounts;
+	}
+
+	/**
 	 * 加成完成时触发
 	 * @param future 
 	 */

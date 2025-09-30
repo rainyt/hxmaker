@@ -1,5 +1,7 @@
 package hx.ui;
 
+import hx.core.Hxmaker;
+import hx.display.Stage;
 import hx.display.Quad;
 import hx.display.MovieClip;
 import hx.display.Spine;
@@ -249,7 +251,7 @@ class UIManager {
 				obj.data = getBitmapData(data) ?? assets.getBitmapData(data);
 			}
 			if (xml.get("fill") == "true") {
-				var scale = ScaleUtils.mathScale(obj.stage.stageWidth, obj.stage.stageHeight, obj.width, obj.height);
+				var scale = ScaleUtils.mathScale(Hxmaker.engine.stageWidth, Hxmaker.engine.stageHeight, obj.width, obj.height);
 				obj.scaleX = obj.scaleY = scale;
 			}
 			if (xml.exists("scale9Grid")) {

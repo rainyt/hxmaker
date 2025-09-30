@@ -29,7 +29,7 @@ class SoundManager {
 	/**
 	 * 音效播放间隔，多个音效在同一个时间内播放时，不会重叠播放
 	 */
-	public var effectTimeInterval:Float = 0.16;
+	public var effectTimeInterval:Float = 0.06;
 
 	private function new() {}
 

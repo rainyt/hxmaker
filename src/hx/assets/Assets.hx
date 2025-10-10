@@ -29,7 +29,6 @@ class Assets extends Future<Assets, Dynamic> {
 	 * 重新再请求加载下一个
 	 */
 	private static function readyLoadNext():Void {
-		trace("尝试下一个加载");
 		for (assets in __assets) {
 			if (assets != null) {
 				if (assets.loadNext()) {

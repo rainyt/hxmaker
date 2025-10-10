@@ -1,5 +1,6 @@
 package hx.display;
 
+import hx.geom.Point;
 import hx.geom.Rectangle;
 import hx.utils.ColorUtils;
 import hx.geom.ColorTransform;
@@ -263,5 +264,78 @@ class Graphics extends DisplayObject {
 	 */
 	private function updateGraphics():Void {
 		__graphicsDirty = false;
+	}
+
+	/**
+	 * 绘制圆形
+	 * @param x 
+	 * @param y 
+	 * @param radius 半径
+	 * @param smooth 平滑值，值越高圆形会显示得越平滑，但是相应性能越差
+	 * @param alpha 
+	 * @param colorTransform 
+	 */
+	public function drawCircleLine(x:Float, y:Float, radius:Float, smooth:Int = 10, alpha:Float = 1, ?colorTransform:ColorTransform):Void {
+		// http://slabode.exofire.net/circle_draw.shtml
+
+		var _smooth:Float = smooth;
+		var _steps:Int = Std.int(_smooth * Math.sqrt(radius));
+
+		// Precompute the value based on segments
+		var theta = 2 * 3.1415926 / _steps;
+
+		var tangential_factor = Math.tan(theta);
+		var radial_factor = Math.cos(theta);
+
+		var x2:Float = radius;
+		var y2:Float = 0;
+
+		var _verts:Array<Point> = [];
+
+		for (_ in 0..._steps) {
+			var __x = x2 + x;
+			var __y = y2 + y;
+
+			_verts.push(new Point(__x, __y));
+
+			var tx = -y2;
+			var ty = x2;
+
+			x2 += tx * tangential_factor;
+			y2 += ty * tangential_factor;
+
+			x2 *= radial_factor;
+			y2 *= radial_factor;
+		}
+
+		drawLines(_verts);
+	}
+
+	public function drawLines(lines:Array<Point>, alpha:Float = 1, ?color:ColorTransform):Void {
+		var _count:Int = lines.length;
+
+		if (_count == 2) {
+			drawLine(lines[0].x, lines[0].y, lines[1].x, lines[1].y, alpha, color);
+			return;
+		}
+
+		if (_count == 1) {
+			// drawPoint(lines[0].x, lines[0].y);
+			return;
+		}
+
+		// start the polygon by drawing this start point
+		// drawLine(lines[0].x, lines[0].y, lines[1].x, lines[1].y, alpha, color);
+		this.moveTo(lines[0].x, lines[0].y);
+		this.lineTo(lines[1].x, lines[1].y);
+
+		// draw the rest of the points
+		for (i in 1..._count - 1) {
+			// drawLine(lines[i].x, lines[i].y, lines[i + 1].x, lines[i + 1].y, alpha, color);
+			this.lineTo(lines[i + 1].x, lines[i + 1].y);
+		}
+		// join last point to first point
+		// drawLine(lines[_count - 1].x, lines[_count - 1].y, lines[0].x, lines[0].y, alpha, color);
+		this.lineTo(lines[0].x, lines[0].y);
 	}
 }

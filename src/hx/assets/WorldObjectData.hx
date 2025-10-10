@@ -48,16 +48,6 @@ class WorldObjectData {
 		}
 	}
 
-	public function getConfig(id:String):ObjectConfig {
-		var array:Array<ObjectConfig> = data.objects;
-		for (index => value in array) {
-			if (value.id == id) {
-				return value;
-			}
-		}
-		return null;
-	}
-
 	#if echo
 	/**
 	 * 创建碰撞块
@@ -65,7 +55,7 @@ class WorldObjectData {
 	 * @return Shape
 	 */
 	public function createEchoCollision(id:String):Body {
-		var config = getConfig(id);
+		var config = getObjectDataById(id);
 		switch config.collisionType {
 			case POLYGON:
 				var points:Array<Vector2> = [];
@@ -86,7 +76,9 @@ class WorldObjectData {
 					mass: STATIC,
 					shape: {
 						type: CIRCLE,
-						radius: config.radian
+						radius: config.radian,
+						offset_x: config.collisionX,
+						offset_y: config.collisionY
 					}
 				});
 		}
@@ -195,18 +187,6 @@ class WorldObjectData {
 			groupObjects: groupObjects
 		}, "	");
 	}
-}
-
-typedef ObjectConfig = {
-	id:String,
-	offestX:Float,
-	offestY:Float,
-	collisionType:CollisionType,
-	points:Array<Float>,
-	radian:Float,
-	classType:String,
-	type:String,
-	path:String,
 }
 
 enum abstract CollisionType(String) to String from String {

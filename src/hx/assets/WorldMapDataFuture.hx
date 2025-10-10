@@ -20,7 +20,7 @@ class WorldMapDataFuture extends Future<StyleAssets, String> {
 			var assets = new WorldMapDataAssets(mapData);
 			assets.objects.set(path.withoutExtension().withoutDirectory(), assets.worldMapData);
 			for (file in assets.worldMapData.files) {
-				var config = WorldObjectData.current.getConfig(file.id);
+				var config = WorldObjectData.current.getObjectDataById(file.id);
 				switch config.type {
 					case "png":
 						assets.loadBitmapData(Path.join([dir, config.path]));

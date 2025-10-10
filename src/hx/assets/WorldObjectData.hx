@@ -32,7 +32,13 @@ class WorldObjectData {
 	 */
 	public var groupObjects:Array<GroupObjectData> = [];
 
-	public function new(data:Dynamic) {
+	/**
+	 * 根路径
+	 */
+	public var rootPath:String;
+
+	public function new(rootPath:String, data:Dynamic) {
+		this.rootPath = rootPath;
 		this.data = data;
 		for (key in Reflect.fields(data)) {
 			Reflect.setProperty(this, key, Reflect.getProperty(data, key));

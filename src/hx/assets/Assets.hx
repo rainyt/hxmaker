@@ -543,7 +543,7 @@ class Assets extends Future<Assets, Dynamic> {
 	 * @param name 
 	 * @return String
 	 */
-	public function getObject(name:String):String {
+	public function getObject(name:String):Dynamic {
 		var obj = objects.get(name);
 		if (obj == null) {
 			for (assets in uiAssetses) {

@@ -45,11 +45,8 @@ class EchoDebug extends Debug {
 	}
 
 	override public inline function draw_circle(x:Float, y:Float, radius:Float, color:Int, ?stroke:Int, alpha:Float = 1.) {
-		// canvas.beginFill(color);
-		// canvas.graphics.beginFill(color, alpha);
-		// stroke != null ? canvas.graphics.lineStyle(1, stroke, 1) : canvas.graphics.lineStyle();
-		// canvas.graphics.drawCircle(x, y, radius);
-		// canvas.graphics.endFill();
+		canvas.beginLineStyle(color, 3);
+		canvas.drawCircleLine(x, y, radius, 2);
 	}
 
 	override public inline function clear() {

@@ -539,6 +539,24 @@ class Assets extends Future<Assets, Dynamic> {
 	}
 
 	/**
+	 * 获得Object
+	 * @param name 
+	 * @return String
+	 */
+	public function getObject(name:String):String {
+		var obj = objects.get(name);
+		if (obj == null) {
+			for (assets in uiAssetses) {
+				obj = assets.getObject(name);
+				if (obj != null) {
+					return obj;
+				}
+			}
+		}
+		return obj;
+	}
+
+	/**
 	 * 获得音频
 	 * @param name 
 	 * @return Sound

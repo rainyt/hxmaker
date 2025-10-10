@@ -20,7 +20,7 @@ class WorldMapDataFuture extends Future<StyleAssets, String> {
 				id:String
 			}> = mapData.files;
 			var assets = new StyleAssets();
-			assets.objects.set("map", mapData);
+			assets.objects.set(path.withoutExtension().withoutDirectory(), mapData);
 			for (file in files) {
 				var config = WorldObjectData.current.getConfig(file.id);
 				switch config.type {

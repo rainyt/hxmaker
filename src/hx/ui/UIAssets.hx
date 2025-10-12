@@ -8,6 +8,8 @@ import hx.assets.StringFuture;
 import hx.assets.Assets;
 import hx.display.DisplayObjectContainer;
 
+using haxe.io.Path;
+
 class UIAssets extends Assets {
 	/**
 	 * 模块映射
@@ -63,11 +65,11 @@ class UIAssets extends Assets {
 				switch item.nodeName {
 					case "MovieClip":
 						// 加载精灵图
-						var path = item.get("src");
-						this.loadAtlas(path, StringTools.replace(path, ".png", ".xml"));
+						var path = item.get("src").withoutExtension();
+						this.loadAtlas(path + ".png", path + ".xml");
 					case "spine":
 						// 加载Spine动画
-						var path = item.get("path");
+						var path = item.get("path").withoutExtension();
 						this.loadSpineAtlas(path + ".png", path + ".atlas");
 						this.loadString(path + ".json");
 					case "bitmapData":
@@ -78,9 +80,13 @@ class UIAssets extends Assets {
 						// 加载音频
 						var path = item.get("path");
 						this.loadSound(path);
+					case "font":
+						// 加载字体
+						var path = item.get("path").withoutExtension();
+						this.loadFnt(path + ".png", path + ".fnt");
 					case "atlas":
 						// 加载精灵图
-						var path = item.get("path");
+						var path = item.get("path").withoutExtension();
 						this.loadAtlas(path + ".png", path + ".xml");
 					case "Image", "Button":
 						// 加载图片

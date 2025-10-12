@@ -221,7 +221,7 @@ class Assets extends Future<Assets, Dynamic> {
 		var path = getNativePath(png);
 		xml = getNativePath(xml);
 		pushFuture(new hx.assets.FntFuture({
-			png: png,
+			png: path,
 			xml: xml,
 			path: path
 		}, false));

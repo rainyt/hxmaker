@@ -38,6 +38,9 @@ class SceneManager {
 			if (lastScene.parent == null)
 				showScene(lastScene);
 		}
+		if (has) {
+			scene.onReleaseEvent.call();
+		}
 	}
 
 	/**

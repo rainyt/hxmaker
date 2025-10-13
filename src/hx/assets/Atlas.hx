@@ -28,6 +28,15 @@ class Atlas {
 	public function parser():Void {}
 
 	/**
+	 * 根据名称获得位图
+	 * @param name 
+	 * @return BitmapData
+	 */
+	public function getBitmapData(name:String):BitmapData {
+		return bitmapDatas[name];
+	}
+
+	/**
 	 * 根据名字获得位图数组，并会对名字进行一个排序处理
 	 * @param name 如果为空，则返回所有位图数组
 	 * @return Array<BitmapData>

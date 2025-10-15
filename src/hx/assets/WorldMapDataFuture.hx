@@ -24,6 +24,9 @@ class WorldMapDataFuture extends Future<StyleAssets, String> {
 				switch config.type {
 					case "png":
 						assets.loadBitmapData(Path.join([dir, config.path]));
+					case "spine":
+						assets.loadSpineAtlas(Path.join([dir, config.spinePngFiles]), Path.join([dir, config.spineAtlasFile]));
+						assets.loadString(Path.join([dir, config.spineJsonFile]));
 					default:
 						throw "unknown type" + config.type;
 				}

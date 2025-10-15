@@ -89,4 +89,14 @@ class SceneManager {
 		scenes.push(scene);
 		Hxmaker.engine.stages[0].addChild(scene);
 	}
+
+	/**
+	 * 返回上一个场景
+	 */
+	public function backScene(releaseOldScene:Bool = false):Void {
+		if (scenes.length > 2) {
+			var scene = scenes[scenes.length - 2];
+			this.replaceScene(scene, releaseOldScene);
+		}
+	}
 }

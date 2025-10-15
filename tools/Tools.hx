@@ -15,6 +15,8 @@ class Tools {
 			throw "No project name provided." + "\nUsage: hxmaker create <engine_name> <project_name>";
 		}
 		switch (command) {
+			case "build":
+				// 编译指定目标
 			case "create":
 				var project:Project = switch project {
 					case "openfl":

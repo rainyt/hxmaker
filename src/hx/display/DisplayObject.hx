@@ -493,6 +493,17 @@ class DisplayObject extends EventDispatcher {
 	}
 
 	/**
+	 * 同时将`scaleX`和`scaleY`设置比例
+	 */
+	public var scale(never, set):Float;
+
+	private function set_scale(value:Float):Float {
+		this.scaleX = value;
+		this.scaleY = value;
+		return value;
+	}
+
+	/**
 	 * 显示对象的x比例渲染缩放，默认为1
 	 */
 	public var scaleX(get, set):Float;

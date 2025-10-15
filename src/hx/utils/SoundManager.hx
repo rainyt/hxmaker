@@ -36,11 +36,13 @@ class SoundManager {
 	/**
 	 * 播放音效
 	 * @param id 
+	 * @param isLoop 是否循环播放
+	 * @param isForce 是否强制播放
 	 * @return ISoundChannel，该对象在不可播放的情况下会返回`null`
 	 */
-	public function playEffect(id:String, isLoop:Bool = false):ISoundChannel {
+	public function playEffect(id:String, isLoop:Bool = false, isForce:Bool = false):ISoundChannel {
 		var now = Timer.stamp();
-		if (__soundEffects.exists(id)) {
+		if (!isForce && __soundEffects.exists(id)) {
 			if (now - __soundEffects.get(id) < effectTimeInterval) {
 				return null;
 			}

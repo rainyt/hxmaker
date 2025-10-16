@@ -1,5 +1,8 @@
 package hx.display;
 
+#if openfl
+import hx.shader.StrokeShader;
+#end
 import hx.core.Hxmaker;
 import hx.geom.Matrix;
 import hx.geom.Rectangle;
@@ -15,6 +18,22 @@ class Label extends DisplayObject implements IDataProider<String> implements IRo
 	 * 全局文本过滤实现
 	 */
 	public static var onGlobalCharFilter:String->String;
+
+	public var __smoothing:Bool = true;
+
+	/**
+	 * 平滑处理，默认为`false`
+	 */
+	public var smoothing(get, set):Bool;
+
+	private function set_smoothing(value:Bool):Bool {
+		__smoothing = value;
+		return value;
+	}
+
+	private function get_smoothing():Bool {
+		return __smoothing;
+	}
 
 	/**
 	 * 是否启用全局文本过滤
@@ -215,5 +234,20 @@ class Label extends DisplayObject implements IDataProider<String> implements IRo
 			return getTextHeight();
 		}
 		return super.get_height();
+	}
+
+	/**
+	 * 设置描边，当设置描边后，shader会变更
+	 * @param color 
+	 * @param size 
+	 */
+	public function stroke(color:Int = 0x0, size:Int = 1):Void {
+		#if openfl
+		if (size == 0) {
+			this.shader = null;
+		} else {
+			this.shader = new StrokeShader(size, color);
+		}
+		#end
 	}
 }

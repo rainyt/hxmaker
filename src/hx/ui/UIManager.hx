@@ -297,6 +297,10 @@ class UIManager {
 			if (xml.exists("vAlign")) {
 				obj.verticalAlign = xml.get("vAlign");
 			}
+			if (xml.exists("stroke")) {
+				// var color = xml.get("strokeColor");
+				obj.stroke(0x0, Std.parseInt(xml.get("stroke")));
+			}
 		});
 		addAttributesParse(VBox, function(obj:VBox, xml:Xml, assets:Assets) {
 			if (xml.exists("gap")) {

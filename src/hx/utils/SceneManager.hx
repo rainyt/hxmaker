@@ -86,7 +86,8 @@ class SceneManager {
 	 * @param scene 
 	 */
 	public function showScene(scene:Scene):Void {
-		scenes.push(scene);
+		if (scenes.indexOf(scene) == -1)
+			scenes.push(scene);
 		Hxmaker.engine.stages[0].addChild(scene);
 	}
 

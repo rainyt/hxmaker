@@ -95,8 +95,11 @@ class Spine extends Graphics implements ISpine {
 
 	#if !spine_hx
 	private function onComplete(e:TrackEntry):Void {
-		if (hasEventListener(Event.COMPLETE))
-			this.dispatchEvent(new Event(Event.COMPLETE));
+		if (hasEventListener(Event.COMPLETE)) {
+			var event = new Event(Event.COMPLETE);
+			event.data = e;
+			this.dispatchEvent(event);
+		}
 	}
 	#end
 

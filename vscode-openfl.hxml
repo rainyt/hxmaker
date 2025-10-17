@@ -1,10 +1,11 @@
 --main Test
 --class-path src
 --class-path test
---interp
 --library spine-haxe
 --library actuate
 --library openfl
+--library openfl-glsl
+--library vector-math
 --library lime
 --library hxmaker-openfl
 --js bin/main.js

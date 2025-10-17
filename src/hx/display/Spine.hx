@@ -1,5 +1,6 @@
 package hx.display;
 
+import hx.events.SpineEvent;
 import hx.display.ISpine.ISpineDrawOrder;
 #if spine_hx
 import spine.AnimationState.TrackEntry;
@@ -89,15 +90,67 @@ class Spine extends Graphics implements ISpine {
 		animationState = new AnimationState(new AnimationStateData(data));
 		#if !spine_hx
 		animationState.onComplete.add(onComplete);
+		animationState.onEvent.add(onEvent);
+		animationState.onStart.add(onStart);
+		animationState.onEnd.add(onEnd);
+		animationState.onDispose.add(onDispose);
+		animationState.onInterrupt.add(onInterrupt);
 		#end
 		this.updateEnabled = true;
 	}
 
 	#if !spine_hx
+	private function onEvent(e:TrackEntry, s:spine.Event):Void {
+		if (hasEventListener(SpineEvent.EVENT)) {
+			var event = new SpineEvent(SpineEvent.EVENT);
+			event.data = e;
+			event.trackEntry = e;
+			event.event = s;
+			this.dispatchEvent(event);
+		}
+	}
+
 	private function onComplete(e:TrackEntry):Void {
 		if (hasEventListener(Event.COMPLETE)) {
-			var event = new Event(Event.COMPLETE);
+			var event = new SpineEvent(Event.COMPLETE);
 			event.data = e;
+			event.trackEntry = e;
+			this.dispatchEvent(event);
+		}
+	}
+
+	private function onStart(e:TrackEntry):Void {
+		if (hasEventListener(SpineEvent.START)) {
+			var event = new SpineEvent(SpineEvent.START);
+			event.data = e;
+			event.trackEntry = e;
+			this.dispatchEvent(event);
+		}
+	}
+
+	private function onEnd(e:TrackEntry):Void {
+		if (hasEventListener(SpineEvent.END)) {
+			var event = new SpineEvent(SpineEvent.END);
+			event.data = e;
+			event.trackEntry = e;
+			this.dispatchEvent(event);
+		}
+	}
+
+	private function onDispose(e:TrackEntry):Void {
+		if (hasEventListener(SpineEvent.DISPOSE)) {
+			var event = new SpineEvent(SpineEvent.DISPOSE);
+			event.data = e;
+			event.trackEntry = e;
+			this.dispatchEvent(event);
+		}
+	}
+
+	private function onInterrupt(e:TrackEntry):Void {
+		if (hasEventListener(SpineEvent.INTERRUPT)) {
+			var event = new SpineEvent(SpineEvent.INTERRUPT);
+			event.data = e;
+			event.trackEntry = e;
 			this.dispatchEvent(event);
 		}
 	}

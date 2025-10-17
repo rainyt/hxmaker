@@ -15,6 +15,18 @@ class SceneManager {
 	 */
 	public var scenes:Array<Scene> = [];
 
+	/**
+	 * 当前显示的场景
+	 */
+	public var currentScene(get, never):Scene;
+
+	private function get_currentScene():Scene {
+		if (scenes.length > 0) {
+			return scenes[scenes.length - 1];
+		}
+		return null;
+	}
+
 	public static function getInstance():SceneManager {
 		if (__instance == null) {
 			__instance = new SceneManager();

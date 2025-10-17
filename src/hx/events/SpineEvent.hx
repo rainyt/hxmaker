@@ -1,6 +1,10 @@
 package hx.events;
 
+#if spine_hx
+import spine.AnimationState.TrackEntry;
+#else
 import spine.animation.TrackEntry;
+#end
 
 /**
  * Spine事件

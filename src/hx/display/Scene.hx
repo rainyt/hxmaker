@@ -34,8 +34,8 @@ class Scene extends Box {
 	public function new() {
 		super();
 		__bg = new Quad(1, 1, 0xff0000);
-		__bg.alpha = 0.;
-		this.addChild(__bg);
+		__bg.alpha = 0;
+		this.addChildAt(__bg, 0);
 	}
 
 	override function updateLayout() {

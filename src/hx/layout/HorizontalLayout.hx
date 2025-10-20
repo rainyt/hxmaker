@@ -17,12 +17,21 @@ class HorizontalLayout extends Layout {
 	 */
 	public var verticalAlign:VerticalAlign = null;
 
+	/**
+	 * 垂直填充，是否等比例填充父容器高度，默认`false`
+	 */
+	public var verticalFill:Bool = false;
+
 	override function update(children:Array<DisplayObject>) {
 		super.update(children);
 		var offestX = 0.;
 		for (child in children) {
 			child.x = offestX;
 			offestX += child.width + gap;
+
+			if (verticalFill) {
+				child.height = this.parent.height;
+			}
 
 			switch (verticalAlign) {
 				case TOP:

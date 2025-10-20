@@ -34,4 +34,15 @@ class HBox extends Box {
 	private function get_verticalAlign():VerticalAlign {
 		return cast(this.layout, hx.layout.HorizontalLayout).verticalAlign;
 	}
+
+	public var fill(get, set):Bool;
+
+	private function set_fill(value:Bool):Bool {
+		cast(this.layout, hx.layout.HorizontalLayout).verticalFill = value;
+		return value;
+	}
+
+	private function get_fill():Bool {
+		return cast(this.layout, hx.layout.HorizontalLayout).verticalFill;
+	}
 }

@@ -306,14 +306,33 @@ class UIManager {
 			if (xml.exists("gap")) {
 				obj.gap = xml.getFloatValue("gap");
 			}
+			if (xml.exists("fill")) {
+				obj.fill = xml.get("fill") == "true";
+			}
+			if (xml.exists("hAlign")) {
+				obj.horizontalAlign = xml.get("hAlign");
+			}
 		});
 		addAttributesParse(HBox, function(obj:HBox, xml:Xml, assets:Assets) {
 			if (xml.exists("gap")) {
 				obj.gap = xml.getFloatValue("gap");
 			}
+			if (xml.exists("fill")) {
+				obj.fill = xml.get("fill") == "true";
+			}
+			if (xml.exists("vAlign")) {
+				obj.verticalAlign = xml.get("vAlign");
+			}
 		});
 		addAttributesParse(Scene, function(obj:Scene, xml:Xml, assets:Assets) {});
-		addAttributesParse(Scroll, function(obj:Scroll, xml:Xml, assets:Assets) {});
+		addAttributesParse(Scroll, function(obj:Scroll, xml:Xml, assets:Assets) {
+			if (xml.exists("scrollXEnable")) {
+				obj.scrollXEnable = xml.get("scrollXEnable") == "true";
+			}
+			if (xml.exists("scrollYEnable")) {
+				obj.scrollYEnable = xml.get("scrollYEnable") == "true";
+			}
+		});
 		addAttributesParse(ListView, function(obj:ListView, xml:Xml, assets:Assets) {});
 		addCreateInstance(Spine, function(xml:Xml):Spine {
 			var id = xml.getStringId("src");

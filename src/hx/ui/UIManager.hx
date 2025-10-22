@@ -251,7 +251,7 @@ class UIManager {
 				obj.data = getBitmapData(data) ?? assets.getBitmapData(data);
 			}
 			if (xml.get("fill") == "true") {
-				var scale = ScaleUtils.mathScale(Hxmaker.engine.stageWidth, Hxmaker.engine.stageHeight, obj.width, obj.height);
+				var scale = ScaleUtils.mathScale(Hxmaker.engine.stageWidth, Hxmaker.engine.stageHeight, obj.width, obj.height, false, false, true);
 				obj.scaleX = obj.scaleY = scale;
 			}
 			if (xml.exists("scale9Grid")) {

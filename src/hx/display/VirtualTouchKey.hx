@@ -203,6 +203,9 @@ class VirtualTouchKey extends Box {
 	}
 
 	private function onKeyMouseDown(e:#if jsapi Dynamic #else Event #end):Void {
+		if(e.target is Button){
+			return;
+		}
 		if (_touchEvent && _touchEventId != -1)
 			return;
 		if (e != null) {

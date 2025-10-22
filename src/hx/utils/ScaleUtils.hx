@@ -4,8 +4,8 @@ package hx.utils;
  * 缩放比例工具
  */
 class ScaleUtils {
-	public static function mathScale(stageWidth:Float, stageHeight:Float, hdwidth:Float, hdheight:Float, lockLandscape:Bool = false,
-			scalePower:Bool = false):Float {
+	public static function mathScale(stageWidth:Float, stageHeight:Float, hdwidth:Float, hdheight:Float, lockLandscape:Bool = false, scalePower:Bool = false,
+			isMaxScale:Bool = false):Float {
 		var currentScale:Float = 1;
 
 		if (hdwidth == 0 || hdheight == 0) {
@@ -21,17 +21,21 @@ class ScaleUtils {
 			wscale = Math.round(stageWidth / hdwidth * 1000000) / 1000000;
 			hscale = Math.round(stageHeight / hdheight * 1000000) / 1000000;
 		}
-		if (hdwidth > hdheight) {
-			if (wscale > hscale) {
-				currentScale = wscale;
-			} else {
-				currentScale = hscale;
-			}
+		if (isMaxScale) {
+			currentScale = Math.max(wscale, hscale);
 		} else {
-			if (wscale < hscale) {
-				currentScale = wscale;
+			if (hdwidth > hdheight) {
+				if (wscale > hscale) {
+					currentScale = wscale;
+				} else {
+					currentScale = hscale;
+				}
 			} else {
-				currentScale = hscale;
+				if (wscale < hscale) {
+					currentScale = wscale;
+				} else {
+					currentScale = hscale;
+				}
 			}
 		}
 

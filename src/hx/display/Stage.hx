@@ -108,10 +108,11 @@ class Stage extends Box {
 					} else
 						__lastClickTime = Timer.stamp();
 				}
-			} else if (event.type == MouseEvent.MOUSE_MOVE) {
-				__stageX = event.stageX;
-				__stageY = event.stageY;
 			}
+			// else if (event.type == MouseEvent.MOUSE_MOVE) {
+			__stageX = event.stageX;
+			__stageY = event.stageY;
+			// }
 
 			var i = touchList.length;
 			while (i-- > 0) {

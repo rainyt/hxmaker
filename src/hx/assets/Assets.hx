@@ -462,7 +462,9 @@ class Assets extends Future<Assets, Dynamic> {
 		} else {
 			objects.set(formatName(future.getLoadData()), data);
 		}
+		#if assets_debug
 		trace("Assets: loaded ", future.path, loadedCounts, totalCounts, __loadIndex);
+		#end
 		if (loadedCounts == totalCounts) {
 			this.completeValue(this);
 			__assets.remove(this);

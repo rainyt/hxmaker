@@ -348,7 +348,14 @@ class UIManager {
 				obj.scrollYEnable = xml.get("scrollYEnable") == "true";
 			}
 		});
-		addAttributesParse(ListView, function(obj:ListView, xml:Xml, assets:Assets) {});
+		addAttributesParse(ListView, function(obj:ListView, xml:Xml, assets:Assets) {
+			if (xml.exists("scrollXEnable")) {
+				obj.scrollXEnable = xml.get("scrollXEnable") == "true";
+			}
+			if (xml.exists("scrollYEnable")) {
+				obj.scrollYEnable = xml.get("scrollYEnable") == "true";
+			}
+		});
 		addCreateInstance(Spine, function(xml:Xml):Spine {
 			var id = xml.getStringId("src");
 			var spine = new Spine(UIManager.getSkeletonData(id));

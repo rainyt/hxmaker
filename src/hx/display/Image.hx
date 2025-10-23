@@ -36,6 +36,26 @@ class Image extends DisplayObject implements IDataProider<BitmapData> implements
 	}
 
 	/**
+	 * 重复纹理，默认值为`false`
+	 */
+	public var repeat(get, set):Bool;
+
+	private var __repeat:Bool = false;
+	private var __repeatDirty:Bool = false;
+
+	private function set_repeat(value:Bool):Bool {
+		if (value != __repeat) {
+			__repeat = value;
+			__repeatDirty = true;
+		}
+		return value;
+	}
+
+	private function get_repeat():Bool {
+		return __repeat;
+	}
+
+	/**
 	 * 九宫格缩放矩形，会根据矩形的left/right/top/bottom的值来裁剪位图，并拉伸填充。
 	 * 这将图像分为九个区域，其角落将始终保持其原始大小。中心区域在两个方向上延伸以填充剩余空间；侧部区域将相应地在水平或垂直方向上拉伸。
 	 */
@@ -55,7 +75,7 @@ class Image extends DisplayObject implements IDataProider<BitmapData> implements
 	 * 获得九宫格图已渲染的图形
 	 * @return Graphic
 	 */
-	private function getScale9GridGraphic():Graphics {
+	private function getGraphic():Graphics {
 		var __scale9Grid = scale9Grid;
 		if (__scale9Grid != null) {
 			if (__graphic == null) {
@@ -105,6 +125,49 @@ class Image extends DisplayObject implements IDataProider<BitmapData> implements
 				// 下面中间
 				__graphic.drawRectUVs(leftWidth, height - bottomHeight, width - leftWidth - rightWidth, bottomHeight,
 					maskUVs(rect.x, rect.bottom, rect.width, bottomHeight, textureWidth, textureHeight, offsetX, offsetY));
+			}
+		} else if (__repeat) {
+			if (__graphic == null) {
+				__graphic = new Graphics();
+			}
+			if (__repeatDirty) {
+				__repeatDirty = false;
+				__graphic.clear();
+				__graphic.x = this.x;
+				__graphic.y = this.y;
+				__graphic.rotation = this.rotation;
+				__graphic.__updateTransform(this.parent);
+				__graphic.beginBitmapData(this.data);
+				// 计算重复的UVS
+				var pHeight = this.data.height;
+				var pWidth = this.data.width;
+				var pHeightCounts = Math.ceil(this.height / pHeight);
+				var pWidthCounts = Math.ceil(this.width / pWidth);
+				var outHeight = this.height % pHeight;
+				if (outHeight == 0)
+					outHeight = pHeight;
+				var outWidth = this.width % pWidth;
+				if (outWidth == 0)
+					outWidth = pWidth;
+				var textureWidth = this.data.data.getWidth();
+				var textureHeight = this.data.data.getHeight();
+				var offsetX = this.data.uvOffsetX;
+				var offsetY = this.data.uvOffsetY;
+				var drawX = 0.;
+				var drawY = 0.;
+				for (ix in 0...pWidthCounts) {
+					var isOutWidth = ix + 1 == pWidthCounts;
+					var setWidth = isOutWidth ? outWidth : pWidth;
+					for (iy in 0...pHeightCounts) {
+						var isOutHeight = iy + 1 == pHeightCounts;
+						var setHeight = isOutHeight ? outHeight : pHeight;
+						__graphic.drawRectUVs(drawX, drawY, setWidth, setHeight,
+							maskUVs(0, 0, setWidth, setHeight, textureWidth, textureHeight, offsetX, offsetY));
+						drawY += setHeight;
+					}
+					drawY = 0;
+					drawX += setWidth;
+				}
 			}
 		}
 		return __graphic;
@@ -218,30 +281,36 @@ class Image extends DisplayObject implements IDataProider<BitmapData> implements
 	}
 
 	override private function get_width():Float {
-		if (scale9Grid != null) {
-			return __width;
+		if (scale9Grid != null || __repeat) {
+			if (__width != null)
+				return __width;
 		}
 		return super.get_width();
 	}
 
 	override private function get_height():Float {
-		if (scale9Grid != null) {
-			return __height;
+		if (scale9Grid != null || __repeat) {
+			if (__height != null)
+				return __height;
 		}
 		return super.get_height();
 	}
 
 	override private function set_width(value:Float):Float {
 		super.set_width(value);
-		if (scale9Grid == null)
+		if (scale9Grid == null && !__repeat)
 			this.__width = null;
+		if (__repeat)
+			__repeatDirty = true;
 		return value;
 	}
 
 	override private function set_height(value:Float):Float {
 		super.set_height(value);
-		if (scale9Grid == null)
+		if (scale9Grid == null && !__repeat)
 			this.__height = null;
+		if (__repeat)
+			__repeatDirty = true;
 		return value;
 	}
 }

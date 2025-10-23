@@ -266,6 +266,9 @@ class UIManager {
 				var scale = ScaleUtils.mathScale(Hxmaker.engine.stageWidth, Hxmaker.engine.stageHeight, obj.width, obj.height, false, false, true);
 				obj.scaleX = obj.scaleY = scale;
 			}
+			if (xml.get("repeat") == "true") {
+				obj.repeat = true;
+			}
 			if (xml.exists("scale9Grid")) {
 				var rect = xml.get("scale9Grid");
 				var rects = rect.split(" ");

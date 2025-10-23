@@ -231,8 +231,8 @@ class Scroll extends BoxContainer {
 
 	private var velocity:Point; // 惯性
 
-	private var shouldFreeSlideX:Bool;
-	private var shouldFreeSlideY:Bool;
+	private var shouldFreeSlideX:Bool = false;
+	private var shouldFreeSlideY:Bool = false;
 
 	private var freeOverScrollMaxDistanceX:Float = -1; // 自由滑动，并且超出版边的最大距离x
 	private var freeOverScrollMaxDistanceY:Float = -1; // 自由滑动，并且超出版边的最大距离y
@@ -272,6 +272,11 @@ class Scroll extends BoxContainer {
 
 				velocity.x *= freeSlideDecelerationAfterEnterOverScroll;
 			}
+
+			velocity.x = Math.abs(velocity.x) <= 1.3 ? 0 : velocity.x;
+			if (velocity.x == 0) {
+				shouldFreeSlideX = false;
+			}
 		}
 
 		if (shouldFreeSlideY) {
@@ -299,6 +304,11 @@ class Scroll extends BoxContainer {
 				}
 
 				velocity.y *= freeSlideDecelerationAfterEnterOverScroll;
+			}
+
+			velocity.y = Math.abs(velocity.y) <= 1.3 ? 0 : velocity.y;
+			if (velocity.y == 0) {
+				shouldFreeSlideY = false;
 			}
 		}
 	}

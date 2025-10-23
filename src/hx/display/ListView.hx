@@ -1,5 +1,6 @@
 package hx.display;
 
+import haxe.Timer;
 import hx.events.MouseEvent;
 import hx.events.Event;
 
@@ -123,6 +124,9 @@ class ListView extends Scroll implements IDataProider<ArrayCollection> {
 				}
 			}
 			this.__dataDirty = false;
+			if (autoVisible) {
+				Timer.delay(this.invalidate, 16);
+			}
 		}
 	}
 

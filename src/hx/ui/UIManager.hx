@@ -2,6 +2,7 @@ package hx.ui;
 
 import hx.core.Hxmaker;
 import hx.display.Stage;
+import hx.display.ImageLoader;
 import hx.display.Quad;
 import hx.display.MovieClip;
 import hx.display.Spine;
@@ -242,6 +243,17 @@ class UIManager {
 						var points = point.split(" ");
 						obj.labelOffsetPoint = new Point(Std.parseFloat(points[0]), Std.parseFloat(points[1]));
 				}
+			}
+		});
+		addAttributesParse(ImageLoader, function(obj:ImageLoader, xml:Xml, assets:Assets) {
+			if (xml.exists("src")) {
+				var data = xml.get("src");
+				data = Path.withoutDirectory(Path.withoutExtension(data));
+				var bitmapData:BitmapData = getBitmapData(data) ?? assets.getBitmapData(data);
+				if (bitmapData != null)
+					obj.data = bitmapData;
+				else
+					obj.data = xml.get("src");
 			}
 		});
 		addAttributesParse(Image, function(obj:Image, xml:Xml, assets:Assets) {

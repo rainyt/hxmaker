@@ -156,7 +156,14 @@ class Spine extends Graphics implements ISpine {
 	}
 	#end
 
+	/**
+	 * 是否必须在可见时进行渲染，如果设置为`true`，可设置该对象的`visible`属性为`false`来取消渲染，有助于提高性能。默认值为`false`。
+	 */
+	public var mustVisibleRender:Bool = false;
+
 	override function onUpdate(dt:Float) {
+		if (mustVisibleRender && !visible)
+			return;
 		__renderCurrentTime += dt;
 		if (__fps >= 60 || __renderCurrentTime >= __renderFpsTime) {
 			this.update(__renderCurrentTime);

@@ -352,45 +352,43 @@ class Scroll extends BoxContainer {
 	private function onMouseUp(e:MouseEvent) {
 		if (__down) {
 			__down = false;
-			if (__lastStepX != 0 || __lastStepY != 0) {
-				if (!isOverScrollEnbaled) {
-					var time = 0.5;
-					Actuate.tween(this, time, getMoveingToData({
-						scrollX: scrollX - __lastStepX / time * 4,
-						scrollY: scrollY - __lastStepY / time * 4
-					}));
-				} else {
-					velocity = new Point(__lastStepX, __lastStepY);
+			if (!isOverScrollEnbaled) {
+				var time = 0.5;
+				Actuate.tween(this, time, getMoveingToData({
+					scrollX: scrollX - __lastStepX / time * 4,
+					scrollY: scrollY - __lastStepY / time * 4
+				}));
+			} else {
+				velocity = new Point(__lastStepX, __lastStepY);
 
-					velocity.x = Math.abs(velocity.x) <= 1.3 ? 0 : velocity.x;
-					velocity.y = Math.abs(velocity.y) <= 1.3 ? 0 : velocity.y;
+				velocity.x = Math.abs(velocity.x) <= 1.3 ? 0 : velocity.x;
+				velocity.y = Math.abs(velocity.y) <= 1.3 ? 0 : velocity.y;
 
-					var maxSize = this.getMaxSize();
+				var maxSize = this.getMaxSize();
 
-					var overScrollSideHorizontal = tryGetOverScrollSide(maxSize.x, HORIZONTAL);
-					var overScrollSideVertical = tryGetOverScrollSide(maxSize.y, VERTICAL);
+				var overScrollSideHorizontal = tryGetOverScrollSide(maxSize.x, HORIZONTAL);
+				var overScrollSideVertical = tryGetOverScrollSide(maxSize.y, VERTICAL);
 
-					if (overScrollSideHorizontal == NONE) { // 惯性
+				if (overScrollSideHorizontal == NONE) { // 惯性
 
-						shouldFreeSlideX = velocity.x != 0;
-						freeOverScrollMaxDistanceX = -1;
-					} else { // 弹回
+					shouldFreeSlideX = velocity.x != 0;
+					freeOverScrollMaxDistanceX = -1;
+				} else { // 弹回
 
-						Actuate.tween(this, bounceBackTime, {
-							scrollX: overScrollSideHorizontal == LEFT ? 0 : -maxSize.x
-						});
-					}
+					Actuate.tween(this, bounceBackTime, {
+						scrollX: overScrollSideHorizontal == LEFT ? 0 : -maxSize.x
+					});
+				}
 
-					if (overScrollSideVertical == NONE) { // 惯性
+				if (overScrollSideVertical == NONE) { // 惯性
 
-						shouldFreeSlideY = velocity.y != 0;
-						freeOverScrollMaxDistanceY = -1;
-					} else { // 弹回
+					shouldFreeSlideY = velocity.y != 0;
+					freeOverScrollMaxDistanceY = -1;
+				} else { // 弹回
 
-						Actuate.tween(this, bounceBackTime, {
-							scrollY: overScrollSideVertical == TOP ? 0 : -maxSize.y
-						});
-					}
+					Actuate.tween(this, bounceBackTime, {
+						scrollY: overScrollSideVertical == TOP ? 0 : -maxSize.y
+					});
 				}
 			}
 		}

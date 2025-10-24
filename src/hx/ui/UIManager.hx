@@ -167,6 +167,8 @@ class UIManager {
 			var percentHeight:Null<Float> = null;
 			for (key in xml.attributes()) {
 				switch key {
+					case "visible":
+						display.visible = xml.get("visible") == "true";
 					case "id":
 						display.name = xml.get("id");
 					case "x":

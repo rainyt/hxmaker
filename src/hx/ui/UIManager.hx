@@ -271,6 +271,9 @@ class UIManager {
 			if (xml.get("repeat") == "true") {
 				obj.repeat = true;
 			}
+			if (xml.exists("smoothing")) {
+				obj.smoothing = xml.get("smoothing") == "true";
+			}
 			if (xml.exists("scale9Grid")) {
 				var rect = xml.get("scale9Grid");
 				var rects = rect.split(" ");

@@ -211,6 +211,14 @@ class SpineSprite extends Sprite implements ISpineDrawOrder {
 			__drawIndex++;
 		}
 	}
+
+	override function addEventListener<T>(type:String, listener:T->Void) {
+		spine.addEventListener(type, listener);
+	}
+
+	override function removeEventListener<T>(type:String, listener:T->Void) {
+		spine.removeEventListener(type, listener);
+	}
 }
 
 typedef DisplayObjectDraw = {

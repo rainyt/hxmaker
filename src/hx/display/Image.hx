@@ -89,7 +89,7 @@ class Image extends DisplayObject implements IDataProider<BitmapData> implements
 				__graphic.y = this.y;
 				__graphic.rotation = this.rotation;
 				__graphic.__updateTransform(this.parent);
-				__graphic.beginBitmapData(this.data);
+				__graphic.beginBitmapData(this.data, this.smoothing);
 				var rect = __scale9Grid;
 				var rightWidth = (this.data.width - rect.x - rect.width);
 				var leftWidth = rect.x;
@@ -137,7 +137,7 @@ class Image extends DisplayObject implements IDataProider<BitmapData> implements
 				__graphic.y = this.y;
 				__graphic.rotation = this.rotation;
 				__graphic.__updateTransform(this.parent);
-				__graphic.beginBitmapData(this.data);
+				__graphic.beginBitmapData(this.data, this.smoothing);
 				// 计算重复的UVS
 				var pHeight = this.data.height;
 				var pWidth = this.data.width;
@@ -218,6 +218,7 @@ class Image extends DisplayObject implements IDataProider<BitmapData> implements
 
 	private function set_smoothing(value:Bool):Bool {
 		__smoothing = value;
+		setTransformDirty();
 		return value;
 	}
 
@@ -278,6 +279,7 @@ class Image extends DisplayObject implements IDataProider<BitmapData> implements
 	override function setTransformDirty(value:Bool = true) {
 		super.setTransformDirty(value);
 		__scale9GridDirty = true;
+		__repeatDirty = true;
 	}
 
 	override private function get_width():Float {

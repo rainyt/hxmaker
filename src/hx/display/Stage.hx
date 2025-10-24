@@ -75,6 +75,10 @@ class Stage extends Box {
 
 	private var __lastClickTime:Float = 0;
 
+	private var __currentMouseDownDisplay:DisplayObject;
+
+	private var __mouseDownDt:Float = 0.;
+
 	/**
 	 * 触发鼠标事件
 	 * @param event 
@@ -89,6 +93,13 @@ class Stage extends Box {
 				}
 			}
 			var display:DisplayObject = touchList[touchList.length - 1];
+
+			if (event.type == MouseEvent.MOUSE_DOWN) {
+				this.__currentMouseDownDisplay = display;
+				this.__mouseDownDt = 0;
+			} else if (event.type == MouseEvent.MOUSE_UP) {
+				this.__currentMouseDownDisplay = null;
+			}
 
 			if (event.type == MouseEvent.CLICK) {
 				// 如果是一样的，则无需处理新的回调
@@ -142,6 +153,19 @@ class Stage extends Box {
 			this.dispatchEvent(event);
 		}
 		return false;
+	}
+
+	override function onUpdate(dt:Float) {
+		super.onUpdate(dt);
+		if (this.__currentMouseDownDisplay != null) {
+			__mouseDownDt += dt;
+			if (this.__mouseDownDt > 0.5) {
+				if (this.__currentMouseDownDisplay.hasEventListener(MouseEvent.MOUSE_LONG_CLICK)) {
+					var event = new MouseEvent(MouseEvent.MOUSE_LONG_CLICK);
+					this.__currentMouseDownDisplay.dispatchEvent(event);
+				}
+			}
+		}
 	}
 
 	/**

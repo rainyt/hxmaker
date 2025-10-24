@@ -45,6 +45,11 @@ class MouseEvent extends Event {
 	public inline static var MOUSE_OUT:String = "mouseOut";
 
 	/**
+	 * 鼠标长按事件，按下0.5秒会触发持续性的鼠标事件
+	 */
+	public inline static var MOUSE_LONG_CLICK:String = "mouseLongClick";
+
+	/**
 	 * 鼠标按下的位置X
 	 */
 	public var stageX:Float = 0;

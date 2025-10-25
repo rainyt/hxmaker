@@ -4,7 +4,7 @@ package hx.events;
  * 触摸事件类，继承自 Event
  * 用于处理触摸相关的交互事件，包括触摸开始、结束和移动
  */
-class TouchEvent extends Event {
+class TouchEvent extends MouseEvent {
 	/**
 	 * 触摸开始事件类型
 	 * 当用户触摸屏幕时触发

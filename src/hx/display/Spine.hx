@@ -31,6 +31,11 @@ import spine.Skeleton;
 @:keep
 class Spine extends Graphics implements ISpine {
 	/**
+	 * 默认刷新帧率，可设置帧率，那么每次创建新的Spine实例时，会使用该帧率影响`renderFps`属性。
+	 */
+	public static var defaultFps = 60;
+
+	/**
 	 * 剪切工具
 	 */
 	private static var clipper:SkeletonClipping = new SkeletonClipping();
@@ -97,6 +102,7 @@ class Spine extends Graphics implements ISpine {
 		animationState.onInterrupt.add(onInterrupt);
 		#end
 		this.updateEnabled = true;
+		this.renderFps = defaultFps;
 	}
 
 	#if !spine_hx

@@ -1,11 +1,10 @@
 package hx.display;
 
-import openfl.events.Event;
-import openfl.events.TouchEvent;
+import hx.events.Event;
+import hx.events.TouchEvent;
 import hx.display.DisplayObject;
-import openfl.geom.Point;
-import openfl.events.MouseEvent;
-import openfl.geom.Point;
+import hx.geom.Point;
+import hx.events.MouseEvent;
 
 /**
  * 虚拟移动按键，可用于在手机上模拟人物的移动、方向等操作。
@@ -203,7 +202,7 @@ class VirtualTouchKey extends Box {
 	}
 
 	private function onKeyMouseDown(e:#if jsapi Dynamic #else Event #end):Void {
-		if(e.target is Button){
+		if (e.target is Button) {
 			return;
 		}
 		if (_touchEvent && _touchEventId != -1)

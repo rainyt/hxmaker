@@ -10,6 +10,8 @@
 # 支持
 | 功能 | 描述 | 状态 | 自动合批 |
 --- | --- | --- | ---
+| hx.display.DisplayObject | 所有显示对象的基类 | ✅ | / |
+| hx.display.DisplayObjectContainer | 可容纳多个显示对象的容器类 | ✅ | / |
 | hx.display.Image | 图片，用于渲染游戏2D画面，自动批处理实现，支持九宫格图渲染 | ✅ | ✅ |
 | hx.display.Label | 文本，用于渲染文字 | ✅ | ✅ |
 | hx.display.Button | 按钮，普通的按钮 | ✅ | ✅ |
@@ -28,6 +30,14 @@
 | hx.display.BitmapLabel | 位图纹理支持 | ✅ | ✅ |
 | hx.display.ListView | 列表视图，用于实现列表，需要遮罩因此需要消耗drawcall | ✅ | ❌ |
 | hx.display.CustomDisplayObject | 自定义显示对象，使用它进行渲染必然会产生1次绘制 | ✅ | ❌ |
+| hx.display.Stage | 游戏引擎舞台 | ✅ | ✅ |
+| hx.display.BoxContainer | 基于box布局的基础容器类 | ✅ | ✅ |
+| hx.display.BaseScrollBar | 滚动条的基类 | ✅ | ✅ |
+| hx.display.VScrollBar | 垂直滚动条 | ✅ | ✅ |
+| hx.display.InputLabel | 输入文本框 | ✅ | ✅ |
+| hx.display.ItemRenderer | 列表的基础项渲染器 | ✅ | ✅ |
+| hx.display.DefaultItemRenderer | ListView的默认项渲染器 | ✅ | ✅ |
+| hx.display.ImageLoader | 图片加载组件 | ✅ | ✅ |
 | hx.events.MouseEvent | 鼠标事件 | ✅ | / |
 | hx.events.KeyboardEvent | 键盘事件 | ✅ | / |
 | hx.assets.Assets | 资源加载器，支持图片、音频、精灵图、XML、JSON等常见资源格式加载 | ✅ | / |

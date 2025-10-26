@@ -10,6 +10,8 @@ All common display objects (see the list below) and BlendMode.ADD can be automat
 # Support
 | Feature | Description | Status | Auto-batch |
 --- | --- | --- | ---
+| hx.display.DisplayObject | Base class for all display objects | ✅ | / |
+| hx.display.DisplayObjectContainer | Container class that can hold multiple display objects | ✅ | / |
 | hx.display.Image | Image for rendering 2D game graphics, auto-batched, supports nine-slice rendering | ✅ | ✅ |
 | hx.display.Label | Text for rendering text | ✅ | ✅ |
 | hx.display.Button | Button, a regular button | ✅ | ✅ |
@@ -28,6 +30,14 @@ All common display objects (see the list below) and BlendMode.ADD can be automat
 | hx.display.BitmapLabel | Bitmap texture support | ✅ | ✅ |
 | hx.display.ListView | List view for implementing lists, requires masking so drawcall is consumed | ✅ | ❌ |
 | hx.display.CustomDisplayObject | Custom display object, using it for rendering will definitely produce 1 draw | ✅ | ❌ |
+| hx.display.Stage | Game engine stage | ✅ | ✅ |
+| hx.display.BoxContainer | Base container class for box-based layouts | ✅ | ✅ |
+| hx.display.BaseScrollBar | Base class for scroll bars | ✅ | ✅ |
+| hx.display.VScrollBar | Vertical scroll bar | ✅ | ✅ |
+| hx.display.InputLabel | Input text field | ✅ | ✅ |
+| hx.display.ItemRenderer | Base item renderer for lists | ✅ | ✅ |
+| hx.display.DefaultItemRenderer | Default item renderer for ListView | ✅ | ✅ |
+| hx.display.ImageLoader | Image loader component | ✅ | ✅ |
 | hx.events.MouseEvent | Mouse events | ✅ | / |
 | hx.events.KeyboardEvent | Keyboard events | ✅ | / |
 | hx.assets.Assets | Resource loader, supports loading of common resource formats such as images, audio, sprite sheets, XML, JSON, etc. | ✅ | / |

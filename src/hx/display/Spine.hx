@@ -233,7 +233,7 @@ class Spine extends Graphics implements ISpine {
 		this.clear();
 		var isStartDarw = true;
 		for (slot in skeleton.drawOrder) {
-			if (slot.attachment != null) {
+			if (slot.attachment != null #if spine_haxe && slot.data.visible #end) {
 				// 不可见的情况下跳过
 				if (slot.color.a == 0) {
 					continue;

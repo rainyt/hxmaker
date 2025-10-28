@@ -176,12 +176,15 @@ class SpineSprite extends Sprite implements ISpineDrawOrder {
 		if (isStart) {
 			__drawIndex = 0;
 			for (graphics in __drawGraphics) {
-				graphics.clear();
+				if (graphics != null)
+					graphics.clear();
 			}
 			this.removeChildren();
 		}
 
-		if (bitmapData != null) {
+		var isDarwable = bitmapData != null;
+
+		if (isDarwable) {
 			var g = getDrawGraphicsAt(__drawIndex);
 			g.beginBitmapData(bitmapData);
 			g.drawTriangles(vertices, triangles, uvs, alpha, color, applyBlendAddMode);
@@ -208,6 +211,7 @@ class SpineSprite extends Sprite implements ISpineDrawOrder {
 			if (data.drawFunction != null) {
 				data.drawFunction(display);
 			}
+			// if (isDarwable)
 			__drawIndex++;
 		}
 	}

@@ -136,6 +136,11 @@ class DisplayObjectContainer extends DisplayObject {
 		if (isOneAddToStage && this.stage != null && child.stage == null) {
 			child.__onAddToStage(this.stage);
 		}
+		if (this.hasEventListener(Event.ADDED)) {
+			var event = new Event(Event.ADDED);
+			event.target = child;
+			this.dispatchEvent(event);
+		}
 		this.__layoutDirty = true;
 		this.setDirty();
 	}
@@ -150,6 +155,11 @@ class DisplayObjectContainer extends DisplayObject {
 			child.onRemoveToStage();
 		if (child.hasEventListener(Event.REMOVED_FROM_STAGE))
 			child.dispatchEvent(new Event(Event.REMOVED_FROM_STAGE));
+		if (this.hasEventListener(Event.REMOVED)) {
+			var event = new Event(Event.REMOVED);
+			event.target = child;
+			this.dispatchEvent(event);
+		}
 		child.__parent = null;
 		child.__onRemoveFromStage();
 		this.__layoutDirty = true;

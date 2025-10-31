@@ -177,6 +177,13 @@ class VirtualTouchKey extends Box {
 	private var _mouseX:Float;
 	private var _mouseY:Float;
 
+	/**
+	 * 条件判断
+	 */
+	public dynamic function conditions():Bool {
+		return true;
+	}
+
 	public function onVirtualTouchDown(mouseX:Float, mouseY:Float):Void {
 		_mouseX = mouseX;
 		_mouseY = mouseY;
@@ -202,6 +209,8 @@ class VirtualTouchKey extends Box {
 	}
 
 	private function onKeyMouseDown(e:#if jsapi Dynamic #else Event #end):Void {
+		if (!conditions())
+			return;
 		if (e.target is Button) {
 			return;
 		}

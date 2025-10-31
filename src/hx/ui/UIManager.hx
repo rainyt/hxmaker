@@ -85,6 +85,22 @@ class UIManager {
 	}
 
 	/**
+	 * 获得对象资源
+	 * @param id 
+	 * @return Dynamic
+	 */
+	public static function getObject(id:String):Dynamic {
+		for (assets in assetsList) {
+			var object = assets.getObject(id);
+			if (object != null) {
+				return object;
+			}
+		}
+		trace("无法读取", id);
+		return null;
+	}
+
+	/**
 	 * 获得SkeletonData数据
 	 * @param name spine名称
 	 * @param json 如果不提供，则自动以name为命名获得

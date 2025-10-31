@@ -119,8 +119,8 @@ class UIBuilder {
 					});
 				} else {
 					typePath = ComplexType.TPath({
-						name: "Dynamic",
-						pack: []
+						name: "DisplayObject",
+						pack: ["hx", "display"]
 					});
 				}
 				array.push({

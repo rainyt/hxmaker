@@ -374,8 +374,6 @@ class UIManager {
 			if (xml.exists("fill")) {
 				obj.fill = xml.get("fill") == "true";
 			}
-			if(xml.get("id") == "troop")
-				trace("啊、");
 			if (xml.exists("hAlign")) {
 				obj.horizontalAlign = xml.get("hAlign");
 			}

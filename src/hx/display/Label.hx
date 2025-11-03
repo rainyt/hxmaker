@@ -21,6 +21,8 @@ class Label extends DisplayObject implements IDataProider<String> implements IRo
 
 	public var __smoothing:Bool = true;
 
+	@:privateAccess private var __textFormatDirty:Bool = true;
+
 	/**
 	 * 平滑处理，默认为`false`
 	 */
@@ -109,8 +111,34 @@ class Label extends DisplayObject implements IDataProider<String> implements IRo
 		if (value == null)
 			return null;
 		__textFormat.setTo(value);
-		setDirty();
+		this.setTextFormatDirty();
 		return value;
+	}
+
+	/**
+	 * 设置脏标记，并且强制重新渲染文本
+	 * @param value 
+	 */
+	public function setTextFormatDirty(value:Bool = true):Void {
+		this.__textFormatDirty = value;
+		this.setDirty();
+	}
+
+	/**
+	 * 设置文本颜色，该接口与`textFormat`直接设置是一样的效果，只是更加方便快捷
+	 */
+	public var color(get, set):Int;
+
+	private function set_color(value:Int):Int {
+		if (__textFormat.color != value) {
+			__textFormat.color = value;
+			this.setTextFormatDirty();
+		}
+		return value;
+	}
+
+	private function get_color():Int {
+		return __textFormat.color;
 	}
 
 	public function new(?text:String, ?textFormat:TextFormat) {

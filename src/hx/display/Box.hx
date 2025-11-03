@@ -1,5 +1,6 @@
 package hx.display;
 
+import hx.geom.Matrix;
 import hx.geom.Rectangle;
 
 /**
@@ -24,6 +25,47 @@ class Box extends DisplayObjectContainer {
 			__rect.height = __height;
 		}
 		return super.__getRect();
+	}
+
+	override function getBounds(parent:DisplayObject = null):Rectangle {
+		var rect = super.getBounds(parent);
+		if (__width != null) {
+			rect.x = this.x;
+			rect.width = __width;
+		}
+		if (__height != null) {
+			rect.y = this.y;
+			rect.height = __height;
+		}
+		return rect;
+	}
+
+	override function __getBounds(parent:Matrix = null):Rectangle {
+		var rect = super.__getBounds(parent);
+		
+		var selfRect:Rectangle;
+		if (parent != null) {
+			var t = __transform.clone();
+			t.concat(parent);
+			selfRect = __getLocalBounds(__getRect(), t);
+		} else {
+			selfRect = __getLocalBounds(__getRect());
+		}
+
+		if (__width != null) {
+			rect.x = selfRect.x;
+			rect.width = selfRect.width;
+		}
+		if (__height != null) {
+			rect.y = selfRect.y;
+			rect.height = selfRect.height;
+		}
+		
+		return rect;
+	}
+
+	public function __superGetBounds(parent:Matrix = null):Rectangle {
+		return super.__getBounds(parent);
 	}
 
 	override function set_width(value:Float):Float {

@@ -397,19 +397,19 @@ class Scroll extends BoxContainer {
 	public var contentWidth(get, never):Float;
 
 	private function get_contentWidth():Float {
-		var ret = box.__getBounds();
+		var ret = box.__superGetBounds();
 		return ret.width;
 	}
 
 	public var contentHeight(get, never):Float;
 
 	private function get_contentHeight():Float {
-		var ret = box.__getBounds();
+		var ret = box.__superGetBounds();
 		return ret.height;
 	}
 
 	private function getMoveingToData(data:{scrollX:Float, scrollY:Float}):{scrollX:Float, scrollY:Float} {
-		var ret = box.__getBounds();
+		var ret = box.__superGetBounds();
 		var maxWidth = ret.width - this.width;
 		var maxHeight = ret.height - this.height;
 		if (!scrollXEnable || data.scrollX > 0 || maxWidth < 0) {
@@ -473,7 +473,7 @@ class Scroll extends BoxContainer {
 	 * 获取可活动空间大小
 	 */
 	private function getMaxSize():Point {
-		var ret = box.__getBounds();
+		var ret = box.__superGetBounds();
 		if (!scrollYEnable)
 			ret.height = 0;
 		if (!scrollXEnable)

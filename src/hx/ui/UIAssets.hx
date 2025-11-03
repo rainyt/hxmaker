@@ -39,17 +39,26 @@ class UIAssets extends Assets {
 	override function start() {
 		var id = Assets.formatName(__path);
 		if (strings.exists(id)) {
-			viewXml = Xml.parse(strings.get(id));
-			parseXml(viewXml);
-			__start();
+			parserXmlString(strings.get(id));
+			return;
+		}
+		var xmlString = UIManager.getString(id);
+		if (xmlString != null) {
+			parserXmlString(xmlString);
 			return;
 		}
 		// 这里需要解析这个xml所需要的所有资源
 		new StringFuture(__path).onComplete((xml:String) -> {
-			viewXml = Xml.parse(xml);
-			parseXml(viewXml);
-			__start();
+			// 缓存xml
+			strings.set(id, xml);
+			parserXmlString(xml);
 		}).onError(errorValue);
+	}
+
+	private function parserXmlString(xml:String):Void {
+		viewXml = Xml.parse(xml);
+		parseXml(viewXml);
+		__start();
 	}
 
 	private function parseXml(xml:Xml):Void {
@@ -191,18 +200,20 @@ class UIAssets extends Assets {
 					}
 				} else {
 					// 需要检查moudle模块
-					for (key => assets in this.uiAssetses) {
-						if (key == ui) {
-							var parent = assets.build(parent, true);
-							UIManager.getInstance().applyAttributes(parent, item, this);
-							if (parent is DisplayObjectContainer) {
-								buildUi(item, cast parent, ids);
-							}
-							if (parent.name != null && ids != null) {
-								ids.set(parent.name, parent);
-							}
-							return parent;
+					var assets = UIManager.getUIAssets(ui);
+					if (assets == null) {
+						assets = this.uiAssetses.get(ui);
+					}
+					if (assets != null) {
+						var parent = assets.build(parent, true);
+						UIManager.getInstance().applyAttributes(parent, item, this);
+						if (parent is DisplayObjectContainer) {
+							buildUi(item, cast parent, ids);
 						}
+						if (parent.name != null && ids != null) {
+							ids.set(parent.name, parent);
+						}
+						return parent;
 					}
 				}
 			} else if (item.nodeName.indexOf("child:") == 0) {

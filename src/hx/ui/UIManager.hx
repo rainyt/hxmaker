@@ -81,7 +81,6 @@ class UIManager {
 				return bitmapData;
 			}
 		}
-		trace("无法读取", id);
 		return null;
 	}
 
@@ -97,7 +96,21 @@ class UIManager {
 				return object;
 			}
 		}
-		trace("无法读取", id);
+		return null;
+	}
+
+	/**
+	 * 读取当前布局文件
+	 * @param id 
+	 * @return String
+	 */
+	public static function getString(id:String):String {
+		for (assets in assetsList) {
+			var str = assets.getString(id);
+			if (str != null) {
+				return str;
+			}
+		}
 		return null;
 	}
 
@@ -112,6 +125,16 @@ class UIManager {
 			var data = assets.getSkeletonData(name, json);
 			if (data != null) {
 				return data;
+			}
+		}
+		return null;
+	}
+
+	public static function getUIAssets(id:String):UIAssets {
+		for (assets in assetsList) {
+			var uiAssets = assets.getUIAssets(id);
+			if (uiAssets != null) {
+				return uiAssets;
 			}
 		}
 		return null;
@@ -502,25 +525,11 @@ class UIManager {
 	 */
 	public function buildUi(id:String, parent:DisplayObjectContainer):Void {
 		var id = Path.withoutDirectory(Path.withoutExtension(id));
-		for (assets in assetsList) {
-			var uiAssets = getUIAssets(assets, id);
-			if (uiAssets != null) {
-				uiAssets.build(parent);
-				break;
-			}
+		var uiAssets = getUIAssets(id);
+		if (uiAssets != null) {
+			uiAssets.build(parent);
+		} else {
+			trace("无法构造：" + id);
 		}
-	}
-
-	public function getUIAssets(assets:Assets, id:String):UIAssets {
-		if (assets.uiAssetses.exists(id)) {
-			return assets.uiAssetses.get(id);
-		}
-		for (assets in assets.uiAssetses) {
-			var uiAssets = getUIAssets(assets, id);
-			if (uiAssets != null) {
-				return uiAssets;
-			}
-		}
-		return null;
 	}
 }

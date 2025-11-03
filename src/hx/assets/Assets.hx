@@ -171,6 +171,26 @@ class Assets extends Future<Assets, Dynamic> {
 	 * @return Bool
 	 */
 	public function hasLoading(future:Future<Dynamic, Dynamic>):Bool {
+		var id = Assets.formatName(future.path);
+		if (UIManager.getBitmapData(id) != null) {
+			return true;
+		}
+		if (UIManager.getSound(id) != null) {
+			return true;
+		}
+		if (UIManager.getString(id) != null) {
+			return true;
+		}
+		if (UIManager.getAtlas(id) != null) {
+			return true;
+		}
+		if (UIManager.getSkeletonData(id) != null) {
+			return true;
+		}
+		if (UIManager.getUIAssets(id) != null) {
+			return true;
+		}
+
 		for (f in futures) {
 			if (f.path == future.path) {
 				return true;
@@ -605,6 +625,24 @@ class Assets extends Future<Assets, Dynamic> {
 			}
 		}
 		return bitmapData;
+	}
+
+	/**
+	 * 获得界面配置
+	 * @param name 
+	 * @return UIAssets
+	 */
+	public function getUIAssets(name:String):UIAssets {
+		var uiAssets = uiAssetses.get(name);
+		if (uiAssets == null) {
+			for (assets in uiAssetses) {
+				uiAssets = assets.getUIAssets(name);
+				if (uiAssets != null) {
+					return uiAssets;
+				}
+			}
+		}
+		return uiAssets;
 	}
 
 	/**

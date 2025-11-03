@@ -9,6 +9,7 @@ import hx.display.Spine;
 import hx.display.ListView;
 import hx.display.Scroll;
 import hx.display.BitmapLabel;
+import hx.display.Stack;
 import spine.SkeletonData;
 import hx.display.Scene;
 import hx.geom.Point;
@@ -272,6 +273,11 @@ class UIManager {
 					obj.data = bitmapData;
 				else
 					obj.data = xml.get("src");
+			}
+		});
+		addAttributesParse(Stack, function(obj:Stack, xml:Xml, assets:Assets) {
+			if (xml.exists("currentId")) {
+				obj.currentId = xml.get("currentId");
 			}
 		});
 		addAttributesParse(Image, function(obj:Image, xml:Xml, assets:Assets) {

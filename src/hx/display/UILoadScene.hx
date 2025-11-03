@@ -9,6 +9,8 @@ import hx.ui.UIAssets;
 class UILoadScene extends Scene {
 	public var uiAssets:UIAssets;
 
+	public var onLoadedEvent:FunctionListener = new FunctionListener();
+
 	public function new() {
 		super();
 	}
@@ -26,6 +28,7 @@ class UILoadScene extends Scene {
 				uiAssets.onComplete((e) -> {
 					uiAssets.build(this);
 					this.onLoaded();
+					this.onLoadedEvent.call();
 				}).onError(err -> {});
 				uiAssets.start();
 			}

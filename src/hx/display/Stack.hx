@@ -7,11 +7,6 @@ class Stack extends Box {
 	private var __stackDirty:Bool = false;
 
 	/**
-	 * 显示对象列表
-	 */
-	public var displayObjects:Array<DisplayObject> = [];
-
-	/**
 	 * 当前显示对象ID，对应着displayObjects中的对象name属性
 	 */
 	public var currentId(default, set):String;
@@ -30,7 +25,7 @@ class Stack extends Box {
 	public var currentIndex(get, set):Int;
 
 	private function get_currentIndex():Int {
-		for (index => display in displayObjects) {
+		for (index => display in children) {
 			if (display.name == this.currentId) {
 				return index;
 			}
@@ -40,8 +35,8 @@ class Stack extends Box {
 
 	private function set_currentIndex(index:Int):Int {
 		if (this.currentIndex != index) {
-			if (displayObjects[index] != null)
-				this.currentId = displayObjects[index].name;
+			if (children[index] != null)
+				this.currentId = children[index].name;
 		}
 		return index;
 	}
@@ -49,33 +44,14 @@ class Stack extends Box {
 	override function __updateTransform(parent:DisplayObject) {
 		if (__stackDirty) {
 			__stackDirty = false;
-			for (object in displayObjects) {
+			for (object in children) {
 				if (object.name == this.currentId) {
 					object.visible = true;
-					superAddChildAt(object, 0);
-				} else if (object.parent == this) {
-					superRemoveChild(object);
+				} else {
+					object.visible = false;
 				}
 			}
 		}
 		super.__updateTransform(parent);
-	}
-
-	override public function addChildAt(child:DisplayObject, index:Int) {
-		if (displayObjects.indexOf(child) == -1) {
-			displayObjects.push(child);
-		}
-	}
-
-	override public function removeChild(child:DisplayObject):Void {
-		displayObjects.remove(child);
-	}
-
-	private function superAddChildAt(child:DisplayObject, index:Int):Void {
-		super.addChildAt(child, this.children.length);
-	}
-
-	private function superRemoveChild(child:DisplayObject):Void {
-		super.removeChild(child);
 	}
 }

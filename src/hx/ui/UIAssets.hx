@@ -195,7 +195,7 @@ class UIAssets extends Assets {
 						ids.set(uiDisplay.name, uiDisplay);
 					}
 					parent = cast uiDisplay;
-					if (parent is DisplayObjectContainer) {
+					if (autoBuildUi && parent is DisplayObjectContainer) {
 						buildUi(item, cast parent, ids);
 					}
 				} else {
@@ -207,7 +207,7 @@ class UIAssets extends Assets {
 					if (assets != null) {
 						var parent = assets.build(parent, true);
 						UIManager.getInstance().applyAttributes(parent, item, this);
-						if (parent is DisplayObjectContainer) {
+						if (autoBuildUi && parent is DisplayObjectContainer) {
 							buildUi(item, cast parent, ids);
 						}
 						if (parent.name != null && ids != null) {

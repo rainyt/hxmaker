@@ -9,6 +9,7 @@ import hx.display.Spine;
 import hx.display.ListView;
 import hx.display.Scroll;
 import hx.display.BitmapLabel;
+import hx.display.FlowBox;
 import hx.display.Stack;
 import spine.SkeletonData;
 import hx.display.Scene;
@@ -365,6 +366,17 @@ class UIManager {
 			if (xml.exists("stroke")) {
 				// var color = xml.get("strokeColor");
 				obj.stroke(0x0, Std.parseInt(xml.get("stroke")));
+			}
+		});
+		addAttributesParse(FlowBox, function(obj:FlowBox, xml:Xml, assets:Assets) {
+			if (xml.exists("gap")) {
+				obj.gap = xml.getFloatValue("gap");
+			}
+			if (xml.exists("gapX")) {
+				obj.gapX = xml.getFloatValue("gapX");
+			}
+			if (xml.exists("gapY")) {
+				obj.gapY = xml.getFloatValue("gapY");
 			}
 		});
 		addAttributesParse(VBox, function(obj:VBox, xml:Xml, assets:Assets) {

@@ -1,5 +1,6 @@
 package hx.display;
 
+import hx.events.Event;
 import hx.ui.UIManager;
 import hx.assets.BitmapDataFuture;
 
@@ -21,14 +22,18 @@ class ImageLoader extends Box implements IDataProider<Dynamic> {
 			var bitmapData = UIManager.getBitmapData(v);
 			if (bitmapData != null) {
 				image.data = bitmapData;
+				this.dispatchEvent(new Event(Event.CHANGE));
 			} else {
 				new BitmapDataFuture(__data, true).onComplete((data) -> {
-					if (__data == v)
+					if (__data == v) {
 						image.data = data;
+						this.dispatchEvent(new Event(Event.CHANGE));
+					}
 				});
 			}
 		} else if (__data is BitmapData) {
 			image.data = __data;
+			this.dispatchEvent(new Event(Event.CHANGE));
 		}
 		return __data;
 	}

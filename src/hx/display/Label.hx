@@ -137,6 +137,23 @@ class Label extends DisplayObject implements IDataProider<String> implements IRo
 		return value;
 	}
 
+	/**
+	 * 字体大小，该接口与`textFormat`直接设置是一样的效果，只是更加方便快捷
+	 */
+	public var fontSize(get, set):Int;
+
+	private function set_fontSize(value:Int):Int {
+		if (__textFormat.size != value) {
+			__textFormat.size = value;
+			this.setTextFormatDirty();
+		}
+		return value;
+	}
+
+	private function get_fontSize():Int {
+		return __textFormat.size;
+	}
+
 	private function get_color():Int {
 		return __textFormat.color;
 	}

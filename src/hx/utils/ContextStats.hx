@@ -11,6 +11,7 @@ class ContextStats {
 	private static var __cpuTimer:Float = 0;
 	private static var __cpus:Array<Float> = [];
 	private static var __memory:Int = 0;
+	private static var __spineRenderCount:Int = 0;
 
 	/**
 	 * 帧率
@@ -56,6 +57,23 @@ class ContextStats {
 		__drawcall = 0;
 		__visibleDisplayCounts = 0;
 		__vertexCount = 0;
+		__spineRenderCount = 0;
+	}
+
+	/**
+	 * Spine渲染次数
+	 */
+	public static var spineRenderCount(get, never):Int;
+
+	private static function get_spineRenderCount():Int {
+		return __spineRenderCount;
+	}
+
+	/**
+	 * 统计Spine渲染次数
+	 */
+	public static function statsSpineRenderCount():Void {
+		__spineRenderCount++;
 	}
 
 	public static function statsDrawCall():Void {

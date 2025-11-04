@@ -1,5 +1,6 @@
 package hx.display;
 
+import hx.utils.ContextStats;
 import hx.events.SpineEvent;
 import hx.display.ISpine.ISpineDrawOrder;
 #if spine_hx
@@ -83,6 +84,8 @@ class Spine extends Graphics implements ISpine {
 	 * 动画状态数据
 	 */
 	public var animationState:AnimationState;
+
+	private var __spineDrawDirty:Bool = true;
 
 	/**
 	 * 构造一个Spine渲染器
@@ -170,6 +173,9 @@ class Spine extends Graphics implements ISpine {
 	override function onUpdate(dt:Float) {
 		if (mustVisibleRender && !visible)
 			return;
+		if (!__playing && !__spineDrawDirty)
+			return;
+		__spineDrawDirty = false;
 		__renderCurrentTime += dt;
 		if (__fps >= 60 || __renderCurrentTime >= __renderFpsTime) {
 			this.update(__renderCurrentTime);
@@ -205,6 +211,7 @@ class Spine extends Graphics implements ISpine {
 	 * @param dt 
 	 */
 	public function update(delta:Float):Void {
+		ContextStats.statsSpineRenderCount();
 		this.onUpdateWorldTransformBefore();
 		animationState.update(delta);
 		animationState.apply(skeleton);
@@ -348,6 +355,8 @@ class Spine extends Graphics implements ISpine {
 		this.setTransformDirty();
 	}
 
+	private var __playing = false;
+
 	/**
 	 * 播放动画
 	 * @param name 
@@ -358,7 +367,13 @@ class Spine extends Graphics implements ISpine {
 		var t = this.animationState.getCurrent(index);
 		if (t != null && t.animation.name == name)
 			return t;
+		__playing = true;
 		return this.animationState.setAnimationByName(index, name, isLoop);
+	}
+
+	public function stop():Void {
+		this.animationState.clearTracks();
+		__playing = false;
 	}
 
 	/**
@@ -373,5 +388,6 @@ class Spine extends Graphics implements ISpine {
 		#end
 		this.skeleton.setBonesToSetupPose();
 		this.skeleton.setSlotsToSetupPose();
+		__spineDrawDirty = true;
 	}
 }

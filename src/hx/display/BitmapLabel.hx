@@ -1,5 +1,6 @@
 package hx.display;
 
+import hx.geom.ColorTransform;
 import hx.assets.FntAtlas;
 import hx.assets.Atlas;
 
@@ -37,6 +38,11 @@ class BitmapLabel extends Box implements IDataProider<String> {
 		this.updateEnabled = true;
 	}
 
+	override function set_colorTransform(value:ColorTransform):ColorTransform {
+		__textDirty = true;
+		return super.set_colorTransform(value);
+	}
+
 	private function __onUpdateText():Void {
 		if (__textDirty) {
 			// 重绘
@@ -54,6 +60,7 @@ class BitmapLabel extends Box implements IDataProider<String> {
 					var c = chars[i];
 					charFnt = null;
 					var img = new Image(atlas.bitmapDatas.get(fontName + c));
+					img.colorTransform = this.colorTransform;
 					this.addChild(img);
 					if (fntAtlas != null) {
 						charFnt = fntAtlas.chars.get(c);

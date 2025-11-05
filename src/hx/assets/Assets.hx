@@ -228,7 +228,9 @@ class Assets extends Future<Assets, Dynamic> {
 		if (!isBindAssets || UIManager.getBitmapData(formatName(path)) == null) {
 			pushFuture(new hx.assets.BitmapDataFuture(path, false));
 		} else {
+			#if assets_debug
 			trace("已经加载了", path);
+			#end
 		}
 	}
 
@@ -381,11 +383,15 @@ class Assets extends Future<Assets, Dynamic> {
 		if (future == null) {
 			return false;
 		}
+		#if assets_debug
 		trace("CURRENT_LOAD_COUNTS", CURRENT_LOAD_COUNTS);
+		#end
 		// trace("剩余", future.getLoadData());
 		if (CURRENT_LOAD_COUNTS < MAX_ASSETS_LOAD_COUNTS) {
 			CURRENT_LOAD_COUNTS++;
+			#if assets_debug
 			trace("开始加载：", future.getLoadData());
+			#end
 			__loadIndex++;
 			future.post();
 			loadNext();

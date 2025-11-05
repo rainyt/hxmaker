@@ -54,6 +54,24 @@ class DisplayObject extends EventDispatcher {
 	@:noCompletion private var __maskRect:Rectangle;
 	@:noCompletion private var __background:DisplayObject;
 	@:noCompletion private var __shader:Shader;
+	@:noCompletion private var __hide:Bool = false;
+
+	/**
+	 * 是否隐藏，隐藏即不参与布局、渲染，但是仍然会存在于显示列表中
+	 */
+	public var hide(get, set):Bool;
+
+	private function get_hide():Bool {
+		return __hide;
+	}
+
+	private function set_hide(value:Bool):Bool {
+		if (__hide != value) {
+			__hide = value;
+			this.setDirty();
+		}
+		return value;
+	}
 
 	/**
 	 * 着色器设置
@@ -459,7 +477,7 @@ class DisplayObject extends EventDispatcher {
 	}
 
 	public function get_visible():Bool {
-		return __visible;
+		return !hide && __visible;
 	}
 
 	/**

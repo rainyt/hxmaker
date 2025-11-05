@@ -51,7 +51,7 @@ class DisplayObjectContainer extends DisplayObject {
 	 */
 	public function updateLayout():Void {
 		if (layout != null) {
-			layout.update(this.children);
+			layout.update(this.children.filter((object) -> !object.hide));
 		}
 		for (object in this.children) {
 			if (object is DisplayObjectContainer) {
@@ -320,6 +320,8 @@ class DisplayObjectContainer extends DisplayObject {
 		__updateLayout();
 		var rect = new Rectangle();
 		for (object in this.children) {
+			if (object.hide)
+				continue;
 			var objectRect = object.getBounds(parent);
 			if (objectRect.width > 0 && objectRect.height > 0)
 				rect.expand(objectRect.x, objectRect.y, objectRect.width, objectRect.height);

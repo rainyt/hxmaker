@@ -64,7 +64,6 @@ class UIAssets extends Assets {
 	private function parseXml(xml:Xml):Void {
 		for (item in xml.elements()) {
 			// 判断是否需要加载资源
-			trace(item.nodeName);
 			if (item.nodeName.indexOf("xml:") == 0) {
 				// 需要加载xml配置
 				var nodeName = item.nodeName;

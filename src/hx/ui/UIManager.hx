@@ -232,6 +232,9 @@ class UIManager {
 						}
 					case "alpha":
 						display.alpha = Std.parseFloat(xml.get("alpha"));
+					case "scale":
+						display.scaleX = Std.parseFloat(xml.get("scale"));
+						display.scaleY = Std.parseFloat(xml.get("scale"));
 					case "scaleX":
 						display.scaleX = Std.parseFloat(xml.get("scaleX"));
 					case "scaleY":

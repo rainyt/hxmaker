@@ -79,11 +79,9 @@ class UIAnimate {
 	/**
 	 * 开始播放动画
 	 */
-	public function start():Void {
-		trace("开始播放", this.id);
-		for (key in startOption.fields()) {
-			target.setProperty(key, startOption.getProperty(key));
-		}
+	public function play(updateOption:Bool = true):Void {
+		if (updateOption)
+			this.updateOption();
 		var actuate = Actuate.tween(target, duration, endOption, false).onUpdate(() -> {
 			if (target.parent != null) {
 				target.parent.updateLayout();

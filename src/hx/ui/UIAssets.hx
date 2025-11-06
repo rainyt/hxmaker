@@ -137,9 +137,8 @@ class UIAssets extends Assets {
 			for (object in ids) {
 				if (object is UIAnimate) {
 					var animate:UIAnimate = object;
-					animate.updateOption();
 					if (animate.auto)
-						animate.start();
+						animate.play();
 				}
 			}
 		});

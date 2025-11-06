@@ -101,6 +101,10 @@ class UIBuilder {
 		var array:Array<Field> = [];
 		for (item in xml.elements()) {
 			if (item.exists("id")) {
+				if (item.nodeName == "animate") {
+					continue;
+				}
+
 				// trace("create field", item);
 				var classPkgName = moudle != null ? moudle.getType(item.nodeName) : "hx.display." + item.nodeName;
 				var type:haxe.macro.Type = null;

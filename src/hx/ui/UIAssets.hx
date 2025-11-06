@@ -28,7 +28,7 @@ class UIAssets extends Assets {
 	/**
 	 * 动画配置列表
 	 */
-	public var aniamtes:Array<UIAnimate> = [];
+	public var animates:Array<UIAnimate> = [];
 
 	public function new(path:String) {
 		super();
@@ -122,13 +122,13 @@ class UIAssets extends Assets {
 	/**
 	 * 开始播放动画
 	 */
-	public function startAniamte():Void {
-		for (aniamte in this.aniamtes) {
-			aniamte.updateOption();
+	public function startAnimates():Void {
+		for (animate in this.animates) {
+			animate.updateOption();
 		}
-		for (aniamte in this.aniamtes) {
-			if (aniamte.auto)
-				aniamte.start();
+		for (animate in this.animates) {
+			if (animate.auto)
+				animate.start();
 		}
 	}
 
@@ -151,7 +151,7 @@ class UIAssets extends Assets {
 		// 对父节点进行属性绑定
 		UIManager.getInstance().applyAttributes(parent, parentXml, this);
 		buildUi(parentXml, parent, ids);
-		hx.utils.Timer.getInstance().nextFrame(startAniamte);
+		hx.utils.Timer.getInstance().nextFrame(startAnimates);
 		return parent;
 	}
 
@@ -159,16 +159,16 @@ class UIAssets extends Assets {
 		if (item.get("load") == "true")
 			return null;
 
-		if (item.nodeName == "aniamte") {
+		if (item.nodeName == "animate") {
 			var target = item.get("target");
 			var display = target == "this" ? parent : ids.get(target);
 			if (display != null) {
-				var aniamte = new UIAnimate(display, item);
+				var animate = new UIAnimate(display, item);
 				if (item.get("auto") == "false")
-					aniamte.auto = false;
+					animate.auto = false;
 				if (item.exists("id"))
-					aniamte.id = item.get("id");
-				this.aniamtes.push(aniamte);
+					animate.id = item.get("id");
+				this.animates.push(animate);	
 			}
 			return null;
 		}

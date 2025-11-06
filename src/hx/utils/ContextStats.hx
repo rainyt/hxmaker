@@ -58,6 +58,7 @@ class ContextStats {
 		__visibleDisplayCounts = 0;
 		__vertexCount = 0;
 		__spineRenderCount = 0;
+		__timeTaskCounts = 0;
 	}
 
 	/**
@@ -134,5 +135,20 @@ class ContextStats {
 	 */
 	public static function statsMemory(memory:Int):Void {
 		__memory = memory;
+	}
+
+	private static var __timeTaskCounts:Int = 0;
+
+	public static var timerTaskCount(get, never):Int;
+
+	private static function get_timerTaskCount():Int {
+		return __timeTaskCounts;
+	}
+
+	/**
+	 * 统计时间任务数量
+	 */
+	public static function statsTimeTaskCount():Void {
+		__timeTaskCounts++;
 	}
 }

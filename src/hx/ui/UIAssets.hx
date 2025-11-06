@@ -25,11 +25,6 @@ class UIAssets extends Assets {
 	 */
 	public var viewXml:Xml;
 
-	/**
-	 * 动画配置列表
-	 */
-	public var animates:Array<UIAnimate> = [];
-
 	public function new(path:String) {
 		super();
 		__path = path;
@@ -120,19 +115,6 @@ class UIAssets extends Assets {
 	}
 
 	/**
-	 * 开始播放动画
-	 */
-	public function startAnimates():Void {
-		for (animate in this.animates) {
-			animate.updateOption();
-		}
-		for (animate in this.animates) {
-			if (animate.auto)
-				animate.start();
-		}
-	}
-
-	/**
 	 * 开始构造布局
 	 * @param parent 
 	 */
@@ -151,9 +133,20 @@ class UIAssets extends Assets {
 		// 对父节点进行属性绑定
 		UIManager.getInstance().applyAttributes(parent, parentXml, this);
 		buildUi(parentXml, parent, ids);
-		hx.utils.Timer.getInstance().nextFrame(startAnimates);
+		hx.utils.Timer.getInstance().nextFrame(() -> {
+			for (object in ids) {
+				if (object is UIAnimate) {
+					var animate:UIAnimate = object;
+					animate.updateOption();
+					if (animate.auto)
+						animate.start();
+				}
+			}
+		});
 		return parent;
 	}
+
+	public static var ANIMATE_UID:Int = 0;
 
 	public function buildItem(item:Xml, parent:DisplayObjectContainer, ids:Map<String, Dynamic>, autoBuildUi:Bool = true):DisplayObject {
 		if (item.get("load") == "true")
@@ -169,8 +162,9 @@ class UIAssets extends Assets {
 				if (item.exists("id")) {
 					animate.id = item.get("id");
 					ids.set(item.get("id"), animate);
+				} else {
+					ids.set("__animate__" + ANIMATE_UID++, animate);
 				}
-				this.animates.push(animate);
 			}
 			return null;
 		}

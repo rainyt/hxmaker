@@ -80,6 +80,7 @@ class UIAnimate {
 	 * 开始播放动画
 	 */
 	public function start():Void {
+		trace("开始播放", this.id);
 		for (key in startOption.fields()) {
 			target.setProperty(key, startOption.getProperty(key));
 		}

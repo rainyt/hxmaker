@@ -34,7 +34,7 @@ class UIBuilder {
 		// 将在该布局中新增ids的字段，以便访问
 		fileds.push({
 			name: "ids",
-			kind: FVar(macro :Map<String, hx.display.DisplayObject>, macro new Map()),
+			kind: FVar(macro :Map<String, Dynamic>, macro new Map()),
 			meta: [
 				{
 					name: ":noCompletion",
@@ -102,6 +102,34 @@ class UIBuilder {
 		for (item in xml.elements()) {
 			if (item.exists("id")) {
 				if (item.nodeName == "animate") {
+					var typePath = ComplexType.TPath({
+						name: "UIAnimate",
+						pack: ["hx", "ui"]
+					});
+					array.push({
+						name: item.get("id"),
+						access: [APublic],
+						kind: FProp("get", "null", typePath),
+						pos: Context.currentPos()
+					});
+					array.push({
+						name: "get_" + item.get("id"),
+						access: [APrivate],
+						kind: FFun({
+							args: [],
+							ret: typePath,
+							expr: macro {
+								return cast this.getChildById($v{item.get("id")});
+							}
+						}),
+						meta: [
+							{
+								name: ":noCompletion",
+								pos: Context.currentPos()
+							}
+						],
+						pos: Context.currentPos()
+					});
 					continue;
 				}
 

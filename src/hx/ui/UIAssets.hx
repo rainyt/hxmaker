@@ -138,8 +138,8 @@ class UIAssets extends Assets {
 	 */
 	public function build(parent:DisplayObjectContainer, createRoot:Bool = false):DisplayObject {
 		var parentXml = viewXml.nodeType == Document ? viewXml.firstElement() : viewXml;
-		var ids:Map<String, DisplayObject> = Reflect.getProperty(parent, "ids");
-		ids = ids == null ? new Map<String, DisplayObject>() : ids;
+		var ids:Map<String, Dynamic> = Reflect.getProperty(parent, "ids");
+		ids = ids == null ? new Map<String, Dynamic>() : ids;
 		if (createRoot) {
 			var display = buildItem(parentXml, parent, ids, false);
 			if (display is DisplayObjectContainer) {
@@ -155,7 +155,7 @@ class UIAssets extends Assets {
 		return parent;
 	}
 
-	public function buildItem(item:Xml, parent:DisplayObjectContainer, ids:Map<String, DisplayObject>, autoBuildUi:Bool = true):DisplayObject {
+	public function buildItem(item:Xml, parent:DisplayObjectContainer, ids:Map<String, Dynamic>, autoBuildUi:Bool = true):DisplayObject {
 		if (item.get("load") == "true")
 			return null;
 
@@ -166,9 +166,11 @@ class UIAssets extends Assets {
 				var animate = new UIAnimate(display, item);
 				if (item.get("auto") == "false")
 					animate.auto = false;
-				if (item.exists("id"))
+				if (item.exists("id")) {
 					animate.id = item.get("id");
-				this.animates.push(animate);	
+					ids.set(item.get("id"), animate);
+				}
+				this.animates.push(animate);
 			}
 			return null;
 		}
@@ -239,7 +241,7 @@ class UIAssets extends Assets {
 	 * @param parent 父节点容器 
 	 * @param ids 映射表
 	 */
-	public function buildUi(xml:Xml, parent:DisplayObjectContainer, ids:Map<String, DisplayObject>):Void {
+	public function buildUi(xml:Xml, parent:DisplayObjectContainer, ids:Map<String, Dynamic>):Void {
 		for (item in xml.elements()) {
 			buildItem(item, parent, ids);
 		}

@@ -87,8 +87,9 @@ class Stage extends Box {
 		var touchList = [];
 		if (needHitTest && __hitTest(event.stageX, event.stageY, touchList)) {
 			for (index => object in touchList) {
-				if (object.parent != null && !object.parent.mouseChildren) {
-					touchList.splice(index, touchList.length - index);
+				// if (object.parent != null && !object.parent.mouseChildren) {
+				if (object is DisplayObjectContainer && !cast(object, DisplayObjectContainer).mouseChildren) {
+					touchList.splice(index + 1, touchList.length - index - 1);
 					break;
 				}
 			}

@@ -93,13 +93,13 @@ class Label extends DisplayObject implements IDataProider<String> implements IRo
 	 * 设置文本格式范围
 	 * @param textFormat 
 	 * @param startIndex 
-	 * @param endIndex 
+	 * @param length 
 	 */
-	public function setRangeTextFormat(textFormat:TextFormat, startIndex:Int = 0, endIndex:Int = -1):Void {
+	public function setRangeTextFormat(textFormat:TextFormat, startIndex:Int = 0, length:Int = -1):Void {
 		var rangeTextFormat:RangeTextFormat = new RangeTextFormat();
 		rangeTextFormat.setTo(textFormat);
 		rangeTextFormat.startIndex = startIndex;
-		rangeTextFormat.endIndex = endIndex;
+		rangeTextFormat.endIndex = startIndex + length;
 		__rangeTextFormats.push(rangeTextFormat);
 	}
 
@@ -122,6 +122,40 @@ class Label extends DisplayObject implements IDataProider<String> implements IRo
 			}
 		}
 		return __textFormat;
+	}
+
+	/**
+	 * 根据正则表达式设置文本范围格式
+	 */
+	public function setRegexRangeTextFormat(regex:EReg, textFormat:TextFormat):Void {
+		this.clearRangeTextFormats();
+		var text:String = this.data;
+		var texts:Array<String> = [];
+		regex.map(text, (f) -> {
+			var value = f.matched(0);
+			texts.push(value);
+			return value;
+		});
+		if (texts.length > 0) {
+			this.setTextsRangeTextFormat(texts, textFormat);
+		}
+	}
+
+	/**
+	 * 设置文本范围格式
+	 * @param textFormat 
+	 * @param startIndex 
+	 * @param endIndex 
+	 */
+	public function setTextsRangeTextFormat(texts:Array<String>, textFormat:TextFormat):Void {
+		this.clearRangeTextFormats();
+		var text:String = this.data;
+		for (s in texts) {
+			var at = text.indexOf(s);
+			if (at != -1) {
+				this.setRangeTextFormat(textFormat, at, s.length);
+			}
+		}
 	}
 
 	/**

@@ -525,7 +525,13 @@ class UIManager {
 				}
 			}
 		}
-		var name = Type.getClassName(Type.getClass(ui));
+		var name:String = null;
+		var moudleType = UIAssets.moudle.classed.get(attributes.nodeName.replace("xml:", ""));
+		if (moudleType != null && moudleType.extendsClassName != null) {
+			name = moudleType.extendsClassName;
+		} else {
+			name = Type.getClassName(Type.getClass(ui));
+		}
 		var parser = __applyAttributes.get(name);
 		if (parser != null) {
 			parser(ui, attributes, assets);

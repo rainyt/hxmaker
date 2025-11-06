@@ -10,6 +10,11 @@ class MoudleClassType {
 	public var className:String;
 
 	/**
+	 * 当前模块的继承类名
+	 */
+	public var extendsClassName:String;
+
+	/**
 	 * 类型绑定
 	 */
 	public var attributes:Map<String, Attributes> = [];
@@ -17,6 +22,7 @@ class MoudleClassType {
 	public function new(?xml:Xml, ?className:String) {
 		if (xml != null) {
 			className = xml.get("classed");
+			extendsClassName = xml.get("extends");
 			for (item in xml.elements()) {
 				attributes.set(item.nodeName, new Attributes(item));
 			}

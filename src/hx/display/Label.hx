@@ -85,6 +85,16 @@ class Label extends DisplayObject implements IDataProider<String> implements IRo
 	public var textFormat(get, set):TextFormat;
 
 	/**
+	 * 设置文本格式范围
+	 * @param textFormat 
+	 * @param startIndex 
+	 * @param endIndex 
+	 */
+	public function setTextFormatRange(textFormat:TextFormat, startIndex:Int = 0, endIndex:Int = -1):Void {
+
+	}
+
+	/**
 	 * 是否自动换行，默认为`true`
 	 */
 	public var wordWrap(get, set):Bool;

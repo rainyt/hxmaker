@@ -61,6 +61,7 @@ class Timer {
 		while (i-- > 0) {
 			var t = timerChildren[i];
 			t.update(dt);
+			ContextStats.statsTimeTaskCount();
 			if (t.duration <= 0) {
 				timerChildren.splice(i, 1);
 			}

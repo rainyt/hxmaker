@@ -18,7 +18,7 @@ using Reflect;
 /**
  * UI动画控制程序，通过XML配置实现动画
  */
-class UIAniamte {
+class UIAnimate {
 	/**
 	 * 动画目标对象开始动画值
 	 */
@@ -45,9 +45,19 @@ class UIAniamte {
 	public var duration:Float = 0;
 
 	/**
+	 * 是否自动播放
+	 */
+	public var auto:Bool = true;
+
+	/**
 	 * 缓动函数
 	 */
 	public var ease:IEasing;
+
+	/**
+	 * 动画ID
+	 */
+	public var id:String;
 
 	public function new(target:DisplayObject, xml:Xml) {
 		this.target = target;

@@ -28,7 +28,7 @@ class UIAssets extends Assets {
 	/**
 	 * 动画配置列表
 	 */
-	public var aniamtes:Array<UIAniamte> = [];
+	public var aniamtes:Array<UIAnimate> = [];
 
 	public function new(path:String) {
 		super();
@@ -127,7 +127,8 @@ class UIAssets extends Assets {
 			aniamte.updateOption();
 		}
 		for (aniamte in this.aniamtes) {
-			aniamte.start();
+			if (aniamte.auto)
+				aniamte.start();
 		}
 	}
 
@@ -162,7 +163,11 @@ class UIAssets extends Assets {
 			var target = item.get("target");
 			var display = target == "this" ? parent : ids.get(target);
 			if (display != null) {
-				var aniamte = new UIAniamte(display, item);
+				var aniamte = new UIAnimate(display, item);
+				if (item.get("auto") == "false")
+					aniamte.auto = false;
+				if (item.exists("id"))
+					aniamte.id = item.get("id");
 				this.aniamtes.push(aniamte);
 			}
 			return null;

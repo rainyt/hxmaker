@@ -85,13 +85,43 @@ class Label extends DisplayObject implements IDataProider<String> implements IRo
 	public var textFormat(get, set):TextFormat;
 
 	/**
+	 * 范围文本格式
+	 */
+	private var __rangeTextFormats:Array<RangeTextFormat> = [];
+
+	/**
 	 * 设置文本格式范围
 	 * @param textFormat 
 	 * @param startIndex 
 	 * @param endIndex 
 	 */
-	public function setTextFormatRange(textFormat:TextFormat, startIndex:Int = 0, endIndex:Int = -1):Void {
+	public function setRangeTextFormat(textFormat:TextFormat, startIndex:Int = 0, endIndex:Int = -1):Void {
+		var rangeTextFormat:RangeTextFormat = new RangeTextFormat();
+		rangeTextFormat.setTo(textFormat);
+		rangeTextFormat.startIndex = startIndex;
+		rangeTextFormat.endIndex = endIndex;
+		__rangeTextFormats.push(rangeTextFormat);
+	}
 
+	/**
+	 * 清空所有范围文本格式
+	 */
+	public function clearRangeTextFormats():Void {
+		__rangeTextFormats = [];
+	}
+
+	/**
+	 * 根据字符索引获取文本格式
+	 * @param at 字符索引
+	 * @return 范围文本格式
+	 */
+	public function getCharTextFormatAt(at:Int):TextFormat {
+		for (format in __rangeTextFormats) {
+			if (format.startIndex <= at && at < format.endIndex) {
+				return format;
+			}
+		}
+		return __textFormat;
 	}
 
 	/**

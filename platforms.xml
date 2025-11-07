@@ -1,0 +1,27 @@
+<project>
+    <!-- 微信小游戏库编译 -->
+    <section if="wechat || qihoo || qqquick || baidu || g4399 || bili || mgc || tt || ks || meituan">
+        <haxelib name="wechat-zygame-dom" />
+    </section>
+    <section if="oppo">
+        <haxelib name="oppo-rpk-core" />
+    </section>
+    <section if="huawei">
+        <haxelib name="huawei-rpk-core" />
+    </section>
+    <section if="wifi">
+        <haxelib name="wifi-cpk-core" />
+    </section>
+    <section if="vivo">
+        <haxelib name="vivo-rpk-core" />
+    </section>
+    <section if="xiaomi">
+        <haxelib name="xiaomi-rpk-core" />
+    </section>
+    <section if="meizu">
+        <haxelib name="meizu-rpk-core" />
+    </section>
+    <section if="lianxin">
+        <haxelib name="lianxin-sdk"/>
+    </section>
+</project>

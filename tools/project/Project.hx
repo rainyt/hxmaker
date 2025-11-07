@@ -51,4 +51,6 @@ class Project {
 	public function getProjectData():Dynamic {
 		return {};
 	}
+
+	public function build(args:Array<String>):Void {}
 }

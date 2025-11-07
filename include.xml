@@ -1,4 +1,6 @@
 <project>
     <haxelib name="actuate"/>
     <haxeflag name='--macro keep("hx.display.*")' />
+    <!-- 如果是属于hxmaker独立项目，则需要定义`hxmaker_project` -->
+    <include path="platforms.xml" if="hxmaker_project"/>
 </project>

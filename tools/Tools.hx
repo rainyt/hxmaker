@@ -14,17 +14,18 @@ class Tools {
 		if (projectName == null) {
 			throw "No project name provided." + "\nUsage: hxmaker create <engine_name> <project_name>";
 		}
+		var project:Project = switch project {
+			case "openfl":
+				// Create OpenFL project
+				new OpenFLProject();
+			default:
+				throw "Unknown project type: " + project;
+		}
 		switch (command) {
 			case "build":
 				// 编译指定目标
+				project.build(args.slice(2));
 			case "create":
-				var project:Project = switch project {
-					case "openfl":
-						// Create OpenFL project
-						new OpenFLProject();
-					default:
-						throw "Unknown project type: " + project;
-				}
 				project.export(Path.join([args[args.length - 1], projectName]));
 		}
 	}

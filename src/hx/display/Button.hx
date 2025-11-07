@@ -109,15 +109,15 @@ class Button extends BoxContainer {
 	}
 
 	public function new(text:String = null, skin:ButtonSkin = null, textFormat:TextFormat = null) {
-		super();
 		__img = new Image();
-		this.addChild(__img);
+		__box = new Box();
+		super();
+		this.addChildAt(__img, 0);
 		__label = new Label(text);
 		__label.horizontalAlign = CENTER;
 		__label.verticalAlign = MIDDLE;
-		this.addChild(__label);
-		__box = new Box();
-		this.addChild(__box);
+		this.addChildAt(__box, 1);
+		this.addChildAt(__label, 2);
 		this.skin = skin;
 		this.mouseChildren = false;
 		this.layout = new AnchorLayout();

@@ -191,6 +191,13 @@ class UIAssets extends Assets {
 					var type = Type.resolveClass(moudle.classed.get(ui).className);
 					var uiDisplay:DisplayObject = UIManager.getInstance().createInstance(type, item);
 					parent.addChild(uiDisplay);
+					var __ui_id__ = Reflect.getProperty(uiDisplay, "__ui_id__");
+					if (__ui_id__ != null) {
+						var assetsUi = UIManager.getUIAssets(Assets.formatName(__ui_id__));
+						if (assetsUi != null) {
+							UIManager.getInstance().applyAttributes(uiDisplay, assetsUi.viewXml.firstElement(), this, true);
+						}
+					}
 					UIManager.getInstance().applyAttributes(uiDisplay, item, this);
 					if (uiDisplay.name != null && ids != null) {
 						ids.set(uiDisplay.name, uiDisplay);

@@ -1,5 +1,6 @@
 package hx.ui;
 
+import hx.utils.Timer;
 import hx.core.Hxmaker;
 import hx.display.Stage;
 import hx.display.ImageLoader;
@@ -512,7 +513,7 @@ class UIManager {
 	 * @param ui 
 	 * @param attributes 
 	 */
-	public function applyAttributes(ui:DisplayObject, attributes:Xml, assets:Assets):Void {
+	public function applyAttributes(ui:DisplayObject, attributes:Xml, assets:Assets, applySuperClasses:Bool = false):Void {
 		// 应用样式
 		if (attributes.exists("style")) {
 			var id = attributes.get("style");
@@ -525,16 +526,18 @@ class UIManager {
 				}
 			}
 		}
-		var name:String = null;
-		var moudleType = UIAssets.moudle.classed.get(attributes.nodeName.replace("xml:", ""));
-		if (moudleType != null && moudleType.extendsClassName != null) {
-			name = moudleType.extendsClassName;
-		} else {
-			name = Type.getClassName(Type.getClass(ui));
-		}
+		var uiClass:Class<Dynamic> = Type.getClass(ui);
+		var name = Type.getClassName(uiClass);
 		var parser = __applyAttributes.get(name);
 		if (parser != null) {
 			parser(ui, attributes, assets);
+		} else if (applySuperClasses) {
+			uiClass = Type.getSuperClass(uiClass);
+			name = Type.getClassName(uiClass);
+			parser = __applyAttributes.get(name);
+			if (parser != null)
+				parser(ui, attributes, assets);
+			// Timer.getInstance().nextFrame(parser, ui, attributes, assets);
 		}
 		__applyAttributes.get("default")(ui, attributes, assets);
 	}

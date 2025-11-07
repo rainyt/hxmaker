@@ -36,8 +36,8 @@ class Timer {
 	 * 下一帧调用运行
 	 * @param cb 
 	 */
-	public function nextFrame(cb:Void->Void, ...args):Int {
-		return setTimeout(cb, 0, args);
+	public function nextFrame(cb:Dynamic, ...args:Dynamic):Int {
+		return setTimeout(cb, 0, args.toArray());
 	}
 
 	/**
@@ -45,7 +45,7 @@ class Timer {
 	 * @param cb 
 	 * @param duration 
 	 */
-	public function setTimeout(cb:Void->Void, duration:Float, ...args):Int {
+	public function setTimeout(cb:Dynamic, duration:Float, args:Array<Dynamic>):Int {
 		uid++;
 		var t = new TimerChild(uid, duration, cb, args);
 		timerChildren.push(t);
@@ -85,11 +85,11 @@ class TimerChild {
 	 * @param closure 
 	 * @param ...args 
 	 */
-	public function new(id:Int, duration:Float, closure:Dynamic, ...args) {
+	public function new(id:Int, duration:Float, closure:Dynamic, args:Array<Dynamic>) {
 		this.id = id;
 		this.duration = duration;
 		this.closure = closure;
-		this.args = args.toArray();
+		this.args = args;
 	}
 
 	/**

@@ -47,6 +47,11 @@ class SpineSprite extends Sprite implements ISpineDrawOrder {
 		return value;
 	}
 
+	override function set_colorTransform(value:ColorTransform):ColorTransform {
+		spine.colorTransform = value;
+		return super.set_colorTransform(value);
+	}
+
 	/**
 	 * Spine骨架
 	 */
@@ -167,6 +172,12 @@ class SpineSprite extends Sprite implements ISpineDrawOrder {
 		return this.__slotDisplay[slot.data.name];
 	}
 
+	public function onStart():Void {}
+
+	public function onEnd():Void {
+		__colorTransformDirty = false;
+	}
+
 	/**
 	 * 自定义渲染处理
 	 * @param slot 
@@ -193,6 +204,9 @@ class SpineSprite extends Sprite implements ISpineDrawOrder {
 
 		if (isDarwable) {
 			var g = getDrawGraphicsAt(__drawIndex);
+			if (__colorTransformDirty) {
+				g.colorTransform = this.colorTransform;
+			}
 			g.beginBitmapData(bitmapData);
 			g.drawTriangles(vertices, triangles, uvs, alpha, color, applyBlendAddMode);
 			this.addChild(g);

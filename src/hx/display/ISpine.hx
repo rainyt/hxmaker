@@ -75,4 +75,8 @@ interface ISpine {
 interface ISpineDrawOrder {
 	public function onDrawOrder(slot:Slot, bitmapData:BitmapData, vertices:Array<Float>, triangles:Array<Int>, uvs:Array<Float>, alpha:Float,
 		color:ColorTransform, applyBlendAddMode:Bool, isStart:Bool):Void;
+
+	public function onStart():Void;
+
+	public function onEnd():Void;
 }

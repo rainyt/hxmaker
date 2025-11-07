@@ -239,6 +239,9 @@ class Spine extends Graphics implements ISpine {
 		}
 		this.clear();
 		var isStartDarw = true;
+		if (__spineDrawOrder != null) {
+			__spineDrawOrder.onStart();
+		}
 		for (slot in skeleton.drawOrder) {
 			if (slot.attachment != null #if spine_haxe && slot.data.visible #end) {
 				// 不可见的情况下跳过
@@ -351,6 +354,9 @@ class Spine extends Graphics implements ISpine {
 					isStartDarw = false;
 				}
 			}
+		}
+		if (__spineDrawOrder != null) {
+			__spineDrawOrder.onEnd();
 		}
 		this.setTransformDirty();
 	}

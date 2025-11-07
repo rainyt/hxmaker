@@ -16,9 +16,24 @@ import hx.display.BitmapData;
  */
 class Assets extends Future<Assets, Dynamic> {
 	/**
+	 * 默认原生路径
+	 */
+	public static var defaultNativePath:String = null;
+
+	public static function getDefaultNativePath(path:String):String {
+		if (path.indexOf("http") == 0) {
+			return path;
+		}
+		if (defaultNativePath != null && path.indexOf(defaultNativePath) == -1) {
+			return Path.join([defaultNativePath, path]);
+		}
+		return path;
+	}
+
+	/**
 	 * 原生路径
 	 */
-	public var nativePath:String = "";
+	public var nativePath:String = null;
 
 	/**
 	 * 正在加载的资源管理器
@@ -158,8 +173,13 @@ class Assets extends Future<Assets, Dynamic> {
 		super(null, false);
 	}
 
+	/**
+	 * 获取资源的原生路径
+	 * @param path 
+	 * @return String
+	 */
 	public function getNativePath(path:String):String {
-		if (path.toLowerCase().indexOf(nativePath.toLowerCase()) == -1) {
+		if (this.nativePath != null && path.toLowerCase().indexOf(nativePath.toLowerCase()) == -1) {
 			return Path.join([nativePath, path]);
 		}
 		return path;

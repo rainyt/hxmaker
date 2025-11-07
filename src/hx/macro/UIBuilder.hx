@@ -30,6 +30,7 @@ class UIBuilder {
 		}
 		// 绑定继承类
 		var localClass = Context.getLocalClass().get();
+		localClass.meta.add(":keep", [], Context.currentPos());
 		var fileds = Context.getBuildFields();
 		// 将在该布局中新增ids的字段，以便访问
 		fileds.push({

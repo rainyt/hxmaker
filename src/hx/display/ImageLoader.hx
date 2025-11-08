@@ -22,17 +22,20 @@ class ImageLoader extends Box implements IDataProider<Dynamic> {
 			var bitmapData = UIManager.getBitmapData(v);
 			if (bitmapData != null) {
 				image.data = bitmapData;
+				updateScale();
 				this.dispatchEvent(new Event(Event.CHANGE));
 			} else {
 				new BitmapDataFuture(__data, true).onComplete((data) -> {
 					if (__data == v) {
 						image.data = data;
+						updateScale();
 						this.dispatchEvent(new Event(Event.CHANGE));
 					}
 				});
 			}
 		} else if (__data is BitmapData) {
 			image.data = __data;
+			updateScale();
 			this.dispatchEvent(new Event(Event.CHANGE));
 		}
 		return __data;
@@ -55,5 +58,33 @@ class ImageLoader extends Box implements IDataProider<Dynamic> {
 	override function set_height(value:Float):Float {
 		image.height = value;
 		return value;
+	}
+
+	/**
+	 * 图片的宽度缩放比例，默认值为null
+	 */
+	public var scaleWidth(default, set):Null<Float>;
+
+	public function set_scaleWidth(value:Null<Float>):Null<Float> {
+		this.scaleWidth = value;
+		return value;
+	}
+
+	/**
+	 * 图片的高度缩放比例，默认值为null
+	 */
+	public var scaleHeight(default, set):Null<Float>;
+
+	public function set_scaleHeight(value:Null<Float>):Null<Float> {
+		this.scaleHeight = value;
+		return value;
+	}
+
+	private function updateScale() {
+		if (this.image.data == null || this.scaleWidth == null || this.scaleHeight == null)
+			return;
+		var w = scaleWidth / this.image.data.width;
+		var h = scaleHeight / this.image.data.height;
+		this.scale = Math.min(w, h);
 	}
 }

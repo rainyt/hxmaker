@@ -302,6 +302,10 @@ class UIManager {
 				else
 					obj.data = xml.get("src");
 			}
+			if (xml.exists("scaleWidth"))
+				obj.scaleWidth = Std.parseFloat(xml.get("scaleWidth"));
+			if (xml.exists("scaleHeight"))
+				obj.scaleHeight = Std.parseFloat(xml.get("scaleHeight"));
 		});
 		addAttributesParse(Stack, function(obj:Stack, xml:Xml, assets:Assets) {
 			if (xml.exists("currentId")) {

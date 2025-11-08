@@ -17,6 +17,8 @@ class ImageLoader extends Box implements IDataProider<Dynamic> {
 	}
 
 	public function set_data(v:Dynamic):Dynamic {
+		if (__data == v)
+			return v;
 		__data = v;
 		if (__data is String) {
 			var bitmapData = UIManager.getBitmapData(v);

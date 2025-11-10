@@ -175,11 +175,11 @@ class Spine extends Graphics implements ISpine {
 			return;
 		if (!__playing && !__spineDrawDirty)
 			return;
-		__spineDrawDirty = false;
 		__renderCurrentTime += dt;
 		if (__fps >= 60 || __renderCurrentTime >= __renderFpsTime) {
 			this.update(__renderCurrentTime);
 			__renderCurrentTime = 0;
+			__spineDrawDirty = false;
 		}
 	}
 

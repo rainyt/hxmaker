@@ -410,7 +410,7 @@ class DisplayObject extends EventDispatcher {
 	 * @return Rectangle
 	 */
 	public function getBounds(targetCoordinateSpace:DisplayObject = null):Rectangle {
-		if (this.__transformDirty && stage != null)
+		if (this.__transformDirty && stage != null && stage.__transformDirty)
 			stage.__updateTransform(null);
 		var matrix = new Matrix();
 		if (targetCoordinateSpace != null && targetCoordinateSpace != this) {

@@ -32,7 +32,7 @@ import spine.Skeleton;
 @:keep
 class Spine extends Graphics implements ISpine {
 	/**
-	 * 默认刷新帧率，可设置帧率，那么每次创建新的Spine实例时，会使用该帧率影响`renderFps`属性。
+	 * 默认刷新帧率，可设置帧率，那么每次创建新的Spine实例时，会使用该帧率影响`renderFps`
 	 */
 	public static var defaultFps = 60;
 

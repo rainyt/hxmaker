@@ -12,6 +12,7 @@ class ContextStats {
 	private static var __cpus:Array<Float> = [];
 	private static var __memory:Int = 0;
 	private static var __spineRenderCount:Int = 0;
+	private static var __graphicRenderCount:Int = 0;
 
 	/**
 	 * 帧率
@@ -59,6 +60,7 @@ class ContextStats {
 		__vertexCount = 0;
 		__spineRenderCount = 0;
 		__timeTaskCounts = 0;
+		__graphicRenderCount = 0;
 	}
 
 	/**
@@ -150,5 +152,21 @@ class ContextStats {
 	 */
 	public static function statsTimeTaskCount():Void {
 		__timeTaskCounts++;
+	}
+
+	/**
+	 * 统计图形渲染次数
+	 */
+	public static function statsGraphicRenderCount():Void {
+		__graphicRenderCount++;
+	}
+
+	/**
+	 * 图形渲染次数
+	 */
+	public static var graphicRenderCount(get, never):Int;
+
+	private static function get_graphicRenderCount():Int {
+		return __graphicRenderCount;
 	}
 }

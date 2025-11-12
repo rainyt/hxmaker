@@ -53,6 +53,20 @@ class SpineSprite extends Sprite implements ISpineDrawOrder {
 	}
 
 	/**
+	 * 是否必须在可见时进行渲染，如果设置为`true`，可设置该对象的`visible`属性为`false`来取消渲染，有助于提高性能。默认值为`false`。
+	 */
+	public var mustVisibleRender(get, set):Bool;
+
+	private function get_mustVisibleRender():Bool {
+		return this.spine.mustVisibleRender;
+	}
+
+	private function set_mustVisibleRender(value:Bool):Bool {
+		this.spine.mustVisibleRender = value;
+		return value;
+	}
+
+	/**
 	 * Spine骨架
 	 */
 	public var skeleton:Skeleton;

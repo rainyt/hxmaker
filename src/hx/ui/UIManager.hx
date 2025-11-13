@@ -209,6 +209,10 @@ class UIManager {
 			var percentHeight:Null<Float> = null;
 			for (key in xml.attributes()) {
 				switch key {
+					case "mouseEnabled":
+						display.mouseEnabled = xml.get("mouseEnabled") == "true";
+					case "mouseChildren":
+						if (display is DisplayObjectContainer) cast(display, DisplayObjectContainer).mouseChildren = xml.get("mouseChildren") == "true";
 					case "visible":
 						display.visible = xml.get("visible") == "true";
 					case "id":

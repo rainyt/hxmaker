@@ -45,4 +45,16 @@ class Scene extends Box {
 			__bg.height = this.stage.height;
 		}
 	}
+
+	/**
+	 * 场景背景
+	 */
+	public var sceneBackground(get, never):Quad;
+
+	/**
+	 * 获取场景背景
+	 */
+	private function get_sceneBackground():Quad {
+		return __bg;
+	}
 }

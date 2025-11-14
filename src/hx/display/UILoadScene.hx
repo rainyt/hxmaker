@@ -11,8 +11,21 @@ class UILoadScene extends Scene {
 
 	public var onLoadedEvent:FunctionListener = new FunctionListener();
 
+	/**
+	 * 是否正在构造中
+	 */
+	private var __supering__:Bool = false;
+
+	private var __superOnLoaded__:Bool = false;
+
 	public function new() {
+		__supering__ = true;
 		super();
+		__supering__ = false;
+		if (__superOnLoaded__) {
+			this.onLoaded();
+			this.onLoadedEvent.call();
+		}
 	}
 
 	/**
@@ -25,15 +38,25 @@ class UILoadScene extends Scene {
 			if (__ui_id__ != null) {
 				uiAssets = new UIAssets(__ui_id__);
 				UIManager.bindAssets(uiAssets);
+				this.onLoad();
 				uiAssets.onComplete((e) -> {
 					uiAssets.build(this);
-					this.onLoaded();
-					this.onLoadedEvent.call();
+					if (!__supering__) {
+						this.onLoaded();
+						this.onLoadedEvent.call();
+					} else {
+						__superOnLoaded__ = true;
+					}
 				}).onError(err -> {});
 				uiAssets.start();
 			}
 		}
 	}
+
+	/**
+	 * 当需要自定义载入资源时使用
+	 */
+	public function onLoad():Void {}
 
 	public function onLoaded():Void {}
 

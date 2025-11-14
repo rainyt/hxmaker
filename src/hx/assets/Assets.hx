@@ -399,6 +399,7 @@ class Assets extends Future<Assets, Dynamic> {
 	 * 准备加载下一个
 	 */
 	private function loadNext():Bool {
+		this.progressValue(this.getProgress());
 		var future = futures[__loadIndex];
 		if (future == null) {
 			return false;

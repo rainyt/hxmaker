@@ -5,6 +5,7 @@ import hx.events.FutureErrorEvent;
 
 class Future<T, DATA> {
 	@:noCompletion private var __completes:Array<T->Void> = [];
+	@:noCompletion private var __progresses:Array<Float->Void> = [];
 	@:noCompletion private var __errors:Array<FutureErrorEvent->Void> = [];
 	@:noCompletion private var __dones:Array<Void->Void> = [];
 	@:noCompletion private var __data:DATA;
@@ -38,6 +39,11 @@ class Future<T, DATA> {
 		return __data;
 	}
 
+	public function onProgress(listener:Float->Void):Future<T, DATA> {
+		__progresses.push(listener);
+		return this;
+	}
+
 	public function onComplete(listener:T->Void):Future<T, DATA> {
 		__completes.push(listener);
 		return this;
@@ -65,6 +71,16 @@ class Future<T, DATA> {
 	public function customCompleteValue(cb:Future<T, DATA>->T->Void):Future<T, DATA> {
 		__customCompleteValue = cb;
 		return this;
+	}
+
+	/**
+	 * 当请求进度更新时，调用此函数
+	 * @param value 
+	 */
+	public function progressValue(value:Float):Void {
+		for (cb in __progresses) {
+			cb(value);
+		}
 	}
 
 	/**

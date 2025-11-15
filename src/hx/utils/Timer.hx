@@ -45,7 +45,7 @@ class Timer {
 	 * @param cb 
 	 * @param duration 
 	 */
-	public function setTimeout(cb:Dynamic, duration:Float, args:Array<Dynamic>):Int {
+	public function setTimeout(cb:Dynamic, duration:Float, ?args:Array<Dynamic>):Int {
 		uid++;
 		var t = new TimerChild(uid, duration, cb, args);
 		timerChildren.push(t);

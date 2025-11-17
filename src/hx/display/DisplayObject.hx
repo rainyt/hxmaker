@@ -812,7 +812,7 @@ class DisplayObject extends EventDispatcher {
 	 * @return Point
 	 */
 	public function localToGlobal(point:Point):Point {
-		if (this.__transformDirty && stage != null)
+		if (this.__transformDirty && stage != null && stage.__transformDirty)
 			stage.__updateTransform(null);
 		var p = point.clone();
 		p.x = __worldTransform.__transformX(p.x, p.y);
@@ -826,7 +826,7 @@ class DisplayObject extends EventDispatcher {
 	 * @return Point
 	 */
 	public function globalToLocal(point:Point):Point {
-		if (this.__transformDirty && stage != null)
+		if (this.__transformDirty && stage != null && stage.__transformDirty)
 			stage.__updateTransform(null);
 		var p = point.clone();
 		p.x = __worldTransform.__transformInverseX(p.x, p.y);
@@ -840,7 +840,7 @@ class DisplayObject extends EventDispatcher {
 	public var touchX(get, never):Float;
 
 	private function get_touchX():Float {
-		if (this.__transformDirty)
+		if (this.__transformDirty && stage != null && stage.__transformDirty)
 			stage.__updateTransform(null);
 		return this.__worldTransform.__transformInverseX(Hxmaker.engine.touchX, Hxmaker.engine.touchY);
 	}
@@ -851,7 +851,7 @@ class DisplayObject extends EventDispatcher {
 	public var touchY(get, never):Float;
 
 	private function get_touchY():Float {
-		if (this.__transformDirty)
+		if (this.__transformDirty && stage != null && stage.__transformDirty)
 			stage.__updateTransform(null);
 		return this.__worldTransform.__transformInverseY(Hxmaker.engine.touchX, Hxmaker.engine.touchY);
 	}

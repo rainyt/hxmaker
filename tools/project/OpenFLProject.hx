@@ -47,6 +47,9 @@ class OpenFLProject extends Project {
 		if (args.indexOf("final") != -1) {
 			cmd += " -final";
 		}
+		if (args.indexOf("debug") != -1) {
+			cmd += " -debug";
+		}
 		trace(cmd);
 		Sys.command(cmd);
 	}

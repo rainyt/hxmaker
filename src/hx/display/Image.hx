@@ -100,31 +100,32 @@ class Image extends DisplayObject implements IDataProider<BitmapData> implements
 				var offsetX = this.data.uvOffsetX;
 				var offsetY = this.data.uvOffsetY;
 				// 左上
-				__graphic.drawRectUVs(0, 0, leftWidth, topHeight, maskUVs(0, 0, leftWidth, topHeight, textureWidth, textureHeight, offsetX, offsetY));
+				__graphic.drawRectUVs(0, 0, leftWidth, topHeight, maskUVs(0, 0, leftWidth, topHeight, textureWidth, textureHeight, offsetX, offsetY),
+					this.alpha);
 				// 右上
 				__graphic.drawRectUVs(this.width - rightWidth, 0, rightWidth, topHeight,
-					maskUVs(rect.right, 0, rightWidth, topHeight, textureWidth, textureHeight, offsetX, offsetY));
+					maskUVs(rect.right, 0, rightWidth, topHeight, textureWidth, textureHeight, offsetX, offsetY), this.alpha);
 				// 左下
 				__graphic.drawRectUVs(0, this.height - bottomHeight, leftWidth, bottomHeight,
-					maskUVs(0, rect.bottom, leftWidth, bottomHeight, textureWidth, textureHeight, offsetX, offsetY));
+					maskUVs(0, rect.bottom, leftWidth, bottomHeight, textureWidth, textureHeight, offsetX, offsetY), this.alpha);
 				// 右下
 				__graphic.drawRectUVs(this.width - rightWidth, this.height - bottomHeight, rightWidth, bottomHeight,
-					maskUVs(rect.right, rect.bottom, rightWidth, bottomHeight, textureWidth, textureHeight, offsetX, offsetY));
+					maskUVs(rect.right, rect.bottom, rightWidth, bottomHeight, textureWidth, textureHeight, offsetX, offsetY), this.alpha);
 				// 中间
 				__graphic.drawRectUVs(rect.left, rect.top, this.width - rightWidth - rect.left, this.height - bottomHeight - rect.top,
-					maskUVs(rect.x, rect.y, rect.width, rect.height, textureWidth, textureHeight, offsetX, offsetY));
+					maskUVs(rect.x, rect.y, rect.width, rect.height, textureWidth, textureHeight, offsetX, offsetY), this.alpha);
 				// 左边中间
 				__graphic.drawRectUVs(0, topHeight, leftWidth, this.height - bottomHeight - topHeight,
-					maskUVs(0, rect.y, leftWidth, rect.height, textureWidth, textureHeight, offsetX, offsetY));
+					maskUVs(0, rect.y, leftWidth, rect.height, textureWidth, textureHeight, offsetX, offsetY), this.alpha);
 				// 右边中间
 				__graphic.drawRectUVs(this.width - rightWidth, topHeight, rightWidth, this.height - bottomHeight - topHeight,
-					maskUVs(rect.right, rect.y, rightWidth, rect.height, textureWidth, textureHeight, offsetX, offsetY));
+					maskUVs(rect.right, rect.y, rightWidth, rect.height, textureWidth, textureHeight, offsetX, offsetY), this.alpha);
 				// 上面中间
 				__graphic.drawRectUVs(leftWidth, 0, width - leftWidth - rightWidth, topHeight,
-					maskUVs(rect.x, 0, rect.width, topHeight, textureWidth, textureHeight, offsetX, offsetY));
+					maskUVs(rect.x, 0, rect.width, topHeight, textureWidth, textureHeight, offsetX, offsetY), this.alpha);
 				// 下面中间
 				__graphic.drawRectUVs(leftWidth, height - bottomHeight, width - leftWidth - rightWidth, bottomHeight,
-					maskUVs(rect.x, rect.bottom, rect.width, bottomHeight, textureWidth, textureHeight, offsetX, offsetY));
+					maskUVs(rect.x, rect.bottom, rect.width, bottomHeight, textureWidth, textureHeight, offsetX, offsetY), this.alpha);
 			}
 		} else if (__repeat) {
 			if (__graphic == null) {
@@ -162,7 +163,7 @@ class Image extends DisplayObject implements IDataProider<BitmapData> implements
 						var isOutHeight = iy + 1 == pHeightCounts;
 						var setHeight = isOutHeight ? outHeight : pHeight;
 						__graphic.drawRectUVs(drawX, drawY, setWidth, setHeight,
-							maskUVs(0, 0, setWidth, setHeight, textureWidth, textureHeight, offsetX, offsetY));
+							maskUVs(0, 0, setWidth, setHeight, textureWidth, textureHeight, offsetX, offsetY), this.alpha);
 						drawY += setHeight;
 					}
 					drawY = 0;

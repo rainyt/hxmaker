@@ -171,6 +171,14 @@ class SpineSprite extends Sprite implements ISpineDrawOrder {
 	}
 
 	/**
+	 * 解绑slot
+	 * @param slot 
+	 */
+	public function unbindSlot(name:String):Void {
+		this.__slotDisplay.remove(name);
+	}
+
+	/**
 	 * 清除所有绑定的slot显示对象
 	 */
 	public function clearAllBindSlots():Void {

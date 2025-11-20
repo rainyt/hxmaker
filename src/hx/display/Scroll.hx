@@ -349,14 +349,18 @@ class Scroll extends BoxContainer {
 		}
 	}
 
+	/**
+	 * 鼠标松开时，滚动的时间
+	 */
+	public var moveUpTime:Float = 3;
+
 	private function onMouseUp(e:MouseEvent) {
 		if (__down) {
 			__down = false;
 			if (!isOverScrollEnbaled) {
-				var time = 0.5;
-				Actuate.tween(this, time, getMoveingToData({
-					scrollX: scrollX - __lastStepX / time * 4,
-					scrollY: scrollY - __lastStepY / time * 4
+				Actuate.tween(this, moveUpTime, getMoveingToData({
+					scrollX: scrollX - __lastStepX / 0.016 * moveUpTime,
+					scrollY: scrollY - __lastStepY / 0.016 * moveUpTime
 				}));
 			} else {
 				velocity = new Point(__lastStepX, __lastStepY);
@@ -369,27 +373,56 @@ class Scroll extends BoxContainer {
 				var overScrollSideHorizontal = tryGetOverScrollSide(maxSize.x, HORIZONTAL);
 				var overScrollSideVertical = tryGetOverScrollSide(maxSize.y, VERTICAL);
 
-				if (overScrollSideHorizontal == NONE) { // 惯性
+				var scrollMoveToX:Null<Float> = null;
+				var scrollMoveToY:Null<Float> = null;
 
+				if (overScrollSideHorizontal == NONE) { // 惯性
 					shouldFreeSlideX = velocity.x != 0;
 					freeOverScrollMaxDistanceX = -1;
-				} else { // 弹回
-
-					Actuate.tween(this, bounceBackTime, {
-						scrollX: overScrollSideHorizontal == LEFT ? 0 : -maxSize.x
-					});
+				} else {
+					// 弹回
+					scrollMoveToX = overScrollSideHorizontal == LEFT ? 0 : -maxSize.x;
 				}
 
 				if (overScrollSideVertical == NONE) { // 惯性
 
 					shouldFreeSlideY = velocity.y != 0;
 					freeOverScrollMaxDistanceY = -1;
-				} else { // 弹回
-
-					Actuate.tween(this, bounceBackTime, {
-						scrollY: overScrollSideVertical == TOP ? 0 : -maxSize.y
-					});
+				} else {
+					// 弹回
+					scrollMoveToY = overScrollSideVertical == TOP ? 0 : -maxSize.y;
 				}
+
+				Actuate.stop(this);
+
+				var moveingToData = getMoveingToData({
+					scrollX: scrollX - __lastStepX / 0.016 * moveUpTime,
+					scrollY: scrollY - __lastStepY / 0.016 * moveUpTime
+				});
+
+				if (moveingToData.x <= 0 || moveingToData.x >= maxSize.x)
+					scrollMoveToX = moveingToData.x;
+
+				if (moveingToData.y <= 0 || moveingToData.y >= maxSize.y)
+					scrollMoveToY = moveingToData.y;
+
+				if (scrollMoveToX != null)
+					Actuate.tween(this, bounceBackTime, {
+						scrollX: scrollMoveToX
+					}, false);
+				else
+					Actuate.tween(this, moveUpTime, {
+						scrollX: moveingToData.scrollX
+					});
+
+				if (scrollMoveToY != null)
+					Actuate.tween(this, bounceBackTime, {
+						scrollY: scrollMoveToY
+					}, false);
+				else
+					Actuate.tween(this, moveUpTime, {
+						scrollY: moveingToData.scrollY
+					});
 			}
 		}
 	}

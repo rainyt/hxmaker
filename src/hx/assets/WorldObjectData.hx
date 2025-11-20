@@ -461,6 +461,16 @@ typedef DisplayData = {
 	 * 组ID，如果存在组ID，则选中的时候，需要一起选中
 	 */
 	var ?groupId:String;
+
+	/**
+	 * 透明度
+	 */
+	var ?alpha:Null<Float>;
+
+	/**
+	 * 混合模式
+	 */
+	var ?blendMode:String;
 }
 
 /**

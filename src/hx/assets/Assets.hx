@@ -16,6 +16,11 @@ import hx.display.BitmapData;
  */
 class Assets extends Future<Assets, Dynamic> {
 	/**
+	 * 等待加载的资源列表
+	 */
+	// @:noCompletion private static var __waitLoadAssetses:Array<Assets> = [];
+
+	/**
 	 * 默认原生路径
 	 */
 	public static var defaultNativePath:String = null;
@@ -44,13 +49,19 @@ class Assets extends Future<Assets, Dynamic> {
 	 * 重新再请求加载下一个
 	 */
 	private static function readyLoadNext():Void {
+		trace("尝试加载下一个资源");
 		for (assets in __assets) {
 			if (assets != null) {
 				if (assets.loadNext()) {
-					break;
+					return;
 				}
 			}
 		}
+		// 尝试加载其他正在等待的assets文件
+		// if (__waitLoadAssetses.length > 0) {
+		// var assets = __waitLoadAssetses.shift();
+		// assets.loadNext();
+		// }
 	}
 
 	/**
@@ -73,12 +84,11 @@ class Assets extends Future<Assets, Dynamic> {
 	/**
 	 * 最大同时加载的资源数量
 	 */
-	public static var MAX_ASSETS_LOAD_COUNTS = 20;
-
+	// public static var MAX_ASSETS_LOAD_COUNTS = 99999;
 	/**
 	 * 当前正在加载的资源数量
 	 */
-	public static var CURRENT_LOAD_COUNTS:Int = 0;
+	// public static var CURRENT_LOAD_COUNTS:Int = 0;
 
 	/**
 	 * 加载的资源列表
@@ -405,20 +415,26 @@ class Assets extends Future<Assets, Dynamic> {
 			return false;
 		}
 		#if assets_debug
-		trace("CURRENT_LOAD_COUNTS", CURRENT_LOAD_COUNTS);
+		// trace("CURRENT_LOAD_COUNTS", CURRENT_LOAD_COUNTS);
 		#end
 		// trace("剩余", future.getLoadData());
-		if (CURRENT_LOAD_COUNTS < MAX_ASSETS_LOAD_COUNTS) {
-			CURRENT_LOAD_COUNTS++;
-			#if assets_debug
-			trace("开始加载：", future.getLoadData());
-			#end
-			__loadIndex++;
-			future.post();
-			loadNext();
-			return true;
-		}
-		return false;
+		// if (CURRENT_LOAD_COUNTS < MAX_ASSETS_LOAD_COUNTS) {
+		// CURRENT_LOAD_COUNTS++;
+		#if assets_debug
+		trace("开始加载：", future.getLoadData());
+		#end
+		__loadIndex++;
+		future.post();
+		loadNext();
+		return true;
+		// } else {
+		// trace("当前加载数量已达上限", MAX_ASSETS_LOAD_COUNTS);
+		// if (!__waitLoadAssetses.contains(this)) {
+		// __waitLoadAssetses.push(this);
+		// trace("待加载资产队列：", __waitLoadAssetses.length);
+		// }
+		// }
+		// return false;
 	}
 
 	public function pushAssets(assets:Assets):Void {
@@ -483,7 +499,7 @@ class Assets extends Future<Assets, Dynamic> {
 	 * @param future 
 	 */
 	private function onCompleted(future:Future<Dynamic, Dynamic>, data:Dynamic):Void {
-		CURRENT_LOAD_COUNTS--;
+		// CURRENT_LOAD_COUNTS--;
 		loadedCounts++;
 		if (data is Zip) {
 			var zip:Zip = cast data;
@@ -527,7 +543,7 @@ class Assets extends Future<Assets, Dynamic> {
 	 * @param future 
 	 */
 	private function __onError(error:Dynamic):Void {
-		CURRENT_LOAD_COUNTS--;
+		// CURRENT_LOAD_COUNTS--;
 		if (error is FutureErrorEvent)
 			this.errorValue(error);
 		else

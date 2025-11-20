@@ -396,15 +396,15 @@ class Scroll extends BoxContainer {
 				Actuate.stop(this);
 
 				var moveingToData = getMoveingToData({
-					scrollX: scrollX - __lastStepX / 0.016 * moveUpTime,
-					scrollY: scrollY - __lastStepY / 0.016 * moveUpTime
+					scrollX: scrollX - __lastStepX / 0.16 * moveUpTime,
+					scrollY: scrollY - __lastStepY / 0.16 * moveUpTime
 				});
 
-				if (moveingToData.x <= 0 || moveingToData.x >= maxSize.x)
-					scrollMoveToX = moveingToData.x;
+				if (moveingToData.scrollX <= 0 || moveingToData.scrollX >= maxSize.x)
+					scrollMoveToX = moveingToData.scrollX;
 
-				if (moveingToData.y <= 0 || moveingToData.y >= maxSize.y)
-					scrollMoveToY = moveingToData.y;
+				if (moveingToData.scrollY <= 0 || moveingToData.scrollY >= maxSize.y)
+					scrollMoveToY = moveingToData.scrollY;
 
 				if (scrollMoveToX != null)
 					Actuate.tween(this, bounceBackTime, {

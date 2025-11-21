@@ -356,9 +356,9 @@ class DisplayObjectContainer extends DisplayObject {
 
 	override function setTransformDirty(value:Bool = true) {
 		super.setTransformDirty(value);
-		for (object in this.children) {
-			object.setTransformDirty();
-		}
+		// for (object in this.children) {
+		// object.setTransformDirty();
+		// }
 	}
 
 	override function set_width(value:Float):Float {

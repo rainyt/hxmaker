@@ -78,4 +78,8 @@ class BoxContainer extends Box {
 		box.height = value;
 		return super.set_height(value);
 	}
+
+	override function updateLayout() {
+		this.box.updateLayout();
+	}
 }

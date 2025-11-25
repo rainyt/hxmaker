@@ -5,6 +5,8 @@
 --library spine-hx
 --library actuate
 --library openfl
+--library vector-math
+--library openfl-glsl
 --library lime
 --library echo
 --library hxmaker-openfl

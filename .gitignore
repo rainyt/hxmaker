@@ -2,3 +2,4 @@ Export
 .DS_Store
 api_docs
 bin
+.marscode/deviceInfo.json

@@ -149,10 +149,12 @@ class Button extends BoxContainer {
 		switch e.type {
 			case MouseEvent.MOUSE_DOWN:
 				__isDown = true;
-				this.box.scaleX = 0.94;
-				this.box.scaleY = 0.94;
-				this.box.originX = this.width * 0.03;
-				this.box.originY = this.height * 0.03;
+				this.box.scale = 1;
+				var pWidth = this.width;
+				var pHeight = this.height;
+				this.box.scale = 0.94;
+				this.box.originX = pWidth * 0.03;
+				this.box.originY = pHeight * 0.03;
 				if (clickSoundEffectId != null) {
 					SoundManager.getInstance().playEffect(clickSoundEffectId);
 				}
@@ -177,5 +179,11 @@ class Button extends BoxContainer {
 
 	private function get_scale9Grid():Rectangle {
 		return this.__img.scale9Grid;
+	}
+
+	override function updateLayout() {
+		if (!__isDown) {
+			super.updateLayout();
+		}
 	}
 }

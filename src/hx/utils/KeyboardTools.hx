@@ -32,7 +32,7 @@ class KeyboardTools {
 	 */
 	public static function isKeyClick(key:Int):Bool {
 		if (_upKeys.exists(key)) {
-			var time = TimeTools.stamp() - _upKeys.get(key);
+			var time = Timer.stamp() - _upKeys.get(key);
 			_upKeys.remove(key);
 			if (time < 0.3) {
 				return true;

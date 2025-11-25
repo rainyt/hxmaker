@@ -71,6 +71,8 @@ class SoundManager {
 	 * @return ISoundChannel
 	 */
 	public function playBGMSound(id:String):ISoundChannel {
+		if (__bgmid == id && __bgmSoundChannel != null)
+			return __bgmSoundChannel;
 		__bgmid = id;
 		if (__bgmSoundChannel != null) {
 			__bgmSoundChannel.stop();

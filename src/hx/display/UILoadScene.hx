@@ -1,5 +1,6 @@
 package hx.display;
 
+import hx.utils.Timer;
 import hx.ui.UIManager;
 import hx.ui.UIAssets;
 
@@ -7,6 +8,14 @@ import hx.ui.UIAssets;
  * UI自动载入界面场景支持
  */
 class UILoadScene extends Scene {
+	/**
+	 * 默认的加载显示对象类
+	 */
+	public static var defaultLoadDisplay:Class<DisplayObject> = null;
+
+	@:noCompletion private var __loadView:DisplayObject;
+	@:noCompletion private var __isLoaded:Bool = false;
+
 	public var uiAssets:UIAssets;
 
 	public var onLoadedEvent:FunctionListener = new FunctionListener();
@@ -47,8 +56,21 @@ class UILoadScene extends Scene {
 					} else {
 						__superOnLoaded__ = true;
 					}
+					__isLoaded = true;
+					if (__loadView != null) {
+						__loadView.remove();
+						__loadView = null;
+					}
 				}).onError(err -> {});
 				uiAssets.start();
+				if (defaultLoadDisplay != null)
+					Timer.getInstance().setTimeout(() -> {
+						if (!__isLoaded) {
+							var view = Type.createInstance(defaultLoadDisplay, []);
+							this.addChild(view);
+							__loadView = view;
+						}
+					}, 0.3);
 			}
 		}
 	}

@@ -22,16 +22,6 @@ class Assets extends Future<Assets, Dynamic> {
 	public static var MAX_TRY_LOAD_TIMES = 6;
 
 	/**
-	 * 最大加载个数
-	 */
-	public var maxLoadCounts:Int = 20;
-
-	/**
-	 * 当前加载个数
-	 */
-	public var currentLoadCounts:Int = 0;
-
-	/**
 	 * 尝试重新加载次数
 	 */
 	private var __tryLoadTimes:Int = 0;

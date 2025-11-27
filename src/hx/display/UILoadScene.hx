@@ -61,7 +61,9 @@ class UILoadScene extends Scene {
 						__loadView.remove();
 						__loadView = null;
 					}
-				}).onError(err -> {});
+				}).onError(err -> {
+					trace("加载失败：", err);
+				});
 				uiAssets.start();
 				if (defaultLoadDisplay != null)
 					Timer.getInstance().setTimeout(() -> {

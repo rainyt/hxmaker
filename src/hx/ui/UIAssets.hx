@@ -50,9 +50,14 @@ class UIAssets extends Assets {
 		}).onError(errorValue);
 	}
 
+	private var __isParserXml:Bool = false;
+
 	private function parserXmlString(xml:String):Void {
-		viewXml = Xml.parse(xml);
-		parseXml(viewXml);
+		if (!__isParserXml) {
+			viewXml = Xml.parse(xml);
+			parseXml(viewXml);
+			__isParserXml = true;
+		}
 		__start();
 	}
 

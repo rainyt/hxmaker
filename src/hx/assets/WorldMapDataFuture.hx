@@ -18,6 +18,7 @@ class WorldMapDataFuture extends Future<StyleAssets, String> {
 		new StringFuture(getLoadData()).onComplete(map -> {
 			var mapData = Json.parse(map);
 			var assets = new WorldMapDataAssets(mapData);
+			assets.tryLoadTimes = 0;
 			assets.objects.set(path.withoutExtension().withoutDirectory(), assets.worldMapData);
 			for (file in assets.worldMapData.files) {
 				var config = WorldObjectData.current.getObjectDataById(file.id);

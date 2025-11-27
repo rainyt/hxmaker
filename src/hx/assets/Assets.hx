@@ -1,5 +1,6 @@
 package hx.assets;
 
+import hx.utils.Timer;
 import spine.SkeletonData;
 import hx.display.Spine;
 import hx.ui.UIManager;
@@ -16,9 +17,29 @@ import hx.display.BitmapData;
  */
 class Assets extends Future<Assets, Dynamic> {
 	/**
-	 * 等待加载的资源列表
+	 * 最大尝试重新载入次数，如果连续失败6次，则会触发全局事件`Event.ASSETS_LOAD_ERROR`
 	 */
-	// @:noCompletion private static var __waitLoadAssetses:Array<Assets> = [];
+	public static var MAX_TRY_LOAD_TIMES = 6;
+
+	/**
+	 * 最大加载个数
+	 */
+	public var maxLoadCounts:Int = 20;
+
+	/**
+	 * 当前加载个数
+	 */
+	public var currentLoadCounts:Int = 0;
+
+	/**
+	 * 尝试重新加载次数
+	 */
+	private var __tryLoadTimes:Int = 0;
+
+	/**
+	 * 尝试重新加载次数
+	 */
+	public var tryLoadTimes:Int = MAX_TRY_LOAD_TIMES;
 
 	/**
 	 * 默认原生路径
@@ -57,11 +78,6 @@ class Assets extends Future<Assets, Dynamic> {
 				}
 			}
 		}
-		// 尝试加载其他正在等待的assets文件
-		// if (__waitLoadAssetses.length > 0) {
-		// var assets = __waitLoadAssetses.shift();
-		// assets.loadNext();
-		// }
 	}
 
 	/**
@@ -80,15 +96,6 @@ class Assets extends Future<Assets, Dynamic> {
 		var name = Path.withoutExtension(Path.withoutDirectory(path));
 		return name;
 	}
-
-	/**
-	 * 最大同时加载的资源数量
-	 */
-	// public static var MAX_ASSETS_LOAD_COUNTS = 99999;
-	/**
-	 * 当前正在加载的资源数量
-	 */
-	// public static var CURRENT_LOAD_COUNTS:Int = 0;
 
 	/**
 	 * 加载的资源列表
@@ -389,7 +396,10 @@ class Assets extends Future<Assets, Dynamic> {
 			this.stop();
 			return;
 		}
+		__loadIndex = 0;
 		loading = true;
+		this.isComplete = false;
+		this.isError = false;
 		this.totalCounts = futures.length;
 		this.loadedCounts = 0;
 		loadNext();
@@ -415,26 +425,19 @@ class Assets extends Future<Assets, Dynamic> {
 			return false;
 		}
 		#if assets_debug
-		// trace("CURRENT_LOAD_COUNTS", CURRENT_LOAD_COUNTS);
-		#end
-		// trace("剩余", future.getLoadData());
-		// if (CURRENT_LOAD_COUNTS < MAX_ASSETS_LOAD_COUNTS) {
-		// CURRENT_LOAD_COUNTS++;
-		#if assets_debug
 		trace("开始加载：", future.getLoadData());
 		#end
 		__loadIndex++;
-		future.post();
+		if (!future.isComplete) {
+			future.post();
+		} else {
+			loadedCounts++;
+			#if assets_debug
+			trace("已完成加载，跳过：", future.getLoadData());
+			#end
+		}
 		loadNext();
 		return true;
-		// } else {
-		// trace("当前加载数量已达上限", MAX_ASSETS_LOAD_COUNTS);
-		// if (!__waitLoadAssetses.contains(this)) {
-		// __waitLoadAssetses.push(this);
-		// trace("待加载资产队列：", __waitLoadAssetses.length);
-		// }
-		// }
-		// return false;
 	}
 
 	public function pushAssets(assets:Assets):Void {
@@ -699,5 +702,23 @@ class Assets extends Future<Assets, Dynamic> {
 			return sound.root.play();
 		}
 		return null;
+	}
+
+	override function errorValue(data:FutureErrorEvent) {
+		this.loading = false;
+		if (isError)
+			return;
+		this.isError = true;
+		if (__tryLoadTimes++ >= tryLoadTimes) {
+			super.errorValue(data);
+		} else {
+			// 1秒后重试
+			Timer.getInstance().setTimeout(() -> {
+				trace("Assets: 重试加载 futures.length=", futures.length, __tryLoadTimes);
+				this.isError = false;
+				this.isComplete = false;
+				this.start();
+			}, 2);
+		}
 	}
 }

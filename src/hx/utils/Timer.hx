@@ -67,12 +67,57 @@ class Timer {
 			}
 		}
 	}
+
+	/**
+	 * 设置循环定时器调用
+	 * @param cb 
+	 * @param duration 
+	 */
+	public function setInterval(cb:Dynamic, duration:Float, ?args:Array<Dynamic>):Int {
+		uid++;
+		var t = new TimerChild(uid, duration, cb, args);
+		t.isInterval = true;
+		timerChildren.push(t);
+		return t.id;
+	}
+
+	/**
+	 * 移除指定ID的定时器
+	 * @param id 
+	 */
+	public function stop(id:Int):Void {
+		var i = timerChildren.length;
+		while (i-- > 0) {
+			var t = timerChildren[i];
+			if (t.id == id) {
+				timerChildren.splice(i, 1);
+				break;
+			}
+		}
+	}
+
+	/**
+	 * 创建循环定时器
+	 * @param cb 
+	 * @param duration 
+	 */
+	public function createIntervalTimer(cb:Int->Void, duration:Float):Void {
+		var id = uid + 1;
+		setInterval(cb, duration, [id]);
+	}
 }
 
 class TimerChild {
 	public var id:Int = 0;
 
 	public var duration:Float = 0;
+
+	private var __duration:Float = 0;
+
+	/**
+	 * 是否为循环定时器
+	 */
+	public var isInterval:Bool = false;
 
 	public var closure:Dynamic;
 
@@ -88,6 +133,7 @@ class TimerChild {
 	public function new(id:Int, duration:Float, closure:Dynamic, args:Array<Dynamic>) {
 		this.id = id;
 		this.duration = duration;
+		this.__duration = duration;
 		this.closure = closure;
 		this.args = args;
 	}
@@ -100,6 +146,9 @@ class TimerChild {
 		duration -= dt;
 		if (duration <= 0) {
 			Reflect.callMethod(this.closure, this.closure, this.args == null ? [] : this.args);
+			if (isInterval) {
+				duration += this.__duration;
+			}
 		}
 	}
 }

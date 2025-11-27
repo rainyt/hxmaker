@@ -45,6 +45,11 @@ class UIAnimate {
 	public var duration:Float = 0;
 
 	/**
+	 * 动画延迟时间
+	 */
+	public var delay:Float = 0;
+
+	/**
 	 * 是否自动播放
 	 */
 	public var auto:Bool = true;
@@ -63,6 +68,7 @@ class UIAnimate {
 		this.target = target;
 		this.xml = xml;
 		this.duration = Std.parseFloat(xml.get("duration"));
+		this.delay = xml.exists("delay") ? Std.parseFloat(xml.get("delay")) : 0;
 		var easeName:String = xml.get("ease");
 		if (easeName != null) {
 			var easeNames = easeName.split(".");
@@ -89,7 +95,7 @@ class UIAnimate {
 			if (target.parent != null) {
 				target.parent.updateLayout();
 			}
-		});
+		}).delay(delay);
 		if (ease != null)
 			actuate.ease(ease);
 	}

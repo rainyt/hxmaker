@@ -15,11 +15,39 @@ import hx.providers.IRootDataProvider;
 @:keep
 class Label extends DisplayObject implements IDataProider<String> implements IRootDataProvider<ITextFieldDataProvider> {
 	/**
+	 * 设置文本缓存器
+	 */
+	public static function setTextFieldContextBitmapData(textCacheId:Int, bitmapData:TextCacheBitmapData):Void {
+		#if hxmaker_openfl
+		hx.render.TextFieldRender.setTextFieldContextBitmapData(textCacheId,
+			new hx.text.TextFieldContextBitmapData(bitmapData.size, bitmapData.textureWidth, bitmapData.textureHeight, bitmapData.offestX, bitmapData.offestY));
+		#end
+	}
+
+	/**
+	 * 释放文本缓存器
+	 */
+	public static function disposeTextFieldContextBitmapData(textCacheId:Int):Void {
+		#if hxmaker_openfl
+		hx.render.TextFieldRender.disposeTextFieldContextBitmapData(textCacheId);
+		#end
+	}
+
+	/**
 	 * 全局文本过滤实现
 	 */
 	public static var onGlobalCharFilter:String->String;
 
 	public var __smoothing:Bool = true;
+
+	/**
+	 * 文本缓存ID，默认为`0`，用于决定使用哪个文本缓存器。如果需要使用多个文本缓存器，你需要检查`引擎后端`是否支持。当前`openfl`后端能够正常使用，请参考例子：
+	 * ```haxe
+	 * Label.setTextFieldContextBitmapData(1, new TextCacheBitmapData(50, 2048, 2048, 5, 5));
+	 * ```
+	 * 如果不设置则也会有一个默认的文本缓存器，请注意内存的使用率，每多一个文本缓存器，则意味着增加了一张2048的图片；
+	 */
+	public var textCacheId:Int = 0;
 
 	@:privateAccess private var __textFormatDirty:Bool = true;
 

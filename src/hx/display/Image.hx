@@ -1,5 +1,7 @@
 package hx.display;
 
+import hx.core.Hxmaker;
+import hx.utils.ScaleUtils;
 import hx.geom.Rectangle;
 import hx.providers.IRootDataProvider;
 

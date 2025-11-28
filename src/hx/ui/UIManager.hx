@@ -246,7 +246,7 @@ class UIManager {
 						display.scaleY = Std.parseFloat(xml.get("scaleY"));
 					case "rotation":
 						display.rotation = Std.parseFloat(xml.get("rotation"));
-					case "left", "right", "top", "bottom", "centerX", "centerY":
+					case "left", "right", "top", "bottom", "centerX", "centerY", "fill":
 						// 意味着需要使用AnchorLayoutData数据
 						useAnchor = true;
 					case "blendMode":
@@ -264,7 +264,8 @@ class UIManager {
 					display.parent.layout = new AnchorLayout();
 				}
 				var layoutData = new AnchorLayoutData(xml.getFloatValue("top"), xml.getFloatValue("right"), xml.getFloatValue("bottom"),
-					xml.getFloatValue("left"), xml.getFloatValue("centerX"), xml.getFloatValue("centerY"));
+					xml.getFloatValue("left"), xml.getFloatValue("centerX"), xml.getFloatValue("centerY"),
+					xml.exists("fill") ? xml.get("fill") == "true" : false);
 				display.layoutData = layoutData;
 				layoutData.percentWidth = percentWidth;
 				layoutData.percentHeight = percentHeight;
@@ -321,10 +322,6 @@ class UIManager {
 				var data = xml.get("src");
 				data = Path.withoutDirectory(Path.withoutExtension(data));
 				obj.data = getBitmapData(data) ?? assets.getBitmapData(data);
-			}
-			if (xml.get("fill") == "true") {
-				var scale = ScaleUtils.mathScale(Hxmaker.engine.stageWidth, Hxmaker.engine.stageHeight, obj.width, obj.height, false, false, true);
-				obj.scaleX = obj.scaleY = scale;
 			}
 			if (xml.get("repeat") == "true") {
 				obj.repeat = true;
@@ -433,6 +430,9 @@ class UIManager {
 		addCreateInstance(Spine, function(xml:Xml):Spine {
 			var id = xml.getStringId("src");
 			var spine = new Spine(UIManager.getSkeletonData(id));
+			if (xml.exists("renderFps")) {
+				spine.renderFps = Std.parseInt(xml.get("renderFps"));
+			}
 			return spine;
 		});
 		addAttributesParse(Spine, function(obj:Spine, xml:Xml, assets:Assets) {

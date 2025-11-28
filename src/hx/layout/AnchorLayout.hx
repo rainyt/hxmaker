@@ -1,5 +1,8 @@
 package hx.layout;
 
+import hx.core.Hxmaker;
+import hx.utils.ScaleUtils;
+import hx.display.Image;
 import hx.display.DisplayObject;
 
 /**
@@ -18,6 +21,16 @@ class AnchorLayout extends Layout {
 		for (object in children) {
 			if (object.layoutData != null && object.layoutData is AnchorLayoutData) {
 				var layoutData:AnchorLayoutData = cast object.layoutData;
+				if (layoutData.isFill) {
+					if (object is Image) {
+						var image:Image = cast object;
+						if (image.data != null) {
+							var scale = ScaleUtils.mathScale(Hxmaker.engine.stageWidth, Hxmaker.engine.stageHeight, image.data.width, image.data.height,
+								false, false, true);
+							image.scale = scale;
+						}
+					}
+				}
 
 				// 百分比宽高兼容
 				if (layoutData.percentWidth != null) {

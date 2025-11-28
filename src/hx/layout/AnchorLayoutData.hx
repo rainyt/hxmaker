@@ -104,6 +104,11 @@ class AnchorLayoutData extends LayoutData {
 	public var verticalCenter:Null<Float> = null;
 
 	/**
+	 * 是否填充整个舞台
+	 */
+	public var isFill:Bool = false;
+
+	/**
 	 * 
 	 * @param top 
 	 * @param right 
@@ -112,7 +117,8 @@ class AnchorLayoutData extends LayoutData {
 	 * @param horizontalCenter 
 	 * @param verticalCenter 
 	 */
-	public function new(?top:Float, ?right:Float, ?bottom:Float, ?left:Float, ?horizontalCenter:Null<Float>, ?verticalCenter:Null<Float>) {
+	public function new(?top:Float, ?right:Float, ?bottom:Float, ?left:Float, ?horizontalCenter:Null<Float>, ?verticalCenter:Null<Float>,
+			?isFill:Bool = false) {
 		super();
 		this.top = top;
 		this.right = right;
@@ -120,5 +126,6 @@ class AnchorLayoutData extends LayoutData {
 		this.left = left;
 		this.horizontalCenter = horizontalCenter;
 		this.verticalCenter = verticalCenter;
+		this.isFill = isFill;
 	}
 }

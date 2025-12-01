@@ -46,6 +46,10 @@ class UIManager {
 		for (assets in assetsList) {
 			assets.clean();
 		}
+		unbindAll();
+	}
+
+	public static function unbindAll():Void {
 		assetsList = [];
 	}
 

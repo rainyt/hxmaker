@@ -64,6 +64,8 @@ class UIAnimate {
 	 */
 	public var id:String;
 
+	private var __isAutoPlay:Bool = false;
+
 	public function new(target:DisplayObject, xml:Xml) {
 		this.target = target;
 		this.xml = xml;

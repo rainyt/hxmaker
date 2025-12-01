@@ -98,6 +98,7 @@ class Stage extends Box {
 			if (event.type == MouseEvent.MOUSE_DOWN) {
 				this.__currentMouseDownDisplay = display;
 				this.__mouseDownDt = 0;
+				this.focus = display;
 			} else if (event.type == MouseEvent.MOUSE_UP) {
 				this.__currentMouseDownDisplay = null;
 			}

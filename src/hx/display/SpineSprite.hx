@@ -49,6 +49,9 @@ class SpineSprite extends Sprite implements ISpineDrawOrder {
 
 	override function set_colorTransform(value:ColorTransform):ColorTransform {
 		spine.colorTransform = value;
+		for (item in __slotDisplay) {
+			item.display.colorTransform = value;
+		}
 		return super.set_colorTransform(value);
 	}
 

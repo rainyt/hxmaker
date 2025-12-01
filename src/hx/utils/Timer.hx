@@ -62,7 +62,7 @@ class Timer {
 			var t = timerChildren[i];
 			t.update(dt);
 			ContextStats.statsTimeTaskCount();
-			if (t.duration <= 0) {
+			if (t.duration <= 0 && !t.isInterval) {
 				timerChildren.splice(i, 1);
 			}
 		}

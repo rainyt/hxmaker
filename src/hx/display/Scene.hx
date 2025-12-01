@@ -13,7 +13,7 @@ class Scene extends Box {
 	/**
 	 * 释放场景事件
 	 */
-	public var onReleaseEvent:FunctionListener = new FunctionListener();
+	public var onReleaseEvent:FunctionListener = new FunctionListener(true);
 
 	override function get_width():Float {
 		return Hxmaker.engine.stageWidth;

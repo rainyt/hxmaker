@@ -18,7 +18,7 @@ class UILoadScene extends Scene {
 
 	public var uiAssets:UIAssets;
 
-	public var onLoadedEvent:FunctionListener = new FunctionListener();
+	public var onLoadedEvent:FunctionListener = new FunctionListener(true);
 
 	/**
 	 * 是否正在构造中

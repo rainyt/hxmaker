@@ -110,6 +110,7 @@ class Stage extends Box {
 					}
 					focus = display;
 					focus.dispatchEvent(new Event(Event.FOCUS_OVER, false, true));
+					return true;
 				} else {
 					// 判断上一次的点击时间
 					if (Timer.stamp() - __lastClickTime < 0.3) {

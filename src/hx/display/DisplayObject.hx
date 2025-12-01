@@ -12,6 +12,7 @@ import hx.geom.ColorTransform;
 import hx.geom.Matrix;
 import hx.geom.Rectangle;
 import hx.events.Event;
+import hx.layout.AnchorLayoutData;
 
 using hx.utils.MathUtils;
 
@@ -874,5 +875,104 @@ class DisplayObject extends EventDispatcher {
 	public function remove():Void {
 		if (this.parent != null)
 			this.parent.removeChild(this);
+	}
+
+	/**
+	 * 中心X坐标，当布局数据为`AnchorLayoutData`类型时可用
+	 */
+	public var centerX(get, set):Null<Float>;
+
+	private function get_centerX():Null<Float> {
+		if (this.layoutData is AnchorLayoutData) {
+			return cast(this.layoutData, AnchorLayoutData).horizontalCenter;
+		}
+		return null;
+	}
+
+	private function set_centerX(value:Null<Float>):Null<Float> {
+		if (this.layoutData is AnchorLayoutData) {
+			return cast(this.layoutData, AnchorLayoutData).horizontalCenter = value;
+		}
+		return value;
+	}
+
+	public var centerY(get, set):Null<Float>;
+
+	private function get_centerY():Null<Float> {
+		if (this.layoutData is AnchorLayoutData) {
+			return cast(this.layoutData, AnchorLayoutData).verticalCenter;
+		}
+		return null;
+	}
+
+	private function set_centerY(value:Null<Float>):Null<Float> {
+		if (this.layoutData is AnchorLayoutData) {
+			return cast(this.layoutData, AnchorLayoutData).verticalCenter = value;
+		}
+		return value;
+	}
+
+	public var left(get, set):Null<Float>;
+
+	private function get_left():Null<Float> {
+		if (this.layoutData is AnchorLayoutData) {
+			return cast(this.layoutData, AnchorLayoutData).left;
+		}
+		return null;
+	}
+
+	private function set_left(value:Null<Float>):Null<Float> {
+		if (this.layoutData is AnchorLayoutData) {
+			return cast(this.layoutData, AnchorLayoutData).left = value;
+		}
+		return value;
+	}
+
+	public var right(get, set):Null<Float>;
+
+	private function get_right():Null<Float> {
+		if (this.layoutData is AnchorLayoutData) {
+			return cast(this.layoutData, AnchorLayoutData).right;
+		}
+		return null;
+	}
+
+	private function set_right(value:Null<Float>):Null<Float> {
+		if (this.layoutData is AnchorLayoutData) {
+			return cast(this.layoutData, AnchorLayoutData).right = value;
+		}
+		return value;
+	}
+
+	public var top(get, set):Null<Float>;
+
+	private function get_top():Null<Float> {
+		if (this.layoutData is AnchorLayoutData) {
+			return cast(this.layoutData, AnchorLayoutData).top;
+		}
+		return null;
+	}
+
+	private function set_top(value:Null<Float>):Null<Float> {
+		if (this.layoutData is AnchorLayoutData) {
+			return cast(this.layoutData, AnchorLayoutData).top = value;
+		}
+		return value;
+	}
+
+	public var bottom(get, set):Null<Float>;
+
+	private function get_bottom():Null<Float> {
+		if (this.layoutData is AnchorLayoutData) {
+			return cast(this.layoutData, AnchorLayoutData).bottom;
+		}
+		return null;
+	}
+
+	private function set_bottom(value:Null<Float>):Null<Float> {
+		if (this.layoutData is AnchorLayoutData) {
+			return cast(this.layoutData, AnchorLayoutData).bottom = value;
+		}
+		return value;
 	}
 }

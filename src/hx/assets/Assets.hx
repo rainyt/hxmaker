@@ -27,6 +27,11 @@ class Assets extends Future<Assets, Dynamic> {
 	private var __tryLoadTimes:Int = 0;
 
 	/**
+	 * 资源名称
+	 */
+	public var name:String;
+
+	/**
 	 * 尝试重新加载次数
 	 */
 	public var tryLoadTimes:Int = MAX_TRY_LOAD_TIMES;

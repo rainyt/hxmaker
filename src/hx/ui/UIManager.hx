@@ -40,7 +40,7 @@ class UIManager {
 	/**
 	 * 资源列表
 	 */
-	private static var assetsList:Array<Assets> = [];
+	public static var assetsList:Array<Assets> = [];
 
 	public static function clean():Void {
 		for (assets in assetsList) {

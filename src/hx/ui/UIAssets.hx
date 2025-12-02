@@ -1,5 +1,6 @@
 package hx.ui;
 
+import hx.utils.DisplayTools;
 import hx.macro.MacroTools;
 import hx.macro.UIMoudle;
 import haxe.io.Path;
@@ -235,10 +236,19 @@ class UIAssets extends Assets {
 			} else if (item.nodeName.indexOf("child:") == 0) {
 				// 访问当前节点的子节点
 				var name = item.nodeName.split(":")[1];
-				var child = parent.getChildByName(name);
+				var child:DisplayObject = null;
+				DisplayTools.map(parent, (display) -> {
+					if (display.name == name) {
+						child = display;
+						return false;
+					}
+					return true;
+				});
 				if (child != null && child is DisplayObjectContainer) {
 					parent = cast child;
 					buildUi(item, cast parent, ids);
+				} else {
+					trace("未找到子节点:" + name);
 				}
 			}
 		}

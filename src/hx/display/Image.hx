@@ -128,6 +128,11 @@ class Image extends DisplayObject implements IDataProider<BitmapData> implements
 				// 下面中间
 				__graphic.drawRectUVs(leftWidth, height - bottomHeight, width - leftWidth - rightWidth, bottomHeight,
 					maskUVs(rect.x, rect.bottom, rect.width, bottomHeight, textureWidth, textureHeight, offsetX, offsetY), this.alpha);
+				__graphic.originX = this.originX;
+				__graphic.originY = this.originY;
+				__graphic.colorTransform = this.colorTransform;
+				__graphic.scaleX = this.scaleX > 0 ? 1 : -1;
+				__graphic.scaleY = this.scaleY > 0 ? 1 : -1;
 			}
 		} else if (__repeat) {
 			if (__graphic == null) {
@@ -171,6 +176,11 @@ class Image extends DisplayObject implements IDataProider<BitmapData> implements
 					drawY = 0;
 					drawX += setWidth;
 				}
+				__graphic.originX = this.originX;
+				__graphic.originY = this.originY;
+				__graphic.colorTransform = this.colorTransform;
+				__graphic.scaleX = this.scaleX > 0 ? 1 : -1;
+				__graphic.scaleY = this.scaleY > 0 ? 1 : -1;
 			}
 		}
 		return __graphic;

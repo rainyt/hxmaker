@@ -1,5 +1,6 @@
 package hx.display;
 
+import hx.utils.ColorUtils;
 import hx.geom.PerspectiveProjection;
 import hx.geom.Vector3D;
 import hx.geom.TransformMatrix3D;
@@ -974,5 +975,17 @@ class DisplayObject extends EventDispatcher {
 			return cast(this.layoutData, AnchorLayoutData).bottom = value;
 		}
 		return value;
+	}
+
+	/**
+	 * 设置颜色变换
+	 * @param color 颜色值
+	 * @param alpha 透明度
+	 */
+	public function setColorTransform(color:UInt, alpha:Float):Void {
+		var color = ColorUtils.toShaderColor(color);
+		var outA = 1 - alpha;
+		this.colorTransform = new ColorTransform(color.r * outA, color.g * outA, color.b * outA, 1, 255 * color.r * alpha, 255 * color.g * alpha,
+			255 * color.b * alpha, 0);
 	}
 }

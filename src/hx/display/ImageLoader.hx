@@ -69,6 +69,7 @@ class ImageLoader extends Box implements IDataProider<Dynamic> {
 
 	public function set_scaleWidth(value:Null<Float>):Null<Float> {
 		this.scaleWidth = value;
+		this.updateScale();
 		return value;
 	}
 
@@ -79,6 +80,7 @@ class ImageLoader extends Box implements IDataProider<Dynamic> {
 
 	public function set_scaleHeight(value:Null<Float>):Null<Float> {
 		this.scaleHeight = value;
+		this.updateScale();
 		return value;
 	}
 

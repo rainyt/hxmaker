@@ -239,6 +239,24 @@ class Scroll extends BoxContainer {
 
 	private static inline var freeOverScrollMaxDistanceMultiplier = 2;
 
+	/**
+	 * 最大滚动距离x
+	 */
+	public var maxScrollX(get, never):Float;
+
+	public function get_maxScrollX():Float {
+		return this.getMaxSize().x;
+	}
+
+	/**
+	 * 最大滚动距离y
+	 */
+	public var maxScrollY(get, never):Float;
+
+	public function get_maxScrollY():Float {
+		return this.getMaxSize().y;
+	}
+
 	private function updateScrollPosition() {
 		if (!shouldFreeSlideX && !shouldFreeSlideY) {
 			return;
@@ -541,6 +559,16 @@ class Scroll extends BoxContainer {
 			}
 		}
 		return NONE;
+	}
+
+	/**
+	 * 滚动到指定位置
+	 */
+	public function scrollTo(x:Float, y:Float, duration:Float = 0.2):Void {
+		Actuate.tween(this, duration, {
+			scrollX: x,
+			scrollY: y
+		});
 	}
 }
 

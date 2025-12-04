@@ -95,14 +95,14 @@ class UIAnimate {
 				this.target.setProperty(key, this.startOption.getProperty(key));
 			}
 		}
-		var actuate = Actuate.tween(target, duration, endOption, false)
-			.onUpdate(() -> {
-				if (target.parent != null) {
-					target.parent.updateLayout();
-				}
-			})
-			.delay(delay)
-			.reverse(isReverse);
+		var actuate = Actuate.tween(target, duration, endOption, false).onUpdate(() -> {
+			if (target.parent != null) {
+				target.parent.updateLayout();
+			}
+		}).delay(delay);
+		if (isReverse) {
+			actuate.reverse();
+		}
 		if (ease != null)
 			actuate.ease(ease);
 	}

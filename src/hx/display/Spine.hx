@@ -374,6 +374,7 @@ class Spine extends Graphics implements ISpine {
 		if (t != null && t.animation.name == name)
 			return t;
 		__playing = true;
+		this.__spineDrawDirty = true;
 		return this.animationState.setAnimationByName(index, name, isLoop);
 	}
 

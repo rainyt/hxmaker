@@ -131,6 +131,7 @@ class Button extends BoxContainer {
 	override function onStageInit() {
 		super.onStageInit();
 		this.addEventListener(MouseEvent.MOUSE_DOWN, this.onMouseEvent);
+		this.addEventListener(MouseEvent.CLICK, this.onMouseEvent);
 	}
 
 	override function onAddToStage() {
@@ -163,10 +164,11 @@ class Button extends BoxContainer {
 				this.box.scaleY = 1;
 				this.box.originX = 0;
 				this.box.originY = 0;
-				if (__isDown && e.target == this && clickEvent != null) {
+				__isDown = false;
+			case MouseEvent.CLICK:
+				if (clickEvent != null) {
 					clickEvent();
 				}
-				__isDown = false;
 		}
 	}
 

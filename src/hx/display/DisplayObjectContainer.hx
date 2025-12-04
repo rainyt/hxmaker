@@ -393,4 +393,18 @@ class DisplayObjectContainer extends DisplayObject {
 			return this.globalToLocal(new Point(0, stage.__stageY)).y;
 		return 0;
 	}
+
+	/**
+	 * 交换两个子对象的位置
+	 * @param childA 
+	 * @param childB 
+	 */
+	public function swapChildren(childA:DisplayObject, childB:DisplayObject) {
+		var indexA = getChildIndexAt(childA);
+		var indexB = getChildIndexAt(childB);
+		if (indexA != -1 && indexB != -1) {
+			this.children[indexA] = childB;
+			this.children[indexB] = childA;
+		}
+	}
 }

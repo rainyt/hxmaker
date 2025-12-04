@@ -158,17 +158,19 @@ class UIAssets extends Assets {
 
 	public static var ANIMATE_UID:Int = 0;
 
-	public function buildItem(item:Xml, parent:DisplayObjectContainer, ids:Map<String, Dynamic>, autoBuildUi:Bool = true):DisplayObject {
-		if (item.get("load") == "true")
-			return null;
-
-		if (item.nodeName == "animate") {
-			var target = item.get("target");
-			var display = target == "this" ? parent : ids.get(target);
-			if (display != null) {
-				var animate = new UIAnimate(display, item);
-				if (item.get("auto") == "false")
-					animate.auto = false;
+	/**
+	 * 构建动画
+	 */
+	public function buildAnimate(item:Xml, parent:DisplayObjectContainer, ids:Map<String, Dynamic>, parentAnimateGroup:UIAnimateGroup = null):UIAnimate {
+		var target = item.get("target");
+		var display = target == "this" ? parent : ids.get(target);
+		if (display != null || item.nodeName == "animate-group") {
+			var animate = item.nodeName == "animate-group" ? new UIAnimateGroup(display, item) : new UIAnimate(display, item);
+			if (item.get("auto") == "false")
+				animate.auto = false;
+			if (parentAnimateGroup != null) {
+				parentAnimateGroup.addAnimate(animate);
+			} else {
 				if (item.exists("id")) {
 					animate.id = item.get("id");
 					ids.set(item.get("id"), animate);
@@ -176,6 +178,25 @@ class UIAssets extends Assets {
 					ids.set("__animate__" + ANIMATE_UID++, animate);
 				}
 			}
+			if (item.nodeName == "animate-group") {
+				var group:UIAnimateGroup = cast animate;
+				for (item in item.elements()) {
+					if (item.nodeName == "animate") {
+						var newAnimate = buildAnimate(item, parent, ids, group);
+					}
+				}
+			}
+			return animate;
+		}
+		return null;
+	}
+
+	public function buildItem(item:Xml, parent:DisplayObjectContainer, ids:Map<String, Dynamic>, autoBuildUi:Bool = true):DisplayObject {
+		if (item.get("load") == "true")
+			return null;
+
+		if (item.nodeName == "animate" || item.nodeName == "animate-group") {
+			var animate = buildAnimate(item, parent, ids);
 			return null;
 		}
 

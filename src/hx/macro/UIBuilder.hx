@@ -102,7 +102,7 @@ class UIBuilder {
 		var array:Array<Field> = [];
 		for (item in xml.elements()) {
 			if (item.exists("id")) {
-				if (item.nodeName == "animate") {
+				if (item.nodeName == "animate" || item.nodeName == "animate-group") {
 					var typePath = ComplexType.TPath({
 						name: "UIAnimate",
 						pack: ["hx", "ui"]

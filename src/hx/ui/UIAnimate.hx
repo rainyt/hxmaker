@@ -86,18 +86,23 @@ class UIAnimate {
 
 	/**
 	 * 开始播放动画
+	 * @param setStartOption 是否设置开始动画值
+	 * @param isReverse 是否反向播放
 	 */
-	public function play(setStartOption:Bool = false):Void {
+	public function play(setStartOption:Bool = false, isReverse:Bool = false):Void {
 		if (setStartOption) {
 			for (key in this.startOption.fields()) {
 				this.target.setProperty(key, this.startOption.getProperty(key));
 			}
 		}
-		var actuate = Actuate.tween(target, duration, endOption, false).onUpdate(() -> {
-			if (target.parent != null) {
-				target.parent.updateLayout();
-			}
-		}).delay(delay);
+		var actuate = Actuate.tween(target, duration, endOption, false)
+			.onUpdate(() -> {
+				if (target.parent != null) {
+					target.parent.updateLayout();
+				}
+			})
+			.delay(delay)
+			.reverse(isReverse);
 		if (ease != null)
 			actuate.ease(ease);
 	}

@@ -26,4 +26,19 @@ class DisplayTools {
 		}
 		return true;
 	}
+
+	/**
+	 * 过滤容器里的所有对象
+	 * @param display 
+	 * @param cb 
+	 */
+	public static function filter(display:DisplayObjectContainer, cb:DisplayObject->Bool):Array<DisplayObject> {
+		var arr = [];
+		map(display, function(d) {
+			if (cb(d))
+				arr.push(d);
+			return true;
+		});
+		return arr;
+	}
 }

@@ -150,20 +150,21 @@ class DisplayObjectContainer extends DisplayObject {
 	 * @param child 
 	 */
 	public function removeChild(child:DisplayObject):Void {
-		this.__children.remove(child);
-		if (child.__parent != null)
-			child.onRemoveToStage();
-		if (child.hasEventListener(Event.REMOVED_FROM_STAGE))
-			child.dispatchEvent(new Event(Event.REMOVED_FROM_STAGE));
-		if (this.hasEventListener(Event.REMOVED)) {
-			var event = new Event(Event.REMOVED);
-			event.target = child;
-			this.dispatchEvent(event);
+		if (this.__children.remove(child)) {
+			if (child.__parent != null)
+				child.onRemoveToStage();
+			if (child.hasEventListener(Event.REMOVED_FROM_STAGE))
+				child.dispatchEvent(new Event(Event.REMOVED_FROM_STAGE));
+			if (this.hasEventListener(Event.REMOVED)) {
+				var event = new Event(Event.REMOVED);
+				event.target = child;
+				this.dispatchEvent(event);
+			}
+			child.__parent = null;
+			child.__onRemoveFromStage();
+			this.__layoutDirty = true;
+			this.setDirty();
 		}
-		child.__parent = null;
-		child.__onRemoveFromStage();
-		this.__layoutDirty = true;
-		this.setDirty();
 	}
 
 	override function onRemoveToStage() {

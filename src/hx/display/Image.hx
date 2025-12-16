@@ -86,53 +86,55 @@ class Image extends DisplayObject implements IDataProider<BitmapData> implements
 			if (__scale9GridDirty) {
 				__scale9GridDirty = false;
 				__graphic.clear();
-				// 这里仅继承坐标、旋转，但不要缩放，因为不需要
-				__graphic.x = this.x;
-				__graphic.y = this.y;
-				__graphic.rotation = this.rotation;
-				__graphic.__updateTransform(this.parent);
-				__graphic.beginBitmapData(this.data, this.smoothing);
-				var rect = __scale9Grid;
-				var rightWidth = (this.data.width - rect.x - rect.width);
-				var leftWidth = rect.x;
-				var topHeight = rect.y;
-				var bottomHeight = (this.data.height - rect.y - rect.height);
-				var textureWidth = this.data.data.getWidth();
-				var textureHeight = this.data.data.getHeight();
-				var offsetX = this.data.uvOffsetX;
-				var offsetY = this.data.uvOffsetY;
-				// 左上
-				__graphic.drawRectUVs(0, 0, leftWidth, topHeight, maskUVs(0, 0, leftWidth, topHeight, textureWidth, textureHeight, offsetX, offsetY),
-					this.alpha);
-				// 右上
-				__graphic.drawRectUVs(this.width - rightWidth, 0, rightWidth, topHeight,
-					maskUVs(rect.right, 0, rightWidth, topHeight, textureWidth, textureHeight, offsetX, offsetY), this.alpha);
-				// 左下
-				__graphic.drawRectUVs(0, this.height - bottomHeight, leftWidth, bottomHeight,
-					maskUVs(0, rect.bottom, leftWidth, bottomHeight, textureWidth, textureHeight, offsetX, offsetY), this.alpha);
-				// 右下
-				__graphic.drawRectUVs(this.width - rightWidth, this.height - bottomHeight, rightWidth, bottomHeight,
-					maskUVs(rect.right, rect.bottom, rightWidth, bottomHeight, textureWidth, textureHeight, offsetX, offsetY), this.alpha);
-				// 中间
-				__graphic.drawRectUVs(rect.left, rect.top, this.width - rightWidth - rect.left, this.height - bottomHeight - rect.top,
-					maskUVs(rect.x, rect.y, rect.width, rect.height, textureWidth, textureHeight, offsetX, offsetY), this.alpha);
-				// 左边中间
-				__graphic.drawRectUVs(0, topHeight, leftWidth, this.height - bottomHeight - topHeight,
-					maskUVs(0, rect.y, leftWidth, rect.height, textureWidth, textureHeight, offsetX, offsetY), this.alpha);
-				// 右边中间
-				__graphic.drawRectUVs(this.width - rightWidth, topHeight, rightWidth, this.height - bottomHeight - topHeight,
-					maskUVs(rect.right, rect.y, rightWidth, rect.height, textureWidth, textureHeight, offsetX, offsetY), this.alpha);
-				// 上面中间
-				__graphic.drawRectUVs(leftWidth, 0, width - leftWidth - rightWidth, topHeight,
-					maskUVs(rect.x, 0, rect.width, topHeight, textureWidth, textureHeight, offsetX, offsetY), this.alpha);
-				// 下面中间
-				__graphic.drawRectUVs(leftWidth, height - bottomHeight, width - leftWidth - rightWidth, bottomHeight,
-					maskUVs(rect.x, rect.bottom, rect.width, bottomHeight, textureWidth, textureHeight, offsetX, offsetY), this.alpha);
-				__graphic.originX = this.originX;
-				__graphic.originY = this.originY;
-				__graphic.colorTransform = this.colorTransform;
-				__graphic.scaleX = this.scaleX > 0 ? 1 : -1;
-				__graphic.scaleY = this.scaleY > 0 ? 1 : -1;
+				if (this.data != null) {
+					// 这里仅继承坐标、旋转，但不要缩放，因为不需要
+					__graphic.x = this.x;
+					__graphic.y = this.y;
+					__graphic.rotation = this.rotation;
+					__graphic.__updateTransform(this.parent);
+					__graphic.beginBitmapData(this.data, this.smoothing);
+					var rect = __scale9Grid;
+					var rightWidth = (this.data.width - rect.x - rect.width);
+					var leftWidth = rect.x;
+					var topHeight = rect.y;
+					var bottomHeight = (this.data.height - rect.y - rect.height);
+					var textureWidth = this.data.data.getWidth();
+					var textureHeight = this.data.data.getHeight();
+					var offsetX = this.data.uvOffsetX;
+					var offsetY = this.data.uvOffsetY;
+					// 左上
+					__graphic.drawRectUVs(0, 0, leftWidth, topHeight, maskUVs(0, 0, leftWidth, topHeight, textureWidth, textureHeight, offsetX, offsetY),
+						this.alpha);
+					// 右上
+					__graphic.drawRectUVs(this.width - rightWidth, 0, rightWidth, topHeight,
+						maskUVs(rect.right, 0, rightWidth, topHeight, textureWidth, textureHeight, offsetX, offsetY), this.alpha);
+					// 左下
+					__graphic.drawRectUVs(0, this.height - bottomHeight, leftWidth, bottomHeight,
+						maskUVs(0, rect.bottom, leftWidth, bottomHeight, textureWidth, textureHeight, offsetX, offsetY), this.alpha);
+					// 右下
+					__graphic.drawRectUVs(this.width - rightWidth, this.height - bottomHeight, rightWidth, bottomHeight,
+						maskUVs(rect.right, rect.bottom, rightWidth, bottomHeight, textureWidth, textureHeight, offsetX, offsetY), this.alpha);
+					// 中间
+					__graphic.drawRectUVs(rect.left, rect.top, this.width - rightWidth - rect.left, this.height - bottomHeight - rect.top,
+						maskUVs(rect.x, rect.y, rect.width, rect.height, textureWidth, textureHeight, offsetX, offsetY), this.alpha);
+					// 左边中间
+					__graphic.drawRectUVs(0, topHeight, leftWidth, this.height - bottomHeight - topHeight,
+						maskUVs(0, rect.y, leftWidth, rect.height, textureWidth, textureHeight, offsetX, offsetY), this.alpha);
+					// 右边中间
+					__graphic.drawRectUVs(this.width - rightWidth, topHeight, rightWidth, this.height - bottomHeight - topHeight,
+						maskUVs(rect.right, rect.y, rightWidth, rect.height, textureWidth, textureHeight, offsetX, offsetY), this.alpha);
+					// 上面中间
+					__graphic.drawRectUVs(leftWidth, 0, width - leftWidth - rightWidth, topHeight,
+						maskUVs(rect.x, 0, rect.width, topHeight, textureWidth, textureHeight, offsetX, offsetY), this.alpha);
+					// 下面中间
+					__graphic.drawRectUVs(leftWidth, height - bottomHeight, width - leftWidth - rightWidth, bottomHeight,
+						maskUVs(rect.x, rect.bottom, rect.width, bottomHeight, textureWidth, textureHeight, offsetX, offsetY), this.alpha);
+					__graphic.originX = this.originX;
+					__graphic.originY = this.originY;
+					__graphic.colorTransform = this.colorTransform;
+					__graphic.scaleX = this.scaleX > 0 ? 1 : -1;
+					__graphic.scaleY = this.scaleY > 0 ? 1 : -1;
+				}
 			}
 		} else if (__repeat) {
 			if (__graphic == null) {
@@ -141,46 +143,48 @@ class Image extends DisplayObject implements IDataProider<BitmapData> implements
 			if (__repeatDirty) {
 				__repeatDirty = false;
 				__graphic.clear();
-				__graphic.x = this.x;
-				__graphic.y = this.y;
-				__graphic.rotation = this.rotation;
-				__graphic.__updateTransform(this.parent);
-				__graphic.beginBitmapData(this.data, this.smoothing);
-				// 计算重复的UVS
-				var pHeight = this.data.height;
-				var pWidth = this.data.width;
-				var pHeightCounts = Math.ceil(this.height / pHeight);
-				var pWidthCounts = Math.ceil(this.width / pWidth);
-				var outHeight = this.height % pHeight;
-				if (outHeight == 0)
-					outHeight = pHeight;
-				var outWidth = this.width % pWidth;
-				if (outWidth == 0)
-					outWidth = pWidth;
-				var textureWidth = this.data.data.getWidth();
-				var textureHeight = this.data.data.getHeight();
-				var offsetX = this.data.uvOffsetX;
-				var offsetY = this.data.uvOffsetY;
-				var drawX = 0.;
-				var drawY = 0.;
-				for (ix in 0...pWidthCounts) {
-					var isOutWidth = ix + 1 == pWidthCounts;
-					var setWidth = isOutWidth ? outWidth : pWidth;
-					for (iy in 0...pHeightCounts) {
-						var isOutHeight = iy + 1 == pHeightCounts;
-						var setHeight = isOutHeight ? outHeight : pHeight;
-						__graphic.drawRectUVs(drawX, drawY, setWidth, setHeight,
-							maskUVs(0, 0, setWidth, setHeight, textureWidth, textureHeight, offsetX, offsetY), this.alpha);
-						drawY += setHeight;
+				if (this.data != null) {
+					__graphic.x = this.x;
+					__graphic.y = this.y;
+					__graphic.rotation = this.rotation;
+					__graphic.__updateTransform(this.parent);
+					__graphic.beginBitmapData(this.data, this.smoothing);
+					// 计算重复的UVS
+					var pHeight = this.data.height;
+					var pWidth = this.data.width;
+					var pHeightCounts = Math.ceil(this.height / pHeight);
+					var pWidthCounts = Math.ceil(this.width / pWidth);
+					var outHeight = this.height % pHeight;
+					if (outHeight == 0)
+						outHeight = pHeight;
+					var outWidth = this.width % pWidth;
+					if (outWidth == 0)
+						outWidth = pWidth;
+					var textureWidth = this.data.data.getWidth();
+					var textureHeight = this.data.data.getHeight();
+					var offsetX = this.data.uvOffsetX;
+					var offsetY = this.data.uvOffsetY;
+					var drawX = 0.;
+					var drawY = 0.;
+					for (ix in 0...pWidthCounts) {
+						var isOutWidth = ix + 1 == pWidthCounts;
+						var setWidth = isOutWidth ? outWidth : pWidth;
+						for (iy in 0...pHeightCounts) {
+							var isOutHeight = iy + 1 == pHeightCounts;
+							var setHeight = isOutHeight ? outHeight : pHeight;
+							__graphic.drawRectUVs(drawX, drawY, setWidth, setHeight,
+								maskUVs(0, 0, setWidth, setHeight, textureWidth, textureHeight, offsetX, offsetY), this.alpha);
+							drawY += setHeight;
+						}
+						drawY = 0;
+						drawX += setWidth;
 					}
-					drawY = 0;
-					drawX += setWidth;
+					__graphic.originX = this.originX;
+					__graphic.originY = this.originY;
+					__graphic.colorTransform = this.colorTransform;
+					__graphic.scaleX = this.scaleX > 0 ? 1 : -1;
+					__graphic.scaleY = this.scaleY > 0 ? 1 : -1;
 				}
-				__graphic.originX = this.originX;
-				__graphic.originY = this.originY;
-				__graphic.colorTransform = this.colorTransform;
-				__graphic.scaleX = this.scaleX > 0 ? 1 : -1;
-				__graphic.scaleY = this.scaleY > 0 ? 1 : -1;
 			}
 		}
 		return __graphic;

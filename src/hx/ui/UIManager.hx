@@ -456,6 +456,12 @@ class UIManager {
 					obj.play();
 				}
 			}
+			if (xml.get("repeat") == "true") {
+				obj.repeat = true;
+			}
+			if (xml.exists("smoothing")) {
+				obj.smoothing = xml.get("smoothing") == "true";
+			}
 		});
 		addAttributesParse(Quad, function(obj:Quad, xml:Xml, assets:Assets) {
 			// color

@@ -93,4 +93,10 @@ class BitmapData {
 			return data != null ? data.getHeight() : 0;
 		}
 	}
+
+	public function draw(source:DisplayObject, matrix:hx.geom.Matrix):Void {
+		if (data != null && source != null) {
+			data.draw(source, matrix);
+		}
+	}
 }

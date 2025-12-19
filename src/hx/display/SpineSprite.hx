@@ -246,12 +246,14 @@ class SpineSprite extends Sprite implements ISpineDrawOrder {
 			display.rotation = slot.bone.getWorldRotationX();
 			display.scaleX = slot.bone.getWorldScaleX();
 			display.scaleY = slot.bone.getWorldScaleY();
+			display.alpha = slot.color.a;
 			#else
 			display.x = slot.bone.worldX;
 			display.y = slot.bone.worldY;
 			display.rotation = slot.bone.worldRotationX;
 			display.scaleX = slot.bone.worldScaleX;
 			display.scaleY = slot.bone.worldScaleY;
+			display.alpha = slot.color.a;
 			#end
 			this.addChild(display);
 			if (data.drawFunction != null) {

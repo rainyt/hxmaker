@@ -298,7 +298,7 @@ class VirtualTouchKey extends Box {
 	/**
 	 * 重新计算虚拟按键的位置
 	 */
-	private function resetVirtualTouchDisplay():Void {
+	public function resetVirtualTouchDisplay():Void {
 		if (!_down) {
 			_orignPos.x = 0;
 			_orignPos.y = 0;

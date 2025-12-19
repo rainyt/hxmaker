@@ -12,6 +12,8 @@ interface IBitmapData {
 
 	public function getHeight():Int;
 
+	public function clear():Void;
+
 	/**
 	 * 绘制源对象到当前位图数据
 	 * @param source 源对象

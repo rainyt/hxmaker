@@ -94,9 +94,15 @@ class BitmapData {
 		}
 	}
 
-	public function draw(source:DisplayObject, matrix:hx.geom.Matrix):Void {
+	public function clear():Void {
+		if (data != null) {
+			data.clear();
+		}
+	}
+
+	public function draw(source:DisplayObject, matrix:hx.geom.Matrix = null):Void {
 		if (data != null && source != null) {
-			data.draw(source, matrix);
+			data.draw(source, matrix == null ? new hx.geom.Matrix() : matrix);
 		}
 	}
 }

@@ -194,7 +194,16 @@ class SpineSprite extends Sprite implements ISpineDrawOrder {
 	 * @return 
 	 */
 	public function getBindSoltDisplay(slot:Slot):DisplayObjectDraw {
-		return this.__slotDisplay[slot.data.name];
+		return this.getBindSoltDisplayByName(slot.data.name);
+	}
+
+	/**
+	 * 获取slot绑定的显示对象
+	 * @param name 
+	 * @return 
+	 */
+	public function getBindSoltDisplayByName(name:String):DisplayObjectDraw {
+		return this.__slotDisplay[name];
 	}
 
 	public function onStart():Void {}

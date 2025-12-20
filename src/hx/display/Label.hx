@@ -155,8 +155,9 @@ class Label extends DisplayObject implements IDataProider<String> implements IRo
 	/**
 	 * 根据正则表达式设置文本范围格式
 	 */
-	public function setRegexRangeTextFormat(regex:EReg, textFormat:TextFormat):Void {
-		this.clearRangeTextFormats();
+	public function setRegexRangeTextFormat(regex:EReg, textFormat:TextFormat, overrideSet:Bool = true):Void {
+		if (overrideSet)
+			this.clearRangeTextFormats();
 		var text:String = this.data;
 		var texts:Array<String> = [];
 		regex.map(text, (f) -> {
@@ -165,18 +166,19 @@ class Label extends DisplayObject implements IDataProider<String> implements IRo
 			return value;
 		});
 		if (texts.length > 0) {
-			this.setTextsRangeTextFormat(texts, textFormat);
+			this.setTextsRangeTextFormat(texts, textFormat, false);
 		}
 	}
 
 	/**
-	 * 设置文本范围格式
+	 * 设置文本列表中的文本格式设置
+	 * @param texts 
 	 * @param textFormat 
-	 * @param startIndex 
-	 * @param endIndex 
+	 * @param overrideSet 
 	 */
-	public function setTextsRangeTextFormat(texts:Array<String>, textFormat:TextFormat):Void {
-		this.clearRangeTextFormats();
+	public function setTextsRangeTextFormat(texts:Array<String>, textFormat:TextFormat, overrideSet:Bool = true):Void {
+		if (overrideSet)
+			this.clearRangeTextFormats();
 		var text:String = this.data;
 		for (s in texts) {
 			var at = text.indexOf(s);

@@ -59,7 +59,8 @@ class UIManager {
 	 */
 	public static function bindAssets(assets:Assets) {
 		if (assets != null) {
-			assetsList.push(assets);
+			if (assetsList.indexOf(assets) == -1)
+				assetsList.push(assets);
 			@:privateAccess assets.__isBindAssets = true;
 		}
 	}

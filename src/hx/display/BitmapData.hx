@@ -105,4 +105,11 @@ class BitmapData {
 			data.draw(source, matrix == null ? new hx.geom.Matrix() : matrix);
 		}
 	}
+
+	public function dispose():Void {
+		if (data != null) {
+			data.dispose();
+			data = null;
+		}
+	}
 }

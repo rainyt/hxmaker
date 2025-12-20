@@ -20,4 +20,9 @@ interface IBitmapData {
 	 * @param matrix 变换矩阵
 	 */
 	public function draw(source:DisplayObject, matrix:Matrix):Void;
+
+	/**
+	 * 释放位图数据
+	 */
+	public function dispose():Void;
 }

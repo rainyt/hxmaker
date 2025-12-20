@@ -52,6 +52,11 @@ class SpineSprite extends Sprite implements ISpineDrawOrder {
 		for (item in __slotDisplay) {
 			item.display.colorTransform = value;
 		}
+		for (graphics in __drawGraphics) {
+			if (graphics == null)
+				continue;
+			graphics.colorTransform = value;
+		}
 		return super.set_colorTransform(value);
 	}
 

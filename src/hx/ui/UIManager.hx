@@ -4,6 +4,7 @@ import hx.utils.Timer;
 import hx.core.Hxmaker;
 import hx.display.Stage;
 import hx.display.ImageLoader;
+import hx.display.InputLabel;
 import hx.display.Quad;
 import hx.display.MovieClip;
 import hx.display.Spine;
@@ -381,6 +382,25 @@ class UIManager {
 				// var color = xml.get("strokeColor");
 				obj.stroke(0x0, Std.parseInt(xml.get("stroke")));
 			}
+		});
+		addAttributesParse(InputLabel, function(obj:InputLabel, xml:Xml, assets:Assets) {
+			if (xml.exists("text")) {
+				obj.data = xml.get("text");
+				var textformat = createTextformat(xml);
+				if (textformat != null) {
+					obj.textFormat = textformat;
+				}
+			}
+			// if (xml.exists("hAlign")) {
+			// obj.horizontalAlign = xml.get("hAlign");
+			// }
+			// if (xml.exists("vAlign")) {
+			// obj.verticalAlign = xml.get("vAlign");
+			// }
+			// if (xml.exists("stroke")) {
+			// var color = xml.get("strokeColor");
+			// obj.stroke(0x0, Std.parseInt(xml.get("stroke")));
+			// }
 		});
 		addAttributesParse(FlowBox, function(obj:FlowBox, xml:Xml, assets:Assets) {
 			if (xml.exists("gap")) {

@@ -183,11 +183,6 @@ class Stage extends Box {
 	 */
 	public function handleKeyboardEvent(event:KeyboardEvent):Void {
 		event.target = this;
-		if (event.type == KeyboardEvent.KEY_DOWN) {
-			@:privateAccess KeyboardTools.onKeyDown(event.keyCode);
-		} else {
-			@:privateAccess KeyboardTools.onKeyUp(event.keyCode);
-		}
 		if (focus != null && focus.stage != null && focus.stage == this) {
 			focus.dispatchEvent(event);
 		} else {

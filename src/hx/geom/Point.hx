@@ -91,4 +91,14 @@ class Point {
 		this.x = x;
 		this.y = y;
 	}
+
+	/**
+	 * 旋转当前点，并返回新的坐标对象
+	 * @param angle 
+	 * @return Point
+	 */
+	public function rotate(angle:Float):Point {
+		var radian:Float = Point.rotationToRadian(angle);
+		return new Point(x * Math.cos(radian) - y * Math.sin(radian), x * Math.sin(radian) + y * Math.cos(radian));
+	}
 }

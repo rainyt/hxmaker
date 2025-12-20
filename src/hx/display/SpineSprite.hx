@@ -167,6 +167,8 @@ class SpineSprite extends Sprite implements ISpineDrawOrder {
 	 * @param display 
 	 */
 	public function bindSlot(name:String, display:DisplayObject, ?draw:DisplayObject->Void):Void {
+		if (this.skeleton.findSlot(name) == null)
+			throw 'slot $name not found';
 		this.__slotDisplay[name] = {
 			display: display,
 			drawFunction: draw

@@ -40,7 +40,8 @@ class InputLabel extends Box implements IDataProider<String> {
 	private var __startRect:Rectangle;
 
 	private function updateSelection():Void {
-		__startRect = this.label.root.getChatBounds(selectionStart);
+		if (this.label.root != null)
+			__startRect = this.label.root.getChatBounds(selectionStart);
 		__dt = 0;
 	}
 
@@ -108,7 +109,10 @@ class InputLabel extends Box implements IDataProider<String> {
 				break;
 			}
 		}
-		// 触发点击事件时，设置焦点到输入框
+		this.focus();
+	}
+
+	public function focus():Void {
 		TextInputUtils.openInput(this);
 	}
 

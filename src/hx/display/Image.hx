@@ -272,6 +272,14 @@ class Image extends DisplayObject implements IDataProider<BitmapData> implements
 			// 3D世界矩阵
 			// this.__worldTransformMatrix3D.identity();
 			// this.__worldTransformMatrix3D.append(parent.__worldTransformMatrix3D);
+		} else {
+			this.__worldAlpha = this.__alpha;
+			this.__worldTransform.identity();
+			if (this.data != null && this.data.frameRect != null) {
+				this.__worldTransform.translate(-this.data.frameRect.x, -this.data.frameRect.y);
+			}
+			this.__worldTransform.translate(this.__originWorldX, this.__originWorldY);
+			this.__worldTransform.concat(__transform);
 		}
 	}
 

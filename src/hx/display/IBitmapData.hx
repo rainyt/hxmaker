@@ -19,7 +19,7 @@ interface IBitmapData {
 	 * @param source 源对象
 	 * @param matrix 变换矩阵
 	 */
-	public function draw(source:DisplayObject, matrix:Matrix):Void;
+	public function draw(source:DisplayObject, matrix:Matrix, ?blendMode:BlendMode):Void;
 
 	/**
 	 * 释放位图数据

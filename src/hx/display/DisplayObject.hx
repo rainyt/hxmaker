@@ -1,5 +1,6 @@
 package hx.display;
 
+import hx.filters.RenderFilter;
 import hx.utils.ColorUtils;
 import hx.geom.PerspectiveProjection;
 import hx.geom.Vector3D;
@@ -57,6 +58,11 @@ class DisplayObject extends EventDispatcher {
 	@:noCompletion private var __background:DisplayObject;
 	@:noCompletion private var __shader:Shader;
 	@:noCompletion private var __hide:Bool = false;
+
+	/**
+	 * 渲染滤镜列表，可以为渲染对象添加多个渲染滤镜
+	 */
+	public var filters:Array<RenderFilter> = null;
 
 	/**
 	 * 是否隐藏，隐藏即不参与布局、渲染，但是仍然会存在于显示列表中

@@ -17,6 +17,11 @@ class RenderFilter {
 
 	private var __dirty:Bool = true;
 
+	/**
+	 * 是否是舞台渲染滤镜，默认值为false
+	 */
+	public var isStageRenderFilter = false;
+
 	public function init():Void {}
 
 	public function update(display:DisplayObject, dt:Float):Void {}

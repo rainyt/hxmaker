@@ -6,12 +6,27 @@ import hx.geom.Matrix;
  * 纹理接口
  */
 interface IBitmapData {
+	/**
+	 * 获取纹理对象
+	 * @return 纹理对象
+	 */
 	public function getTexture():Dynamic;
 
+	/**
+	 * 获取位图数据宽度
+	 * @return 宽度
+	 */
 	public function getWidth():Int;
 
+	/**
+	 * 获取位图数据高度
+	 * @return 高度
+	 */
 	public function getHeight():Int;
 
+	/**
+	 * 清除位图数据
+	 */
 	public function clear():Void;
 
 	/**

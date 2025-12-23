@@ -34,7 +34,7 @@ interface IBitmapData {
 	 * @param source 源对象
 	 * @param matrix 变换矩阵
 	 */
-	public function draw(source:DisplayObject, matrix:Matrix, ?blendMode:BlendMode):Void;
+	public function draw(source:DisplayObject, matrix:Matrix, ?blendMode:BlendMode, updateTransform:Bool = true):Void;
 
 	/**
 	 * 释放位图数据

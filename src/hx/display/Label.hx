@@ -99,6 +99,7 @@ class Label extends DisplayObject implements IDataProider<String> implements IRo
 		if (__data != value) {
 			__data = value;
 			this.setDirty();
+			this.setFilterDirty();
 		}
 		return __data;
 	}
@@ -392,11 +393,12 @@ class Label extends DisplayObject implements IDataProider<String> implements IRo
 	 */
 	public function stroke(color:Int = 0x0, size:Int = 1):Void {
 		#if openfl
-		if (size == 0) {
-			this.shader = null;
-		} else {
-			this.shader = new StrokeShader(size, color);
-		}
+		// if (size == 0) {
+		// 	this.shader = null;
+		// } else {
+		// 	this.shader = new StrokeShader(size, color);
+		// }
+		this.filters = [new hx.filters.StrokeFilter(size)];
 		#end
 	}
 }

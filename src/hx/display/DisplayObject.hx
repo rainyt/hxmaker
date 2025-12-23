@@ -358,6 +358,14 @@ class DisplayObject extends EventDispatcher {
 			this.__worldTransform.concat(__transform);
 		}
 
+		if (this.filters != null) {
+			for (filter in this.filters) {
+				if (!filter.isStageRenderFilter) {
+					filter.updateTransform(this);
+				}
+			}
+		}
+
 		// this.__transformDirty = false;
 	}
 
@@ -739,6 +747,18 @@ class DisplayObject extends EventDispatcher {
 		this.__dirty = value;
 		if (value && stage != null && stage != this) {
 			this.stage.setDirty();
+		}
+	}
+
+	/**
+	 * 设置滤镜为脏
+	 * @param value 
+	 */
+	private function setFilterDirty(value:Bool = true):Void {
+		if (this.filters != null) {
+			for (filter in this.filters) {
+				filter.invalidate();
+			}
 		}
 	}
 

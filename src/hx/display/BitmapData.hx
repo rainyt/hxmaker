@@ -100,9 +100,9 @@ class BitmapData {
 		}
 	}
 
-	public function draw(source:DisplayObject, matrix:hx.geom.Matrix = null, ?blendMode:BlendMode):Void {
+	public function draw(source:DisplayObject, matrix:hx.geom.Matrix = null, ?blendMode:BlendMode, updateTransform:Bool = true):Void {
 		if (data != null && source != null) {
-			data.draw(source, matrix == null ? new hx.geom.Matrix() : matrix, blendMode);
+			data.draw(source, matrix == null ? new hx.geom.Matrix() : matrix, blendMode, updateTransform);
 		}
 	}
 

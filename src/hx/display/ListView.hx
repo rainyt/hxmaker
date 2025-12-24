@@ -48,7 +48,9 @@ class ListView extends Scroll implements IDataProider<ArrayCollection> {
 	override function onInit() {
 		super.onInit();
 		this.itemRendererRecycler = DisplayObjectRecycler.withClass(DefaultItemRenderer);
-		this.layout = new hx.layout.VerticalLayout();
+		var layout = new hx.layout.VerticalLayout();
+		layout.horizontalFill = true;
+		this.layout = layout;
 		this.addEventListener(MouseEvent.CLICK, onSelectedItem);
 	}
 

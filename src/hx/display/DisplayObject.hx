@@ -220,6 +220,8 @@ class DisplayObject extends EventDispatcher {
 					this.__blendFilter = new hx.filters.SubtractFilter();
 				case INVERT:
 					this.__blendFilter = new hx.filters.InvertFilter();
+				case DARKEN:
+					this.__blendFilter = new hx.filters.DarkenFilter();
 			}
 		}
 		__blendMode = value;

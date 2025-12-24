@@ -12,6 +12,7 @@ enum abstract BlendMode(String) to String from String {
 
 	/**
 	 * 将显示对象颜色的值和背景颜色相乘。
+	 * - 乘法滤镜在Hxmaker中得到支持
 	 */
 	var MULTIPLY = "multiply";
 
@@ -34,6 +35,7 @@ enum abstract BlendMode(String) to String from String {
 		0xFFCC33，背景像素的RGB值为0xDDF800
 		显示像素的RGB值为0x222C33（因为0xFF-
 		0xDD=0x22，0xF8-0xCC=0x2C，0x33-0x00=0x33）。
+		- 差异滤镜在Hxmaker中得到支持
 	 */
 	var DIFFERENCE = "difference";
 
@@ -48,4 +50,16 @@ enum abstract BlendMode(String) to String from String {
 	 * - 翻转滤镜在Hxmaker中得到支持
 	 */
 	var INVERT = "invert";
+
+	/**
+		选择显示对象的组成颜色中较深的颜色
+		背景的颜色（值较小的颜色）。这
+		设置通常用于叠加类型。
+		例如，如果显示对象具有RGB值为的像素
+		0xFFCC33，背景像素的RGB值为0xDDF800
+		显示像素的RGB值为0xDDCC00（因为0xFF>
+		0xDD、0xCC＜0xF8和0x33＞0x00＝33）。
+		- 变暗滤镜在Hxmaker中得到支持
+	 */
+	var DARKEN = "darken";
 }

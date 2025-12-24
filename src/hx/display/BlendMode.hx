@@ -6,6 +6,7 @@ package hx.display;
 enum abstract BlendMode(String) to String from String {
 	/**
 	 * 将显示对象的颜色值添加到其背景的颜色中
+	 * - 加法滤镜在Hxmaker中得到支持
 	 */
 	var ADD = "add";
 
@@ -31,11 +32,13 @@ enum abstract BlendMode(String) to String from String {
 
 	/**
 	 * 从背景色的值中减去显示对象中组成颜色的值，应用0的下限。此设置通常用于为两个对象之间的暗化溶解设置动画。<br>例如，如果显示对象具有RGB值为0xAA2233的像素，而背景像素具有RGB值0xDDA600，则显示像素的最终RGB值是0x338400（因为0xDD-0xAA=0x33，0xA6-0x22=0x84，以及0x00-0x33<0x00）。
+	 * - 相减滤镜在Hxmaker中得到支持
 	 */
 	var SUBTRACT = "subtract";
 
 	/**
 	 * 翻转颜色
+	 * - 翻转滤镜在Hxmaker中得到支持
 	 */
 	var INVERT = "invert";
 }

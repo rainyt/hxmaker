@@ -1,6 +1,7 @@
 package hx.display;
 
 import hx.filters.RenderFilter;
+import hx.filters.InvertFilter;
 import hx.utils.ColorUtils;
 import hx.geom.PerspectiveProjection;
 import hx.geom.Vector3D;
@@ -15,6 +16,7 @@ import hx.geom.Matrix;
 import hx.geom.Rectangle;
 import hx.events.Event;
 import hx.layout.AnchorLayoutData;
+import hx.filters.SubtractFilter;
 
 using hx.utils.MathUtils;
 
@@ -58,6 +60,11 @@ class DisplayObject extends EventDispatcher {
 	@:noCompletion private var __background:DisplayObject;
 	@:noCompletion private var __shader:Shader;
 	@:noCompletion private var __hide:Bool = false;
+
+	/**
+	 * 混合模式使用的渲染滤镜
+	 */
+	@:noCompletion private var __blendFilter:RenderFilter;
 
 	/**
 	 * 渲染滤镜列表，可以为渲染对象添加多个渲染滤镜
@@ -199,6 +206,20 @@ class DisplayObject extends EventDispatcher {
 	}
 
 	private function set_blendMode(value:BlendMode):BlendMode {
+		if (__blendMode != value) {
+			this.__blendFilter = null;
+			switch value {
+				case ADD:
+				case MULTIPLY:
+				case NORMAL:
+				case SCREEN:
+				case DIFFERENCE:
+				case SUBTRACT:
+					this.__blendFilter = new SubtractFilter();
+				case INVERT:
+					this.__blendFilter = new InvertFilter();
+			}
+		}
 		__blendMode = value;
 		this.setDirty();
 		return value;

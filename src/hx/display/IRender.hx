@@ -42,5 +42,11 @@ interface IRender {
 	 */
 	public function renderGraphics(graphics:Graphics):Void;
 
+	/**
+	 * 将当前已渲染好的画面渲染到BitmapData
+	 * @return 
+	 */
+	public function renderToBitmapData(bitmapData:hx.display.BitmapData):Void;
+
 	public function endFill():Void;
 }

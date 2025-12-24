@@ -1,5 +1,6 @@
 package hx.display;
 
+import hx.filters.StrokeFilter;
 #if openfl
 import hx.shader.StrokeShader;
 #end
@@ -386,6 +387,8 @@ class Label extends DisplayObject implements IDataProider<String> implements IRo
 		return super.get_height();
 	}
 
+	private var __filter:StrokeFilter;
+
 	/**
 	 * 设置描边，当设置描边后，shader会变更
 	 * @param color 
@@ -393,12 +396,8 @@ class Label extends DisplayObject implements IDataProider<String> implements IRo
 	 */
 	public function stroke(color:Int = 0x0, size:Int = 1):Void {
 		#if openfl
-		// if (size == 0) {
-		// 	this.shader = null;
-		// } else {
-		// 	this.shader = new StrokeShader(size, color);
-		// }
-		this.filters = [new hx.filters.StrokeFilter(size)];
+		__filter = new StrokeFilter(size, color, textFormat != null ? textFormat.color : 0x0);
+		this.filters = [__filter];
 		#end
 	}
 }

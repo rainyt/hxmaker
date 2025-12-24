@@ -74,4 +74,14 @@ enum abstract BlendMode(String) to String from String {
 		- 变亮滤镜在Hxmaker中得到支持
 	 */
 	var LIGHTEN = "lighten";
+
+	/**
+		强制为显示对象创建透明度组。这
+		意味着显示对象在之前已在临时缓冲区中预编译
+		它被进一步处理。如果满足以下条件，预编译将自动完成
+		显示对象是通过位图缓存预缓存的，或者如果显示
+		object是一个显示对象容器，它至少有一个子对象
+		除了“正常”之外，还有“混合模式”设置。
+	 */
+	var LAYER = "layer";
 }

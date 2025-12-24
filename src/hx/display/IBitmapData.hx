@@ -27,7 +27,7 @@ interface IBitmapData {
 	/**
 	 * 清除位图数据
 	 */
-	public function clear():Void;
+	public function clear(?rect:hx.geom.Rectangle):Void;
 
 	/**
 	 * 绘制源对象到当前位图数据

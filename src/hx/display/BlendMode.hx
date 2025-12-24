@@ -84,4 +84,12 @@ enum abstract BlendMode(String) to String from String {
 		除了“正常”之外，还有“混合模式”设置。
 	 */
 	var LAYER = "layer";
+
+	/**
+		将显示对象的每个像素的alpha值应用于
+		背景这需要`blendMode`属性
+		父显示对象设置为
+		`hx.display.BlendMode.Layer`
+	 */
+	var ALPHA = "alpha";
 }

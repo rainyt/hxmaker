@@ -209,7 +209,7 @@ class DisplayObject extends EventDispatcher {
 		if (__blendMode != value) {
 			this.__blendFilter = null;
 			switch value {
-				case ADD, ALPHA, NORMAL, SCREEN:
+				case ADD, ALPHA, NORMAL, SCREEN, ERASE:
 				case MULTIPLY:
 					this.__blendFilter = new hx.filters.MultiplyFilter();
 				case DIFFERENCE:

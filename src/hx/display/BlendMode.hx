@@ -62,4 +62,16 @@ enum abstract BlendMode(String) to String from String {
 		- 变暗滤镜在Hxmaker中得到支持
 	 */
 	var DARKEN = "darken";
+
+	/**
+		选择显示对象的组成颜色中较浅的颜色
+		背景的颜色（值较大的颜色）。这
+		设置通常用于叠加类型。
+		例如，如果显示对象具有RGB值为的像素
+		0xFFCC33，背景像素的RGB值为0xDDF800
+		显示像素的RGB值为0xFFF833（因为0xFF<
+		0xDDF8、0xCC>0xF8和0x33<0x00＝33）。
+		- 变亮滤镜在Hxmaker中得到支持
+	 */
+	var LIGHTEN = "lighten";
 }

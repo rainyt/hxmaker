@@ -227,6 +227,11 @@ class Label extends DisplayObject implements IDataProider<String> implements IRo
 	 */
 	public function setTextFormatDirty(value:Bool = true):Void {
 		this.__textFormatDirty = value;
+		if (__textFormat != null) {
+			if (__filter != null) {
+				__filter.fontColor = __textFormat.color;
+			}
+		}
 		this.setDirty();
 	}
 

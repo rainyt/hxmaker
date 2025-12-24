@@ -214,10 +214,11 @@ class DisplayObject extends EventDispatcher {
 				case NORMAL:
 				case SCREEN:
 				case DIFFERENCE:
+					this.__blendFilter = new hx.filters.DifferenceFilter();
 				case SUBTRACT:
-					this.__blendFilter = new SubtractFilter();
+					this.__blendFilter = new hx.filters.SubtractFilter();
 				case INVERT:
-					this.__blendFilter = new InvertFilter();
+					this.__blendFilter = new hx.filters.InvertFilter();
 			}
 		}
 		__blendMode = value;

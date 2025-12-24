@@ -26,7 +26,14 @@ enum abstract BlendMode(String) to String from String {
 	var SCREEN = "screen";
 
 	/**
-	 * 显示对象与背景颜色之间的差值。
+		将显示对象的组成颜色与以下颜色进行比较
+		它的背景，并减去两者中较暗的值
+		从较浅的值中提取组成颜色。此设置常用
+		以获得更鲜艳的颜色。
+		例如，如果显示对象具有RGB值为的像素
+		0xFFCC33，背景像素的RGB值为0xDDF800
+		显示像素的RGB值为0x222C33（因为0xFF-
+		0xDD=0x22，0xF8-0xCC=0x2C，0x33-0x00=0x33）。
 	 */
 	var DIFFERENCE = "difference";
 

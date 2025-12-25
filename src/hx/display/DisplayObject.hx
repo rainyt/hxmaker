@@ -227,7 +227,7 @@ class DisplayObject extends EventDispatcher {
 				case HARDLIGHT:
 					this.__blendFilter = new hx.filters.HardLightFilter();
 				case OVERLAY:
-					// this.__blendFilter = new hx.filters.OverlayFilter();
+					this.__blendFilter = new hx.filters.OverlayFilter();
 			}
 		}
 		__blendMode = value;

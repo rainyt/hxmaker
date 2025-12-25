@@ -100,4 +100,24 @@ enum abstract BlendMode(String) to String from String {
 		`hx.display.BlendMode.Layer`
 	 */
 	var ERASE = "erase";
+
+	/**
+		根据显示器的暗度调整每个像素的颜色
+		对象。如果显示对象的灰度低于50%
+		并且背景颜色被屏蔽从而产生较浅的颜色。如果
+		显示对象比50%灰色暗，
+		这导致颜色变深。此设置通常用于着色
+		影响。
+	 */
+	var HARDLIGHT = "hardlight";
+
+	/**
+		根据背景的暗度调整每个像素的颜色。
+		如果背景浅于50%灰色，则显示对象和
+		背景颜色被屏蔽，导致颜色变浅。如果
+		背景比50%灰色深，颜色会成倍增加，这
+		导致颜色变深。此设置通常用于着色
+		影响。
+	 */
+	var OVERLAY = "overlay";
 }

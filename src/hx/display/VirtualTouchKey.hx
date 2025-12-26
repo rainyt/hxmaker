@@ -219,9 +219,6 @@ class VirtualTouchKey extends Box {
 		if (e != null) {
 			_mouseX = this.touchX;
 			_mouseY = this.touchY;
-			if (_touchEvent) {
-				_touchEventId = cast(e, TouchEvent).touchPointID;
-			}
 		}
 		_beginPos.x = _mouseX;
 		_beginPos.y = _mouseY;
@@ -249,6 +246,9 @@ class VirtualTouchKey extends Box {
 		if (Point.distance(_mathPos, _beginPos) < virtualTouchMaxRadius) {
 			if (onCheckCanTouch(_beginPos)) {
 				_down = true;
+				if (_touchEvent) {
+					_touchEventId = cast(e, TouchEvent).touchPointID;
+				}
 				onKeyMouseMove(e);
 			}
 		}

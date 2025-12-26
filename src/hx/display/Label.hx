@@ -369,7 +369,7 @@ class Label extends DisplayObject implements IDataProider<String> implements IRo
 	}
 
 	public function getTextHeight():Float {
-		if (root == null && this.stage != null) {
+		if (__dirty) {
 			Hxmaker.engine.renderer.renderLabel(this, true);
 		}
 		return root == null ? 0 : root.getTextHeight();

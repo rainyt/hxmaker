@@ -57,7 +57,9 @@ class ListView extends Scroll implements IDataProider<ArrayCollection> {
 	private function onSelectedItem(e:MouseEvent) {
 		var child:DisplayObject = cast e.target;
 		var itemRenderer = __getItemRendererByChild(child);
-		this.selectedIndex = this.getChildIndexAt(itemRenderer);
+		var index = this.getChildIndexAt(itemRenderer);
+		if (index >= 0)
+			this.selectedIndex = index;
 	}
 
 	private function __getItemRendererByChild(child:DisplayObject):DisplayObject {

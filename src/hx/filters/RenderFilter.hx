@@ -44,4 +44,11 @@ class RenderFilter {
 	public function dispose():Void {
 		render = null;
 	}
+
+	/**
+	 * 更新舞台尺寸，需要在舞台尺寸变化时调用，以通知滤镜处理舞台尺寸变化
+	 */
+	public function updateStageSize():Void {
+		this.invalidate();
+	}
 }

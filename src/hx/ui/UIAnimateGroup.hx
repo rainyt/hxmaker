@@ -16,7 +16,15 @@ class UIAnimateGroup extends UIAnimate {
 		animates.push(animate);
 	}
 
+	override function stop() {
+		super.stop();
+		for (animate in animates) {
+			animate.stop();
+		}
+	}
+
 	override function play(setStartOption:Bool = false, isReverse:Bool = false) {
+		this.stop();
 		for (animate in animates) {
 			animate.play(setStartOption, isReverse);
 		}

@@ -123,4 +123,11 @@ class UIAnimate {
 		}
 		trace(startOption, endOption);
 	}
+
+	/**
+	 * 停止播放动画
+	 */
+	public function stop():Void {
+		Actuate.stop(target);
+	}
 }

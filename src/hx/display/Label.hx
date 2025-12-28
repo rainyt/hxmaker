@@ -197,9 +197,22 @@ class Label extends DisplayObject implements IDataProider<String> implements IRo
 
 	private var __wordWrap:Bool = true;
 
+	override function set_width(value:Float):Float {
+		if (wordWrap)
+			this.setTextFormatDirty();
+		return super.set_width(value);
+	}
+
+	override function set_height(value:Float):Float {
+		if (wordWrap)
+			this.setTextFormatDirty();
+		return super.set_height(value);
+	}
+
 	private function set_wordWrap(value:Bool):Bool {
 		if (__wordWrap != value) {
 			__wordWrap = value;
+			this.setTextFormatDirty();
 			this.setDirty();
 		}
 		return __wordWrap;

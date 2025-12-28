@@ -257,6 +257,13 @@ class UIManager {
 						useAnchor = true;
 					case "blendMode":
 						display.blendMode = xml.get("blendMode");
+					case "colorTransform":
+						var colorTransform = xml.get("colorTransform");
+						var colors = colorTransform.split(" ");
+						if (colors.length == 2) {
+							// 0xffffff 0.5格式
+							display.setColorTransform(Std.parseInt(colors[0]), Std.parseFloat(colors[1]));
+						}
 					default:
 						var classType = UIAssets.moudle.getClassType(display);
 						if (classType != null) {

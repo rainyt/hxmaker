@@ -14,6 +14,7 @@ import hx.events.KeyboardEvent;
 class Stage extends Box {
 	@:noCompletion private var __stageWidth:Float = 0;
 	@:noCompletion private var __stageHeight:Float = 0;
+	@:noCompletion private var __clickFocus:DisplayObject = null;
 
 	/**
 	 * 舞台的焦点对象
@@ -105,13 +106,13 @@ class Stage extends Box {
 
 			if (event.type == MouseEvent.CLICK) {
 				// 如果是一样的，则无需处理新的回调
-				if (focus != display) {
-					if (focus != null) {
-						focus.dispatchEvent(new Event(Event.FOCUS_OUT, false, true));
+				if (__clickFocus != display) {
+					if (__clickFocus != null) {
+						__clickFocus.dispatchEvent(new Event(Event.FOCUS_OUT, false, true));
 					}
-					focus = display;
-					focus.dispatchEvent(new Event(Event.FOCUS_OVER, false, true));
-					return true;
+					__clickFocus = display;
+					__clickFocus.dispatchEvent(new Event(Event.FOCUS_OVER, false, true));
+					// return true;
 				} else {
 					// 判断上一次的点击时间
 					if (Timer.stamp() - __lastClickTime < 0.3) {

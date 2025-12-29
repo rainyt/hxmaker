@@ -244,6 +244,9 @@ class Assets extends Future<Assets, Dynamic> {
 	 * @param path 
 	 */
 	public function loadSound(path:String):Void {
+		#if cpp
+		return;
+		#end
 		#if !hxmaker_editer
 		path = getNativePath(path);
 		pushFuture(new hx.assets.SoundFuture(path, false));

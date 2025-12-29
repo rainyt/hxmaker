@@ -221,6 +221,8 @@ class UIManager {
 						if (display is DisplayObjectContainer) cast(display, DisplayObjectContainer).mouseChildren = xml.get("mouseChildren") == "true";
 					case "visible":
 						display.visible = xml.get("visible") == "true";
+					case "hide":
+						display.hide = xml.get("hide") == "true";
 					case "id":
 						display.name = xml.get("id");
 					case "x":

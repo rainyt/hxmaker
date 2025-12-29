@@ -1,5 +1,6 @@
 package hx.ui;
 
+import hx.utils.Log;
 import hx.utils.DisplayTools;
 import hx.macro.MacroTools;
 import hx.macro.UIMoudle;
@@ -163,9 +164,9 @@ class UIAssets extends Assets {
 	 */
 	public function buildAnimate(item:Xml, parent:DisplayObjectContainer, ids:Map<String, Dynamic>, parentAnimateGroup:UIAnimateGroup = null):UIAnimate {
 		var target = item.get("target");
-		var display = target == "this" ? parent : ids.get(target);
+		var display:DisplayObject = target == "this" ? parent : ids.get(target);
 		if (display != null || item.nodeName == "animate-group") {
-			var animate = item.nodeName == "animate-group" ? new UIAnimateGroup(display, item) : new UIAnimate(display, item);
+			var animate:UIAnimate = item.nodeName == "animate-group" ? new UIAnimateGroup(display, item) : new UIAnimate(display, item);
 			if (item.get("auto") == "false")
 				animate.auto = false;
 			if (parentAnimateGroup != null) {

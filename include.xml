@@ -3,6 +3,8 @@
     <haxeflag name='--macro keep("hx.display.*")' />
     <!-- 如果是属于hxmaker独立项目，则需要定义`hxmaker_project` -->
     <include path="platforms.xml" if="hxmaker_project" />
+    <!-- 即使在发布模式下，也要在最终二进制文件中添加符号，允许通过ndk-stack读取崩溃的错误位置，性能影响：无 -->
+	<define name="HXCPP_DEBUG_LINK" />
     <!-- 即使在发布模式下，也具有有效的功能级堆栈跟踪，此定义将允许您在抛出异常或直接查询堆栈时获得包含函数名称的haxe栈追踪。启用此定义时，每次函数调用都会产生少量开销。运行时性能影响：非常小。-->
     <define name="HXCPP_STACK_TRACE" />
     <!-- 即使在发布模式下，也将行信息包括在堆栈跟踪中，并将行号添加到函数名中。每行haxe代码都有额外的开销，运行时性能受到影响：从小到中。 -->

@@ -31,6 +31,15 @@ class UILoadScene extends Scene {
 		__supering__ = true;
 		super();
 		__supering__ = false;
+	}
+
+	private var __addedToStage__:Bool = false;
+
+	override function onAddToStage() {
+		super.onAddToStage();
+		if (__addedToStage__)
+			return;
+		__addedToStage__ = true;
 		if (__superOnLoaded__) {
 			this.onLoaded();
 			this.onLoadedEvent.call();

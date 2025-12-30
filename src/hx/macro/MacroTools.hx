@@ -1,5 +1,6 @@
 package hx.macro;
 
+import haxe.macro.Context;
 #if macro
 import sys.FileSystem;
 #end
@@ -27,5 +28,18 @@ class MacroTools {
 			return macro $v{null};
 		}
 		return macro $v{sys.io.File.getContent(path)};
+	}
+
+	/**
+	 * 获取定义值
+	 * @return ExprOf<Map<String,String>>
+	 */
+	macro public static function getDefines():ExprOf<Map<String, String>> {
+		var obj:Map<String, String> = [];
+		var map = Context.getDefines();
+		for (key => value in map) {
+			obj.set(key, value);
+		}
+		return Context.makeExpr(obj, Context.currentPos());
 	}
 }

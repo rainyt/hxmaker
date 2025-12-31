@@ -4,6 +4,7 @@ import hx.events.SoundEvent;
 import haxe.Timer;
 import hx.ui.UIManager;
 import hx.assets.ISoundChannel;
+import hx.media.SoundTransform;
 
 /**
  * 音频管理器
@@ -51,6 +52,9 @@ class SoundManager {
 		var sound = UIManager.getSound(id);
 		if (sound != null) {
 			var channel = sound.root.play(isLoop);
+			if (channel != null) {
+				channel.setVolume(__effectSoundTransform.volume, __effectSoundTransform.pan);
+			}
 			__effectSoundChannel.push(channel);
 			channel.addEventListener(SoundEvent.SOUND_COMPLETE, (e) -> {
 				__effectSoundChannel.remove(channel);
@@ -80,6 +84,9 @@ class SoundManager {
 		var sound = UIManager.getSound(id);
 		if (sound != null) {
 			__bgmSoundChannel = sound.root.play(true);
+			if (__bgmSoundChannel != null) {
+				__bgmSoundChannel.setVolume(__musicSoundTransform.volume, __musicSoundTransform.pan);
+			}
 		}
 		return __bgmSoundChannel;
 	}
@@ -111,6 +118,34 @@ class SoundManager {
 	public function resumeBGMSound():Void {
 		if (__bgmid != null) {
 			this.playBGMSound(__bgmid);
+		}
+	}
+
+	private var __effectSoundTransform:SoundTransform = new SoundTransform();
+
+	private var __musicSoundTransform:SoundTransform = new SoundTransform();
+
+	/**
+	 * 设置音效音量
+	 * @param transform 
+	 */
+	public function setEffectSoundTransform(transform:SoundTransform):Void {
+		__effectSoundTransform = transform;
+		for (channel in __effectSoundChannel) {
+			if (channel != null)
+				channel.setVolume(__effectSoundTransform.volume, __effectSoundTransform.pan);
+		}
+		setMusicSoundTransform(__musicSoundTransform);
+	}
+
+	/**
+	 * 设置背景音乐音量
+	 * @param transform 
+	 */
+	public function setMusicSoundTransform(transform:SoundTransform):Void {
+		__musicSoundTransform = transform;
+		if (__bgmSoundChannel != null) {
+			__bgmSoundChannel.setVolume(__musicSoundTransform.volume, __musicSoundTransform.pan);
 		}
 	}
 }

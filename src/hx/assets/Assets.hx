@@ -245,12 +245,11 @@ class Assets extends Future<Assets, Dynamic> {
 	 * @param isMusic 是否为音乐资源，默认为`false`，如果为`true`，在某些平台上，如Android，会将该资源加载为音乐资源，而不是普通的音效资源
 	 */
 	public function loadSound(path:String, isMusic:Bool = false):Void {
-		// #if cpp
-		// return;
-		// #end
 		#if !hxmaker_editer
 		path = getNativePath(path);
-		pushFuture(new hx.assets.SoundFuture(path, false));
+		var future = new hx.assets.SoundFuture(path, false);
+		future.isMusic = isMusic;
+		pushFuture(future);
 		#end
 	}
 

@@ -42,6 +42,8 @@ class SoundManager {
 	 * @return ISoundChannel，该对象在不可播放的情况下会返回`null`
 	 */
 	public function playEffect(id:String, isLoop:Bool = false, isForce:Bool = false):ISoundChannel {
+		if (!__effectEnable)
+			return null;
 		var now = Timer.stamp();
 		if (!isForce && __soundEffects.exists(id)) {
 			if (now - __soundEffects.get(id) < effectTimeInterval) {
@@ -78,6 +80,9 @@ class SoundManager {
 		if (__bgmid == id && __bgmSoundChannel != null)
 			return __bgmSoundChannel;
 		__bgmid = id;
+		if (!__musicEnable) {
+			return null;
+		}
 		if (__bgmSoundChannel != null) {
 			__bgmSoundChannel.stop();
 		}
@@ -146,6 +151,33 @@ class SoundManager {
 		__musicSoundTransform = transform;
 		if (__bgmSoundChannel != null) {
 			__bgmSoundChannel.setVolume(__musicSoundTransform.volume, __musicSoundTransform.pan);
+		}
+	}
+
+	private var __effectEnable:Bool = true;
+
+	/**
+	 * 设置音效开关
+	 * @param enable 
+	 */
+	public function setEffectEnable(enable:Bool):Void {
+		__effectEnable = enable;
+		if (!__effectEnable)
+			this.stopAllEffectSound();
+	}
+
+	private var __musicEnable:Bool = true;
+
+	/**
+	 * 设置背景音乐开关
+	 * @param enable 
+	 */
+	public function setMusicEnable(enable:Bool):Void {
+		__musicEnable = enable;
+		if (!__musicEnable)
+			this.stopBGMSound();
+		else {
+			this.resumeBGMSound();
 		}
 	}
 }

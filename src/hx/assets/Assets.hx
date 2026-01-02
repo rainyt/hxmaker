@@ -1,5 +1,6 @@
 package hx.assets;
 
+import hx.utils.SoundManager;
 import hx.utils.Timer;
 import spine.SkeletonData;
 import hx.display.Spine;
@@ -204,22 +205,22 @@ class Assets extends Future<Assets, Dynamic> {
 	 */
 	public function hasLoading(future:Future<Dynamic, Dynamic>):Bool {
 		var id = Assets.formatName(future.path);
-		if (UIManager.getBitmapData(id) != null) {
+		if (future is BitmapDataFuture && UIManager.getBitmapData(id) != null) {
 			return true;
 		}
-		if (UIManager.getSound(id) != null) {
+		if (future is SoundFuture && UIManager.getSound(id) != null) {
 			return true;
 		}
-		if (UIManager.getString(id) != null) {
+		if (future is StringFuture && UIManager.getString(id) != null) {
 			return true;
 		}
-		if (UIManager.getAtlas(id) != null) {
+		if (future is TextureAtlasFuture && UIManager.getAtlas(id) != null) {
 			return true;
 		}
-		if (UIManager.getSkeletonData(id) != null) {
+		if (future is SpineTextureAtlasFuture && UIManager.getSkeletonData(id) != null) {
 			return true;
 		}
-		if (UIManager.getUIAssets(id) != null) {
+		if (future is UIAssetsFuture && UIManager.getUIAssets(id) != null) {
 			return true;
 		}
 
@@ -697,7 +698,7 @@ class Assets extends Future<Assets, Dynamic> {
 	public function playSound(name:String):ISoundChannel {
 		var sound = this.getSound(name);
 		if (sound != null) {
-			return sound.root.play();
+			return SoundManager.getInstance().playEffectSound(sound);
 		}
 		return null;
 	}

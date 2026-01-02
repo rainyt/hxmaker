@@ -1,5 +1,6 @@
 package hx.utils;
 
+import hx.assets.Sound;
 import hx.events.SoundEvent;
 import haxe.Timer;
 import hx.ui.UIManager;
@@ -52,6 +53,17 @@ class SoundManager {
 		}
 		__soundEffects.set(id, now);
 		var sound = UIManager.getSound(id);
+		return this.playEffectSound(sound, isLoop);
+	}
+
+	/**
+	 * 播放音效
+	 * @param sound 
+	 * @return ISoundChannel，该对象在不可播放的情况下会返回`null`
+	 */
+	public function playEffectSound(sound:Sound, isLoop:Bool = false):ISoundChannel {
+		if (!__effectEnable)
+			return null;
 		if (sound != null) {
 			var channel = sound.root.play(isLoop);
 			if (channel != null) {

@@ -1,5 +1,6 @@
 package hx.display;
 
+import hx.utils.SoundManager;
 import hx.assets.Sound;
 import hx.events.Event;
 
@@ -197,7 +198,7 @@ class MovieClip extends Image {
 			__frameDirt = true;
 		}
 		if (enableSound && currentData != null && __frameDirt && currentData.sound != null) {
-			currentData.sound.root.play();
+			SoundManager.getInstance().playEffectSound(currentData.sound);
 			__frameDirt = false;
 		}
 		__time += dt;

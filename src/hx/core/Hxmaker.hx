@@ -22,10 +22,11 @@ class Hxmaker {
 	 * @param stageWidth 舞台宽度自适应
 	 * @param stageHeight 舞台高度自适应
 	 */
-	public static function init<T:IEngine>(classes:Class<T>, stageWidth:Int, stageHeight:Int):T {
+	public static function init<T:IEngine>(classes:Class<T>, stageWidth:Int, stageHeight:Int, cacheAsBitmap:Bool = false):T {
 		__engine = Type.createInstance(classes, []);
 		__engine.init(stageWidth, stageHeight);
 		__engine.stages.push(topView);
+		__engine.renderer.cacheAsBitmap = cacheAsBitmap;
 		return cast __engine;
 	}
 }

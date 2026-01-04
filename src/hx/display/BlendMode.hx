@@ -46,6 +46,11 @@ enum abstract BlendMode(String) to String from String {
 	var SUBTRACT = "subtract";
 
 	/**
+	 * 减去滤镜，对应`BlendMode.SUBTRACT_FAST`，更快但效果略有不同，背景色会固定为`vec4(0.5)`。
+	 */
+	var SUBTRACT_FAST = "subtract_fast";
+
+	/**
 	 * 翻转颜色
 	 * - 翻转滤镜在Hxmaker中得到支持
 	 */

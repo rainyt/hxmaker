@@ -5,6 +5,11 @@ package hx.display;
  */
 interface IRender {
 	/**
+	 * 是否开启缓存为Bitmap
+	 */
+	public var cacheAsBitmap(get, set):Bool;
+
+	/**
 	 * 清理屏幕
 	 */
 	public function clear():Void;

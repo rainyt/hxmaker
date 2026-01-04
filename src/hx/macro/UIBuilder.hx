@@ -24,6 +24,7 @@ class UIBuilder {
 	private static function get_moudle():UIMoudle {
 		if (__moudle == null) {
 			var path = UIMoudle.getUIBuilderPath();
+			trace("UIBuilder.moudle.uibuildPath", path);
 			var moudlePath = Path.join([path, "moudle.xml"]);
 			if (FileSystem.exists(moudlePath)) {
 				__moudle = new UIMoudle(File.getContent(moudlePath), path);

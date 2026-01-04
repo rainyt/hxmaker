@@ -102,6 +102,7 @@ class UIBuilder {
 			}
 		}
 		if (moudle != null && moudle.uibuildPath != null) {
+			trace("访问", Path.join([moudle.uibuildPath, path]));
 			return Path.join([moudle.uibuildPath, path]);
 		}
 		return path;

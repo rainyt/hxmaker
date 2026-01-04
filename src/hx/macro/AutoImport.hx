@@ -18,7 +18,6 @@ class AutoImport {
 	#if macro
 	macro public static function build(path:String, packageName:String = "game.levels"):Array<Field> {
 		path = UIBuilder.moudle != null ? Path.join([UIBuilder.moudle.uibuildPath, path]) : path;
-		trace("访问", path);
 		if (!FileSystem.exists(path))
 			path = "../../../../" + path;
 		var files = FileSystem.readDirectory(path);

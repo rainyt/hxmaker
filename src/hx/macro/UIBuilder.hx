@@ -24,9 +24,7 @@ class UIBuilder {
 	private static function get_moudle():UIMoudle {
 		if (__moudle == null) {
 			var path = UIMoudle.getUIBuilderPath();
-			trace("UIBuilder.moudle.uibuildPath", path);
 			var moudlePath = Path.join([path, "moudle.xml"]);
-			trace("UIBuilder.moudle.moudlePath", moudlePath);
 			if (FileSystem.exists(moudlePath)) {
 				__moudle = new UIMoudle(File.getContent(moudlePath), path);
 			} else {
@@ -105,7 +103,6 @@ class UIBuilder {
 			}
 		}
 		if (moudle != null && moudle.uibuildPath != null) {
-			trace("访问", Path.join([moudle.uibuildPath, path]));
 			return Path.join([moudle.uibuildPath, path]);
 		}
 		return path;

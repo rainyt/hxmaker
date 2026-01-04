@@ -1,5 +1,6 @@
 package hx.macro;
 
+import sys.io.Process;
 import haxe.Exception;
 import sys.FileSystem;
 import haxe.io.Path;
@@ -16,7 +17,20 @@ class UIBuilder {
 	/**
 	 * 模块组件
 	 */
-	public static var moudle:UIMoudle;
+	@:persistent public static var moudle(get, never):UIMoudle;
+
+	private static var __moudle:UIMoudle;
+
+	private static function get_moudle():UIMoudle {
+		if (__moudle == null) {
+			var path = UIMoudle.getUIBuilderPath();
+			var moudlePath = Path.join([path, "moudle.xml"]);
+			if (FileSystem.exists(moudlePath)) {
+				__moudle = new UIMoudle(File.getContent(moudlePath), path);
+			}
+		}
+		return __moudle;
+	}
 
 	/**
 	 * 构造一个XML布局
@@ -24,10 +38,6 @@ class UIBuilder {
 	 * @return Array<Field>
 	 */
 	public static function build(path:String):Array<Field> {
-		// 构造模块组件
-		if (moudle == null && FileSystem.exists("./moudle.xml")) {
-			moudle = new UIMoudle(File.getContent("./moudle.xml"));
-		}
 		// 绑定继承类
 		var localClass = Context.getLocalClass().get();
 		localClass.meta.add(":keep", [], Context.currentPos());
@@ -89,6 +99,9 @@ class UIBuilder {
 			} else {
 				current = Path.directory(current);
 			}
+		}
+		if (moudle != null && moudle.uibuildPath != null) {
+			return Path.join([moudle.uibuildPath, path]);
 		}
 		return path;
 	}

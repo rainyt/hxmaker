@@ -3,6 +3,8 @@ package hx.macro;
 #if macro
 import sys.io.File;
 import sys.FileSystem;
+import haxe.macro.Context;
+import sys.io.Process;
 #end
 import haxe.io.Path;
 
@@ -17,20 +19,44 @@ class UIMoudle {
 
 	public var assetsFiles:Array<String> = [];
 
-	public function new(content:String) {
+	public var uibuildPath:String;
+
+	public function new(content:String, ?uibuildPath:String) {
+		this.uibuildPath = uibuildPath;
 		if (content == null) {
 			return;
 		}
 		var xml = Xml.parse(content);
 		for (item in xml.firstElement().elements()) {
 			if (item.nodeName == "assets") {
-				assetsFiles.push(item.get("path"));
+				assetsFiles.push(uibuildPath != null ? Path.join([uibuildPath, item.get("path")]) : item.get("path"));
 			} else
 				classed.set(item.nodeName, new MoudleClassType(item));
 		}
 	}
 
 	#if macro
+	/**
+	 * 获取UIBuilder路径
+	 */
+	public static function getUIBuilderPath():String {
+		var definePath = Context.getDefines().get("ui_builder_path");
+		if (definePath != null) {
+			if (definePath.indexOf("<haxelib:") == 0) {
+				// 说明是haxelib，格式为：<haxelib:name>/path
+				var haxelibName = definePath.substring(9, definePath.indexOf(">"));
+				var cmd = "haxelib path " + haxelibName;
+				var process = new Process("haxelib", ["path", haxelibName]);
+				var output = process.stdout.readAll().toString();
+				var haxelibPath = output.split("\n")[0];
+				haxelibPath = haxelibPath + definePath.substring(definePath.indexOf("/") + 1);
+				return haxelibPath;
+			}
+			return definePath;
+		}
+		return "";
+	}
+
 	/**
 	 * 查询是否存在组件类型
 	 * @param type 

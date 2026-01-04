@@ -5,6 +5,7 @@ import haxe.macro.Expr.FieldType;
 import haxe.macro.Expr.Access;
 import haxe.macro.Expr.Field;
 import haxe.macro.Context;
+import haxe.io.Path;
 import haxe.macro.Expr.ComplexType;
 import sys.FileSystem;
 #end
@@ -16,6 +17,7 @@ import sys.FileSystem;
 class AutoImport {
 	#if macro
 	macro public static function build(path:String, packageName:String = "game.levels"):Array<Field> {
+		path = UIBuilder.moudle !=null ? Path.join([UIBuilder.moudle.uibuildPath, path]) : path;
 		if (!FileSystem.exists(path))
 			path = "../../../../" + path;
 		var files = FileSystem.readDirectory(path);

@@ -22,7 +22,7 @@ class JSONData {
 	 * @param embed 数据是否嵌入，默认为true，如果为false，则data会为null，需要主动为data赋值
 	 */
 	public macro static function create(jsonPath:String, indexNames:Array<String> = null, typeNames:Array<String> = null, embed:Bool = true) {
-		var rootJsonPath = jsonPath;
+		var rootJsonPath = UIBuilder.moudle != null ? Path.join([UIBuilder.moudle.uibuildPath, jsonPath]) : jsonPath;
 		jsonPath = rootJsonPath;
 		var data:Dynamic = haxe.Json.parse(File.getContent(jsonPath));
 		var name = Path.withoutDirectory(Path.withoutExtension(jsonPath));

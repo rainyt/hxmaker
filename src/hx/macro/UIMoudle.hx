@@ -45,8 +45,7 @@ class UIMoudle {
 			if (definePath.indexOf("<haxelib:") == 0) {
 				// 说明是haxelib，格式为：<haxelib:name>/path
 				var haxelibName = definePath.substring(9, definePath.indexOf(">"));
-				var cmd = "haxelib path " + haxelibName;
-				var process = new Process("haxelib", ["path", haxelibName]);
+				var process = new Process("haxelib", ["libpath", haxelibName]);
 				var output = process.stdout.readAll().toString();
 				var haxelibPath = output.split("\n")[0];
 				haxelibPath = haxelibPath + definePath.substring(definePath.indexOf("/") + 1);

@@ -17,9 +17,9 @@ class UIBuilder {
 	/**
 	 * 模块组件
 	 */
-	@:persistent public static var moudle(get, never):UIMoudle;
+	public static var moudle(get, never):UIMoudle;
 
-	private static var __moudle:UIMoudle;
+	@:persistent private static var __moudle:UIMoudle;
 
 	private static function get_moudle():UIMoudle {
 		if (__moudle == null) {

@@ -79,8 +79,8 @@ class ContextStats {
 		__spineRenderCount++;
 	}
 
-	public static function statsDrawCall():Void {
-		__drawcall++;
+	public static function statsDrawCall(counts:Int = 1):Void {
+		__drawcall += counts;
 	}
 
 	public static function statsVertexCount(count:Int):Void {

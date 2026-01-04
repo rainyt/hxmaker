@@ -26,8 +26,11 @@ class UIBuilder {
 			var path = UIMoudle.getUIBuilderPath();
 			trace("UIBuilder.moudle.uibuildPath", path);
 			var moudlePath = Path.join([path, "moudle.xml"]);
+			trace("UIBuilder.moudle.moudlePath", moudlePath);
 			if (FileSystem.exists(moudlePath)) {
 				__moudle = new UIMoudle(File.getContent(moudlePath), path);
+			} else {
+				trace("File not exists:", moudlePath);
 			}
 		}
 		return __moudle;

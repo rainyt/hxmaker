@@ -48,6 +48,8 @@ class UIMoudle {
 				var process = new Process("haxelib", ["libpath", haxelibName]);
 				var output = process.stdout.readAll().toString();
 				var haxelibPath = output.split("\n")[0];
+				haxelibPath = StringTools.replace(haxelibPath, "\n", "");
+				haxelibPath = StringTools.replace(haxelibPath, "\r", "");
 				haxelibPath = haxelibPath + definePath.substring(definePath.indexOf("/") + 1);
 				return haxelibPath;
 			}

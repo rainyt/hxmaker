@@ -1,5 +1,6 @@
 package hx.display;
 
+import hx.filters.StageBitmapData;
 import hx.utils.ContextStats;
 import hx.events.Event;
 
@@ -28,7 +29,7 @@ class FPS extends DisplayObjectContainer {
 		this.label.data = "FPS:" + ContextStats.fps + "\ndrawCall:" + ContextStats.drawCall + "\nvertexCount:" + ContextStats.vertexCount + "\ndisplays:"
 			+ ContextStats.visibleDisplayCounts + "\nCPU:" + Std.int(ContextStats.cpu * 100) + "%\nMemory:" + Std.int(ContextStats.memory / 1024 / 1024)
 			+ "mb\nspineRender:" + ContextStats.spineRenderCount + "\ngraphicRender:" + ContextStats.graphicRenderCount + "\ntimerTask:"
-			+ ContextStats.timerTaskCount + "\nblendModeFilter:" + ContextStats.blendModeFilterDrawCall;
+			+ ContextStats.timerTaskCount + "\nblendModeFilter:" + ContextStats.blendModeFilterDrawCall + "\nstageBitmapDatas:" + StageBitmapData.counts;
 		this.__bg.width = label.width + 10;
 		this.__bg.height = label.height + 10;
 		if (this.parent != null && this.parent.children[this.parent.children.length - 1] != this) {

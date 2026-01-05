@@ -61,6 +61,7 @@ class ContextStats {
 		__spineRenderCount = 0;
 		__timeTaskCounts = 0;
 		__graphicRenderCount = 0;
+		__blendModeFilterDrawCall = 0;
 	}
 
 	/**
@@ -168,5 +169,20 @@ class ContextStats {
 
 	private static function get_graphicRenderCount():Int {
 		return __graphicRenderCount;
+	}
+
+	public static var blendModeFilterDrawCall(get, never):Int;
+
+	private static var __blendModeFilterDrawCall:Int = 0;
+
+	private static function get_blendModeFilterDrawCall():Int {
+		return __blendModeFilterDrawCall;
+	}
+
+	/**
+	 * 统计混合模式滤镜绘制次数
+	 */
+	public static function statsBlendModeFilterDrawCall():Void {
+		__blendModeFilterDrawCall++;
 	}
 }

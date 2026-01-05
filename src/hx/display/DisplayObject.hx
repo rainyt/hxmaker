@@ -225,7 +225,8 @@ class DisplayObject extends EventDispatcher {
 				case SUBTRACT:
 					this.__blendFilter = new hx.filters.SubtractFilter();
 				case SUBTRACT_FAST:
-					this.__blendFilter = new hx.filters.SubtractFastFilter();
+					// this.__blendFilter = new hx.filters.SubtractFastFilter();
+					this.shader = hx.shader.SubtractFastShader.getInstance();
 				case INVERT:
 					this.__blendFilter = new hx.filters.InvertFilter();
 				case DARKEN:

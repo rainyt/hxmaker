@@ -205,40 +205,60 @@ class DisplayObject extends EventDispatcher {
 		return __blendMode;
 	}
 
+	/**
+	 * 混合模式使用的渲染滤镜，一般外部不可直接修改此参数，请通过`blendMode`进行修改，当显示对象不再使用时，可通过`dispose`方法释放该滤镜
+	 */
+	private var blendFilter(get, set):RenderFilter;
+
+	private function get_blendFilter():RenderFilter {
+		return __blendFilter;
+	}
+
+	private function set_blendFilter(value:RenderFilter):RenderFilter {
+		if (__blendFilter != value) {
+			if (__blendFilter != null) {
+				__blendFilter.dispose();
+			}
+			__blendFilter = value;
+			this.setDirty();
+		}
+		return value;
+	}
+
 	private function set_blendMode(value:BlendMode):BlendMode {
 		if (__blendMode != value) {
-			this.__blendFilter = null;
+			this.blendFilter = null;
 			switch value {
 				case ALPHA, NORMAL, ERASE:
 				case SCREEN:
 					if (this is DisplayObjectContainer) {
-						this.__blendFilter = new hx.filters.ScreenFilter();
+						this.blendFilter = new hx.filters.ScreenFilter();
 					}
 				case ADD:
 					if (this is DisplayObjectContainer) {
-						this.__blendFilter = new hx.filters.AddFilter();
+						this.blendFilter = new hx.filters.AddFilter();
 					}
 				case MULTIPLY:
-					this.__blendFilter = new hx.filters.MultiplyFilter();
+					this.blendFilter = new hx.filters.MultiplyFilter();
 				case DIFFERENCE:
-					this.__blendFilter = new hx.filters.DifferenceFilter();
+					this.blendFilter = new hx.filters.DifferenceFilter();
 				case SUBTRACT:
-					this.__blendFilter = new hx.filters.SubtractFilter();
+					this.blendFilter = new hx.filters.SubtractFilter();
 				case SUBTRACT_FAST:
-					// this.__blendFilter = new hx.filters.SubtractFastFilter();
-					this.shader = hx.shader.SubtractFastShader.getInstance();
+					this.blendFilter = new hx.filters.SubtractFastFilter();
+				// this.shader = hx.shader.SubtractFastShader.getInstance();
 				case INVERT:
-					this.__blendFilter = new hx.filters.InvertFilter();
+					this.blendFilter = new hx.filters.InvertFilter();
 				case DARKEN:
-					this.__blendFilter = new hx.filters.DarkenFilter();
+					this.blendFilter = new hx.filters.DarkenFilter();
 				case LIGHTEN:
-					this.__blendFilter = new hx.filters.LightenFilter();
+					this.blendFilter = new hx.filters.LightenFilter();
 				case LAYER:
-					this.__blendFilter = new hx.filters.LayerFilter();
+					this.blendFilter = new hx.filters.LayerFilter();
 				case HARDLIGHT:
-					this.__blendFilter = new hx.filters.HardLightFilter();
+					this.blendFilter = new hx.filters.HardLightFilter();
 				case OVERLAY:
-					this.__blendFilter = new hx.filters.OverlayFilter();
+					this.blendFilter = new hx.filters.OverlayFilter();
 			}
 		}
 		__blendMode = value;
@@ -870,7 +890,15 @@ class DisplayObject extends EventDispatcher {
 	/**
 	 * 销毁所有有关显示对象的资源引用
 	 */
-	public function dispose():Void {}
+	public function dispose():Void {
+		this.blendMode = NORMAL;
+		if (filters != null) {
+			for (filter in filters) {
+				filter.dispose();
+			}
+			filters = null;
+		}
+	}
 
 	/**
 	 * 获得顶部渲染层

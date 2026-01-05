@@ -69,7 +69,21 @@ class DisplayObject extends EventDispatcher {
 	/**
 	 * 渲染滤镜列表，可以为渲染对象添加多个渲染滤镜
 	 */
-	public var filters:Array<RenderFilter> = null;
+	public var filters(get, set):Array<RenderFilter> = null;
+
+	private var __filters:Array<RenderFilter> = null;
+
+	private function get_filters():Array<RenderFilter> {
+		return __filters;
+	}
+
+	private function set_filters(value:Array<RenderFilter>):Array<RenderFilter> {
+		if (__filters != value) {
+			__filters = value;
+			this.setDirty();
+		}
+		return value;
+	}
 
 	/**
 	 * 是否隐藏，隐藏即不参与布局、渲染，但是仍然会存在于显示列表中
@@ -216,9 +230,6 @@ class DisplayObject extends EventDispatcher {
 
 	private function set_blendFilter(value:RenderFilter):RenderFilter {
 		if (__blendFilter != value) {
-			if (__blendFilter != null) {
-				__blendFilter.dispose();
-			}
 			__blendFilter = value;
 			this.setDirty();
 		}
@@ -890,15 +901,7 @@ class DisplayObject extends EventDispatcher {
 	/**
 	 * 销毁所有有关显示对象的资源引用
 	 */
-	public function dispose():Void {
-		this.blendMode = NORMAL;
-		if (filters != null) {
-			for (filter in filters) {
-				filter.dispose();
-			}
-			filters = null;
-		}
-	}
+	public function dispose():Void {}
 
 	/**
 	 * 获得顶部渲染层

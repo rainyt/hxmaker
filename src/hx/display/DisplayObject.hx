@@ -69,7 +69,7 @@ class DisplayObject extends EventDispatcher {
 	/**
 	 * 渲染滤镜列表，可以为渲染对象添加多个渲染滤镜
 	 */
-	public var filters(get, set):Array<RenderFilter> = null;
+	public var filters(get, set):Array<RenderFilter>;
 
 	private var __filters:Array<RenderFilter> = null;
 

@@ -30,6 +30,11 @@ interface IEngine {
 	public var touchY:Float;
 
 	/**
+	 * 时间间隔
+	 */
+	public var dt:Float;
+
+	/**
 	 * 添加舞台
 	 * @param stage 
 	 */

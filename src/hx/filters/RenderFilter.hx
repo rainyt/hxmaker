@@ -25,7 +25,11 @@ class RenderFilter {
 
 	public function init():Void {}
 
-	public function update(display:DisplayObject, dt:Float):Void {}
+	public var nowTime:Float = 0;
+
+	public function update(display:DisplayObject, dt:Float):Void {
+		nowTime += dt;
+	}
 
 	public function updateTransform(display:DisplayObject):Void {
 		if (render != null) {

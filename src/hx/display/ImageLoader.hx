@@ -85,10 +85,13 @@ class ImageLoader extends Box implements IDataProider<Dynamic> {
 	}
 
 	private function updateScale() {
-		if (this.image.data == null || this.scaleWidth == null || this.scaleHeight == null)
+		if (this.image.data == null || this.scaleWidth == null || this.scaleHeight == null) {
+			this.parent?.updateLayout();
 			return;
+		}
 		var w = scaleWidth / this.image.data.width;
 		var h = scaleHeight / this.image.data.height;
 		this.scale = Math.min(w, h);
+		this.parent?.updateLayout();
 	}
 }

@@ -61,6 +61,11 @@ class Event {
 	public inline static var FOCUS_OUT:String = "focusOut";
 
 	/**
+	 * 选择事件
+	 */
+	public inline static var SELECT:String = "select";
+
+	/**
 	 * 数据
 	 */
 	public var data:Dynamic;

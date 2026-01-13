@@ -376,7 +376,12 @@ class Spine extends Graphics implements ISpine {
 		__playing = true;
 		this.__spineDrawDirty = true;
 		this.onUpdate(0);
-		return this.animationState.setAnimationByName(index, name, isLoop);
+		try {
+			return this.animationState.setAnimationByName(index, name, isLoop);
+		} catch (e:Dynamic) {
+			trace(e);
+			return null;
+		}
 	}
 
 	public function stop():Void {

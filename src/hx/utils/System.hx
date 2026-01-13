@@ -28,4 +28,30 @@ class System {
 	private static function get_defines():Map<String, String> {
 		return MacroTools.getDefines();
 	}
+
+	/**
+	 * 判断环境是否为电脑
+	 * @return Bool
+	 */
+	public static var isPc(get, never):Bool;
+
+	private static function get_isPc():Bool {
+		#if (android || ios || minigame)
+		return false;
+		#elseif html5
+		var userAgent = js.Browser.navigator.userAgent;
+		var agents = [
+			  "Android",        "iPhone",
+			"SymbianOS", "Windows Phone",
+			     "iPad",          "iPod"
+		];
+		for (tag in agents) {
+			if (userAgent.indexOf(tag) != -1)
+				return false;
+		}
+		return true;
+		#else
+		return true;
+		#end
+	}
 }

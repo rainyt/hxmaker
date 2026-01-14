@@ -205,20 +205,52 @@ class Particle extends Box {
 				case "particle-group-scale":
 					this.scaleXAttribute.start = this.createAttribute(array[0]);
 					this.scaleXAttribute.end = this.createAttribute(array[1]);
-					this.scaleYAttribute.start = this.scaleXAttribute.start;
-					this.scaleYAttribute.end = this.scaleXAttribute.end;
-				case "particle-group-scale-x":
-					this.scaleXAttribute.start = this.createAttribute(array[0]);
-					this.scaleXAttribute.end = this.createAttribute(array[1]);
-				case "particle-group-scale-y":
 					this.scaleYAttribute.start = this.createAttribute(array[0]);
 					this.scaleYAttribute.end = this.createAttribute(array[1]);
+				case "particle-group-scale-x":
+					if (array.length > 2) {
+						this.scaleXAttribute.start = this.createAttribute(array[0]);
+						for (i in 1...array.length) {
+							var attribute = this.createAttribute(array[i]);
+							this.scaleXAttribute.tween.pushAttribute(Std.parseFloat(array[i].get("weight")), attribute);
+						}
+					} else {
+						this.scaleXAttribute.start = this.createAttribute(array[0]);
+						this.scaleXAttribute.end = this.createAttribute(array[1]);
+					}
+				case "particle-group-scale-y":
+					if (array.length > 2) {
+						this.scaleYAttribute.start = this.createAttribute(array[0]);
+						for (i in 1...array.length) {
+							var attribute = this.createAttribute(array[i]);
+							this.scaleYAttribute.tween.pushAttribute(Std.parseFloat(array[i].get("weight")), attribute);
+						}
+					} else {
+						this.scaleYAttribute.start = this.createAttribute(array[0]);
+						this.scaleYAttribute.end = this.createAttribute(array[1]);
+					}
 				case "particle-group-rotation":
-					this.rotaionAttribute.start = this.createAttribute(array[0]);
-					this.rotaionAttribute.end = this.createAttribute(array[1]);
+					if (array.length > 2) {
+						this.rotaionAttribute.start = this.createAttribute(array[0]);
+						for (i in 1...array.length) {
+							var attribute = this.createAttribute(array[i]);
+							this.rotaionAttribute.tween.pushAttribute(Std.parseFloat(array[i].get("weight")), attribute);
+						}
+					} else {
+						this.rotaionAttribute.start = this.createAttribute(array[0]);
+						this.rotaionAttribute.end = this.createAttribute(array[1]);
+					}
 				case "particle-group-color":
-					this.colorAttribute.start = this.createFourAttribute(array[0]);
-					this.colorAttribute.end = this.createFourAttribute(array[1]);
+					if (array.length > 2) {
+						this.colorAttribute.start = this.createFourAttribute(array[0]);
+						for (i in 1...array.length) {
+							var fourAttribute = this.createFourAttribute(array[i]);
+							this.colorAttribute.tween.pushAttribute(Std.parseFloat(array[i].get("weight")), fourAttribute);
+						}
+					} else {
+						this.colorAttribute.start = this.createFourAttribute(array[0]);
+						this.colorAttribute.end = this.createFourAttribute(array[1]);
+					}
 			}
 		}
 		this.forceReset = true;

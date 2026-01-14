@@ -1,6 +1,6 @@
 package hx.particle;
 
-
+@:using(hx.particle.Tools)
 interface Attribute {
 	public var type(get, never):String;
 

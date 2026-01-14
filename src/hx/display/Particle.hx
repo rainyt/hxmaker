@@ -162,9 +162,61 @@ class Particle extends Box {
 	 */
 	public var textures:Array<BitmapData> = [];
 
-	public function new(?json:Dynamic, ?texture:BitmapData) {
+	public function new(?json:JSONParticleData, ?texture:BitmapData) {
 		super();
 		textures.push(texture);
+		if (json != null) {
+			this.applyJsonData(json);
+		}
+	}
+
+	/**
+	 * 应用JSON数据
+	 * @param json 
+	 */
+	public function applyJsonData(data:JSONParticleData):Void {
+		// 系统持续时长
+		this.duration = data.duration;
+		var random = new RandomTwoAttribute(0., 1);
+		// 设置开始颜色
+		this.colorAttribute.start.x = new RandomTwoAttribute(data.startColorRed, data.startColorRed + data.startColorVarianceRed);
+		this.colorAttribute.start.y = new RandomTwoAttribute(data.startColorGreen, data.startColorGreen + data.startColorVarianceGreen);
+		this.colorAttribute.start.z = new RandomTwoAttribute(data.startColorBlue, data.startColorBlue + data.startColorVarianceBlue);
+		this.colorAttribute.start.w = new RandomTwoAttribute(data.startColorAlpha, data.startColorAlpha + data.startColorVarianceAlpha);
+		// 设置结束颜色
+		this.colorAttribute.end.x = new RandomTwoAttribute(data.finishColorRed, data.finishColorRed + data.finishColorVarianceRed);
+		this.colorAttribute.end.y = new RandomTwoAttribute(data.finishColorGreen, data.finishColorGreen + data.finishColorVarianceGreen);
+		this.colorAttribute.end.z = new RandomTwoAttribute(data.finishColorBlue, data.finishColorBlue + data.finishColorVarianceGreen);
+		this.colorAttribute.end.w = new RandomTwoAttribute(data.finishColorAlpha, data.finishColorAlpha + data.finishColorVarianceAlpha);
+		// 设置粒子数量
+		this.counts = data.maxParticles;
+		// 设置粒子生命
+		this.life = data.particleLifespan;
+		this.lifeVariance = data.particleLifespanVariance;
+		// 设置粒子发射类型
+		switch (data.emitterType) {
+			case 0:
+				// 以点发射
+				this.emitMode = ParticleEmitMode.Point;
+		}
+		// 设置粒子位置方差
+		this.widthRange = data.sourcePositionVariancex;
+		this.heightRange = data.sourcePositionVariancey;
+		// 设置粒子向量
+		this.velocity.y.asOneAttribute().value = 0;
+		this.velocity.x = new RandomTwoAttribute(data.speed, data.speed + data.speedVariance);
+		this.acceleration.x = new RandomTwoAttribute(data.radialAcceleration, data.radialAcceleration + data.radialAccelVariance);
+		this.acceleration.y.asOneAttribute().value = 0;
+		this.tangential.x = new RandomTwoAttribute(data.tangentialAcceleration, data.tangentialAcceleration + data.tangentialAccelVariance);
+		this.tangential.y.asOneAttribute().value = 0;
+		this.gravity.x.asOneAttribute().value = data.gravityx * 0.5;
+		this.gravity.y.asOneAttribute().value = -data.gravityy * 0.5;
+		// 设置粒子的开始角度
+		this.rotaionAttribute.start = new RandomTwoAttribute(data.rotationStart, data.rotationStart + data.rotationStartVariance);
+		this.rotaionAttribute.end = new RandomTwoAttribute(data.rotationEnd, data.rotationEnd + data.rotationEndVariance);
+		// 设置粒子发射方向
+		this.emitRotation = new RandomTwoAttribute(data.angle - data.angleVariance, data.angle + data.angleVariance);
+		this.forceReset = true;
 	}
 
 	/**
@@ -189,6 +241,8 @@ class Particle extends Box {
 	}
 
 	override public function onUpdate(dt:Float) {
+		if (childs == null)
+			return;
 		var curtime = time + dt;
 		var lifetime = (life + lifeVariance);
 		if (curtime > lifetime * 2) {
@@ -255,5 +309,16 @@ class Particle extends Box {
 				value.dispose();
 			}
 		this.childs = null;
+	}
+
+	private var __particleBlendMode:BlendMode = BlendMode.ADD;
+
+	override function set_blendMode(value:BlendMode):BlendMode {
+		__particleBlendMode = value;
+		return value;
+	}
+
+	override function get_blendMode():BlendMode {
+		return __particleBlendMode;
 	}
 }

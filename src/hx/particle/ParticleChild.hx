@@ -155,7 +155,6 @@ class ParticleChild {
 		this.id = id;
 		this.particle = parent;
 		this.image = @:privateAccess parent.__pool.get();
-		this.image.blendMode = ADD;
 	}
 
 	public var texture(get, set):BitmapData;
@@ -233,6 +232,7 @@ class ParticleChild {
 	}
 
 	public function reset():Void {
+		this.image.blendMode = particle.blendMode;
 		var vx = 0.;
 		var vy = 0.;
 		var ax = 0.;

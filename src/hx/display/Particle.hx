@@ -164,7 +164,6 @@ class Particle extends Box {
 
 	public function new(?json:Dynamic, ?texture:BitmapData) {
 		super();
-		this.blendMode = BlendMode.SCREEN;
 		textures.push(texture);
 	}
 

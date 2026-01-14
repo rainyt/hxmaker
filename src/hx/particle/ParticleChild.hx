@@ -1,5 +1,6 @@
 package hx.particle;
 
+import hx.geom.ColorTransform;
 import hx.display.BitmapData;
 import hx.display.Image;
 import hx.display.Particle;
@@ -119,6 +120,31 @@ class ParticleChild {
 	 */
 	public var tangentialY:Float = 0;
 
+	/**
+	 * 开始颜色变换
+	 */
+	public var startColorTranform:ColorTransform = new ColorTransform();
+
+	/**
+	 * 结束颜色变换
+	 */
+	public var endColorTranform:ColorTransform = new ColorTransform();
+
+	/**
+	 * 开始颜色变换过渡时间偏移
+	 */
+	public var startTweenOffset:Float = 0;
+
+	/**
+	 * 结束颜色变换过渡时间偏移
+	 */
+	public var endTweenOffset:Float = 1;
+
+	/**
+	 * 用于计算的颜色变换
+	 */
+	private static var mathColorTransform:ColorTransform = new ColorTransform();
+
 	private var _init:Bool = false;
 
 	public var particle:Particle;
@@ -129,6 +155,7 @@ class ParticleChild {
 		this.id = id;
 		this.particle = parent;
 		this.image = @:privateAccess parent.__pool.get();
+		this.image.blendMode = ADD;
 	}
 
 	public var texture(get, set):BitmapData;
@@ -188,35 +215,20 @@ class ParticleChild {
 
 		tweenColorID = data.id;
 
+		startTweenOffset = data.startoffest;
+		endTweenOffset = data.endoffest;
+
 		var start:FourAttribute = data.start;
 		var end:FourAttribute = data.end;
-		var startColor1 = start.x.getValue();
-		var startColor2 = start.y.getValue();
-		var startColor3 = start.z.getValue();
-		var startColor4 = start.w.getValue();
+		this.startColorTranform.redMultiplier = start.x.getValue();
+		this.startColorTranform.greenMultiplier = start.y.getValue();
+		this.startColorTranform.blueMultiplier = start.z.getValue();
+		this.startColorTranform.alphaMultiplier = start.w.getValue();
+		this.endColorTranform.redMultiplier = end.x.getValue();
+		this.endColorTranform.greenMultiplier = end.y.getValue();
+		this.endColorTranform.blueMultiplier = end.z.getValue();
+		this.endColorTranform.alphaMultiplier = end.w.getValue();
 
-		var endColor1 = end.x.getValue();
-		var endColor2 = end.y.getValue();
-		var endColor3 = end.z.getValue();
-		var endColor4 = end.w.getValue();
-
-		// 颜色过渡
-		for (i in 0...6) {
-			// 颜色过渡时差
-			// particle._shader.a_rotaAndColorDToffest.value[index4 + 2] = data.startoffest;
-			// particle._shader.a_rotaAndColorDToffest.value[index4 + 3] = data.endoffest;
-			// 颜色
-			// particle._shader.a_startColor.value[index4] = (startColor1);
-			// particle._shader.a_startColor.value[index4 + 1] = (startColor2);
-			// particle._shader.a_startColor.value[index4 + 2] = (startColor3);
-			// particle._shader.a_startColor.value[index4 + 3] = (startColor4);
-			// particle._shader.a_endColor.value[index4] = (endColor1);
-			// particle._shader.a_endColor.value[index4 + 1] = (endColor2);
-			// particle._shader.a_endColor.value[index4 + 2] = (endColor3);
-			// particle._shader.a_endColor.value[index4 + 3] = (endColor4);
-			index4 += 4;
-			index2 += 2;
-		}
 		return true;
 	}
 
@@ -242,13 +254,6 @@ class ParticleChild {
 				vy = particle.velocity.y.getValue();
 				ax = particle.acceleration.x.getValue();
 				ay = particle.acceleration.y.getValue();
-				// tx = particle.tangential.x.getValue() * particle.scaleX;
-				// ty = particle.tangential.y.getValue() * particle.scaleY;
-
-				// vx = particle.velocity.x.getValue();
-				// vy = particle.velocity.y.getValue();
-				// ax = particle.acceleration.x.getValue();
-				// ay = particle.acceleration.y.getValue();
 				tx = particle.tangential.x.getValue();
 				ty = particle.tangential.y.getValue();
 
@@ -297,11 +302,6 @@ class ParticleChild {
 		this.startScaleY = particle.scaleYAttribute.start == particle.scaleXAttribute.start ? this.startScaleY : particle.scaleYAttribute.start.getValue();
 		this.endScaleX = particle.scaleXAttribute.end.getValue();
 		this.endScaleY = particle.scaleYAttribute.end == particle.scaleXAttribute.end ? this.endScaleY : particle.scaleYAttribute.end.getValue();
-		// scaleXstart *= particle.scaleX;
-		// scaleYstart *= particle.scaleY;
-		// scaleXend *= particle.scaleX;
-		// scaleYend *= particle.scaleY;
-
 		this.startRotation = particle.rotaionAttribute.start.getValue();
 		this.endRotation = particle.rotaionAttribute.end.getValue();
 
@@ -333,66 +333,14 @@ class ParticleChild {
 		var endColor3 = particle.colorAttribute.end.z.getValue();
 		var endColor4 = particle.colorAttribute.end.w.getValue();
 
-		var index1 = id * 6;
-		var index2 = id * 12;
-		var index3 = id * 18;
-		var index4 = id * 24;
-
-		for (i in 0...6) {
-			// 颜色过渡时差
-			// particle._shader.a_rotaAndColorDToffest.value[index4 + 2] = 0;
-			// particle._shader.a_rotaAndColorDToffest.value[index4 + 3] = 1;
-			// 颜色过渡
-			// particle._shader.a_startColor.value[index4] = (startColor1);
-			// particle._shader.a_startColor.value[index4 + 1] = (startColor2);
-			// particle._shader.a_startColor.value[index4 + 2] = (startColor3);
-			// particle._shader.a_startColor.value[index4 + 3] = (startColor4);
-			// particle._shader.a_endColor.value[index4] = (endColor1);
-			// particle._shader.a_endColor.value[index4 + 1] = (endColor2);
-			// particle._shader.a_endColor.value[index4 + 2] = (endColor3);
-			// particle._shader.a_endColor.value[index4 + 3] = (endColor4);
-			// 角度
-			// particle._shader.a_rotaAndColorDToffest.value[index4] = (startRotaion);
-			// particle._shader.a_rotaAndColorDToffest.value[index4 + 1] = (endRotaion);
-			// 随机值
-			// particle._shader.a_random.value[index1] = (random);
-			// 移动向量
-			// particle._shader.a_velocity.value[index2] = (vx);
-			// particle._shader.a_velocity.value[index2 + 1] = (vy);
-			// 重力以及切向加速力
-			// particle._shader.a_gravityxAndTangential.value[index4] = gx;
-			// particle._shader.a_gravityxAndTangential.value[index4 + 1] = gy;
-			// particle._shader.a_gravityxAndTangential.value[index4 + 2] = tx;
-			// particle._shader.a_gravityxAndTangential.value[index4 + 3] = ty;
-			// 加速力
-			// particle._shader.a_acceleration.value[index2] = (ax);
-			// particle._shader.a_acceleration.value[index2 + 1] = (ay);
-			// 粒子生存时间
-			// particle._shader.a_lifeAndDuration.value[index2] = (life);
-			// particle._shader.a_lifeAndDuration.value[index2 + 1] = (maxlife);
-			// 初始化位置
-			// particle._shader.a_pos.value[index2] = (sx);
-			// particle._shader.a_pos.value[index2 + 1] = (sy);
-			// 缩放比例
-			// particle._shader.a_scaleXXYY.value[index4] = (scaleXstart);
-			// particle._shader.a_scaleXXYY.value[index4 + 1] = (scaleXend);
-			// particle._shader.a_scaleXXYY.value[index4 + 2] = (scaleYstart);
-			// particle._shader.a_scaleXXYY.value[index4 + 3] = (scaleYend);
-			// 动态点
-			if (particle.dynamicEmitPoint) {
-				// particle._shader.a_dynamicPos.value[index3] = (particle.x);
-				// particle._shader.a_dynamicPos.value[index3 + 1] = (particle.y);
-				// particle._shader.a_dynamicPos.value[index3 + 2] = (1);
-			} else {
-				// particle._shader.a_dynamicPos.value[index3] = (0);
-				// particle._shader.a_dynamicPos.value[index3 + 1] = (0);
-				// particle._shader.a_dynamicPos.value[index3 + 2] = (0);
-			}
-			// index1++;
-			// index2 += 2;
-			// index3 += 3;
-			// index4 += 4;
-		}
+		startColorTranform.redMultiplier = startColor1;
+		startColorTranform.greenMultiplier = startColor2;
+		startColorTranform.blueMultiplier = startColor3;
+		startColorTranform.alphaMultiplier = startColor4;
+		endColorTranform.redMultiplier = endColor1;
+		endColorTranform.greenMultiplier = endColor2;
+		endColorTranform.blueMultiplier = endColor3;
+		endColorTranform.alphaMultiplier = endColor4;
 
 		if (particle.colorAttribute.hasTween()) {
 			updateTweenColor();
@@ -432,5 +380,16 @@ class ParticleChild {
 
 		this.image.x = posX + velocityX * aliveTime + (gravityX + accelerationX + tangentialX) * aliveTime * aliveTime;
 		this.image.y = posY + velocityY * aliveTime + (gravityY + accelerationY + tangentialY) * aliveTime * aliveTime;
+
+		var tweenScale:Float = endTweenOffset - startTweenOffset;
+		var coutlife:Float = (ooutlife - startTweenOffset) / tweenScale;
+
+		mathColorTransform.redMultiplier = startColorTranform.redMultiplier + (endColorTranform.redMultiplier - startColorTranform.redMultiplier) * coutlife;
+		mathColorTransform.greenMultiplier = startColorTranform.greenMultiplier
+			+ (endColorTranform.greenMultiplier - startColorTranform.greenMultiplier) * coutlife;
+		mathColorTransform.blueMultiplier = startColorTranform.blueMultiplier
+			+ (endColorTranform.blueMultiplier - startColorTranform.blueMultiplier) * coutlife;
+		this.image.alpha = startColorTranform.alphaMultiplier + (endColorTranform.alphaMultiplier - startColorTranform.alphaMultiplier) * coutlife;
+		this.image.colorTransform = mathColorTransform;
 	}
 }

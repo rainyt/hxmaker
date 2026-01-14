@@ -1,5 +1,6 @@
 package hx.display;
 
+import hx.utils.ObjectPool;
 import hx.events.Event;
 import hx.particle.*;
 
@@ -7,6 +8,13 @@ import hx.particle.*;
  * 粒子系统
  */
 class Particle extends Box {
+	/**
+	 * 粒子池
+	 */
+	private var __pool:ObjectPool<Image> = new ObjectPool<Image>(() -> {
+		return new Image();
+	}, (img:Image) -> {});
+
 	/**
 	 * 通过JSON解析粒子
 	 * @param json 
@@ -45,7 +53,14 @@ class Particle extends Box {
 	/**
 	 * 纹理
 	 */
-	public var texture:BitmapData;
+	public var texture(get, never):BitmapData;
+
+	/**
+	 * 获取当前纹理
+	 */
+	private function get_texture():BitmapData {
+		return textures[0];
+	}
 
 	/**
 	 * 发射模式
@@ -60,17 +75,17 @@ class Particle extends Box {
 	/**
 	 * 当前时间，可设置当前时间来更新粒子
 	 */
-	public var time(get, set):Float;
+	public var time:Float = 0;
 
 	/**
 	 * 宽度范围
 	 */
-	public var widthRange:Float = 0;
+	public var widthRange:Float = 200;
 
 	/**
 	 * 
 	 */
-	public var heightRange:Float = 0;
+	public var heightRange:Float = 200;
 
 	/**
 	 * 粒子生命
@@ -85,7 +100,7 @@ class Particle extends Box {
 	/**
 	 * 整个粒子系统生命持续时长，-1为无限循环
 	 */
-	public var duration:Float = 0;
+	public var duration:Float = -1;
 
 	/**
 	 * 是否循环
@@ -142,9 +157,15 @@ class Particle extends Box {
 	 */
 	public var particleLiveCounts:Int;
 
+	/**
+	 * 纹理列表
+	 */
+	public var textures:Array<BitmapData> = [];
+
 	public function new(?json:Dynamic, ?texture:BitmapData) {
 		super();
 		this.blendMode = BlendMode.SCREEN;
+		textures.push(texture);
 	}
 
 	/**
@@ -177,24 +198,25 @@ class Particle extends Box {
 		this.time = curtime;
 		particleLiveCounts = 0;
 		// var updateAttr:UpdateParams = new UpdateParams();
-		// for (index => value in childs) {
-		// 	if (!value.isDie()) {
-		// 		particleLiveCounts++;
-		// 	}
-		// 	if (value.onReset()) {
-		// 		if (forceReset || dynamicEmitPoint || colorAttribute.hasTween()) {
-		// 			value.reset();
-		// 			updateAttr.push(value);
-		// 		}
-		// 	} else {
-		// 		if (colorAttribute.hasTween()) {
-		// 			// 存在过渡
-		// 			if (value.updateTweenColor()) {
-		// 				updateAttr.push(value);
-		// 			}
-		// 		}
-		// 	}
-		// }
+		for (value in childs) {
+			if (!value.isDie()) {
+				particleLiveCounts++;
+			}
+			if (value.onReset()) {
+				if (forceReset || dynamicEmitPoint || colorAttribute.hasTween()) {
+					value.reset();
+					// updateAttr.push(value);
+				}
+			} else {
+				if (colorAttribute.hasTween()) {
+					// 存在过渡
+					if (value.updateTweenColor()) {
+						// updateAttr.push(value);
+					}
+				}
+			}
+			value.update(dt);
+		}
 		this.invalidate();
 		if (this.duration != -1 && particleLiveCounts == 0) {
 			this.time = 0;
@@ -214,14 +236,14 @@ class Particle extends Box {
 		this.scaleXAttribute.tween.updateWeight();
 		this.scaleYAttribute.tween.updateWeight();
 		this.rotaionAttribute.tween.updateWeight();
-	}
-
-	function get_time():Float {
-		return 0;
-	}
-
-	function set_time(value:Float):Float {
-		return value;
+		childs = [];
+		for (i in 0...counts) {
+			var child = new ParticleChild(this, i);
+			child.texture = texture;
+			childs.push(child);
+			this.addChild(child.image);
+			child.reset();
+		}
 	}
 
 	function get_loop():Bool {

@@ -3,6 +3,7 @@ package hx.ui;
 import hx.utils.Timer;
 import hx.core.Hxmaker;
 import hx.display.Stage;
+import hx.display.Particle;
 import hx.display.ImageLoader;
 import hx.display.InputLabel;
 import hx.display.Quad;
@@ -468,6 +469,21 @@ class UIManager {
 				spine.renderFps = Std.parseInt(xml.get("renderFps"));
 			}
 			return spine;
+		});
+		addCreateInstance(Particle, function(xml:Xml):Particle {
+			var id = xml.getStringId("src");
+			var json = xml.getStringId("json");
+			var particle = new Particle(UIManager.getObject(json), UIManager.getBitmapData(id));
+			return particle;
+		});
+		addAttributesParse(Particle, function(obj:Particle, xml:Xml, assets:Assets) {
+			var configXml = xml.elementsNamed("particle-config");
+			if (configXml.hasNext()) {
+				var config = configXml.next();
+				trace("读取粒子配置", config);
+				obj.applyXmlData(config);
+				obj.start();
+			}
 		});
 		addAttributesParse(Spine, function(obj:Spine, xml:Xml, assets:Assets) {
 			if (xml.exists("action")) {

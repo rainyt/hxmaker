@@ -168,6 +168,83 @@ class Particle extends Box {
 		if (json != null) {
 			this.applyJsonData(json);
 		}
+		this.width = this.height = 1;
+	}
+
+	/**
+	 * 应用XML数据
+	 * @param data 
+	 */
+	public function applyXmlData(data:Xml):Void {
+		// 解析XML数据
+		for (key in data.attributes()) {
+			if (Reflect.hasField(this, key)) {
+				if (key == "counts")
+					counts = Std.parseInt(data.get(key));
+				else
+					Reflect.setProperty(this, key, Std.parseFloat(data.get(key)));
+			}
+		}
+		for (item in data.elements()) {
+			var array = this.getAttributeArray(item);
+			switch item.nodeName {
+				case "particle-velocity":
+					this.velocity.x = this.createAttribute(array[0]);
+					this.velocity.y = this.createAttribute(array[1]);
+				case "particle-emit-rotation":
+					this.emitRotation = this.createAttribute(array[0]);
+				case "particle-gravity":
+					this.gravity.x = this.createAttribute(array[0]);
+					this.gravity.y = this.createAttribute(array[1]);
+				case "particle-acceleration":
+					this.acceleration.x = this.createAttribute(array[0]);
+					this.acceleration.y = this.createAttribute(array[1]);
+				case "particle-tangential":
+					this.tangential.x = this.createAttribute(array[0]);
+					this.tangential.y = this.createAttribute(array[1]);
+				case "particle-group-scale":
+					this.scaleXAttribute.start = this.createAttribute(array[0]);
+					this.scaleXAttribute.end = this.createAttribute(array[1]);
+					this.scaleYAttribute.start = this.scaleXAttribute.start;
+					this.scaleYAttribute.end = this.scaleXAttribute.end;
+				case "particle-group-scale-x":
+					this.scaleXAttribute.start = this.createAttribute(array[0]);
+					this.scaleXAttribute.end = this.createAttribute(array[1]);
+				case "particle-group-scale-y":
+					this.scaleYAttribute.start = this.createAttribute(array[0]);
+					this.scaleYAttribute.end = this.createAttribute(array[1]);
+				case "particle-group-rotation":
+					this.rotaionAttribute.start = this.createAttribute(array[0]);
+					this.rotaionAttribute.end = this.createAttribute(array[1]);
+				case "particle-group-color":
+					this.colorAttribute.start = this.createFourAttribute(array[0]);
+					this.colorAttribute.end = this.createFourAttribute(array[1]);
+			}
+		}
+		this.forceReset = true;
+	}
+
+	private function getAttributeArray(xml:Xml):Array<Xml> {
+		var array:Array<Xml> = [];
+		for (item in xml.elements()) {
+			array.push(item);
+		}
+		return array;
+	}
+
+	private function createAttribute(xml:Xml):Attribute {
+		switch xml.nodeName {
+			case "particle-one-attribute":
+				return new OneAttribute(Std.parseFloat(xml.get("value")));
+			case "particle-random-two-attribute":
+				return new RandomTwoAttribute(Std.parseFloat(xml.get("min")), Std.parseFloat(xml.get("max")));
+			default:
+				throw "Invalid particle attribute type `" + xml.nodeName + "`";
+		}
+	}
+
+	private function createFourAttribute(xml:Xml):FourAttribute {
+		return new FourAttribute(Std.parseFloat(xml.get("x")), Std.parseFloat(xml.get("y")), Std.parseFloat(xml.get("z")), Std.parseFloat(xml.get("w")));
 	}
 
 	/**

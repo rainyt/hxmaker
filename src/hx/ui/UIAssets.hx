@@ -98,7 +98,7 @@ class UIAssets extends Assets {
 						// 加载精灵图
 						var path = item.get("path").withoutExtension();
 						this.loadAtlas(path + ".png", path + ".xml");
-					case "Image", "Button", "ImageLoader":
+					case "Image", "Button", "ImageLoader", "Particle":
 						// 加载图片
 						if (item.exists("src")) {
 							var url = item.get("src");

@@ -196,7 +196,6 @@ class Particle extends Box {
 		}
 		this.time = curtime;
 		particleLiveCounts = 0;
-		// var updateAttr:UpdateParams = new UpdateParams();
 		for (value in childs) {
 			if (!value.isDie()) {
 				particleLiveCounts++;
@@ -204,14 +203,11 @@ class Particle extends Box {
 			if (value.onReset()) {
 				if (forceReset || dynamicEmitPoint || colorAttribute.hasTween()) {
 					value.reset();
-					// updateAttr.push(value);
 				}
 			} else {
 				if (colorAttribute.hasTween()) {
 					// 存在过渡
-					if (value.updateTweenColor()) {
-						// updateAttr.push(value);
-					}
+					value.updateTweenColor();
 				}
 			}
 			value.update(dt);

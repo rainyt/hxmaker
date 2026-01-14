@@ -390,6 +390,7 @@ class ParticleChild {
 		mathColorTransform.blueMultiplier = startColorTranform.blueMultiplier
 			+ (endColorTranform.blueMultiplier - startColorTranform.blueMultiplier) * coutlife;
 		this.image.alpha = startColorTranform.alphaMultiplier + (endColorTranform.alphaMultiplier - startColorTranform.alphaMultiplier) * coutlife;
+
 		this.image.colorTransform = mathColorTransform;
 	}
 }

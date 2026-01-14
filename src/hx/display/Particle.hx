@@ -41,7 +41,7 @@ class Particle extends Box {
 	public var randomLife:Attribute = new RandomTwoAttribute(0, 1);
 
 	/**
-	 * 是否设置发射点为动态，默认为false，当为true时，将会随着x,y的坐标发生变化而改编发射点
+	 * 是否设置发射点为动态，默认为`false`，当为`true`时，将会随着`x`，`y`的坐标发生变化而改编发射点
 	 */
 	public var dynamicEmitPoint:Bool = false;
 

@@ -242,8 +242,13 @@ class ParticleChild {
 		var angle = 0.;
 		// 点与中心的角度
 		var posAngle = 0.;
-		posX = Math.random() * particle.widthRange * particle.scaleX * 2 - particle.widthRange * particle.scaleX;
-		posY = Math.random() * particle.heightRange * particle.scaleY * 2 - particle.heightRange * particle.scaleY;
+		if (particle.dynamicEmitPoint) {
+			posX = Math.random() * particle.widthRange * particle.scaleX * 2 - particle.widthRange * particle.scaleX + particle.x;
+			posY = Math.random() * particle.heightRange * particle.scaleY * 2 - particle.heightRange * particle.scaleY + particle.y;
+		} else {
+			posX = Math.random() * particle.widthRange * particle.scaleX * 2 - particle.widthRange * particle.scaleX;
+			posY = Math.random() * particle.heightRange * particle.scaleY * 2 - particle.heightRange * particle.scaleY;
+		}
 		posAngle = -Math.atan2((posY - 0), (posX - 0));
 		var posAngle2 = Math.atan2((posX - 0), (posY - 0));
 		// posAngle = -45 * 3.14 / 180;
@@ -380,6 +385,11 @@ class ParticleChild {
 
 		this.image.x = posX + velocityX * aliveTime + (gravityX + accelerationX + tangentialX) * aliveTime * aliveTime;
 		this.image.y = posY + velocityY * aliveTime + (gravityY + accelerationY + tangentialY) * aliveTime * aliveTime;
+
+		if (particle.dynamicEmitPoint) {
+			this.image.x -= particle.x;
+			this.image.y -= particle.y;
+		}
 
 		var tweenScale:Float = endTweenOffset - startTweenOffset;
 		var coutlife:Float = (ooutlife - startTweenOffset) / tweenScale;

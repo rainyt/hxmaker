@@ -155,7 +155,7 @@ class Particle extends Box {
 	/**
 	 * 粒子存活数量
 	 */
-	public var particleLiveCounts:Int;
+	public var particleLiveCounts:Int = 0;
 
 	/**
 	 * 纹理列表
@@ -241,7 +241,7 @@ class Particle extends Box {
 	}
 
 	override public function onUpdate(dt:Float) {
-		if (childs == null)
+		if (!_isPlay || childs == null)
 			return;
 		var curtime = time + dt;
 		var lifetime = (life + lifeVariance);

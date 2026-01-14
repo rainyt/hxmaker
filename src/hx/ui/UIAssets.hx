@@ -105,6 +105,10 @@ class UIAssets extends Assets {
 							if (url.indexOf(":") == -1)
 								this.loadBitmapData(url);
 						}
+						if (item.nodeName == "Particle" && item.exists("json")) {
+							var url = item.get("json");
+							this.loadJson(url);
+						}
 				}
 				if (item.exists("style")) {
 					var style = item.get("style");

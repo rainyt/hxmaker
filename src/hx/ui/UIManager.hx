@@ -474,13 +474,15 @@ class UIManager {
 			var id = xml.getStringId("src");
 			var json = xml.getStringId("json");
 			var particle = new Particle(UIManager.getObject(json), UIManager.getBitmapData(id));
+			if (json != null) {
+				particle.start();
+			}
 			return particle;
 		});
 		addAttributesParse(Particle, function(obj:Particle, xml:Xml, assets:Assets) {
 			var configXml = xml.elementsNamed("particle-config");
 			if (configXml.hasNext()) {
 				var config = configXml.next();
-				trace("读取粒子配置", config);
 				obj.applyXmlData(config);
 				obj.start();
 			}

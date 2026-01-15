@@ -367,11 +367,6 @@ class Particle extends Box {
 				if (forceReset || dynamicEmitPoint || colorAttribute.hasTween()) {
 					value.reset();
 				}
-			} else {
-				if (colorAttribute.hasTween()) {
-					// 存在过渡
-					value.updateTweenColor();
-				}
 			}
 			value.update(dt);
 		}

@@ -332,10 +332,8 @@ class ParticleChild {
 		endColorTranform.greenMultiplier = endColor2;
 		endColorTranform.blueMultiplier = endColor3;
 		endColorTranform.alphaMultiplier = endColor4;
-
-		if (particle.colorAttribute.hasTween()) {
-			updateTweenColor();
-		}
+		startTweenOffset = 0;
+		endTweenOffset = 1;
 	}
 
 	public function dispose():Void {
@@ -350,6 +348,10 @@ class ParticleChild {
 	private static var mathColorTransform:ColorTransform = new ColorTransform();
 
 	public function update(dt:Float) {
+		if (particle.colorAttribute.hasTween()) {
+			updateTweenColor();
+		}
+
 		time += dt;
 		var nowtime:Float = time - life * random;
 		if (particle.duration != -1 && nowtime > maxlife || nowtime < 0) {

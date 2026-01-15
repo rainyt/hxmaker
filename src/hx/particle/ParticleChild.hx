@@ -267,15 +267,15 @@ class ParticleChild {
 		var endScaleY:Float = particle.scaleYAttribute.tween.end.getValue();
 		var scaleXlife = particle.scaleXAttribute.leftTime;
 		var scaleYlife = particle.scaleYAttribute.leftTime;
-		var sx:Float = startScaleX * scaleXlife + endScaleX * scaleYlife;
-		var sy:Float = startScaleY * scaleYlife + endScaleY * scaleYlife;
+		var sx:Float = startScaleX + (endScaleX - startScaleX) * scaleXlife;
+		var sy:Float = startScaleY + (endScaleY - startScaleY) * scaleYlife;
 		this.image.scaleX = sx;
 		this.image.scaleY = sy;
 
 		this.particle.rotaionAttribute.update(timeScale, outlife);
 		var startRotation = particle.rotaionAttribute.tween.start.getValue();
 		var endRotation:Float = particle.rotaionAttribute.tween.end.getValue();
-		var rotation:Float = startRotation * scaleXlife + (endRotation - startRotation) * scaleYlife;
+		var rotation:Float = startRotation + (endRotation - startRotation) * particle.rotaionAttribute.leftTime;
 		this.image.rotation = rotation;
 
 		this.image.x = posX + velocityX * aliveTime + (gravityX + accelerationX + tangentialX) * aliveTime * aliveTime;

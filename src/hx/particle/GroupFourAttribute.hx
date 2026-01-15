@@ -36,39 +36,10 @@ class GroupFourAttribute {
 	}
 
 	/**
-	 * 获取过渡值
-	 * @param aliveTimeScale 
+	 * 更新过渡值
+	 * @param aliveTimeScale 存活时间比例
 	 */
-	public function getStartAndEndTweenColor(aliveTimeScale:Float):{
-		startoffest:Float,
-		endoffest:Float,
-		start:FourAttribute,
-		end:FourAttribute
-	} {
-		for (index => value in tween.attributes) {
-			if (value.aliveTimeScale >= aliveTimeScale) {
-				if (index == 0)
-					return {
-						startoffest: 0,
-						endoffest: value.asFourAttribute().aliveTimeScale,
-						start: start,
-						end: value.asFourAttribute().attribute
-					};
-				else
-					return {
-						startoffest: tween.attributes[index - 1].asFourAttribute().aliveTimeScale,
-						endoffest: value.asFourAttribute().aliveTimeScale,
-						start: tween.attributes[index - 1].asFourAttribute().attribute,
-						end: value.asFourAttribute().attribute
-					};
-			}
-		}
-		var value = tween.attributes[0];
-		return {
-			startoffest: 0,
-			endoffest: value.asFourAttribute().aliveTimeScale,
-			start: start,
-			end: value.asFourAttribute().attribute
-		};
+	public function update(aliveTimeScale:Float):Void {
+		tween.update(aliveTimeScale, start, end);
 	}
 }

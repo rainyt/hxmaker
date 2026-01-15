@@ -118,22 +118,19 @@ class ParticleChild {
 	/**
 	 * 开始颜色变换
 	 */
-	public var startColorTranform:ColorTransform = new ColorTransform();
-
+	// public var startColorTranform:ColorTransform = new ColorTransform();
 	/**
 	 * 结束颜色变换
 	 */
-	public var endColorTranform:ColorTransform = new ColorTransform();
-
+	// public var endColorTranform:ColorTransform = new ColorTransform();
 	/**
 	 * 开始颜色变换过渡时间偏移
 	 */
-	public var startTweenOffset:Float = 0;
-
+	// public var startTweenOffset:Float = 0;
 	/**
 	 * 结束颜色变换过渡时间偏移
 	 */
-	public var endTweenOffset:Float = 1;
+	// public var endTweenOffset:Float = 1;
 
 	/**
 	 * 用于计算的颜色变换
@@ -196,26 +193,23 @@ class ParticleChild {
 	/**
 	 * 更新过渡颜色
 	 */
-	public function updateTweenColor():Bool {
-		var tscale = aliveTime / life;
-		var data = particle.colorAttribute.getStartAndEndTweenColor(tscale);
-
-		startTweenOffset = data.startoffest;
-		endTweenOffset = data.endoffest;
-
-		var start:FourAttribute = data.start;
-		var end:FourAttribute = data.end;
-		this.startColorTranform.redMultiplier = start.x.getValue();
-		this.startColorTranform.greenMultiplier = start.y.getValue();
-		this.startColorTranform.blueMultiplier = start.z.getValue();
-		this.startColorTranform.alphaMultiplier = start.w.getValue();
-		this.endColorTranform.redMultiplier = end.x.getValue();
-		this.endColorTranform.greenMultiplier = end.y.getValue();
-		this.endColorTranform.blueMultiplier = end.z.getValue();
-		this.endColorTranform.alphaMultiplier = end.w.getValue();
-
-		return true;
-	}
+	// public function updateTweenColor():Bool {
+	// var tscale = aliveTime / life;
+	// particle.colorAttribute.update(tscale);
+	// startTweenOffset = particle.colorAttribute.tween.startOffset;
+	// endTweenOffset = particle.colorAttribute.tween.endOffset;
+	// var start:FourAttribute = particle.colorAttribute.tween.start;
+	// var end:FourAttribute = particle.colorAttribute.tween.end;
+	// this.startColorTranform.redMultiplier = start.x.getValue();
+	// this.startColorTranform.greenMultiplier = start.y.getValue();
+	// this.startColorTranform.blueMultiplier = start.z.getValue();
+	// this.startColorTranform.alphaMultiplier = start.w.getValue();
+	// this.endColorTranform.redMultiplier = end.x.getValue();
+	// this.endColorTranform.greenMultiplier = end.y.getValue();
+	// this.endColorTranform.blueMultiplier = end.z.getValue();
+	// this.endColorTranform.alphaMultiplier = end.w.getValue();
+	// return true;
+	// }
 
 	public function reset():Void {
 		this.image.blendMode = particle.blendMode;
@@ -314,26 +308,26 @@ class ParticleChild {
 				maxlife = life;
 		}
 
-		var startColor1 = particle.colorAttribute.start.x.getValue();
-		var startColor2 = particle.colorAttribute.start.y.getValue();
-		var startColor3 = particle.colorAttribute.start.z.getValue();
-		var startColor4 = particle.colorAttribute.start.w.getValue();
+		// var startColor1 = particle.colorAttribute.start.x.getValue();
+		// var startColor2 = particle.colorAttribute.start.y.getValue();
+		// var startColor3 = particle.colorAttribute.start.z.getValue();
+		// var startColor4 = particle.colorAttribute.start.w.getValue();
 
-		var endColor1 = particle.colorAttribute.end.x.getValue();
-		var endColor2 = particle.colorAttribute.end.y.getValue();
-		var endColor3 = particle.colorAttribute.end.z.getValue();
-		var endColor4 = particle.colorAttribute.end.w.getValue();
+		// var endColor1 = particle.colorAttribute.end.x.getValue();
+		// var endColor2 = particle.colorAttribute.end.y.getValue();
+		// var endColor3 = particle.colorAttribute.end.z.getValue();
+		// var endColor4 = particle.colorAttribute.end.w.getValue();
 
-		startColorTranform.redMultiplier = startColor1;
-		startColorTranform.greenMultiplier = startColor2;
-		startColorTranform.blueMultiplier = startColor3;
-		startColorTranform.alphaMultiplier = startColor4;
-		endColorTranform.redMultiplier = endColor1;
-		endColorTranform.greenMultiplier = endColor2;
-		endColorTranform.blueMultiplier = endColor3;
-		endColorTranform.alphaMultiplier = endColor4;
-		startTweenOffset = 0;
-		endTweenOffset = 1;
+		// startColorTranform.redMultiplier = startColor1;
+		// startColorTranform.greenMultiplier = startColor2;
+		// startColorTranform.blueMultiplier = startColor3;
+		// startColorTranform.alphaMultiplier = startColor4;
+		// endColorTranform.redMultiplier = endColor1;
+		// endColorTranform.greenMultiplier = endColor2;
+		// endColorTranform.blueMultiplier = endColor3;
+		// endColorTranform.alphaMultiplier = endColor4;
+		// startTweenOffset = 0;
+		// endTweenOffset = 1;
 	}
 
 	public function dispose():Void {
@@ -348,11 +342,9 @@ class ParticleChild {
 	private static var mathColorTransform:ColorTransform = new ColorTransform();
 
 	public function update(dt:Float) {
-		if (particle.colorAttribute.hasTween()) {
-			updateTweenColor();
-		}
-
 		time += dt;
+		var timeScale = aliveTime / life;
+
 		var nowtime:Float = time - life * random;
 		if (particle.duration != -1 && nowtime > maxlife || nowtime < 0) {
 			if (this.image.visible)
@@ -384,15 +376,19 @@ class ParticleChild {
 			this.image.y -= particle.y;
 		}
 
-		var tweenScale:Float = endTweenOffset - startTweenOffset;
-		var coutlife:Float = (ooutlife - startTweenOffset) / tweenScale;
-
-		mathColorTransform.redMultiplier = startColorTranform.redMultiplier + (endColorTranform.redMultiplier - startColorTranform.redMultiplier) * coutlife;
-		mathColorTransform.greenMultiplier = startColorTranform.greenMultiplier
-			+ (endColorTranform.greenMultiplier - startColorTranform.greenMultiplier) * coutlife;
-		mathColorTransform.blueMultiplier = startColorTranform.blueMultiplier
-			+ (endColorTranform.blueMultiplier - startColorTranform.blueMultiplier) * coutlife;
-		this.image.alpha = startColorTranform.alphaMultiplier + (endColorTranform.alphaMultiplier - startColorTranform.alphaMultiplier) * coutlife;
+		// 更新颜色处理
+		this.particle.colorAttribute.update(timeScale);
+		var tweenScale:Float = this.particle.colorAttribute.tween.endOffset - this.particle.colorAttribute.tween.startOffset;
+		var coutlife:Float = (ooutlife - this.particle.colorAttribute.tween.startOffset) / tweenScale;
+		mathColorTransform.redMultiplier = this.particle.colorAttribute.tween.start.x.getValue()
+			+ (this.particle.colorAttribute.tween.end.x.getValue() - this.particle.colorAttribute.tween.start.x.getValue()) * coutlife;
+		mathColorTransform.greenMultiplier = this.particle.colorAttribute.tween.start.y.getValue()
+			+ (this.particle.colorAttribute.tween.end.y.getValue() - this.particle.colorAttribute.tween.start.y.getValue()) * coutlife;
+		mathColorTransform.blueMultiplier = this.particle.colorAttribute.tween.start.z.getValue()
+			+ (this.particle.colorAttribute.tween.end.z.getValue() - this.particle.colorAttribute.tween.start.z.getValue()) * coutlife;
+		mathColorTransform.alphaMultiplier = this.particle.colorAttribute.tween.start.w.getValue()
+			+ (this.particle.colorAttribute.tween.end.w.getValue() - this.particle.colorAttribute.tween.start.w.getValue()) * coutlife;
+		this.image.alpha = mathColorTransform.alphaMultiplier;
 		this.image.colorTransform = mathColorTransform;
 	}
 }

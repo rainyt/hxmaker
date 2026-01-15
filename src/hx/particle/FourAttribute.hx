@@ -1,6 +1,6 @@
 package hx.particle;
 
-class FourAttribute {
+class FourAttribute implements Attribute {
 	public var x:Attribute = new OneAttribute(1);
 
 	public var y:Attribute = new OneAttribute(1);
@@ -35,5 +35,15 @@ class FourAttribute {
 
 	public function copy():FourAttribute {
 		return new FourAttribute(x.copy(), y.copy(), z.copy(), w.copy());
+	}
+
+	public var type(get, never):String;
+
+	private function get_type():String {
+		return "four";
+	}
+
+	public function getValue():Float {
+		return x.getValue() + y.getValue() + z.getValue() + w.getValue();
 	}
 }

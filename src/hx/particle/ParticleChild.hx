@@ -152,9 +152,14 @@ class ParticleChild {
 		// 点与中心的角度
 		var posAngle = 0.;
 		if (particle.dynamicEmitPoint) {
-			// var stagePos = particle.parent.localToGlobal(new Point(particle.x, particle.y));
-			posX = Math.random() * particle.widthRange * 2 - particle.widthRange + particle.x / particle.scaleX;
-			posY = Math.random() * particle.heightRange * 2 - particle.heightRange + particle.y / particle.scaleY;
+			if (particle.localToGlobalEmitPoint) {
+				var stagePos = this.particle.parent.localToGlobal(new Point(particle.x, particle.y));
+				posX = Math.random() * particle.widthRange * 2 - particle.widthRange + stagePos.x / particle.scaleX;
+				posY = Math.random() * particle.heightRange * 2 - particle.heightRange + stagePos.y / particle.scaleY;
+			} else {
+				posX = Math.random() * particle.widthRange * 2 - particle.widthRange + particle.x / particle.scaleX;
+				posY = Math.random() * particle.heightRange * 2 - particle.heightRange + particle.y / particle.scaleY;
+			}
 		} else {
 			posX = Math.random() * particle.widthRange * 2 - particle.widthRange;
 			posY = Math.random() * particle.heightRange * 2 - particle.heightRange;
@@ -307,8 +312,14 @@ class ParticleChild {
 
 	public function updatePosition():Void {
 		if (particle.dynamicEmitPoint) {
-			this.image.x = this.__localX - particle.x / particle.scaleX;
-			this.image.y = this.__localY - particle.y / particle.scaleY;
+			if (particle.localToGlobalEmitPoint) {
+				var stagePos = particle.parent.localToGlobal(new Point(particle.x, particle.y));
+				this.image.x = this.__localX - stagePos.x / particle.scaleX;
+				this.image.y = this.__localY - stagePos.y / particle.scaleY;
+			} else {
+				this.image.x = this.__localX - particle.x / particle.scaleX;
+				this.image.y = this.__localY - particle.y / particle.scaleY;
+			}
 		}
 	}
 }

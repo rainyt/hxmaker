@@ -46,6 +46,11 @@ class Particle extends Box {
 	public var dynamicEmitPoint:Bool = false;
 
 	/**
+	 * 是否将发射点转换为全局坐标，默认为`false`，当为`true`时，将会将发射点转换为全局坐标
+	 */
+	public var localToGlobalEmitPoint:Bool = false;
+
+	/**
 	 * 强制重置，开启后，当粒子在生命最后一刻结束后，会进行重置，默认为false
 	 */
 	public var forceReset:Bool = false;
@@ -201,6 +206,10 @@ class Particle extends Box {
 		for (key in data.attributes()) {
 			if (key == "dynamicEmitPoint") {
 				dynamicEmitPoint = data.get(key) == "true";
+				continue;
+			}
+			if (key == "localToGlobalEmitPoint") {
+				localToGlobalEmitPoint = data.get(key) == "true";
 				continue;
 			}
 			if (key == "time")

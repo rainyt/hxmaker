@@ -212,7 +212,7 @@ class Particle extends Box {
 						this.scaleXAttribute.start = this.createAttribute(array[0]);
 						for (i in 1...array.length) {
 							var attribute = this.createAttribute(array[i]);
-							this.scaleXAttribute.tween.pushAttribute(Std.parseFloat(array[i].get("weight")), attribute);
+							this.scaleXAttribute.tween.pushAttribute(array[i].exists("weight") ? Std.parseFloat(array[i].get("weight")) : 1, attribute);
 						}
 					} else {
 						this.scaleXAttribute.start = this.createAttribute(array[0]);
@@ -223,7 +223,7 @@ class Particle extends Box {
 						this.scaleYAttribute.start = this.createAttribute(array[0]);
 						for (i in 1...array.length) {
 							var attribute = this.createAttribute(array[i]);
-							this.scaleYAttribute.tween.pushAttribute(Std.parseFloat(array[i].get("weight")), attribute);
+							this.scaleYAttribute.tween.pushAttribute(array[i].exists("weight") ? Std.parseFloat(array[i].get("weight")) : 1, attribute);
 						}
 					} else {
 						this.scaleYAttribute.start = this.createAttribute(array[0]);
@@ -234,7 +234,7 @@ class Particle extends Box {
 						this.rotaionAttribute.start = this.createAttribute(array[0]);
 						for (i in 1...array.length) {
 							var attribute = this.createAttribute(array[i]);
-							this.rotaionAttribute.tween.pushAttribute(Std.parseFloat(array[i].get("weight")), attribute);
+							this.rotaionAttribute.tween.pushAttribute(array[i].exists("weight") ? Std.parseFloat(array[i].get("weight")) : 1, attribute);
 						}
 					} else {
 						this.rotaionAttribute.start = this.createAttribute(array[0]);
@@ -245,7 +245,7 @@ class Particle extends Box {
 						this.colorAttribute.start = this.createFourAttribute(array[0]);
 						for (i in 1...array.length) {
 							var fourAttribute = this.createFourAttribute(array[i]);
-							this.colorAttribute.tween.pushAttribute(Std.parseFloat(array[i].get("weight")), fourAttribute);
+							this.colorAttribute.tween.pushAttribute(array[i].exists("weight") ? Std.parseFloat(array[i].get("weight")) : 1, fourAttribute);
 						}
 					} else {
 						this.colorAttribute.start = this.createFourAttribute(array[0]);

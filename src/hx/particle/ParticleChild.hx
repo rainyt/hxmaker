@@ -392,10 +392,5 @@ class ParticleChild {
 			+ (endColorTranform.blueMultiplier - startColorTranform.blueMultiplier) * coutlife;
 		this.image.alpha = startColorTranform.alphaMultiplier + (endColorTranform.alphaMultiplier - startColorTranform.alphaMultiplier) * coutlife;
 		this.image.colorTransform = mathColorTransform;
-		if (mathColorTransform.redMultiplier > 0.8
-			&& mathColorTransform.greenMultiplier > 0.8
-			&& mathColorTransform.blueMultiplier > 0.8) {
-			trace("阿？", mathColorTransform);
-		}
 	}
 }

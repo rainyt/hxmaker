@@ -75,7 +75,28 @@ class Particle extends Box {
 	/**
 	 * 当前时间，可设置当前时间来更新粒子
 	 */
-	public var time:Float = 0;
+	public var time(get, set):Float;
+
+	private var __time:Float = 0;
+
+	/**
+	 * 获取当前时间
+	 */
+	private function get_time():Float {
+		return __time;
+	}
+
+	/**
+	 * 设置当前时间
+	 */
+	private function set_time(value:Float):Float {
+		var step = 1 / 60;
+		while (__time < value) {
+			this.onUpdate(step);
+		}
+		__time = value;
+		return value;
+	}
 
 	/**
 	 * 宽度范围
@@ -178,6 +199,8 @@ class Particle extends Box {
 	public function applyXmlData(data:Xml):Void {
 		// 解析XML数据
 		for (key in data.attributes()) {
+			if (key == "time")
+				continue;
 			if (Reflect.hasField(this, key)) {
 				if (key == "counts")
 					counts = Std.parseInt(data.get(key));
@@ -363,7 +386,7 @@ class Particle extends Box {
 	override public function onUpdate(dt:Float) {
 		if (!_isPlay || childs == null)
 			return;
-		this.time += dt;
+		this.__time += dt;
 		particleLiveCounts = 0;
 		for (value in childs) {
 			if (!value.isDie()) {

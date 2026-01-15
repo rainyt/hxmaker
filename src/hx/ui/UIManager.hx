@@ -485,6 +485,9 @@ class UIManager {
 				var config = configXml.next();
 				obj.applyXmlData(config);
 				obj.start();
+				if (config.exists("time")) {
+					obj.time = Std.parseFloat(config.get("time"));
+				}
 			}
 		});
 		addAttributesParse(Spine, function(obj:Spine, xml:Xml, assets:Assets) {

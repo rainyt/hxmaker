@@ -363,12 +363,7 @@ class Particle extends Box {
 	override public function onUpdate(dt:Float) {
 		if (!_isPlay || childs == null)
 			return;
-		var curtime = time + dt;
-		var lifetime = (life + lifeVariance);
-		if (curtime > lifetime * 2) {
-			curtime = lifetime + (curtime % lifetime);
-		}
-		this.time = curtime;
+		this.time += dt;
 		particleLiveCounts = 0;
 		for (value in childs) {
 			if (!value.isDie()) {

@@ -211,13 +211,6 @@ class ParticleChild {
 		this.gravityX = particle.gravity.x.getValue();
 		this.gravityY = particle.gravity.y.getValue();
 
-		// this.startScaleX = particle.scaleXAttribute.start.getValue();
-		// this.startScaleY = particle.scaleYAttribute.start == particle.scaleXAttribute.start ? this.startScaleY : particle.scaleYAttribute.start.getValue();
-		// this.endScaleX = particle.scaleXAttribute.end.getValue();
-		// this.endScaleY = particle.scaleYAttribute.end == particle.scaleXAttribute.end ? this.endScaleY : particle.scaleYAttribute.end.getValue();
-		// this.startRotation = particle.rotaionAttribute.start.getValue();
-		// this.endRotation = particle.rotaionAttribute.end.getValue();
-
 		// 生命+生命方差实现
 		if (this.life == 0) {
 			var rlife = particle.life + Math.random() * particle.lifeVariance;

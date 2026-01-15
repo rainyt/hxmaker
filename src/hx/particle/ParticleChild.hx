@@ -11,11 +11,6 @@ class ParticleChild {
 	public var id:Int;
 
 	/**
-	 * 过渡色ID
-	 */
-	public var tweenColorID:Int = -1;
-
-	/**
 	 * 生命周期
 	 */
 	public var life:Float = 0;
@@ -143,8 +138,7 @@ class ParticleChild {
 	/**
 	 * 用于计算的颜色变换
 	 */
-	private static var mathColorTransform:ColorTransform = new ColorTransform();
-
+	// private static var mathColorTransform:ColorTransform = new ColorTransform();
 	private var _init:Bool = false;
 
 	public var particle:Particle;
@@ -205,14 +199,6 @@ class ParticleChild {
 	public function updateTweenColor():Bool {
 		var tscale = aliveTime / life;
 		var data = particle.colorAttribute.getStartAndEndTweenColor(tscale);
-		if (data.id == tweenColorID) {
-			return false;
-		}
-
-		var index2 = id * 12;
-		var index4 = id * 24;
-
-		tweenColorID = data.id;
 
 		startTweenOffset = data.startoffest;
 		endTweenOffset = data.endoffest;
@@ -358,6 +344,11 @@ class ParticleChild {
 
 	public var time:Float = 0;
 
+	/**
+	 * 颜色变换
+	 */
+	private static var mathColorTransform:ColorTransform = new ColorTransform();
+
 	public function update(dt:Float) {
 		time += dt;
 		var nowtime:Float = time - life * random;
@@ -400,7 +391,11 @@ class ParticleChild {
 		mathColorTransform.blueMultiplier = startColorTranform.blueMultiplier
 			+ (endColorTranform.blueMultiplier - startColorTranform.blueMultiplier) * coutlife;
 		this.image.alpha = startColorTranform.alphaMultiplier + (endColorTranform.alphaMultiplier - startColorTranform.alphaMultiplier) * coutlife;
-
 		this.image.colorTransform = mathColorTransform;
+		if (mathColorTransform.redMultiplier > 0.8
+			&& mathColorTransform.greenMultiplier > 0.8
+			&& mathColorTransform.blueMultiplier > 0.8) {
+			trace("阿？", mathColorTransform);
+		}
 	}
 }

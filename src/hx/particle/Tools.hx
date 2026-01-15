@@ -10,4 +10,12 @@ class Tools {
 	public static function asRandomTwoAttribute(value:Attribute):RandomTwoAttribute {
 		return cast value;
 	}
+
+	public static function asTwoAttribute(value:Attribute):TwoAttribute {
+		return cast value;
+	}
+
+	public static function asFourAttribute(value:Attribute):FourAttribute {
+		return cast value;
+	}
 }

@@ -37,4 +37,19 @@ class GroupAttribute {
 	public function hasTween():Bool {
 		return tween.attributes.length > 0;
 	}
+
+	/**
+	 * 剩余时间比例
+	 */
+	public var leftTime:Float = 0;
+
+	/**
+	 * 更新过渡值
+	 * @param aliveTimeScale 存活时间比例
+	 */
+	public function update(aliveTimeScale:Float):Void {
+		tween.update(aliveTimeScale, start, end);
+		var tweenScale:Float = this.tween.endOffset - this.tween.startOffset;
+		this.leftTime = (aliveTimeScale - this.tween.startOffset) / tweenScale;
+	}
 }

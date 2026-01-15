@@ -150,7 +150,7 @@ class Particle extends Box {
 	/**
 	 * 颜色过渡参数
 	 */
-	public var colorAttribute:GroupFourAttribute = new GroupFourAttribute(new FourAttribute(), new FourAttribute());
+	public var colorAttribute:GroupAttribute = new GroupAttribute(new FourAttribute(), new FourAttribute());
 
 	/**
 	 * 粒子存活数量
@@ -203,10 +203,21 @@ class Particle extends Box {
 					this.tangential.x = this.createAttribute(array[0]);
 					this.tangential.y = this.createAttribute(array[1]);
 				case "particle-group-scale":
-					this.scaleXAttribute.start = this.createAttribute(array[0]);
-					this.scaleXAttribute.end = this.createAttribute(array[1]);
-					this.scaleYAttribute.start = this.createAttribute(array[0]);
-					this.scaleYAttribute.end = this.createAttribute(array[1]);
+					if (array.length > 2) {
+						this.scaleXAttribute.start = this.createAttribute(array[0]);
+						this.scaleYAttribute.start = this.createAttribute(array[0]);
+						for (i in 1...array.length) {
+							this.scaleXAttribute.tween.pushAttribute(array[i].exists("weight") ? Std.parseFloat(array[i].get("weight")) : 1,
+								this.createAttribute(array[i]));
+							this.scaleYAttribute.tween.pushAttribute(array[i].exists("weight") ? Std.parseFloat(array[i].get("weight")) : 1,
+								this.createAttribute(array[i]));
+						}
+					} else {
+						this.scaleXAttribute.start = this.createAttribute(array[0]);
+						this.scaleXAttribute.end = this.createAttribute(array[1]);
+						this.scaleYAttribute.start = this.createAttribute(array[0]);
+						this.scaleYAttribute.end = this.createAttribute(array[1]);
+					}
 				case "particle-group-scale-x":
 					if (array.length > 2) {
 						this.scaleXAttribute.start = this.createAttribute(array[0]);
@@ -288,15 +299,15 @@ class Particle extends Box {
 		this.duration = data.duration;
 		var random = new RandomTwoAttribute(0., 1);
 		// 设置开始颜色
-		this.colorAttribute.start.x = new RandomTwoAttribute(data.startColorRed, data.startColorRed + data.startColorVarianceRed);
-		this.colorAttribute.start.y = new RandomTwoAttribute(data.startColorGreen, data.startColorGreen + data.startColorVarianceGreen);
-		this.colorAttribute.start.z = new RandomTwoAttribute(data.startColorBlue, data.startColorBlue + data.startColorVarianceBlue);
-		this.colorAttribute.start.w = new RandomTwoAttribute(data.startColorAlpha, data.startColorAlpha + data.startColorVarianceAlpha);
+		this.colorAttribute.start.asFourAttribute().x = new RandomTwoAttribute(data.startColorRed, data.startColorRed + data.startColorVarianceRed);
+		this.colorAttribute.start.asFourAttribute().y = new RandomTwoAttribute(data.startColorGreen, data.startColorGreen + data.startColorVarianceGreen);
+		this.colorAttribute.start.asFourAttribute().z = new RandomTwoAttribute(data.startColorBlue, data.startColorBlue + data.startColorVarianceBlue);
+		this.colorAttribute.start.asFourAttribute().w = new RandomTwoAttribute(data.startColorAlpha, data.startColorAlpha + data.startColorVarianceAlpha);
 		// 设置结束颜色
-		this.colorAttribute.end.x = new RandomTwoAttribute(data.finishColorRed, data.finishColorRed + data.finishColorVarianceRed);
-		this.colorAttribute.end.y = new RandomTwoAttribute(data.finishColorGreen, data.finishColorGreen + data.finishColorVarianceGreen);
-		this.colorAttribute.end.z = new RandomTwoAttribute(data.finishColorBlue, data.finishColorBlue + data.finishColorVarianceGreen);
-		this.colorAttribute.end.w = new RandomTwoAttribute(data.finishColorAlpha, data.finishColorAlpha + data.finishColorVarianceAlpha);
+		this.colorAttribute.end.asFourAttribute().x = new RandomTwoAttribute(data.finishColorRed, data.finishColorRed + data.finishColorVarianceRed);
+		this.colorAttribute.end.asFourAttribute().y = new RandomTwoAttribute(data.finishColorGreen, data.finishColorGreen + data.finishColorVarianceGreen);
+		this.colorAttribute.end.asFourAttribute().z = new RandomTwoAttribute(data.finishColorBlue, data.finishColorBlue + data.finishColorVarianceBlue);
+		this.colorAttribute.end.asFourAttribute().w = new RandomTwoAttribute(data.finishColorAlpha, data.finishColorAlpha + data.finishColorVarianceAlpha);
 		// 设置粒子数量
 		this.counts = data.maxParticles;
 		// 设置粒子生命

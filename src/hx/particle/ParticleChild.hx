@@ -35,25 +35,22 @@ class ParticleChild {
 	 */
 	private var lastLife:Float = 0;
 
-	/**
-	 * 开始缩放X
-	 */
-	public var startScaleX:Float = 1;
-
-	/**
-	 * 开始缩放Y
-	 */
-	public var startScaleY:Float = 1;
-
-	/**
-	 * 结束缩放X
-	 */
-	public var endScaleX:Float = 1;
-
-	/**
-	 * 结束缩放Y
-	 */
-	public var endScaleY:Float = 1;
+	// /**
+	//  * 开始缩放X
+	//  */
+	// public var startScaleX:Float = 1;
+	// /**
+	//  * 开始缩放Y
+	//  */
+	// public var startScaleY:Float = 1;
+	// /**
+	//  * 结束缩放X
+	//  */
+	// public var endScaleX:Float = 1;
+	// /**
+	//  * 结束缩放Y
+	//  */
+	// public var endScaleY:Float = 1;
 
 	/**
 	 * 开始旋转角度
@@ -283,10 +280,10 @@ class ParticleChild {
 		this.gravityX = particle.gravity.x.getValue();
 		this.gravityY = particle.gravity.y.getValue();
 
-		this.startScaleX = particle.scaleXAttribute.start.getValue();
-		this.startScaleY = particle.scaleYAttribute.start == particle.scaleXAttribute.start ? this.startScaleY : particle.scaleYAttribute.start.getValue();
-		this.endScaleX = particle.scaleXAttribute.end.getValue();
-		this.endScaleY = particle.scaleYAttribute.end == particle.scaleXAttribute.end ? this.endScaleY : particle.scaleYAttribute.end.getValue();
+		// this.startScaleX = particle.scaleXAttribute.start.getValue();
+		// this.startScaleY = particle.scaleYAttribute.start == particle.scaleXAttribute.start ? this.startScaleY : particle.scaleYAttribute.start.getValue();
+		// this.endScaleX = particle.scaleXAttribute.end.getValue();
+		// this.endScaleY = particle.scaleYAttribute.end == particle.scaleXAttribute.end ? this.endScaleY : particle.scaleYAttribute.end.getValue();
 		this.startRotation = particle.rotaionAttribute.start.getValue();
 		this.endRotation = particle.rotaionAttribute.end.getValue();
 
@@ -307,27 +304,6 @@ class ParticleChild {
 			if (maxlife < life)
 				maxlife = life;
 		}
-
-		// var startColor1 = particle.colorAttribute.start.x.getValue();
-		// var startColor2 = particle.colorAttribute.start.y.getValue();
-		// var startColor3 = particle.colorAttribute.start.z.getValue();
-		// var startColor4 = particle.colorAttribute.start.w.getValue();
-
-		// var endColor1 = particle.colorAttribute.end.x.getValue();
-		// var endColor2 = particle.colorAttribute.end.y.getValue();
-		// var endColor3 = particle.colorAttribute.end.z.getValue();
-		// var endColor4 = particle.colorAttribute.end.w.getValue();
-
-		// startColorTranform.redMultiplier = startColor1;
-		// startColorTranform.greenMultiplier = startColor2;
-		// startColorTranform.blueMultiplier = startColor3;
-		// startColorTranform.alphaMultiplier = startColor4;
-		// endColorTranform.redMultiplier = endColor1;
-		// endColorTranform.greenMultiplier = endColor2;
-		// endColorTranform.blueMultiplier = endColor3;
-		// endColorTranform.alphaMultiplier = endColor4;
-		// startTweenOffset = 0;
-		// endTweenOffset = 1;
 	}
 
 	public function dispose():Void {
@@ -358,9 +334,18 @@ class ParticleChild {
 		aliveTime = aliveTime * step(0, nowtime);
 
 		var outlife = (life - aliveTime) / life;
-		var ooutlife:Float = 1 - outlife;
-		var sx:Float = startScaleX * outlife + endScaleX * ooutlife;
-		var sy:Float = startScaleY * outlife + endScaleY * ooutlife;
+		
+		// var ooutlife:Float = 1 - outlife;
+		this.particle.scaleXAttribute.update(timeScale);
+		this.particle.scaleYAttribute.update(timeScale);
+		var startScaleX:Float = particle.scaleXAttribute.start.getValue();
+		var endScaleX:Float = particle.scaleXAttribute.end.getValue();
+		var startScaleY:Float = particle.scaleYAttribute.start.getValue();
+		var endScaleY:Float = particle.scaleYAttribute.end.getValue();
+		var scaleXlife = particle.scaleXAttribute.leftTime;
+		var scaleYlife = particle.scaleYAttribute.leftTime;
+		var sx:Float = startScaleX * scaleXlife + endScaleX * scaleYlife;
+		var sy:Float = startScaleY * scaleYlife + endScaleY * scaleYlife;
 		this.image.scaleX = sx;
 		this.image.scaleY = sy;
 
@@ -378,16 +363,15 @@ class ParticleChild {
 
 		// 更新颜色处理
 		this.particle.colorAttribute.update(timeScale);
-		var tweenScale:Float = this.particle.colorAttribute.tween.endOffset - this.particle.colorAttribute.tween.startOffset;
-		var coutlife:Float = (ooutlife - this.particle.colorAttribute.tween.startOffset) / tweenScale;
-		mathColorTransform.redMultiplier = this.particle.colorAttribute.tween.start.x.getValue()
-			+ (this.particle.colorAttribute.tween.end.x.getValue() - this.particle.colorAttribute.tween.start.x.getValue()) * coutlife;
-		mathColorTransform.greenMultiplier = this.particle.colorAttribute.tween.start.y.getValue()
-			+ (this.particle.colorAttribute.tween.end.y.getValue() - this.particle.colorAttribute.tween.start.y.getValue()) * coutlife;
-		mathColorTransform.blueMultiplier = this.particle.colorAttribute.tween.start.z.getValue()
-			+ (this.particle.colorAttribute.tween.end.z.getValue() - this.particle.colorAttribute.tween.start.z.getValue()) * coutlife;
-		mathColorTransform.alphaMultiplier = this.particle.colorAttribute.tween.start.w.getValue()
-			+ (this.particle.colorAttribute.tween.end.w.getValue() - this.particle.colorAttribute.tween.start.w.getValue()) * coutlife;
+		var startColor = this.particle.colorAttribute.tween.start.asFourAttribute();
+		var endColor = this.particle.colorAttribute.tween.end.asFourAttribute();
+		mathColorTransform.redMultiplier = startColor.x.getValue() + (endColor.x.getValue() - startColor.x.getValue()) * this.particle.colorAttribute.leftTime;
+		mathColorTransform.greenMultiplier = startColor.y.getValue()
+			+ (endColor.y.getValue() - startColor.y.getValue()) * this.particle.colorAttribute.leftTime;
+		mathColorTransform.blueMultiplier = startColor.z.getValue()
+			+ (endColor.z.getValue() - startColor.z.getValue()) * this.particle.colorAttribute.leftTime;
+		mathColorTransform.alphaMultiplier = startColor.w.getValue()
+			+ (endColor.w.getValue() - startColor.w.getValue()) * this.particle.colorAttribute.leftTime;
 		this.image.alpha = mathColorTransform.alphaMultiplier;
 		this.image.colorTransform = mathColorTransform;
 	}

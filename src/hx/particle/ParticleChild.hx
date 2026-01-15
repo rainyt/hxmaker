@@ -35,33 +35,6 @@ class ParticleChild {
 	 */
 	private var lastLife:Float = 0;
 
-	// /**
-	//  * 开始缩放X
-	//  */
-	// public var startScaleX:Float = 1;
-	// /**
-	//  * 开始缩放Y
-	//  */
-	// public var startScaleY:Float = 1;
-	// /**
-	//  * 结束缩放X
-	//  */
-	// public var endScaleX:Float = 1;
-	// /**
-	//  * 结束缩放Y
-	//  */
-	// public var endScaleY:Float = 1;
-
-	/**
-	 * 开始旋转角度
-	 */
-	public var startRotation:Float = 0;
-
-	/**
-	 * 结束旋转角度
-	 */
-	public var endRotation:Float = 0;
-
 	/**
 	 * 初始化位置X
 	 */
@@ -112,27 +85,6 @@ class ParticleChild {
 	 */
 	public var tangentialY:Float = 0;
 
-	/**
-	 * 开始颜色变换
-	 */
-	// public var startColorTranform:ColorTransform = new ColorTransform();
-	/**
-	 * 结束颜色变换
-	 */
-	// public var endColorTranform:ColorTransform = new ColorTransform();
-	/**
-	 * 开始颜色变换过渡时间偏移
-	 */
-	// public var startTweenOffset:Float = 0;
-	/**
-	 * 结束颜色变换过渡时间偏移
-	 */
-	// public var endTweenOffset:Float = 1;
-
-	/**
-	 * 用于计算的颜色变换
-	 */
-	// private static var mathColorTransform:ColorTransform = new ColorTransform();
 	private var _init:Bool = false;
 
 	public var particle:Particle;
@@ -186,27 +138,6 @@ class ParticleChild {
 		}
 		return false;
 	}
-
-	/**
-	 * 更新过渡颜色
-	 */
-	// public function updateTweenColor():Bool {
-	// var tscale = aliveTime / life;
-	// particle.colorAttribute.update(tscale);
-	// startTweenOffset = particle.colorAttribute.tween.startOffset;
-	// endTweenOffset = particle.colorAttribute.tween.endOffset;
-	// var start:FourAttribute = particle.colorAttribute.tween.start;
-	// var end:FourAttribute = particle.colorAttribute.tween.end;
-	// this.startColorTranform.redMultiplier = start.x.getValue();
-	// this.startColorTranform.greenMultiplier = start.y.getValue();
-	// this.startColorTranform.blueMultiplier = start.z.getValue();
-	// this.startColorTranform.alphaMultiplier = start.w.getValue();
-	// this.endColorTranform.redMultiplier = end.x.getValue();
-	// this.endColorTranform.greenMultiplier = end.y.getValue();
-	// this.endColorTranform.blueMultiplier = end.z.getValue();
-	// this.endColorTranform.alphaMultiplier = end.w.getValue();
-	// return true;
-	// }
 
 	public function reset():Void {
 		this.image.blendMode = particle.blendMode;
@@ -284,8 +215,8 @@ class ParticleChild {
 		// this.startScaleY = particle.scaleYAttribute.start == particle.scaleXAttribute.start ? this.startScaleY : particle.scaleYAttribute.start.getValue();
 		// this.endScaleX = particle.scaleXAttribute.end.getValue();
 		// this.endScaleY = particle.scaleYAttribute.end == particle.scaleXAttribute.end ? this.endScaleY : particle.scaleYAttribute.end.getValue();
-		this.startRotation = particle.rotaionAttribute.start.getValue();
-		this.endRotation = particle.rotaionAttribute.end.getValue();
+		// this.startRotation = particle.rotaionAttribute.start.getValue();
+		// this.endRotation = particle.rotaionAttribute.end.getValue();
 
 		// 生命+生命方差实现
 		if (this.life == 0) {
@@ -334,14 +265,13 @@ class ParticleChild {
 		aliveTime = aliveTime * step(0, nowtime);
 
 		var outlife = (life - aliveTime) / life;
-		
-		// var ooutlife:Float = 1 - outlife;
-		this.particle.scaleXAttribute.update(timeScale);
-		this.particle.scaleYAttribute.update(timeScale);
-		var startScaleX:Float = particle.scaleXAttribute.start.getValue();
-		var endScaleX:Float = particle.scaleXAttribute.end.getValue();
-		var startScaleY:Float = particle.scaleYAttribute.start.getValue();
-		var endScaleY:Float = particle.scaleYAttribute.end.getValue();
+
+		this.particle.scaleXAttribute.update(timeScale, outlife);
+		this.particle.scaleYAttribute.update(timeScale, outlife);
+		var startScaleX:Float = particle.scaleXAttribute.tween.start.getValue();
+		var endScaleX:Float = particle.scaleXAttribute.tween.end.getValue();
+		var startScaleY:Float = particle.scaleYAttribute.tween.start.getValue();
+		var endScaleY:Float = particle.scaleYAttribute.tween.end.getValue();
 		var scaleXlife = particle.scaleXAttribute.leftTime;
 		var scaleYlife = particle.scaleYAttribute.leftTime;
 		var sx:Float = startScaleX * scaleXlife + endScaleX * scaleYlife;
@@ -349,8 +279,10 @@ class ParticleChild {
 		this.image.scaleX = sx;
 		this.image.scaleY = sy;
 
-		var offsetRotation:Float = (endRotation - startRotation);
-		var rotation:Float = startRotation + offsetRotation * outlife;
+		this.particle.rotaionAttribute.update(timeScale, outlife);
+		var startRotation = particle.rotaionAttribute.tween.start.getValue();
+		var endRotation:Float = particle.rotaionAttribute.tween.end.getValue();
+		var rotation:Float = startRotation * scaleXlife + (endRotation - startRotation) * scaleYlife;
 		this.image.rotation = rotation;
 
 		this.image.x = posX + velocityX * aliveTime + (gravityX + accelerationX + tangentialX) * aliveTime * aliveTime;
@@ -362,7 +294,7 @@ class ParticleChild {
 		}
 
 		// 更新颜色处理
-		this.particle.colorAttribute.update(timeScale);
+		this.particle.colorAttribute.update(timeScale, outlife);
 		var startColor = this.particle.colorAttribute.tween.start.asFourAttribute();
 		var endColor = this.particle.colorAttribute.tween.end.asFourAttribute();
 		mathColorTransform.redMultiplier = startColor.x.getValue() + (endColor.x.getValue() - startColor.x.getValue()) * this.particle.colorAttribute.leftTime;

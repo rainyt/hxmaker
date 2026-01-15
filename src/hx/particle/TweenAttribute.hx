@@ -56,13 +56,13 @@ class TweenAttribute {
 						this.endOffset = value.asFourAttribute().aliveTimeScale;
 						this.start = groupStart;
 						this.end = value.asFourAttribute().attribute;
-						break;
+						return;
 					} else {
 						this.startOffset = attributes[index - 1].asFourAttribute().aliveTimeScale;
 						this.endOffset = value.asFourAttribute().aliveTimeScale;
 						this.start = attributes[index - 1].asFourAttribute().attribute;
 						this.end = value.asFourAttribute().attribute;
-						break;
+						return;
 					}
 				}
 			}

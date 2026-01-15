@@ -47,9 +47,9 @@ class GroupAttribute {
 	 * 更新过渡值
 	 * @param aliveTimeScale 存活时间比例
 	 */
-	public function update(aliveTimeScale:Float):Void {
+	public function update(aliveTimeScale:Float, outlife:Float):Void {
 		tween.update(aliveTimeScale, start, end);
 		var tweenScale:Float = this.tween.endOffset - this.tween.startOffset;
-		this.leftTime = (aliveTimeScale - this.tween.startOffset) / tweenScale;
+		this.leftTime = ((1 - outlife) - this.tween.startOffset) / tweenScale;
 	}
 }

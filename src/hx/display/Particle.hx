@@ -396,10 +396,7 @@ class Particle extends Box {
 		if (texture == null)
 			return;
 		this.dispose();
-		this.colorAttribute.tween.updateWeight();
-		this.scaleXAttribute.tween.updateWeight();
-		this.scaleYAttribute.tween.updateWeight();
-		this.rotaionAttribute.tween.updateWeight();
+		this.updateWeight();
 		childs = [];
 		for (i in 0...counts) {
 			var child = new ParticleChild(this, i);
@@ -408,6 +405,16 @@ class Particle extends Box {
 			this.addChild(child.image);
 			child.reset();
 		}
+	}
+
+	/**
+	 * 更新权重
+	 */
+	public function updateWeight() {
+		this.colorAttribute.tween.updateWeight();
+		this.scaleXAttribute.tween.updateWeight();
+		this.scaleYAttribute.tween.updateWeight();
+		this.rotaionAttribute.tween.updateWeight();
 	}
 
 	function get_loop():Bool {

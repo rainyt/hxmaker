@@ -5,6 +5,7 @@ import hx.display.BitmapData;
 import hx.display.Image;
 import hx.display.Particle;
 import VectorMath;
+import hx.geom.Point;
 
 @:access(hx.particle.Particle)
 class ParticleChild {
@@ -151,11 +152,12 @@ class ParticleChild {
 		// 点与中心的角度
 		var posAngle = 0.;
 		if (particle.dynamicEmitPoint) {
-			posX = Math.random() * particle.widthRange * particle.scaleX * 2 - particle.widthRange * particle.scaleX + particle.x;
-			posY = Math.random() * particle.heightRange * particle.scaleY * 2 - particle.heightRange * particle.scaleY + particle.y;
+			// var stagePos = particle.parent.localToGlobal(new Point(particle.x, particle.y));
+			posX = Math.random() * particle.widthRange * 2 - particle.widthRange + particle.x / particle.scaleX;
+			posY = Math.random() * particle.heightRange * 2 - particle.heightRange + particle.y / particle.scaleY;
 		} else {
-			posX = Math.random() * particle.widthRange * particle.scaleX * 2 - particle.widthRange * particle.scaleX;
-			posY = Math.random() * particle.heightRange * particle.scaleY * 2 - particle.heightRange * particle.scaleY;
+			posX = Math.random() * particle.widthRange * 2 - particle.widthRange + particle.x / particle.scaleX;
+			posY = Math.random() * particle.heightRange * 2 - particle.heightRange + particle.y / particle.scaleY;
 		}
 		posAngle = -Math.atan2((posY - 0), (posX - 0));
 		var posAngle2 = Math.atan2((posX - 0), (posY - 0));
@@ -241,6 +243,9 @@ class ParticleChild {
 	 */
 	private static var mathColorTransform:ColorTransform = new ColorTransform();
 
+	private var __localX:Float = 0;
+	private var __localY:Float = 0;
+
 	public function update(dt:Float) {
 		time += dt;
 		var timeScale = aliveTime / life;
@@ -280,11 +285,10 @@ class ParticleChild {
 
 		this.image.x = posX + velocityX * aliveTime + (gravityX + accelerationX + tangentialX) * aliveTime * aliveTime;
 		this.image.y = posY + velocityY * aliveTime + (gravityY + accelerationY + tangentialY) * aliveTime * aliveTime;
+		this.__localX = this.image.x;
+		this.__localY = this.image.y;
 
-		if (particle.dynamicEmitPoint) {
-			this.image.x -= particle.x;
-			this.image.y -= particle.y;
-		}
+		this.updatePosition();
 
 		// 更新颜色处理
 		this.particle.colorAttribute.update(timeScale, outlife);
@@ -299,5 +303,12 @@ class ParticleChild {
 			+ (endColor.w.getValue() - startColor.w.getValue()) * this.particle.colorAttribute.leftTime;
 		this.image.alpha = mathColorTransform.alphaMultiplier;
 		this.image.colorTransform = mathColorTransform;
+	}
+
+	public function updatePosition():Void {
+		if (particle.dynamicEmitPoint) {
+			this.image.x = this.__localX - particle.x / particle.scaleX;
+			this.image.y = this.__localY - particle.y / particle.scaleY;
+		}
 	}
 }

@@ -199,6 +199,10 @@ class Particle extends Box {
 	public function applyXmlData(data:Xml):Void {
 		// 解析XML数据
 		for (key in data.attributes()) {
+			if (key == "dynamicEmitPoint") {
+				dynamicEmitPoint = data.get(key) == "true";
+				continue;
+			}
 			if (key == "time")
 				continue;
 			if (Reflect.hasField(this, key)) {

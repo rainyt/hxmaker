@@ -156,8 +156,8 @@ class ParticleChild {
 			posX = Math.random() * particle.widthRange * 2 - particle.widthRange + particle.x / particle.scaleX;
 			posY = Math.random() * particle.heightRange * 2 - particle.heightRange + particle.y / particle.scaleY;
 		} else {
-			posX = Math.random() * particle.widthRange * 2 - particle.widthRange + particle.x / particle.scaleX;
-			posY = Math.random() * particle.heightRange * 2 - particle.heightRange + particle.y / particle.scaleY;
+			posX = Math.random() * particle.widthRange * 2 - particle.widthRange;
+			posY = Math.random() * particle.heightRange * 2 - particle.heightRange;
 		}
 		posAngle = -Math.atan2((posY - 0), (posX - 0));
 		var posAngle2 = Math.atan2((posX - 0), (posY - 0));

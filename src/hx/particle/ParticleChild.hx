@@ -151,24 +151,37 @@ class ParticleChild {
 		var angle = 0.;
 		// 点与中心的角度
 		var posAngle = 0.;
+		var localX:Float = 0.;
+		var localY:Float = 0.;
+		switch particle.createMode {
+			case RECT:
+				localX = Math.random() * particle.widthRange * 2 - particle.widthRange;
+				localY = Math.random() * particle.heightRange * 2 - particle.heightRange;
+			case CIRCLE:
+				var radius = particle.minRadiusRange + Math.random() * (particle.maxRadiusRange - particle.minRadiusRange);
+				var angle = Math.random() * Math.PI * 2;
+				localX = Math.cos(angle) * radius;
+				localY = Math.sin(angle) * radius;
+		}
+
 		if (particle.dynamicEmitPoint) {
 			if (particle.localToGlobalEmitPoint) {
 				var stagePos = this.particle.parent.localToGlobal(new Point(particle.x, particle.y));
-				posX = Math.random() * particle.widthRange * 2 - particle.widthRange + stagePos.x / particle.scaleX;
-				posY = Math.random() * particle.heightRange * 2 - particle.heightRange + stagePos.y / particle.scaleY;
+				posX = localX + stagePos.x / particle.scaleX;
+				posY = localY + stagePos.y / particle.scaleY;
 			} else {
-				posX = Math.random() * particle.widthRange * 2 - particle.widthRange + particle.x / particle.scaleX;
-				posY = Math.random() * particle.heightRange * 2 - particle.heightRange + particle.y / particle.scaleY;
+				posX = localX + particle.x / particle.scaleX;
+				posY = localY + particle.y / particle.scaleY;
 			}
 		} else {
-			posX = Math.random() * particle.widthRange * 2 - particle.widthRange;
-			posY = Math.random() * particle.heightRange * 2 - particle.heightRange;
+			posX = localX;
+			posY = localY;
 		}
 		posAngle = -Math.atan2((posY - 0), (posX - 0));
 		var posAngle2 = Math.atan2((posX - 0), (posY - 0));
 		// posAngle = -45 * 3.14 / 180;
 		switch (particle.emitMode) {
-			case Point:
+			case POINT:
 				angle = particle.emitRotation.getValue() * Math.PI / 180;
 				vx = particle.velocity.x.getValue();
 				vy = particle.velocity.y.getValue();
@@ -176,7 +189,17 @@ class ParticleChild {
 				ay = particle.acceleration.y.getValue();
 				tx = particle.tangential.x.getValue();
 				ty = particle.tangential.y.getValue();
-
+			case CIRCLE:
+				angle = Point.radianByFloat(0, 0, localX, localY);
+				// 需要补180度
+				// angle += Math.PI;
+				// angle = Point.rotationToRadian(90);
+				vx = particle.velocity.x.getValue();
+				vy = particle.velocity.y.getValue();
+				ax = particle.acceleration.x.getValue();
+				ay = particle.acceleration.y.getValue();
+				tx = particle.tangential.x.getValue();
+				ty = particle.tangential.y.getValue();
 			default:
 				angle = particle.emitRotation.getValue() * Math.PI / 180;
 				vx = particle.velocity.x.getValue();
@@ -186,17 +209,14 @@ class ParticleChild {
 		}
 
 		// 方向力
-		var vx1:Float = Math.cos(angle) * vx + Math.sin(angle) * vy;
-		var vy1:Float = Math.cos(angle) * vy - Math.sin(angle) * vx;
+		var vx1:Float = Math.cos(angle) * vx - Math.sin(angle) * vy;
+		var vy1:Float = Math.sin(angle) * vx + Math.cos(angle) * vy;
 		vx = vx1;
 		vy = vy1;
 
 		// 加速力
-		var ax1:Float = Math.cos(posAngle) * ax + Math.sin(posAngle) * ay;
-		var ay1:Float = Math.cos(posAngle) * ay - Math.sin(posAngle) * ax;
-		ax = ax1;
-		ay = ay1;
-
+		var ax1:Float = Math.cos(posAngle) * ax - Math.sin(posAngle) * ay;
+		var ay1:Float = Math.sin(posAngle) * ax + Math.cos(posAngle) * ay;
 		ax = ax1;
 		ay = ay1;
 

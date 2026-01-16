@@ -70,7 +70,12 @@ class Particle extends Box {
 	/**
 	 * 发射模式
 	 */
-	public var emitMode:ParticleEmitMode = Point;
+	public var emitMode:ParticleEmitMode = POINT;
+
+	/**
+	 * 创建模式
+	 */
+	public var createMode:ParticleCreateMode = ParticleCreateMode.RECT;
 
 	/**
 	 * 粒子数量
@@ -111,9 +116,19 @@ class Particle extends Box {
 	public var widthRange:Float = 200;
 
 	/**
-	 * 
+	 * 高度范围
 	 */
 	public var heightRange:Float = 200;
+
+	/**
+	 * 圆形半径生成大小，需要设置发射模式为``
+	 */
+	public var minRadiusRange:Float = 200;
+
+	/**
+	 * 最大半径范围
+	 */
+	public var maxRadiusRange:Float = 200;
 
 	/**
 	 * 粒子生命
@@ -206,6 +221,14 @@ class Particle extends Box {
 	public function applyXmlData(data:Xml):Void {
 		// 解析XML数据
 		for (key in data.attributes()) {
+			if (key == "createMode") {
+				createMode = Std.parseInt(data.get(key));
+				continue;
+			}
+			if (key == "emitMode") {
+				emitMode = Std.parseInt(data.get(key));
+				continue;
+			}
 			if (key == "dynamicEmitPoint") {
 				dynamicEmitPoint = data.get(key) == "true";
 				continue;
@@ -355,7 +378,7 @@ class Particle extends Box {
 		switch (data.emitterType) {
 			case 0:
 				// 以点发射
-				this.emitMode = ParticleEmitMode.Point;
+				this.emitMode = ParticleEmitMode.POINT;
 		}
 		// 设置粒子位置方差
 		this.widthRange = data.sourcePositionVariancex;

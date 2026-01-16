@@ -484,8 +484,13 @@ class UIManager {
 			if (configXml.hasNext()) {
 				var config = configXml.next();
 				obj.applyXmlData(config);
-				obj.start();
-				if (config.exists("time")) {
+				if (config.exists("auto")) {
+					if (config.get("auto") == "true") {
+						obj.start();
+					}
+				} else
+					obj.start();
+				if (obj.isPlay && config.exists("time")) {
 					obj.time = Std.parseFloat(config.get("time"));
 				}
 			}

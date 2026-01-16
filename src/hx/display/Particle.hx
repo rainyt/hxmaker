@@ -387,10 +387,12 @@ class Particle extends Box {
 	/**
 	 * 开始发射粒子
 	 */
-	public function start() {
+	public function start(startTime:Float = 0) {
+		this.__time = 0;
 		this._init();
 		_isPlay = true;
 		this.updateEnabled = true;
+		this.time = startTime;
 	}
 
 	public function stop() {

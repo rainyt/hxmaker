@@ -177,8 +177,8 @@ class ParticleChild {
 			posX = localX;
 			posY = localY;
 		}
-		posAngle = -Math.atan2((posY - 0), (posX - 0));
-		var posAngle2 = Math.atan2((posX - 0), (posY - 0));
+		posAngle = -Math.atan2((localY - 0), (localX - 0));
+		var posAngle2 = Math.atan2((localX - 0), (localY - 0));
 		// posAngle = -45 * 3.14 / 180;
 		switch (particle.emitMode) {
 			case POINT:
@@ -191,9 +191,6 @@ class ParticleChild {
 				ty = particle.tangential.y.getValue();
 			case CIRCLE:
 				angle = Point.radianByFloat(0, 0, localX, localY);
-				// 需要补180度
-				// angle += Math.PI;
-				// angle = Point.rotationToRadian(90);
 				vx = particle.velocity.x.getValue();
 				vy = particle.velocity.y.getValue();
 				ax = particle.acceleration.x.getValue();

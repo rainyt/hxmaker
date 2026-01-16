@@ -97,6 +97,8 @@ class Particle extends Box {
 	private function set_time(value:Float):Float {
 		var step = 1 / 60;
 		while (__time < value) {
+			if (!_isPlay || childs == null)
+				break;
 			this.onUpdate(step);
 		}
 		__time = value;

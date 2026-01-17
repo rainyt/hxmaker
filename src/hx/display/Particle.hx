@@ -131,6 +131,21 @@ class Particle extends Box {
 	public var maxRadiusRange:Float = 200;
 
 	/**
+	 * 圆半径缩放比例X
+	 */
+	public var radiusScaleX:Float = 1;
+
+	/**
+	 * 圆半径缩放比例Y
+	 */
+	public var radiusScaleY:Float = 1;
+
+	/**
+	 * 是否使用发射角度
+	 */
+	public var useEmitRotation:Bool = false;
+
+	/**
 	 * 粒子生命
 	 */
 	public var life:Float = 1;
@@ -227,6 +242,10 @@ class Particle extends Box {
 			}
 			if (key == "emitMode") {
 				emitMode = Std.parseInt(data.get(key));
+				continue;
+			}
+			if (key == "useEmitRotation") {
+				useEmitRotation = data.get(key) == "true";
 				continue;
 			}
 			if (key == "dynamicEmitPoint") {

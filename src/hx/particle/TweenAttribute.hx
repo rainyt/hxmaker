@@ -78,4 +78,11 @@ class TweenAttribute {
 			this.end = groupEnd;
 		}
 	}
+
+	/**
+	 * 清空
+	 */
+	public function clear():Void {
+		this.attributes = [];
+	}
 }

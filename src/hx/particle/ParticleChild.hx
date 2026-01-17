@@ -160,8 +160,8 @@ class ParticleChild {
 			case CIRCLE:
 				var radius = particle.minRadiusRange + Math.random() * (particle.maxRadiusRange - particle.minRadiusRange);
 				var angle = Math.random() * Math.PI * 2;
-				localX = Math.cos(angle) * radius;
-				localY = Math.sin(angle) * radius;
+				localX = Math.cos(angle) * radius * this.particle.radiusScaleX;
+				localY = Math.sin(angle) * radius * this.particle.radiusScaleY;
 		}
 
 		if (particle.dynamicEmitPoint) {
@@ -206,14 +206,14 @@ class ParticleChild {
 		}
 
 		// 方向力
-		var vx1:Float = Math.cos(angle) * vx - Math.sin(angle) * vy;
-		var vy1:Float = Math.sin(angle) * vx + Math.cos(angle) * vy;
+		var vx1:Float = Math.cos(angle) * vx + Math.sin(angle) * vy;
+		var vy1:Float = Math.cos(angle) * vy - Math.sin(angle) * vx;
 		vx = vx1;
 		vy = vy1;
 
 		// 加速力
-		var ax1:Float = Math.cos(posAngle) * ax - Math.sin(posAngle) * ay;
-		var ay1:Float = Math.sin(posAngle) * ax + Math.cos(posAngle) * ay;
+		var ax1:Float = Math.cos(posAngle) * ax + Math.sin(posAngle) * ay;
+		var ay1:Float = Math.cos(posAngle) * ay - Math.sin(posAngle) * ax;
 		ax = ax1;
 		ay = ay1;
 
@@ -252,7 +252,16 @@ class ParticleChild {
 			if (maxlife < life)
 				maxlife = life;
 		}
+
+		if (particle.useEmitRotation) {
+			emitRotation = Point.radianToRotation(-angle);
+		}
 	}
+
+	/**
+	 * 发射角度
+	 */
+	public var emitRotation:Float = 0;
 
 	public function dispose():Void {
 		particle = null;
@@ -299,11 +308,15 @@ class ParticleChild {
 		this.image.scaleX = sx;
 		this.image.scaleY = sy;
 
-		this.particle.rotaionAttribute.update(timeScale, outlife);
-		var startRotation = particle.rotaionAttribute.tween.start.getValue();
-		var endRotation:Float = particle.rotaionAttribute.tween.end.getValue();
-		var rotation:Float = startRotation + (endRotation - startRotation) * particle.rotaionAttribute.leftTime;
-		this.image.rotation = rotation;
+		if (particle.useEmitRotation) {
+			this.image.rotation = emitRotation;
+		} else {
+			this.particle.rotaionAttribute.update(timeScale, outlife);
+			var startRotation = particle.rotaionAttribute.tween.start.getValue();
+			var endRotation:Float = particle.rotaionAttribute.tween.end.getValue();
+			var rotation:Float = startRotation + (endRotation - startRotation) * particle.rotaionAttribute.leftTime;
+			this.image.rotation = rotation;
+		}
 
 		this.image.x = posX + velocityX * aliveTime + (gravityX + accelerationX + tangentialX) * aliveTime * aliveTime;
 		this.image.y = posY + velocityY * aliveTime + (gravityY + accelerationY + tangentialY) * aliveTime * aliveTime;

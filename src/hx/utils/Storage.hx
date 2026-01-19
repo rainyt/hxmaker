@@ -28,5 +28,11 @@ class Storage implements IStorage {
 	public function getKeyValue(key:String, defaultValue:Dynamic):Dynamic {
 		return defaultValue;
 	}
+
+	/**
+	 * 移除键对应的值
+	 * @param key 键
+	 */
+	public function removeKey(key:String):Void {}
 }
 #end

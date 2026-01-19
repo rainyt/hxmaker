@@ -52,4 +52,12 @@ class StorageTools {
 	public function getKeyValue(key:String, ?defaultValue:Dynamic):Dynamic {
 		return __storage.getKeyValue(key, defaultValue);
 	}
+
+	/**
+	 * 移除键对应的值
+	 * @param key 键
+	 */
+	public function removeKeyValue(key:String):Void {
+		__storage.removeKey(key);
+	}
 }

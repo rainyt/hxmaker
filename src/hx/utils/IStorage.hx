@@ -21,4 +21,10 @@ interface IStorage {
 	 * @return 值
 	 */
 	function getKeyValue(key:String, defaultValue:Dynamic):Dynamic;
+
+	/**
+	 * 删除键
+	 * @param key 键
+	 */
+	function removeKey(key:String):Void;
 }

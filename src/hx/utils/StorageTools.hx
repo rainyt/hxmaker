@@ -49,7 +49,7 @@ class StorageTools {
 	 * @param defaultValue 默认值
 	 * @return 值
 	 */
-	public function getKeyValue(key:String, defaultValue:Dynamic):Dynamic {
+	public function getKeyValue(key:String, ?defaultValue:Dynamic):Dynamic {
 		return __storage.getKeyValue(key, defaultValue);
 	}
 }

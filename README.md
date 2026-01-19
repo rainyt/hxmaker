@@ -52,6 +52,25 @@ All common display objects (see the list below) and BlendMode.ADD can be automat
 | hx.layout.VerticalLayout | Vertical Layout | Vertical layout |
 | hx.layout.AnchorLayout | Anchor Layout | Objects can be positioned according to the properties of `left`, `right`, `top`, `bottom`, `horizontalCenter`, `verticalCenter` |
 
+# BlendMode Support
+| BlendMode | Support Status | Description |
+| --- | --- | --- |
+| Normal | ✅ | The display object appears in front of the background. |
+| Add | ✅ | Add the color value of the displayed object to its background color. |
+| Multiply | ✅ | Multiply the value of the displayed object color by the background color. |
+| Screen | ✅ | The color value of the displayed object is added to the inverse of the background color. |
+| Difference | ✅ | Compares the display object's color values with its background and subtracts the darker value from the lighter one. |
+| Subtract | ✅ | Subtracts the display object's color values from the background color values, with a lower limit of 0. |
+| Subtract Fast | ✅ | Subtract blend mode, corresponding to `BlendMode.SUBTRACT_FAST`, faster but with slightly different results, background color is fixed to `vec4(0.5)`. |
+| Invert | ✅ | Inverts colors. |
+| Darken | ✅ | Selects the darker color between the display object and background. |
+| Lighten | ✅ | Selects the lighter color between the display object and background. |
+| Layer | ✅ | Forces the creation of a transparency group for the display object. |
+| Alpha | ✅ | Applies the alpha value of each pixel of the display object to the background. Requires parent's blendMode to be `Layer`. |
+| Erase | ✅ | Erases the alpha value of each pixel of the display object from the background. Requires parent's blendMode to be `Layer`. |
+| Hardlight | ✅ | Adjusts each pixel's color based on the darkness of the display object. If the display object is lighter than 50% gray, it lightens; if darker, it darkens. |
+| Overlay | ✅ | Adjusts each pixel's color based on the darkness of the background. If the background is lighter than 50% gray, it lightens; if darker, it darkens. |
+
 
 # Underlying Engine Support
 | Engine | Support Status | Multi-texture Rendering |

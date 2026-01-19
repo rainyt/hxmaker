@@ -19,6 +19,7 @@
 | hx.display.Quad | 矩形显示对象 | ✅ | ✅ |
 | hx.display.Graphics | 矢量图形 | ✅ | ✅ |
 | hx.display.Spine | Spine动画 | ✅ | ✅ |
+| hx.display.SpineSprite | Spine动画精灵，支持插槽绑定 | ✅ | ✅ |
 | hx.display.Scene | 场景，用于管理对象 | ✅ | ✅ |
 | hx.display.UILoadScene | 自动加载UI资源的场景，大多数用于界面打开使用 | ✅ | ✅ |
 | hx.display.MovieClip | 动画剪辑，用于播放帧动画支持 | ✅ | ✅ |
@@ -38,6 +39,7 @@
 | hx.display.ItemRenderer | 列表的基础项渲染器 | ✅ | ✅ |
 | hx.display.DefaultItemRenderer | ListView的默认项渲染器 | ✅ | ✅ |
 | hx.display.ImageLoader | 图片加载组件 | ✅ | ✅ |
+| hx.display.Particle | 粒子系统 | ✅ | ✅ |
 | hx.events.MouseEvent | 鼠标事件 | ✅ | / |
 | hx.events.KeyboardEvent | 键盘事件 | ✅ | / |
 | hx.assets.Assets | 资源加载器，支持图片、音频、精灵图、XML、JSON等常见资源格式加载 | ✅ | / |

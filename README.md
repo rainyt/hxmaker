@@ -19,6 +19,7 @@ All common display objects (see the list below) and BlendMode.ADD can be automat
 | hx.display.Quad | Rectangle display object | ✅ | ✅ |
 | hx.display.Graphics | Vector graphics | ✅ | ✅ |
 | hx.display.Spine | Spine animation | ✅ | ✅ |
+| hx.display.SpineSprite | Spine animation sprite, support solt binds. | ✅ | ✅ |
 | hx.display.Scene | Scene for managing objects | ✅ | ✅ |
 | hx.display.UILoadScene | Scene that automatically loads UI resources, mostly used for opening interfaces | ✅ | ✅ |
 | hx.display.MovieClip | Animation clip for playing frame animations | ✅ | ✅ |
@@ -38,6 +39,7 @@ All common display objects (see the list below) and BlendMode.ADD can be automat
 | hx.display.ItemRenderer | Base item renderer for lists | ✅ | ✅ |
 | hx.display.DefaultItemRenderer | Default item renderer for ListView | ✅ | ✅ |
 | hx.display.ImageLoader | Image loader component | ✅ | ✅ |
+| hx.display.Particle | Particle system | ✅ | ✅ |
 | hx.events.MouseEvent | Mouse events | ✅ | / |
 | hx.events.KeyboardEvent | Keyboard events | ✅ | / |
 | hx.assets.Assets | Resource loader, supports loading of common resource formats such as images, audio, sprite sheets, XML, JSON, etc. | ✅ | / |

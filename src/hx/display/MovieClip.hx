@@ -184,11 +184,13 @@ class MovieClip extends Image {
 		while (currentData != null && __time > __durationTime + currentData.duration) {
 			__durationTime += currentData.duration;
 			currentFrame++;
+			if (currentFrame == __frames.length - 1) {
+				if (this.hasEventListener(Event.COMPLETE))
+					this.dispatchEvent(new Event(Event.COMPLETE));
+			}
 			if (currentFrame >= __frames.length) {
 				// 播放完成事件
 				__frameReset();
-				if (this.hasEventListener(Event.COMPLETE))
-					this.dispatchEvent(new Event(Event.COMPLETE));
 			}
 			// 帧发生变化时处理
 			if (this.hasEventListener(Event.CHANGE))

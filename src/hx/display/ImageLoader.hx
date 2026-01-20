@@ -1,5 +1,6 @@
 package hx.display;
 
+import hx.geom.ColorTransform;
 import hx.events.Event;
 import hx.ui.UIManager;
 import hx.assets.BitmapDataFuture;
@@ -93,5 +94,11 @@ class ImageLoader extends Box implements IDataProider<Dynamic> {
 		var h = scaleHeight / this.image.data.height;
 		this.scale = Math.min(w, h);
 		this.parent?.updateLayout();
+	}
+
+	override function set_colorTransform(value:ColorTransform):ColorTransform {
+		if (this.image != null)
+			this.image.colorTransform = value;
+		return super.set_colorTransform(value);
 	}
 }

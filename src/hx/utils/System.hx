@@ -54,4 +54,26 @@ class System {
 		return true;
 		#end
 	}
+
+	/**
+	 * 复制文本到剪贴板
+	 * @param text 文本
+	 */
+	public static function copy(text:String):Void {
+		#if wechat_zygame_dom
+		if (Wx.setClipboardData != null) {
+			Wx.setClipboardData({
+				data: text,
+				success: (res) -> {
+					trace("复制成功");
+				},
+				fail: (res) -> {
+					trace("复制失败：", res);
+				}
+			});
+		}
+		#elseif sxk_game_sdk
+		v4.NativeApi.copyText(text);
+		#end
+	}
 }

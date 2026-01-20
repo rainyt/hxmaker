@@ -2,6 +2,8 @@ package hx.utils;
 
 import haxe.Exception;
 
+using hx.utils.StringTools;
+
 /**
  * 时间工具
  */
@@ -49,5 +51,32 @@ class DateUtils {
 
 	public static function zero(i:Int):String {
 		return i < 10 ? "0" + i : Std.string(i);
+	}
+
+	/**
+	 * 格式化日期
+	 * %Y 年
+	 * %m 月
+	 * %d 日
+	 * %H 时
+	 * %M 分
+	 * %S 秒
+	 */
+	public static function formatDate(?date:String, format:String = "%Y-%m-%d %H:%M:%S"):String {
+		if (date == null)
+			return "";
+		var date = fromString(date);
+		var year = date.getFullYear();
+		var month = date.getMonth() + 1;
+		var day = date.getDate();
+		var hour = date.getHours();
+		var minute = date.getMinutes();
+		var second = date.getSeconds();
+		return format.replace("%Y", Std.string(year))
+			.replace("%m", Std.string(month))
+			.replace("%d", Std.string(day))
+			.replace("%H", Std.string(hour))
+			.replace("%M", Std.string(minute))
+			.replace("%S", Std.string(second));
 	}
 }

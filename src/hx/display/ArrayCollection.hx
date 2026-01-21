@@ -40,6 +40,15 @@ class ArrayCollection extends EventDispatcher {
 	}
 
 	/**
+	 * 获取元素
+	 * @param index 
+	 * @return Dynamic
+	 */
+	public function get(index:Int):Dynamic {
+		return source[index];
+	}
+
+	/**
 	 * 清空所有元素
 	 */
 	public function clear():Void {

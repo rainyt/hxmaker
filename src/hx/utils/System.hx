@@ -111,7 +111,7 @@ class System {
 					future.completeValue(text);
 				}
 			});
-		}, 16);
+		});
 		#else
 		Actuate.timer(0.016).onComplete(() -> {
 			future.errorValue(FutureErrorEvent.create(FutureErrorEvent.LOAD_ERROR, -1, "读取剪切板失败！"));

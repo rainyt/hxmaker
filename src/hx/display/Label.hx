@@ -106,6 +106,8 @@ class Label extends DisplayObject implements IDataProider<String> implements IRo
 	}
 
 	private function get_data():String {
+		if (__data == null)
+			__data = "";
 		return __data;
 	}
 

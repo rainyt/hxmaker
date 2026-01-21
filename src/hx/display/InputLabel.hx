@@ -6,6 +6,7 @@ import hx.layout.AnchorLayoutData;
 import hx.layout.AnchorLayout;
 import hx.utils.TextInputUtils;
 import hx.events.MouseEvent;
+import StringTools;
 
 /**
  * 输入文本组件
@@ -14,6 +15,23 @@ class InputLabel extends Box implements IDataProider<String> {
 	public var line:Quad = new Quad(1, 1, 0xffffff);
 
 	public var label:Label = new Label();
+
+	/**
+	 * 默认提示文案Label
+	 */
+	public var placeholderLabel:Label = new Label();
+
+	/**
+	 * 默认提示文案
+	 */
+	public var placeholder(default, set):String = "";
+
+	/**
+	 * 默认提示文案文本格式
+	 */
+	public var placeholderTextFormat(get, set):TextFormat;
+
+	private var __placeholderTextFormat:TextFormat = new TextFormat();
 
 	/**
 	 * 当前选中的起始位置
@@ -49,11 +67,19 @@ class InputLabel extends Box implements IDataProider<String> {
 
 	private function set_data(value:String):String {
 		this.label.data = value;
+		this.updatePlaceholderVisibility();
 		return value;
 	}
 
 	private function get_data():String {
 		return this.label.data;
+	}
+
+	/**
+	 * 更新默认提示文案的可见性
+	 */
+	private function updatePlaceholderVisibility():Void {
+		this.placeholderLabel.visible = (this.label.data == null || StringTools.trim(this.label.data) == "") && this.placeholder != "";
 	}
 
 	public var textFormat(get, set):TextFormat;
@@ -65,6 +91,32 @@ class InputLabel extends Box implements IDataProider<String> {
 
 	private function get_textFormat():TextFormat {
 		return this.label.textFormat;
+	}
+
+	/**
+	 * 设置默认提示文案
+	 */
+	private function set_placeholder(value:String):String {
+		placeholder = value;
+		placeholderLabel.data = value;
+		this.updatePlaceholderVisibility();
+		return value;
+	}
+
+	/**
+	 * 获取默认提示文案文本格式
+	 */
+	private function get_placeholderTextFormat():TextFormat {
+		return __placeholderTextFormat;
+	}
+
+	/**
+	 * 设置默认提示文案文本格式
+	 */
+	private function set_placeholderTextFormat(value:TextFormat):TextFormat {
+		__placeholderTextFormat = value;
+		placeholderLabel.textFormat = value;
+		return value;
 	}
 
 	public function getTextWidth():Float {
@@ -82,9 +134,14 @@ class InputLabel extends Box implements IDataProider<String> {
 		this.addEventListener(MouseEvent.CLICK, onClick);
 		this.layout = new AnchorLayout();
 		this.label.layoutData = AnchorLayoutData.fill();
+		this.placeholderLabel.layoutData = AnchorLayoutData.fill();
+		this.addChild(this.placeholderLabel);
 		this.addChild(this.label);
 		this.addChild(line);
 		this.mouseChildren = false;
+		// 默认提示文案颜色
+		this.placeholderTextFormat.color = 0x999999;
+		this.updatePlaceholderVisibility();
 	}
 
 	private function onClick(event:MouseEvent):Void {

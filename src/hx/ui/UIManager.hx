@@ -288,7 +288,9 @@ class UIManager {
 			}
 		});
 		addAttributesParse(Button, function(obj:Button, xml:Xml, assets:Assets) {
-			var textformat = createTextformat(xml);
+			var color = xml.get("color");
+			var fontSize = xml.get("fontSize");
+			var textformat = createTextformat(color, fontSize);
 			if (textformat != null) {
 				obj.textFormat = textformat;
 			}
@@ -377,7 +379,9 @@ class UIManager {
 		addAttributesParse(Label, function(obj:Label, xml:Xml, assets:Assets) {
 			if (xml.exists("text")) {
 				obj.data = xml.get("text");
-				var textformat = createTextformat(xml);
+				var color = xml.get("color");
+				var fontSize = xml.get("fontSize");
+				var textformat = createTextformat(color, fontSize);
 				if (textformat != null) {
 					obj.textFormat = textformat;
 				}
@@ -396,21 +400,24 @@ class UIManager {
 		addAttributesParse(InputLabel, function(obj:InputLabel, xml:Xml, assets:Assets) {
 			if (xml.exists("text")) {
 				obj.data = xml.get("text");
-				var textformat = createTextformat(xml);
+				var color = xml.get("color");
+				var fontSize = xml.get("fontSize");
+				var textformat = createTextformat(color, fontSize);
 				if (textformat != null) {
 					obj.textFormat = textformat;
 				}
 			}
-			// if (xml.exists("hAlign")) {
-			// obj.horizontalAlign = xml.get("hAlign");
-			// }
-			// if (xml.exists("vAlign")) {
-			// obj.verticalAlign = xml.get("vAlign");
-			// }
-			// if (xml.exists("stroke")) {
-			// var color = xml.get("strokeColor");
-			// obj.stroke(0x0, Std.parseInt(xml.get("stroke")));
-			// }
+			if (xml.exists("placeholder")) {
+				obj.placeholder = xml.get("placeholder");
+			}
+			if (xml.exists("placeholderColor")) {
+				var color = xml.get("placeholderColor");
+				var fontSize = xml.get("fontSize");
+				var textformat = createTextformat(color, fontSize);
+				if (textformat != null) {
+					obj.placeholderTextFormat = textformat;
+				}
+			}
 		});
 		addAttributesParse(FlowBox, function(obj:FlowBox, xml:Xml, assets:Assets) {
 			if (xml.exists("gap")) {
@@ -540,9 +547,7 @@ class UIManager {
 		return ui;
 	}
 
-	public function createTextformat(xml:Xml):TextFormat {
-		var color = xml.get("color");
-		var fontSize = xml.get("fontSize");
+	public function createTextformat(color:String, fontSize:String):TextFormat {
 		if (color != null || fontSize != null) {
 			var colorValue = color != null ? Std.parseInt(color) : 0x0;
 			var textFormat = new TextFormat(null, fontSize != null ? Std.parseInt(fontSize) : 26, colorValue);

@@ -1,5 +1,8 @@
 package hx.utils;
 
+import hx.events.FutureErrorEvent;
+import motion.Actuate;
+import hx.assets.Future;
 import hx.macro.MacroTools;
 import haxe.macro.Context;
 
@@ -75,5 +78,45 @@ class System {
 		#elseif sxk_game_sdk
 		v4.NativeApi.copyText(text);
 		#end
+	}
+
+	/**
+	 * 读取剪切板数据
+	 * @return Future<String>
+	 */
+	public static function readClipboardData():Future<String, String> {
+		var future:Future<String, String> = new Future("");
+		#if (ks || wechat)
+		if (Wx.getClipboardData == null) {
+			Actuate.timer(0.016).onComplete(() -> {
+				future.errorValue(FutureErrorEvent.create(FutureErrorEvent.LOAD_ERROR, -1, "读取剪切板失败！"));
+			});
+		} else {
+			Wx.getClipboardData({
+				success: (res) -> {
+					future.completeValue(res.data);
+				},
+				fail: (res) -> {
+					trace("读取剪切板失败：", res);
+					future.errorValue(FutureErrorEvent.create(FutureErrorEvent.LOAD_ERROR, -1, "读取剪切板失败！"));
+				}
+			});
+		}
+		#elseif sxk_game_sdk
+		Actuate.timer(0.016).onComplete(() -> {
+			v4.NativeApi.readClipboardData((text) -> {
+				if (text == null) {
+					future.errorValue(FutureErrorEvent.create(FutureErrorEvent.LOAD_ERROR, -1, "读取剪切板失败！"));
+				} else {
+					future.completeValue(text);
+				}
+			});
+		}, 16);
+		#else
+		Actuate.timer(0.016).onComplete(() -> {
+			future.errorValue(FutureErrorEvent.create(FutureErrorEvent.LOAD_ERROR, -1, "读取剪切板失败！"));
+		});
+		#end
+		return future;
 	}
 }

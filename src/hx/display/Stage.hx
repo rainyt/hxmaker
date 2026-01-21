@@ -99,7 +99,9 @@ class Stage extends Box {
 			}
 			var display:DisplayObject = touchList[touchList.length - 1];
 
-			if (event.type == MouseEvent.MOUSE_DOWN) {
+			if (event.type == MouseEvent.MOUSE_MOVE) {
+				this.__mouseDownDt = 0;
+			} else if (event.type == MouseEvent.MOUSE_DOWN) {
 				this.__currentMouseDownDisplay = display;
 				this.__mouseDownDt = 0;
 				this.focus = display;
@@ -160,10 +162,8 @@ class Stage extends Box {
 		if (this.__currentMouseDownDisplay != null) {
 			__mouseDownDt += dt;
 			if (this.__mouseDownDt > 0.5) {
-				if (this.__currentMouseDownDisplay.hasEventListener(MouseEvent.MOUSE_LONG_CLICK)) {
-					var event = new MouseEvent(MouseEvent.MOUSE_LONG_CLICK);
-					this.__currentMouseDownDisplay.dispatchEvent(event);
-				}
+				var event = new MouseEvent(MouseEvent.MOUSE_LONG_CLICK, false, true);
+				this.__currentMouseDownDisplay.dispatchEvent(event);
 			}
 		}
 	}

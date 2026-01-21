@@ -86,6 +86,7 @@ class Stage extends Box {
 	/**
 	 * 触发鼠标事件
 	 * @param event 
+	 * @param needHitTest 是否需要进行命中测试
 	 */
 	public function handleMouseEvent(event:hx.events.MouseEvent, needHitTest:Bool):Bool {
 		var touchList = [];
@@ -120,6 +121,8 @@ class Stage extends Box {
 						__lastClickTime = 0;
 					} else
 						__lastClickTime = Timer.stamp();
+				} else {
+					return false;
 				}
 			}
 			// else if (event.type == MouseEvent.MOUSE_MOVE) {

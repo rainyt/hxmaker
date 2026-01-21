@@ -400,23 +400,20 @@ class UIManager {
 		addAttributesParse(InputLabel, function(obj:InputLabel, xml:Xml, assets:Assets) {
 			if (xml.exists("text")) {
 				obj.data = xml.get("text");
-				var color = xml.get("color");
-				var fontSize = xml.get("fontSize");
-				var textformat = createTextformat(color, fontSize);
-				if (textformat != null) {
-					obj.textFormat = textformat;
-				}
+			}
+			var color = xml.get("color");
+			var fontSize = xml.get("fontSize");
+			var textformat = createTextformat(color, fontSize);
+			if (textformat != null) {
+				obj.textFormat = textformat;
 			}
 			if (xml.exists("placeholder")) {
 				obj.placeholder = xml.get("placeholder");
 			}
-			if (xml.exists("placeholderColor")) {
-				var color = xml.get("placeholderColor");
-				var fontSize = xml.get("fontSize");
-				var textformat = createTextformat(color, fontSize);
-				if (textformat != null) {
-					obj.placeholderTextFormat = textformat;
-				}
+			var color = xml.get("placeholderColor");
+			var textformat = createTextformat(color, fontSize);
+			if (textformat != null) {
+				obj.placeholderTextFormat = textformat;
 			}
 		});
 		addAttributesParse(FlowBox, function(obj:FlowBox, xml:Xml, assets:Assets) {

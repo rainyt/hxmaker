@@ -50,6 +50,12 @@ class DisplayObject extends EventDispatcher {
 	@:noCompletion private var __mouseEnabled:Bool = true;
 	@:noCompletion private var __originWorldX = 0.;
 	@:noCompletion private var __originWorldY = 0.;
+
+	/**
+	 * 是否反补世界坐标点，如果为`true`则会在发生触摸的时候减去`__originWorldX`和`__originWorldY`
+	 */
+	@:noCompletion private var __originInvertWorldPoint:Bool = false;
+
 	@:noCompletion private var __colorTransform:ColorTransform;
 	@:noCompletion private var __blendMode:BlendMode = NORMAL;
 	@:noCompletion private var __colorTransformDirty = false;
@@ -509,9 +515,11 @@ class DisplayObject extends EventDispatcher {
 		var matrix = new Matrix();
 		if (targetCoordinateSpace != null && targetCoordinateSpace != this) {
 			matrix.copyFrom(this.__worldTransform);
-			matrix.translate(-__originWorldX, -__originWorldY);
+			if (this.__originInvertWorldPoint)
+				matrix.translate(-__originWorldX, -__originWorldY);
 			var targetMatrix = targetCoordinateSpace.__worldTransform.clone();
-			targetMatrix.translate(-targetCoordinateSpace.__originWorldX, -targetCoordinateSpace.__originWorldY);
+			if (targetCoordinateSpace.__originInvertWorldPoint)
+				targetMatrix.translate(-targetCoordinateSpace.__originWorldX, -targetCoordinateSpace.__originWorldY);
 			targetMatrix.invert();
 			matrix.concat(targetMatrix);
 		}
@@ -559,7 +567,8 @@ class DisplayObject extends EventDispatcher {
 		// 如果存在变换矩阵，则使用变换矩阵计算边界
 		var ret = new Rectangle();
 		var m = __worldTransform.clone();
-		m.translate(-__originWorldX, -__originWorldY);
+		if (this.__originInvertWorldPoint)
+			m.translate(-__originWorldX, -__originWorldY);
 		rect.transform(ret, m);
 		return ret;
 	}
@@ -925,8 +934,6 @@ class DisplayObject extends EventDispatcher {
 		if (this.__transformDirty && stage != null && stage.__transformDirty)
 			stage.__updateTransform(null);
 		var p = point.clone();
-		var m = __worldTransform.clone();
-		m.translate(-__originWorldX, -__originWorldY);
 		p.x = __worldTransform.__transformX(p.x, p.y);
 		p.y = __worldTransform.__transformY(p.x, p.y);
 		return p;
@@ -941,10 +948,8 @@ class DisplayObject extends EventDispatcher {
 		if (this.__transformDirty && stage != null && stage.__transformDirty)
 			stage.__updateTransform(null);
 		var p = point.clone();
-		var m = __worldTransform.clone();
-		m.translate(-__originWorldX, -__originWorldY);
-		p.x = m.__transformInverseX(p.x, p.y);
-		p.y = m.__transformInverseY(p.x, p.y);
+		p.x = __worldTransform.__transformInverseX(p.x, p.y);
+		p.y = __worldTransform.__transformInverseY(p.x, p.y);
 		return p;
 	}
 

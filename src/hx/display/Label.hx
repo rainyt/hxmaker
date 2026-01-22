@@ -286,6 +286,7 @@ class Label extends DisplayObject implements IDataProider<String> implements IRo
 
 	public function new(?text:String, ?textFormat:TextFormat) {
 		super();
+		this.__originInvertWorldPoint = true;
 		this.data = text;
 		if (textFormat != null)
 			this.textFormat = textFormat;

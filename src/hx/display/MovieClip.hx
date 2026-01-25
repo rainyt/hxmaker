@@ -168,6 +168,8 @@ class MovieClip extends Image {
 				loop--;
 			if (loop == -1 || loop > 0) {
 				reset();
+			} else {
+				currentFrame = __frames.length - 1;
 			}
 		}
 	}
@@ -184,13 +186,11 @@ class MovieClip extends Image {
 		while (currentData != null && __time > __durationTime + currentData.duration) {
 			__durationTime += currentData.duration;
 			currentFrame++;
-			if (currentFrame == __frames.length - 1) {
-				if (this.hasEventListener(Event.COMPLETE))
-					this.dispatchEvent(new Event(Event.COMPLETE));
-			}
 			if (currentFrame >= __frames.length) {
 				// 播放完成事件
 				__frameReset();
+				if (this.hasEventListener(Event.COMPLETE))
+					this.dispatchEvent(new Event(Event.COMPLETE));
 			}
 			// 帧发生变化时处理
 			if (this.hasEventListener(Event.CHANGE))
@@ -202,6 +202,7 @@ class MovieClip extends Image {
 		if (enableSound && currentData != null && __frameDirt && currentData.sound != null) {
 			SoundManager.getInstance().playEffectSound(currentData.sound);
 			__frameDirt = false;
+			trace("播放音频", currentFrame);
 		}
 		__time += dt;
 	}

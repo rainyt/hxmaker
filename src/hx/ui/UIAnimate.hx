@@ -121,7 +121,7 @@ class UIAnimate {
 				endOption.setProperty(key, target.getProperty(key));
 			}
 		}
-		trace(startOption, endOption);
+		// trace(startOption, endOption);
 	}
 
 	/**

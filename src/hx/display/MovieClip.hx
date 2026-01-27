@@ -202,7 +202,6 @@ class MovieClip extends Image {
 		if (enableSound && currentData != null && __frameDirt && currentData.sound != null) {
 			SoundManager.getInstance().playEffectSound(currentData.sound);
 			__frameDirt = false;
-			trace("播放音频", currentFrame);
 		}
 		__time += dt;
 	}

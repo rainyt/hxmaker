@@ -54,8 +54,9 @@ interface IEngine {
 	 * 初始化引擎
 	 * @param stageWidth 
 	 * @param stageHeight 
+	 * @param lockLandscape 是否锁定横屏
 	 */
-	public function init(stageWidth:Int, stageHeight:Int):Void;
+	public function init(stageWidth:Int, stageHeight:Int, lockLandscape:Bool = false):Void;
 
 	/**
 	 * 释放引擎

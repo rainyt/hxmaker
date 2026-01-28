@@ -19,12 +19,14 @@ class Hxmaker {
 	/**
 	 * 初始化引擎
 	 * @param classes 引擎类
-	 * @param stageWidth 舞台宽度自适应
-	 * @param stageHeight 舞台高度自适应
+	 * @param stageWidth 舞台宽度自适应，0表示不自适应
+	 * @param stageHeight 舞台高度自适应，0表示不自适应
+	 * @param cacheAsBitmap 是否缓存为位图
+	 * @param lockLandscape 是否锁定横屏
 	 */
-	public static function init<T:IEngine>(classes:Class<T>, stageWidth:Int, stageHeight:Int, cacheAsBitmap:Bool = false):T {
+	public static function init<T:IEngine>(classes:Class<T>, stageWidth:Int, stageHeight:Int, cacheAsBitmap:Bool = false, lockLandscape:Bool = false):T {
 		__engine = Type.createInstance(classes, []);
-		__engine.init(stageWidth, stageHeight);
+		__engine.init(stageWidth, stageHeight, lockLandscape);
 		__engine.stages.push(topView);
 		__engine.renderer.cacheAsBitmap = cacheAsBitmap;
 		return cast __engine;

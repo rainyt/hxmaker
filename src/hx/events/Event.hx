@@ -5,6 +5,7 @@ import hx.utils.KeyboardTools;
 /**
  * 事件
  */
+@:keep
 class Event {
 	/**
 	 * 更新事件

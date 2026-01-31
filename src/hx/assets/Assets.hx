@@ -228,6 +228,14 @@ class Assets extends Future<Assets, Dynamic> {
 				return true;
 			}
 		}
+
+		var current = this.parent;
+		while (current != null) {
+			if (current.hasLoading(future)) {
+				return true;
+			}
+			current = current.parent;
+		}
 		return false;
 	}
 
@@ -347,7 +355,7 @@ class Assets extends Future<Assets, Dynamic> {
 	 */
 	public function loadUIAssets(path:String) {
 		path = getNativePath(path);
-		var loader = new hx.assets.UIAssetsFuture(path, false);
+		var loader = new hx.assets.UIAssetsFuture(path, false, this);
 		loader.nativePath = this.nativePath;
 		pushFuture(loader);
 	}

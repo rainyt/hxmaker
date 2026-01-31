@@ -68,6 +68,22 @@ class UIBuilder {
 		});
 		// 新增一个通过ids访问控件的函数
 		fileds.push({
+			name: "setUIAssetsPath",
+			kind: FFun({
+				args: [
+					{
+						name: "path",
+						type: macro :String
+					}
+				],
+				expr: macro {
+					return this.__ui_id__ = path;
+				}
+			}),
+			pos: Context.currentPos(),
+		});
+		// 新增一个通过ids访问控件的函数
+		fileds.push({
 			name: "getChildById",
 			kind: FFun({
 				args: [

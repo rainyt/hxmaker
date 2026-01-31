@@ -14,6 +14,11 @@ using haxe.io.Path;
 
 class UIAssets extends Assets {
 	/**
+	 * 字符串缓存
+	 */
+	private static var __stringCache:Map<String, String> = new Map();
+
+	/**
 	 * 模块映射
 	 */
 	public static var moudle:UIMoudle = new UIMoudle(MacroTools.readContent("./moudle.xml"));
@@ -44,10 +49,15 @@ class UIAssets extends Assets {
 			parserXmlString(xmlString);
 			return;
 		}
+		if (__stringCache.exists(__path)) {
+			parserXmlString(__stringCache.get(__path));
+			return;
+		}
 		// 这里需要解析这个xml所需要的所有资源
 		new StringFuture(__path).onComplete((xml:String) -> {
 			// 缓存xml
 			strings.set(id, xml);
+			__stringCache.set(__path, xml);
 			parserXmlString(xml);
 		}).onError(errorValue);
 	}

@@ -16,6 +16,15 @@ class UILoadScene extends Scene {
 	@:noCompletion private var __loadView:DisplayObject;
 	@:noCompletion private var __isLoaded:Bool = false;
 
+	/**
+	 * 是否已加载完成
+	 */
+	public var isLoaded(get, null):Bool;
+
+	private function get_isLoaded():Bool {
+		return __isLoaded;
+	}
+
 	public var uiAssets:UIAssets;
 
 	public var onLoadedEvent:FunctionListener = new FunctionListener(true);

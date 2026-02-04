@@ -13,4 +13,6 @@
     <define name="HXCPP_CHECK_POINTER" />
     <!-- HXCPP_PROFILER 性能检测器 -->
     <define name="HXCPP_PROFILER" if="telemetry" />
+    <!-- 源文件路径 -->
+    <source path="src" />
 </project>

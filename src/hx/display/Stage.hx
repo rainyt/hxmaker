@@ -17,6 +17,7 @@ class Stage extends Box {
 	 * 舞台宽度的内部存储
 	 */
 	@:noCompletion private var __stageWidth:Float = 0;
+
 	/**
 	 * 舞台高度的内部存储
 	 */
@@ -213,6 +214,14 @@ class Stage extends Box {
 			this.dispatchEvent(event);
 		}
 		return false;
+	}
+
+	/**
+	 * 手动AdvanceTime，用于手动触发舞台更新
+	 * @param dt 时间间隔，单位为秒
+	 */
+	public function advance(dt:Float):Void {
+		this.__onUpdate(dt);
 	}
 
 	/**

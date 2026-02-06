@@ -342,6 +342,7 @@ class DisplayObject extends EventDispatcher {
 	// private function get_projection():PerspectiveProjection {
 	// 	return this.__transformMatrix3D.projection;
 	// }
+
 	/**
 	 * Bate: 3D投影矩阵，用于设置3D透视效果
 	 */
@@ -816,6 +817,12 @@ class DisplayObject extends EventDispatcher {
 	 * 是否启用帧事件更新
 	 */
 	public var updateEnabled:Bool = false;
+
+	private function __onUpdate(dt:Float):Void {
+		if (this.updateEnabled) {
+			this.onUpdate(dt);
+		}
+	}
 
 	/**
 	 * 每帧调用，一般用于更新对象状态，启动它需要设置`updateEnable`为`true`。请注意，如果显示对象不存在`stage`时，则不会调用。

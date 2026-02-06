@@ -283,6 +283,9 @@ class DisplayObject extends EventDispatcher {
 		return value;
 	}
 
+	/**
+	 * 颜色变换，用于调整显示对象的颜色、亮度、对比度等
+	 */
 	public var colorTransform(get, set):ColorTransform;
 
 	private function get_colorTransform():ColorTransform {
@@ -317,6 +320,9 @@ class DisplayObject extends EventDispatcher {
 		return this.__transformMatrix3D.transform3D;
 	}
 
+	/**
+	 * Bate: 3D中心点向量，用于3D变换的中心点设置
+	 */
 	public var center3DVector(get, set):Vector3D;
 
 	private function set_center3DVector(value:Vector3D):Vector3D {
@@ -336,6 +342,9 @@ class DisplayObject extends EventDispatcher {
 	// private function get_projection():PerspectiveProjection {
 	// 	return this.__transformMatrix3D.projection;
 	// }
+	/**
+	 * Bate: 3D投影矩阵，用于设置3D透视效果
+	 */
 	public var projectionMatrix3D(get, set):Matrix3D;
 
 	private function set_projectionMatrix3D(value:Matrix3D):Matrix3D {
@@ -1014,6 +1023,9 @@ class DisplayObject extends EventDispatcher {
 		return value;
 	}
 
+	/**
+	 * 中心Y坐标，当布局数据为`AnchorLayoutData`类型时可用
+	 */
 	public var centerY(get, set):Null<Float>;
 
 	private function get_centerY():Null<Float> {
@@ -1030,6 +1042,9 @@ class DisplayObject extends EventDispatcher {
 		return value;
 	}
 
+	/**
+	 * 左边距，当布局数据为`AnchorLayoutData`类型时可用
+	 */
 	public var left(get, set):Null<Float>;
 
 	private function get_left():Null<Float> {
@@ -1046,6 +1061,9 @@ class DisplayObject extends EventDispatcher {
 		return value;
 	}
 
+	/**
+	 * 右边距，当布局数据为`AnchorLayoutData`类型时可用
+	 */
 	public var right(get, set):Null<Float>;
 
 	private function get_right():Null<Float> {
@@ -1062,6 +1080,9 @@ class DisplayObject extends EventDispatcher {
 		return value;
 	}
 
+	/**
+	 * 上边距，当布局数据为`AnchorLayoutData`类型时可用
+	 */
 	public var top(get, set):Null<Float>;
 
 	private function get_top():Null<Float> {
@@ -1078,6 +1099,9 @@ class DisplayObject extends EventDispatcher {
 		return value;
 	}
 
+	/**
+	 * 下边距，当布局数据为`AnchorLayoutData`类型时可用
+	 */
 	public var bottom(get, set):Null<Float>;
 
 	private function get_bottom():Null<Float> {

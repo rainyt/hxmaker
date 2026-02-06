@@ -381,6 +381,9 @@ class DisplayObjectContainer extends DisplayObject {
 		}
 	}
 
+	/**
+	 * 鼠标X坐标，相对于当前容器的本地坐标
+	 */
 	public var mouseX(get, never):Float;
 
 	private function get_mouseX():Float {
@@ -389,6 +392,9 @@ class DisplayObjectContainer extends DisplayObject {
 		return 0;
 	}
 
+	/**
+	 * 鼠标Y坐标，相对于当前容器的本地坐标
+	 */
 	public var mouseY(get, never):Float;
 
 	private function get_mouseY():Float {

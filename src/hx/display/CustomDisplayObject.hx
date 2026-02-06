@@ -21,6 +21,10 @@ class CustomDisplayObject extends DisplayObject implements IRootDataProvider<Dyn
 		return __root;
 	}
 
+	/**
+	 * 创建一个新的自定义显示对象
+	 * @param display 自定义渲染对象
+	 */
 	public function new(display:Dynamic) {
 		super();
 		@:privateAccess this.root = display;

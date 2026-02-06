@@ -1,13 +1,18 @@
 package hx.utils;
 
+import hx.utils.StringTools;
+
 /**
- * 颜色工具
+ * 颜色工具类，提供颜色转换和处理的常用方法
  */
 class ColorUtils {
 	/**
-	 * 转换为Shader使用的-1~1的浮点数值，支持`0xFFFFFF`、`#FFFFFF`等颜色格式。
-	 * @param color 
-	 * @return Color
+	 * 将颜色值转换为Shader使用的浮点数值（0~1范围）
+	 * 支持多种颜色格式：
+	 * - 十六进制数值：0xFFFFFF
+	 * - 十六进制字符串："#FFFFFF"
+	 * @param color 颜色值，可以是数值或字符串
+	 * @return 转换后的Color对象，包含r、g、b三个通道的浮点值
 	 */
 	public static function toShaderColor(color:Dynamic):Color {
 		if (color is String) {
@@ -25,8 +30,14 @@ class ColorUtils {
 	}
 }
 
+/**
+ * 颜色类型定义，包含RGB三个通道的浮点值（0~1范围）
+ */
 typedef Color = {
+	/** 红色通道值，范围0~1 */
 	r:Float,
+	/** 绿色通道值，范围0~1 */
 	g:Float,
+	/** 蓝色通道值，范围0~1 */
 	b:Float
 }

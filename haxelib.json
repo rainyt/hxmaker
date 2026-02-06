@@ -4,7 +4,7 @@
   "license": "MIT",
   "tags": [],
   "description": "A unified game engine written in Haxe that can run on any game engine.",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "releasenote": "",
   "contributors": ["rainyt"],
   "classPath": "src",

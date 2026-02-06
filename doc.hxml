@@ -3,6 +3,8 @@
 --class-path test
 --library spine-haxe
 --library hxmaker-openfl
+--library openfl-glsl
+--library vector-math
 --library actuate
 --library openfl
 --library lime

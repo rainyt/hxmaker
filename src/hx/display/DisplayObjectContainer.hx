@@ -260,18 +260,6 @@ class DisplayObjectContainer extends DisplayObject {
 		}
 	}
 
-	override private function __onUpdate(dt:Float) {
-		if (this.updateEnabled) {
-			this.onUpdate(dt);
-		}
-		var copyChildren = this.__children.copy();
-		for (child in copyChildren) {
-			if (child.updateEnabled) {
-				child.__onUpdate(dt);
-			}
-		}
-	}
-
 	override function hitTestWorldPoint(x:Float, y:Float):Bool {
 		if (maskRect != null) {
 			// 必须命中在maskRect之内的区域

@@ -1,8 +1,5 @@
 package hx.display;
 
-import hx.layout.AnchorLayoutData;
-import hx.layout.AnchorLayout;
-
 /**
  * 滚动组件
  */

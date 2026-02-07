@@ -189,6 +189,21 @@ class SpineSprite extends Sprite implements ISpineDrawOrder {
 	}
 
 	/**
+	 * 移除slot显示对象
+	 * @param display 
+	 */
+	public function removeBindSlot(display:DisplayObject):Void {
+		for (array in __slotDisplay) {
+			for (index => item in array) {
+				if (item.display == display) {
+					array.splice(index, 1);
+					return;
+				}
+			}
+		}
+	}
+
+	/**
 	 * 解绑slot
 	 * @param slot 
 	 */

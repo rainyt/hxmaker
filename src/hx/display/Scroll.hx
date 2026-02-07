@@ -434,9 +434,9 @@ class Scroll extends BoxContainer {
 
 				var moveData:DynamicAccess<Float> = {};
 				if (scrollMoveToX != null)
-					moveData.scrollX = scrollMoveToX;
+					moveData["scrollX"] = scrollMoveToX;
 				if (scrollMoveToY != null)
-					moveData.scrollY = scrollMoveToY;
+					moveData["scrollY"] = scrollMoveToY;
 
 				if (scrollMoveToX != null || scrollMoveToY != null) {
 					Actuate.tween(this, bounceBackTime, moveData);

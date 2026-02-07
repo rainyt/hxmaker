@@ -541,7 +541,7 @@ class Scroll extends BoxContainer {
 	/**
 	 * 鼠标移动时的目标移动缓动值
 	 */
-	public var mouseMoveDeceleration:Float = 0.1;
+	public var mouseMoveDeceleration:Float = 0.2;
 
 	private function onMouseMove(e:MouseEvent) {
 		if (!__down)

@@ -190,6 +190,13 @@ class Scroll extends BoxContainer {
 	override function onUpdate(dt:Float) {
 		super.onUpdate(dt);
 
+		if (__mouseMoveTargetX != null) {
+			this.scrollX += (__mouseMoveTargetX - this.scrollX) * (dt / 0.016) * this.mouseMoveDeceleration;
+		}
+		if (__mouseMoveTargetY != null) {
+			this.scrollY += (__mouseMoveTargetY - this.scrollY) * (dt / 0.016) * this.mouseMoveDeceleration;
+		}
+
 		updateScrollPosition();
 
 		if (this.autoVisible && __dirty) {
@@ -378,11 +385,16 @@ class Scroll extends BoxContainer {
 		Actuate.tween(this, 0.1, getMoveingToData(data));
 	}
 
+	private var __scrollOldX:Float = 0;
+	private var __scrollOldY:Float = 0;
+
 	private function onMouseDown(e:MouseEvent) {
 		this.startX = e.stageX;
 		this.startY = e.stageY;
 		this.__lastStepX = 0;
 		this.__lastStepY = 0;
+		__scrollOldX = scrollX;
+		__scrollOldY = scrollY;
 		__down = true;
 
 		if (!isOverScrollEnbaled) {
@@ -399,6 +411,8 @@ class Scroll extends BoxContainer {
 
 	private function onMouseUp(e:MouseEvent) {
 		if (__down) {
+			__mouseMoveTargetX = null;
+			__mouseMoveTargetY = null;
 			__down = false;
 			if (!isOverScrollEnbaled) {
 				var moveData = getMoveingToData({
@@ -498,6 +512,21 @@ class Scroll extends BoxContainer {
 		return data;
 	}
 
+	/**
+	 * 当鼠标按下移动时产生的移动X轴
+	 */
+	private var __mouseMoveTargetX:Null<Float> = null;
+
+	/**
+	 * 当鼠标按下移动时产生的移动Y轴
+	 */
+	private var __mouseMoveTargetY:Null<Float> = null;
+
+	/**
+	 * 鼠标移动时的目标移动缓动值
+	 */
+	public var mouseMoveDeceleration:Float = 0.1;
+
 	private function onMouseMove(e:MouseEvent) {
 		if (!__down)
 			return;
@@ -513,33 +542,36 @@ class Scroll extends BoxContainer {
 
 		if (!isOverScrollEnbaled) {
 			// 原本的逻辑
-			this.scrollX -= __lastStepX;
-			this.scrollY -= __lastStepY;
+			this.__scrollOldX -= __lastStepX;
+			this.__scrollOldX -= __lastStepY;
 
-			if (this.scrollX > 0 || maxWidth < 0) {
-				this.scrollX = 0;
+			if (this.__scrollOldX > 0 || maxWidth < 0) {
+				this.__scrollOldX = 0;
 				this.__lastStepX = 0;
-			} else if (this.scrollX < -maxWidth) {
-				this.scrollX = -maxWidth;
+			} else if (this.__scrollOldX < -maxWidth) {
+				this.__scrollOldX = -maxWidth;
 				this.__lastStepX = 0;
 			}
 
-			if (this.scrollY > 0 || maxHeight < 0) {
-				this.scrollY = 0;
+			if (this.__scrollOldY > 0 || maxHeight < 0) {
+				this.__scrollOldY = 0;
 				this.__lastStepY = 0;
-			} else if (this.scrollY < -maxHeight) {
-				this.scrollY = -maxHeight;
+			} else if (this.__scrollOldY < -maxHeight) {
+				this.__scrollOldY = -maxHeight;
 				this.__lastStepY = 0;
 			}
 		} else {
 			// 如果scrollXY超出版边，使用橡皮筋效果限制转移距离
 			if (maxWidth > 0 && scrollXEnable)
-				this.scrollX -= (tryGetOverScrollSide(maxWidth,
+				this.__scrollOldX -= (tryGetOverScrollSide(maxWidth,
 					HORIZONTAL) != NONE) ? __lastStepX != 0 ? rubberBandDistance(__lastStepX, this.width) : 0 : __lastStepX;
 			if (maxHeight > 0 && scrollYEnable)
-				this.scrollY -= (tryGetOverScrollSide(maxHeight,
+				this.__scrollOldY -= (tryGetOverScrollSide(maxHeight,
 					VERTICAL) != NONE) ? __lastStepY != 0 ? rubberBandDistance(__lastStepY, this.height) : 0 : __lastStepY;
 		}
+
+		this.__mouseMoveTargetX = __scrollOldX;
+		this.__mouseMoveTargetY = __scrollOldY;
 	}
 
 	/**

@@ -50,7 +50,9 @@ class SpineSprite extends Sprite implements ISpineDrawOrder {
 	override function set_colorTransform(value:ColorTransform):ColorTransform {
 		spine.colorTransform = value;
 		for (item in __slotDisplay) {
-			item.display.colorTransform = value;
+			for (sub in item) {
+				sub.display.colorTransform = value;
+			}
 		}
 		for (graphics in __drawGraphics) {
 			if (graphics == null)
@@ -121,8 +123,10 @@ class SpineSprite extends Sprite implements ISpineDrawOrder {
 	override function onUpdate(dt:Float) {
 		this.spine.onUpdate(dt);
 		for (object in __slotDisplay) {
-			if (object.display.updateEnabled) {
-				object.display.onUpdate(dt);
+			for (sub in object) {
+				if (sub.display.updateEnabled) {
+					sub.display.onUpdate(dt);
+				}
 			}
 		}
 	}
@@ -164,7 +168,7 @@ class SpineSprite extends Sprite implements ISpineDrawOrder {
 		return __drawGraphics[i];
 	}
 
-	private var __slotDisplay:Map<String, DisplayObjectDraw> = [];
+	private var __slotDisplay:Map<String, Array<DisplayObjectDraw>> = [];
 
 	/**
 	 * 绑定显示对象到slot
@@ -176,10 +180,12 @@ class SpineSprite extends Sprite implements ISpineDrawOrder {
 		if (this.skeleton.findSlot(name) == null)
 			throw 'slot $name not found';
 		#end
-		this.__slotDisplay[name] = {
+		if (this.__slotDisplay[name] == null)
+			this.__slotDisplay[name] = [];
+		this.__slotDisplay[name].push({
 			display: display,
 			drawFunction: draw
-		};
+		});
 	}
 
 	/**
@@ -202,7 +208,7 @@ class SpineSprite extends Sprite implements ISpineDrawOrder {
 	 * @param slot 
 	 * @return 
 	 */
-	public function getBindSoltDisplay(slot:Slot):DisplayObjectDraw {
+	public function getBindSoltDisplay(slot:Slot):Array<DisplayObjectDraw> {
 		return this.getBindSoltDisplayByName(slot.data.name);
 	}
 
@@ -211,7 +217,9 @@ class SpineSprite extends Sprite implements ISpineDrawOrder {
 	 * @param name 
 	 * @return 
 	 */
-	public function getBindSoltDisplayByName(name:String):DisplayObjectDraw {
+	public function getBindSoltDisplayByName(name:String):Array<DisplayObjectDraw> {
+		if (this.__slotDisplay[name] == null)
+			return null;
 		return this.__slotDisplay[name];
 	}
 
@@ -255,30 +263,34 @@ class SpineSprite extends Sprite implements ISpineDrawOrder {
 			this.addChild(g);
 		}
 
-		var data = getBindSoltDisplay(slot);
-		var display = data == null ? null : data.display;
-		if (display != null) {
-			#if spine_hx
-			display.x = slot.bone.getWorldX();
-			display.y = slot.bone.getWorldY();
-			display.rotation = slot.bone.getWorldRotationX();
-			display.scaleX = slot.bone.getWorldScaleX();
-			display.scaleY = slot.bone.getWorldScaleY();
-			display.alpha = slot.color.a;
-			#else
-			display.x = slot.bone.worldX;
-			display.y = slot.bone.worldY;
-			display.rotation = slot.bone.worldRotationX;
-			display.scaleX = slot.bone.worldScaleX;
-			display.scaleY = slot.bone.worldScaleY;
-			display.alpha = slot.color.a;
-			#end
-			this.addChild(display);
-			if (data.drawFunction != null) {
-				data.drawFunction(display);
+		var datas = getBindSoltDisplay(slot);
+		if (datas != null) {
+			for (data in datas) {
+				var display = data == null ? null : data.display;
+				if (display != null) {
+					#if spine_hx
+					display.x = slot.bone.getWorldX();
+					display.y = slot.bone.getWorldY();
+					display.rotation = slot.bone.getWorldRotationX();
+					display.scaleX = slot.bone.getWorldScaleX();
+					display.scaleY = slot.bone.getWorldScaleY();
+					display.alpha = slot.color.a;
+					#else
+					display.x = slot.bone.worldX;
+					display.y = slot.bone.worldY;
+					display.rotation = slot.bone.worldRotationX;
+					display.scaleX = slot.bone.worldScaleX;
+					display.scaleY = slot.bone.worldScaleY;
+					display.alpha = slot.color.a;
+					#end
+					this.addChild(display);
+					if (data.drawFunction != null) {
+						data.drawFunction(display);
+					}
+					// if (isDarwable)
+					__drawIndex++;
+				}
 			}
-			// if (isDarwable)
-			__drawIndex++;
 		}
 	}
 

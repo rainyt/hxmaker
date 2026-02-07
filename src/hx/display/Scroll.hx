@@ -1,5 +1,6 @@
 package hx.display;
 
+import haxe.DynamicAccess;
 import hx.events.MouseEvent;
 import hx.geom.Point;
 import hx.geom.Rectangle;
@@ -183,6 +184,8 @@ class Scroll extends BoxContainer {
 		this.setDirty();
 		return value;
 	}
+
+	private var __logDt:Float = 0;
 
 	override function onUpdate(dt:Float) {
 		super.onUpdate(dt);
@@ -376,10 +379,11 @@ class Scroll extends BoxContainer {
 		if (__down) {
 			__down = false;
 			if (!isOverScrollEnbaled) {
-				Actuate.tween(this, moveUpTime, getMoveingToData({
+				var moveData = getMoveingToData({
 					scrollX: scrollX - __lastStepX / 0.016 * moveUpTime,
 					scrollY: scrollY - __lastStepY / 0.016 * moveUpTime
-				}));
+				});
+				Actuate.tween(this, moveUpTime, moveData);
 			} else {
 				velocity = new Point(__lastStepX, __lastStepY);
 
@@ -420,27 +424,23 @@ class Scroll extends BoxContainer {
 
 				if (moveingToData.scrollX <= 0 || moveingToData.scrollX >= maxSize.x)
 					scrollMoveToX = moveingToData.scrollX;
+				else
+					scrollMoveToX = null;
 
 				if (moveingToData.scrollY <= 0 || moveingToData.scrollY >= maxSize.y)
 					scrollMoveToY = moveingToData.scrollY;
+				else
+					scrollMoveToY = null;
 
+				var moveData:DynamicAccess<Float> = {};
 				if (scrollMoveToX != null)
-					Actuate.tween(this, bounceBackTime, {
-						scrollX: scrollMoveToX
-					}, false);
-				else
-					Actuate.tween(this, moveUpTime, {
-						scrollX: moveingToData.scrollX
-					});
-
+					moveData.scrollX = scrollMoveToX;
 				if (scrollMoveToY != null)
-					Actuate.tween(this, bounceBackTime, {
-						scrollY: scrollMoveToY
-					}, false);
-				else
-					Actuate.tween(this, moveUpTime, {
-						scrollY: moveingToData.scrollY
-					});
+					moveData.scrollY = scrollMoveToY;
+
+				if (scrollMoveToX != null || scrollMoveToY != null) {
+					Actuate.tween(this, bounceBackTime, moveData);
+				}
 			}
 		}
 	}

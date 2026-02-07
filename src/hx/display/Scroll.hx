@@ -224,21 +224,43 @@ class Scroll extends BoxContainer {
 		}
 	}
 
-	public var isOverScrollEnbaled:Bool = true; // 是否开启overscroll效果
+	/**
+	 * 是否开启overscroll效果
+	 */
+	public var isOverScrollEnbaled:Bool = true;
 
-	public var bounceBackTime:Float = 0.35; // 回弹持续时间
+	/**
+	 * 回弹持续时间
+	 */
+	public var bounceBackTime:Float = 0.35;
 
-	public var deceleration:Float = 0.75; // 减速因子
+	/**
+	 * 减速因子
+	 */
+	public var deceleration:Float = 0.5;
 
-	private var freeSlideDecelerationAfterEnterOverScroll:Float = 0.89; // 自由滑动，并且超出版边后的减速因子
+	/**
+	 * 自由滑动，并且超出版边后的减速因子
+	 */
+	private var freeSlideDecelerationAfterEnterOverScroll:Float = 0.89;
 
-	private var velocity:Point; // 惯性
+	/**
+	 * 惯性
+	 */
+	private var velocity:Point;
 
 	private var shouldFreeSlideX:Bool = false;
 	private var shouldFreeSlideY:Bool = false;
 
-	private var freeOverScrollMaxDistanceX:Float = -1; // 自由滑动，并且超出版边的最大距离x
-	private var freeOverScrollMaxDistanceY:Float = -1; // 自由滑动，并且超出版边的最大距离y
+	/**
+	 * 自由滑动，并且超出版边的最大距离x
+	 */
+	private var freeOverScrollMaxDistanceX:Float = -1;
+
+	/**
+	 * 自由滑动，并且超出版边的最大距离y
+	 */
+	private var freeOverScrollMaxDistanceY:Float = -1;
 
 	private static inline var freeOverScrollMaxDistanceMultiplier = 2;
 

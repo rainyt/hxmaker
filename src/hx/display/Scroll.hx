@@ -475,7 +475,23 @@ class Scroll extends BoxContainer {
 					moveData["scrollY"] = scrollMoveToY;
 
 				if (scrollMoveToX != null || scrollMoveToY != null) {
-					Actuate.tween(this, bounceBackTime, moveData);
+					// 计算滚动距离
+					var distanceX = scrollMoveToX != null ? Math.abs(scrollMoveToX - scrollX) : 0;
+					var distanceY = scrollMoveToY != null ? Math.abs(scrollMoveToY - scrollY) : 0;
+					var maxDistance = Math.max(distanceX, distanceY);
+
+					// 计算滚动速度
+					var speed = Math.sqrt(velocity.x * velocity.x + velocity.y * velocity.y);
+
+					// 综合计算动画时间
+					var baseTime = bounceBackTime;
+					var distanceFactor = Math.min(2, maxDistance / 500);
+					var speedFactor = Math.min(1.5, speed / 50);
+
+					var animationTime = baseTime * distanceFactor * speedFactor;
+					animationTime = Math.max(0.2, Math.min(1.5, animationTime));
+
+					Actuate.tween(this, animationTime, moveData);
 				}
 			}
 		}

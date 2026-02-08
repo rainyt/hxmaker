@@ -789,20 +789,12 @@ class DisplayObject extends EventDispatcher {
 		this.onAddToStage();
 		if (this.hasEventListener(Event.ADDED_TO_STAGE))
 			this.dispatchEvent(new Event(Event.ADDED_TO_STAGE));
-		// 如果启用了更新，则添加到舞台的更新列表中
-		if (this.updateEnabled) {
-			stage.addToUpdateList(this);
-		}
 	}
 
 	private function __onRemoveFromStage():Void {
 		if (this.hasEventListener(Event.REMOVED_FROM_STAGE))
 			this.dispatchEvent(new Event(Event.REMOVED_FROM_STAGE));
 		this.onRemoveToStage();
-		// 从舞台的更新列表中移除
-		if (this.__stage != null) {
-			this.__stage.removeFromUpdateList(this);
-		}
 		this.__stage = null;
 	}
 
@@ -824,27 +816,7 @@ class DisplayObject extends EventDispatcher {
 	/**
 	 * 是否启用帧事件更新
 	 */
-	public var updateEnabled(get, set):Bool;
-	
-	@:noCompletion private var __updateEnabled:Bool = false;
-	
-	private function get_updateEnabled():Bool {
-		return __updateEnabled;
-	}
-	
-	private function set_updateEnabled(value:Bool):Bool {
-		if (__updateEnabled != value) {
-			__updateEnabled = value;
-			if (stage != null) {
-				if (value) {
-					stage.addToUpdateList(this);
-				} else {
-					stage.removeFromUpdateList(this);
-				}
-			}
-		}
-		return value;
-	}
+	public var updateEnabled:Bool = false;
 
 	private function __onUpdate(dt:Float):Void {
 		if (this.updateEnabled) {

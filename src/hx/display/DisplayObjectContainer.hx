@@ -145,6 +145,18 @@ class DisplayObjectContainer extends DisplayObject {
 		this.setDirty();
 	}
 
+	override private function __onUpdate(dt:Float) {
+		if (this.updateEnabled) {
+			this.onUpdate(dt);
+		}
+		var copyChildren = this.__children.copy();
+		for (child in copyChildren) {
+			if (child.updateEnabled) {
+				child.__onUpdate(dt);
+			}
+		}
+	}
+
 	/**
 	 * 删除显示对象
 	 * @param child 

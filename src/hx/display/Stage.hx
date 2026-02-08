@@ -35,11 +35,6 @@ class Stage extends Box {
 	private static var __focus:DisplayObject;
 
 	/**
-	 * 需要更新的显示对象列表
-	 */
-	@:noCompletion private var __updateList:Array<DisplayObject> = [];
-
-	/**
 	 * 设置舞台焦点对象
 	 * @param value 要设置为焦点的显示对象
 	 * @return 设置后的焦点对象
@@ -226,17 +221,7 @@ class Stage extends Box {
 	 * @param dt 时间间隔，单位为秒
 	 */
 	public function advance(dt:Float):Void {
-		// 首先更新舞台自身
-		if (this.updateEnabled) {
-			this.onUpdate(dt);
-		}
-		// 遍历更新列表，更新所有需要更新的显示对象
-		var copyUpdateList = __updateList.copy();
-		for (displayObject in copyUpdateList) {
-			if (displayObject.updateEnabled && displayObject.stage == this) {
-				displayObject.onUpdate(dt);
-			}
-		}
+		this.__onUpdate(dt);
 	}
 
 	/**
@@ -314,26 +299,5 @@ class Stage extends Box {
 	public function onDeactivate():Void {
 		this.dispatchEvent(new Event(Event.DEACTIVATE));
 		SoundManager.getInstance().stopAllSound();
-	}
-
-	/**
-	 * 向更新列表添加显示对象
-	 * @param displayObject 要添加的显示对象
-	 */
-	public function addToUpdateList(displayObject:DisplayObject):Void {
-		if (displayObject != null && !__updateList.contains(displayObject)) {
-			__updateList.push(displayObject);
-		}
-	}
-
-	/**
-	 * 从更新列表移除显示对象
-	 * @param displayObject 要移除的显示对象
-	 */
-	public function removeFromUpdateList(displayObject:DisplayObject):Void {
-		var index = __updateList.indexOf(displayObject);
-		if (index != -1) {
-			__updateList.splice(index, 1);
-		}
 	}
 }

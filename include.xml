@@ -15,4 +15,6 @@
     <define name="HXCPP_PROFILER" if="telemetry" />
     <!-- 源文件路径 -->
     <source path="src" />
+    <!-- 禁用标签线样式 -->
+    <define name="disable_label_line_style" if="wechat" />
 </project>

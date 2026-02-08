@@ -194,6 +194,9 @@ class InputLabel extends Box implements IDataProider<String> {
 	}
 
 	private function updateLine(alpha:Float):Void {
+		#if disable_label_line_style
+		line.visible = false;
+		#else
 		line.x = __startRect == null ? (selectionStart == 0 ? 0 : getTextWidth() + 1) : __startRect.x;
 		line.height = __startRect == null ? textFormat.size + 2 : __startRect.height;
 		line.alpha = alpha;
@@ -211,6 +214,7 @@ class InputLabel extends Box implements IDataProider<String> {
 					line.y = 0;
 			}
 		}
+		#end
 		// line.y = __startRect == null ? 0 : __startRect.y;
 	}
 }

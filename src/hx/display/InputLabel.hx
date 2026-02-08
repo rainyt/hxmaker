@@ -169,8 +169,17 @@ class InputLabel extends Box implements IDataProider<String> {
 		this.focus();
 	}
 
+	private var __isFocus:Bool = false;
+
 	public function focus():Void {
+		__isFocus = true;
 		TextInputUtils.openInput(this);
+	}
+
+	override function onRemoveToStage() {
+		super.onRemoveToStage();
+		if (__isFocus && TextInputUtils.zinput == this)
+			TextInputUtils.closeInput(this);
 	}
 
 	private var __dt:Float = 0;

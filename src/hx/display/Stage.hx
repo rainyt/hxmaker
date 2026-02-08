@@ -217,14 +217,6 @@ class Stage extends Box {
 	}
 
 	/**
-	 * 手动AdvanceTime，用于手动触发舞台更新
-	 * @param dt 时间间隔，单位为秒
-	 */
-	public function advance(dt:Float):Void {
-		this.__onUpdate(dt);
-	}
-
-	/**
 	 * 每帧更新舞台状态
 	 * @param dt 时间间隔，单位为秒
 	 */

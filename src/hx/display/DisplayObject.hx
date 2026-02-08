@@ -818,12 +818,6 @@ class DisplayObject extends EventDispatcher {
 	 */
 	public var updateEnabled:Bool = false;
 
-	private function __onUpdate(dt:Float):Void {
-		if (this.updateEnabled) {
-			this.onUpdate(dt);
-		}
-	}
-
 	/**
 	 * 每帧调用，一般用于更新对象状态，启动它需要设置`updateEnable`为`true`。请注意，如果显示对象不存在`stage`时，则不会调用。
 	 * @param dt 

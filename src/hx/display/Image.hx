@@ -1,9 +1,12 @@
 package hx.display;
 
+import hx.ui.UIManager;
 import hx.core.Hxmaker;
 import hx.utils.ScaleUtils;
 import hx.geom.Rectangle;
 import hx.providers.IRootDataProvider;
+
+using haxe.io.Path;
 
 /**
  * 图像是一个映射了纹理的四边形。
@@ -245,12 +248,16 @@ class Image extends DisplayObject implements IDataProider<BitmapData> implements
 
 	/**
 	 * 构造一个位图对象
-	 * @param data 
+	 * @param data 位图数据或者是字符串，如果使用字符串，则会尝试通过UIManager获取位图数据，可直接使用字符串的名称，如`image`，而不是`assets/image.png`。
 	 */
-	public function new(?data:BitmapData) {
+	public function new(?data:Dynamic) {
 		super();
 		if (data != null) {
-			this.data = data;
+			if (data is BitmapData) {
+				this.data = data;
+			} else if (data is String) {
+				this.data = UIManager.getBitmapData(cast(data, String).withoutDirectory().withoutExtension());
+			}
 		}
 	}
 

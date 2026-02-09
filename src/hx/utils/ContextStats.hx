@@ -20,7 +20,13 @@ class ContextStats {
 	public static var fps(get, never):Int;
 
 	private static function get_fps():Int {
-		return __fpses.length - 1;
+		if (__fpses.length == 121) {
+			return 120;
+		}
+		if (__fpses.length == 61) {
+			return 60;
+		}
+		return __fpses.length;
 	}
 
 	/**
@@ -124,7 +130,7 @@ class ContextStats {
 	public static function statsCpu():Void {
 		var now = Timer.stamp();
 		__cpus.push(now - __cpuTimer);
-		if (__cpus.length > 60) {
+		if (__cpus.length > 180) {
 			__cpus.shift();
 		}
 		var all = 0.;

@@ -39,4 +39,12 @@ class TouchEvent extends MouseEvent {
 	 * 触摸点Y坐标
 	 */
 	public var touchY:Float = 0;
+
+	/**
+	 * 转换为字符串表示
+	 * @return 触摸事件的字符串描述
+	 */
+	public override function toString():String {
+		return "TouchEvent[type=" + type + ", touchPointID=" + touchPointID + ", touchX=" + touchX + ", touchY=" + touchY + "]";
+	}
 }

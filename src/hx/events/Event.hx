@@ -89,6 +89,14 @@ class Event {
 	 */
 	public var cannel:Bool;
 
+	public var isDefaultPrevented(get, never):Bool;
+
+	private var __isDefaultPrevented:Bool = false;
+
+	private function get_isDefaultPrevented():Bool {
+		return this.__isDefaultPrevented;
+	}
+
 	/**
 	 * 是否冒泡
 	 */
@@ -131,6 +139,14 @@ class Event {
 	 * 阻止默认行为
 	 */
 	public function preventDefault():Void {
-		this.cannel = true;
+		this.__isDefaultPrevented = true;
+	}
+
+	/**
+	 * 转换为字符串表示
+	 * @return 事件的字符串描述
+	 */
+	public function toString():String {
+		return "Event[type=" + type + ", cannel=" + cannel + ", bubbling=" + bubbling + "]";
 	}
 }

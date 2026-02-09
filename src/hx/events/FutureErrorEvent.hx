@@ -33,7 +33,7 @@ class FutureErrorEvent extends Event {
 	 */
 	public var error:String;
 
-	public function toString():String {
+	public override function toString():String {
 		return "FutureErrorEvent[errorCode=" + errorCode + ", error=" + error + "]";
 	}
 }

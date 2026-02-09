@@ -60,7 +60,6 @@ class MouseEvent extends Event {
 	public var stageY:Float = 0;
 
 	/**
-	 * 
 	 * 指示用户旋转的每个单位应滚动多少行
 	 * 鼠标滚轮。正的增量值表示向上滚动；一
 	 * 负值表示向下滚动。典型值为1至3，但
@@ -69,4 +68,12 @@ class MouseEvent extends Event {
 	 * 属性仅适用于`MouseEvent.mouseWheel`事件。
 	 */
 	public var delta:Float = 0;
+
+	/**
+	 * 转换为字符串表示
+	 * @return 鼠标事件的字符串描述
+	 */
+	public override function toString():String {
+		return "MouseEvent[type=" + type + ", stageX=" + stageX + ", stageY=" + stageY + ", delta=" + delta + "]";
+	}
 }

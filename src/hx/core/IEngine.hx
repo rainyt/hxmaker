@@ -1,5 +1,6 @@
 package hx.core;
 
+import hx.display.IEventDispatcher;
 import hx.display.IRender;
 import hx.geom.Matrix;
 import hx.display.DisplayObjectContainer;
@@ -9,7 +10,7 @@ import hx.display.Stage;
  * 引擎接口，定义了游戏引擎的核心功能和方法
  * 任何具体的引擎实现都必须实现此接口
  */
-interface IEngine {
+interface IEngine extends IEventDispatcher {
 	/**
 	 * 渲染器实例，负责实际的渲染操作
 	 * 通过此渲染器可以控制渲染相关的设置和操作

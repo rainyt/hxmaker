@@ -18,4 +18,12 @@ class KeyboardEvent extends Event {
 	 * 按键码
 	 */
 	public var keyCode:Int;
+
+	/**
+	 * 转换为字符串表示
+	 * @return 键盘事件的字符串描述
+	 */
+	public override function toString():String {
+		return "KeyboardEvent[type=" + type + ", keyCode=" + keyCode + "]";
+	}
 }

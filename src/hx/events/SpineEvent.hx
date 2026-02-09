@@ -44,4 +44,12 @@ class SpineEvent extends Event {
 	 * Spine动画对象
 	 */
 	public var trackEntry:TrackEntry;
+
+	/**
+	 * 转换为字符串表示
+	 * @return Spine事件的字符串描述
+	 */
+	public override function toString():String {
+		return "SpineEvent[type=" + type + "]";
+	}
 }

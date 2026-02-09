@@ -10,7 +10,7 @@ class WechatTextInputUtils {
 	/**
 	 * 当前焦点输入组件
 	 */
-	public static var zinput:InputLabel;
+	public static var input:InputLabel;
 	
 	/**
 	 * 输入值
@@ -26,7 +26,7 @@ class WechatTextInputUtils {
 	 * 打开输入
 	 */
 	public static function openInput(input:InputLabel):Void {
-		zinput = input;
+		 WechatTextInputUtils.input = input;
 		inputValue = input.data;
 		
 		// 防止重复注册事件监听器
@@ -60,8 +60,8 @@ class WechatTextInputUtils {
 	 * 关闭输入
 	 */
 	public static function closeInput(label:InputLabel):Void {
-		if (label == zinput) {
-			zinput = null;
+		if (label == input) {
+			input = null;
 			
 			// 隐藏文字输入键盘
 			Wx.hideKeyboard({
@@ -87,28 +87,28 @@ class WechatTextInputUtils {
 	 * 监听键盘输入事件
 	 */
 	public static function onKeyboardInput(res:Dynamic):Void {
-		if (zinput == null) {
+		if (input == null) {
 			return;
 		}
 		
 		inputValue = res.value;
-		zinput.data = inputValue.substr(0, 9999);
-		zinput.getTextWidth();
-		zinput.dispatchEvent(new Event(Event.CHANGE));
+		input.data = inputValue.substr(0, 9999);
+		input.getTextWidth();
+		input.dispatchEvent(new Event(Event.CHANGE));
 	}
 
 	/**
 	 * 监听用户点击键盘Confirm按钮时的事件
 	 */
 	public static function onKeyboardConfirm(res:Dynamic):Void {
-		if (zinput == null) {
+		if (input == null) {
 			return;
 		}
 		
 		inputValue = res.value;
-		zinput.data = inputValue.substr(0, 9999);
-		zinput.getTextWidth();
-		zinput.dispatchEvent(new Event(Event.CHANGE));
+		input.data = inputValue.substr(0, 9999);
+		input.getTextWidth();
+		input.dispatchEvent(new Event(Event.CHANGE));
 	}
 
 	/**

@@ -15,14 +15,13 @@ class HTML5TextInputUtils {
 	/**
 	 * 当前焦点输入组件
 	 */
-	public static var zinput:InputLabel;
+	public static var input:InputLabel;
 
 	/**
 	 * 打开输入
 	 */
 	public static function openInput(input:InputLabel):Void {
-		zinput = input;
-		var point = input.localToGlobal(new Point(0, 0));
+		HTML5TextInputUtils.input = input;
 		if (textureArea == null) {
 			textureArea = Browser.document.createTextAreaElement();
 			textureArea.style.position = "absolute";
@@ -39,7 +38,7 @@ class HTML5TextInputUtils {
 			// 侦听窗口变化
 			Browser.document.onresize = onResize;
 		}
-		textureArea.value = zinput.data;
+		textureArea.value = input.data;
 		textureArea.style.visibility = "visible";
 		textureArea.selectionStart = input.selectionStart;
 		textureArea.selectionEnd = input.selectionEnd;
@@ -62,29 +61,29 @@ class HTML5TextInputUtils {
 	}
 
 	public static function onKeyUp():Void {
-		zinput.selectionStart = textureArea.selectionStart;
-		zinput.selectionEnd = textureArea.selectionEnd;
+		input.selectionStart = textureArea.selectionStart;
+		input.selectionEnd = textureArea.selectionEnd;
 	}
 
 	/**
 	 * 侦听输入
 	 */
 	public static function onInput():Void {
-		if (zinput == null)
+		if (input == null)
 			return;
-		zinput.data = textureArea.value.substr(0, 9999);
-		zinput.getTextWidth();
-		zinput.selectionStart = textureArea.selectionStart;
-		zinput.selectionEnd = textureArea.selectionEnd;
-		zinput.dispatchEvent(new Event(Event.CHANGE));
+		input.data = textureArea.value.substr(0, 9999);
+		input.getTextWidth();
+		input.selectionStart = textureArea.selectionStart;
+		input.selectionEnd = textureArea.selectionEnd;
+		input.dispatchEvent(new Event(Event.CHANGE));
 	}
 
 	/**
 	 * 停止输入
 	 */
 	public static function closeInput(label:InputLabel):Void {
-		if (label == zinput) {
-			zinput = null;
+		if (label == input) {
+			input = null;
 			if (textureArea != null) {
 				textureArea.style.visibility = "hidden";
 				textureArea.blur();

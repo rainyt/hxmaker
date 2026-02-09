@@ -178,7 +178,7 @@ class InputLabel extends Box implements IDataProider<String> {
 
 	override function onRemoveToStage() {
 		super.onRemoveToStage();
-		if (__isFocus && TextInputUtils.zinput == this)
+		if (__isFocus && TextInputUtils.input == this)
 			TextInputUtils.closeInput(this);
 	}
 

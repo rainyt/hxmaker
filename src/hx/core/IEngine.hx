@@ -85,4 +85,9 @@ interface IEngine {
 	 * @param parentMatrix 父容器的变换矩阵，可选参数
 	 */
 	public function render(display:DisplayObjectContainer, ?parentMatrix:Matrix):Void;
+
+	/**
+	 * 引擎帧率，默认为机器动态帧率，一般不会低于60FPS，可自定义帧率
+	 */
+	public var frameRate(get, set):Int;
 }

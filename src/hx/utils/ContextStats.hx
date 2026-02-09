@@ -1,7 +1,11 @@
 package hx.utils;
 
+import hx.core.Hxmaker;
 import haxe.Timer;
 
+/**
+ * 上下文统计信息
+ */
 class ContextStats {
 	private static var __drawcall = 0;
 	private static var __vertexCount = 0;
@@ -20,11 +24,8 @@ class ContextStats {
 	public static var fps(get, never):Int;
 
 	private static function get_fps():Int {
-		if (__fpses.length == 121) {
-			return 120;
-		}
-		if (__fpses.length == 61) {
-			return 60;
+		if (__fpses.length - 1 == Std.int(__fpses.length / 10) * 10) {
+			return __fpses.length - 1;
 		}
 		return __fpses.length;
 	}
@@ -138,7 +139,7 @@ class ContextStats {
 			all += f;
 		}
 		__frameUsedTime = all / __cpus.length;
-		__cpu = __frameUsedTime / 0.0166;
+		__cpu = __frameUsedTime / (1 / Hxmaker.engine.frameRate);
 	}
 
 	/**

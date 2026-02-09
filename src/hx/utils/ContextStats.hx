@@ -110,9 +110,20 @@ class ContextStats {
 		return __cpu;
 	}
 
+	/**
+	 * 帧使用时间
+	 */
+	public static var frameUsedTime(get, never):Float;
+
+	private static var __frameUsedTime:Float = 0;
+
+	private static function get_frameUsedTime():Float {
+		return __frameUsedTime;
+	}
+
 	public static function statsCpu():Void {
 		var now = Timer.stamp();
-		__cpus.push((now - __cpuTimer) / 0.0166);
+		__cpus.push(now - __cpuTimer);
 		if (__cpus.length > 60) {
 			__cpus.shift();
 		}
@@ -120,7 +131,8 @@ class ContextStats {
 		for (f in __cpus) {
 			all += f;
 		}
-		__cpu = all / __cpus.length;
+		__frameUsedTime = all / __cpus.length;
+		__cpu = __frameUsedTime / 0.0166;
 	}
 
 	/**

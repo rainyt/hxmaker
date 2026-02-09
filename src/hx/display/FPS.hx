@@ -23,15 +23,27 @@ class FPS extends DisplayObjectContainer {
 		this.label = new Label();
 		label.textFormat = new TextFormat(null, 26, 0xffffff);
 		this.addChild(label);
-		this.addEventListener(Event.UPDATE, onUpdated);
 	}
 
-	private function onUpdated(e:Event) {
-		this.label.data = "FPS:" + ContextStats.fps + "\ndrawCall:" + ContextStats.drawCall + "\nvertexCount:" + ContextStats.vertexCount + "\ndisplays:"
-			+ ContextStats.visibleDisplayCounts + "\nCPU:" + Std.int(ContextStats.cpu * 100) + "%\nMemory:" + Std.int(ContextStats.memory / 1024 / 1024)
-			+ "mb\nspineRender:" + ContextStats.spineRenderCount + "\ngraphicRender:" + ContextStats.graphicRenderCount + "\ntimerTask:"
-			+ ContextStats.timerTaskCount + "\nblendModeFilter:" + ContextStats.blendModeFilterDrawCall + "\nstageBitmapDatas:" + StageBitmapData.counts
-			+ "\ncacheAsBitmap:" + Hxmaker.engine.renderer.cacheAsBitmap;
+	override function onUpdate(dt:Float) {
+		super.onUpdate(dt);
+		// 使用数组存储统计信息，方便后续追加其他内容
+		var stats:Array<String> = [
+			"FPS:" + ContextStats.fps,
+			"drawCall:" + ContextStats.drawCall,
+			"vertexCount:" + ContextStats.vertexCount,
+			"displays:" + ContextStats.visibleDisplayCounts,
+			"CPU:" + Std.int(ContextStats.cpu * 100) + "%",
+			"FrameDelay:" + (Std.int(ContextStats.frameUsedTime * 100000) / 100) + "ms",
+			"Memory:" + Std.int(ContextStats.memory / 1024 / 1024) + "mb",
+			"spineRender:" + ContextStats.spineRenderCount,
+			"graphicRender:" + ContextStats.graphicRenderCount,
+			"timerTask:" + ContextStats.timerTaskCount,
+			"blendModeFilter:" + ContextStats.blendModeFilterDrawCall,
+			"stageBitmapDatas:" + StageBitmapData.counts,
+			"cacheAsBitmap:" + Hxmaker.engine.renderer.cacheAsBitmap
+		];
+		this.label.data = stats.join("\n");
 		this.__bg.width = label.width + 10;
 		this.__bg.height = label.height + 10;
 		if (this.parent != null && this.parent.children[this.parent.children.length - 1] != this) {

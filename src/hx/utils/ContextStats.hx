@@ -204,4 +204,17 @@ class ContextStats {
 	public static function statsBlendModeFilterDrawCall():Void {
 		__blendModeFilterDrawCall++;
 	}
+
+	/**
+	 * GPU内存使用量
+	 */
+	public static var gpuMemory(get, never):Int;
+
+	private static function get_gpuMemory():Int {
+		#if openfl
+		return openfl.Lib.current.stage.context3D.totalGPUMemory;
+		#else
+		return 0;
+		#end
+	}
 }

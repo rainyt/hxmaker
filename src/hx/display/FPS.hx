@@ -36,6 +36,9 @@ class FPS extends DisplayObjectContainer {
 			"CPU:" + Std.int(ContextStats.cpu * 100) + "%",
 			"FrameDelay:" + (Std.int(ContextStats.frameUsedTime * 100000) / 100) + "ms",
 			"Memory:" + Std.int(ContextStats.memory / 1024 / 1024) + "mb",
+			#if webgl_memory
+			"GPUMemory:" + Std.int(ContextStats.gpuMemory / 1024 / 1024) + "mb",
+			#end
 			"spineRender:" + ContextStats.spineRenderCount,
 			"graphicRender:" + ContextStats.graphicRenderCount,
 			"timerTask:" + ContextStats.timerTaskCount,

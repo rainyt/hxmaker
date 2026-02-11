@@ -311,6 +311,77 @@ class Graphics extends DisplayObject {
 		drawLines(_verts);
 	}
 
+	/**
+	 * 绘制实心圆形
+	 * @param x 圆心x坐标
+	 * @param y 圆心y坐标
+	 * @param radius 半径
+	 * @param smooth 平滑值，值越高圆形会显示得越平滑，但是相应性能越差
+	 * @param alpha 透明度
+	 * @param colorTransform 颜色变换
+	 */
+	public function drawCircle(x:Float, y:Float, radius:Float, smooth:Int = 10, alpha:Float = 1, ?colorTransform:ColorTransform):Void {
+		// http://slabode.exofire.net/circle_draw.shtml
+
+		var _smooth:Float = smooth;
+		var _steps:Int = Std.int(_smooth * Math.sqrt(radius));
+
+		// Precompute the value based on segments
+		var theta = 2 * 3.1415926 / _steps;
+
+		var tangential_factor = Math.tan(theta);
+		var radial_factor = Math.cos(theta);
+
+		var x2:Float = radius;
+		var y2:Float = 0;
+
+		var vertices:Array<Float> = [];
+		var indices:Array<Int> = [];
+		var uvs:Array<Float> = [];
+
+		// 添加圆心点
+		vertices.push(x);
+		vertices.push(y);
+		uvs.push(0.5);
+		uvs.push(0.5);
+
+		// 计算圆周上的点
+		for (i in 0..._steps) {
+			var __x = x2 + x;
+			var __y = y2 + y;
+
+			vertices.push(__x);
+			vertices.push(__y);
+			uvs.push(0.5 + x2 / (radius * 2));
+			uvs.push(0.5 + y2 / (radius * 2));
+
+			// 计算三角形索引
+			if (i > 0) {
+				indices.push(0);
+				indices.push(i);
+				indices.push(i + 1);
+			}
+
+			var tx = -y2;
+			var ty = x2;
+
+			x2 += tx * tangential_factor;
+			y2 += ty * tangential_factor;
+
+			x2 *= radial_factor;
+			y2 *= radial_factor;
+		}
+
+		// 连接最后一个点和第一个点
+		indices.push(0);
+		indices.push(_steps);
+		indices.push(1);
+
+		// 绘制三角形扇形
+		drawTriangles(vertices, indices, uvs, alpha, colorTransform);
+		__sizeDirty = true;
+	}
+
 	public function drawLines(lines:Array<Point>, alpha:Float = 1, ?color:ColorTransform):Void {
 		var _count:Int = lines.length;
 

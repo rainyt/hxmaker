@@ -72,6 +72,11 @@ class WorldMapData {
 	public var files:Array<WorldFile> = [];
 
 	/**
+	 * 所有文件ID列表
+	 */
+	private var __fileIds:Array<String> = [];
+
+	/**
 	 * 事件列表
 	 */
 	public var events:Array<WorldEventData> = [];
@@ -91,6 +96,20 @@ class WorldMapData {
 	public function parserWorldProjectData(data:WorldProjectData):Void {
 		for (key in Reflect.fields(data)) {
 			Reflect.setProperty(this, key, Reflect.getProperty(data, key));
+		}
+		for (file in files) {
+			__fileIds.push(file.id);
+		}
+		// 然后从boxDisplay中搜索
+		for (world in this.subWorlds) {
+			for (child in world.boxDisplays) {
+				if (__fileIds.indexOf(child.id) == -1) {
+					__fileIds.push(child.id);
+					files.push({
+						id: child.id
+					});
+				}
+			}
 		}
 	}
 }

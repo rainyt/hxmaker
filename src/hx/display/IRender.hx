@@ -72,4 +72,9 @@ interface IRender {
 	 * 在渲染矢量图形时使用，标记填充操作的结束
 	 */
 	public function endFill():Void;
+
+	/**
+	 * 启动多纹理渲染，默认为`true`，但如果后端平台不支持时，那么这个属性会为`false`，同时即使设置成`true`也不会起作用。
+	 */
+	public var multiTextureEnabled(get, set):Bool;
 }

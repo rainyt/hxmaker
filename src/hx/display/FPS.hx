@@ -44,7 +44,8 @@ class FPS extends DisplayObjectContainer {
 			"timerTask:" + ContextStats.timerTaskCount,
 			"blendModeFilter:" + ContextStats.blendModeFilterDrawCall,
 			"stageBitmapDatas:" + StageBitmapData.counts,
-			"cacheAsBitmap:" + Hxmaker.engine.renderer.cacheAsBitmap
+			"cacheAsBitmap:" + Hxmaker.engine.renderer.cacheAsBitmap,
+			"devicePixelRatio:" + Hxmaker.engine.devicePixelRatio,
 		];
 		this.label.data = stats.join("\n");
 		this.__bg.width = label.width + 10;

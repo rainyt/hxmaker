@@ -91,4 +91,10 @@ interface IEngine extends IEventDispatcher {
 	 * 引擎帧率，默认为机器动态帧率，一般不会低于60FPS，可自定义帧率
 	 */
 	public var frameRate(get, set):Int;
+
+	/**
+	 * 设备像素比，用于处理高分辨率屏幕
+	 * 一般为1.0，在Retina屏幕上为2.0
+	 */
+	public var devicePixelRatio(get, never):Float;
 }

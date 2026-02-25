@@ -1,5 +1,7 @@
 package hx.ui;
 
+import hx.assets.Future;
+import hx.assets.AssetsBundle;
 import hx.utils.Timer;
 import hx.core.Hxmaker;
 import hx.display.Stage;
@@ -118,6 +120,54 @@ class UIManager {
 			var str = assets.getString(id);
 			if (str != null) {
 				return str;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * 获取所有资源包
+	 */
+	public static function getAssetsBundleList():Map<String, AssetsBundle> {
+		var list = new Map<String, AssetsBundle>();
+		for (assets in assetsList) {
+			for (key => value in assets.bundles) {
+				list.set(key, value);
+			}
+			for (assets in assets.uiAssetses) {
+				for (key => value in assets.bundles) {
+					list.set(key, value);
+				}
+			}
+		}
+		return list;
+	}
+
+	/**
+	 * 从资源包加载位图资源
+	 * @param file 
+	 * @return Future<BitmapData>
+	 */
+	public static function loadBitmapDataFromAssetsBundle(file:String):Future<BitmapData,Dynamic> {
+		var list = getAssetsBundleList();
+		for (key => value in list) {
+			if(value.has(file)){
+				return value.loadBitmapData(file);
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * 获得资源包
+	 * @param id 
+	 * @return AssetsBundle
+	 */
+	public static function getAssetsBundle(id:String):AssetsBundle {
+		for (assets in assetsList) {
+			var bundle = assets.getAssetsBundle(id);
+			if (bundle != null) {
+				return bundle;
 			}
 		}
 		return null;

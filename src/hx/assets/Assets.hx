@@ -128,6 +128,11 @@ class Assets extends Future<Assets, Dynamic> {
 	public var uiAssetses:Map<String, UIAssets> = new Map();
 
 	/**
+	 * 资源压缩包列表
+	 */
+	public var bundles:Map<String, AssetsBundle> = new Map();
+
+	/**
 	 * 父节点资源节点
 	 */
 	public var parent:Assets;
@@ -237,6 +242,15 @@ class Assets extends Future<Assets, Dynamic> {
 			current = current.parent;
 		}
 		return false;
+	}
+
+	/**
+	 * 加载资源压缩包文件
+	 * @param path 
+	 */
+	public function loadAssetsBundle(path:String):Void {
+		path = getNativePath(path);
+		pushFuture(new hx.assets.AssetsBundleFuture(path, false));
 	}
 
 	/**
@@ -402,6 +416,17 @@ class Assets extends Future<Assets, Dynamic> {
 			this.stop();
 			return;
 		}
+		// 对资源进行排序，优先加载assetsBundle
+		futures.sort(function(a, b) {
+			var isAssetsBundleA = a is AssetsBundleFuture;
+			var isAssetsBundleB = b is AssetsBundleFuture;
+			if (isAssetsBundleA && !isAssetsBundleB) {
+				return -1;
+			} else if (!isAssetsBundleA && isAssetsBundleB) {
+				return 1;
+			}
+			return 0;
+		});
 		__loadIndex = 0;
 		loading = true;
 		this.isComplete = false;
@@ -421,6 +446,8 @@ class Assets extends Future<Assets, Dynamic> {
 		__assets.remove(this);
 	}
 
+	private var __isLoadAssetsBundle:Bool = false;
+
 	/**
 	 * 准备加载下一个
 	 */
@@ -436,13 +463,19 @@ class Assets extends Future<Assets, Dynamic> {
 		__loadIndex++;
 		if (!future.isComplete) {
 			future.post();
+			if (future is AssetsBundleFuture) {
+				__isLoadAssetsBundle = true;
+			} else {
+				__isLoadAssetsBundle = false;
+			}
 		} else {
 			loadedCounts++;
 			#if assets_debug
 			trace("已完成加载，跳过：", future.getLoadData());
 			#end
 		}
-		loadNext();
+		if (!__isLoadAssetsBundle)
+			loadNext();
 		return true;
 	}
 
@@ -474,6 +507,9 @@ class Assets extends Future<Assets, Dynamic> {
 		for (key => value in assets.strings) {
 			this.strings.set(key, value);
 		}
+		for (key => value in assets.bundles) {
+			this.bundles.set(key, value);
+		}
 	}
 
 	public function clean(dispose:Bool = true):Void {
@@ -493,6 +529,7 @@ class Assets extends Future<Assets, Dynamic> {
 		this.styles.clear();
 		this.xmls.clear();
 		this.strings.clear();
+		this.bundles.clear();
 	}
 
 	/**
@@ -510,7 +547,9 @@ class Assets extends Future<Assets, Dynamic> {
 	private function onCompleted(future:Future<Dynamic, Dynamic>, data:Dynamic):Void {
 		// CURRENT_LOAD_COUNTS--;
 		loadedCounts++;
-		if (data is Zip) {
+		if (data is AssetsBundle) {
+			this.bundles.set(formatName(future.getLoadData()), data);
+		} else if (data is Zip) {
 			var zip:Zip = cast data;
 			this.zips.set(formatName(future.getLoadData()), zip);
 		} else if (data is StyleAssets) {
@@ -677,6 +716,22 @@ class Assets extends Future<Assets, Dynamic> {
 			}
 		}
 		return bitmapData;
+	}
+
+	/**
+	 * 获取bundle捆绑数据
+	 */
+	public function getAssetsBundle(id:String):AssetsBundle {
+		var bundle = bundles.get(id);
+		if (bundle == null) {
+			for (assets in uiAssetses) {
+				bundle = assets.getAssetsBundle(id);
+				if (bundle != null) {
+					return bundle;
+				}
+			}
+		}
+		return null;
 	}
 
 	/**

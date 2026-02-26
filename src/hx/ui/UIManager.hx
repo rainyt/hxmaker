@@ -1,5 +1,6 @@
 package hx.ui;
 
+import haxe.io.Bytes;
 import hx.assets.Future;
 import hx.assets.AssetsBundle;
 import hx.utils.Timer;
@@ -144,14 +145,29 @@ class UIManager {
 	}
 
 	/**
+	 * 从资源包加载字节数据
+	 * @param file 
+	 * @return Bytes
+	 */
+	public static function getBytesByBundle(file:String):Bytes {
+		var list = getAssetsBundleList();
+		for (key => value in list) {
+			if (value.has(file)) {
+				return value.get(file);
+			}
+		}
+		return null;
+	}
+
+	/**
 	 * 从资源包加载位图资源
 	 * @param file 
 	 * @return Future<BitmapData>
 	 */
-	public static function loadBitmapDataFromAssetsBundle(file:String):Future<BitmapData,Dynamic> {
+	public static function loadBitmapDataFromAssetsBundle(file:String):Future<BitmapData> {
 		var list = getAssetsBundleList();
 		for (key => value in list) {
-			if(value.has(file)){
+			if (value.has(file)) {
 				return value.loadBitmapData(file);
 			}
 		}

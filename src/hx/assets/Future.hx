@@ -3,7 +3,7 @@ package hx.assets;
 import haxe.Timer;
 import hx.events.FutureErrorEvent;
 
-class Future<T, DATA> {
+class Future<T, DATA = Dynamic> {
 	@:noCompletion private var __completes:Array<T->Void> = [];
 	@:noCompletion private var __progresses:Array<Float->Void> = [];
 	@:noCompletion private var __errors:Array<FutureErrorEvent->Void> = [];
@@ -17,7 +17,7 @@ class Future<T, DATA> {
 
 	public var autoPost:Bool = true;
 
-	public function new(data:DATA, autoPost:Bool = true) {
+	public function new(?data:DATA, autoPost:Bool = true) {
 		__data = data;
 		this.autoPost = autoPost;
 		Timer.delay(() -> {

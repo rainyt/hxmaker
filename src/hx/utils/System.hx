@@ -119,4 +119,27 @@ class System {
 		#end
 		return future;
 	}
+
+	/**
+	 * 判断文件是否存在
+	 * @param path 文件路径
+	 * @return Future<Bool>
+	 */
+	public static function existFile(path:String):Future<Bool> {
+		#if wechat_zygame_dom
+		var future = new Future<Bool>();
+		Wx.getFileSystemManager().access({
+			path: path,
+			success: (res) -> {
+				future.completeValue(true);
+			},
+			fail: (res) -> {
+				future.completeValue(false);
+			}
+		});
+		return future;
+		#else
+		throw "Not support existFile on this platform";
+		#end
+	}
 }

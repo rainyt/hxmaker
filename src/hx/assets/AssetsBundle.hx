@@ -1,7 +1,6 @@
 package hx.assets;
 
 import haxe.crypto.Md5;
-import js.lib.ArrayBuffer;
 import haxe.crypto.Base64;
 import hx.utils.Timer;
 import hx.events.FutureErrorEvent;

@@ -209,6 +209,8 @@ class VirtualTouchKey extends Box {
 	}
 
 	private function onKeyMouseDown(e:#if jsapi Dynamic #else Event #end):Void {
+		if (!mouseEnabled)
+			return;
 		if (!conditions())
 			return;
 		if (e.target is Button) {
@@ -264,6 +266,8 @@ class VirtualTouchKey extends Box {
 	}
 
 	private function onKeyMouseMove(e:#if jsapi Dynamic #else Event #end):Void {
+		if (!mouseEnabled)
+			return;
 		if (!_down)
 			return;
 		if (_touchEvent) {
@@ -282,6 +286,8 @@ class VirtualTouchKey extends Box {
 	}
 
 	private function onKeyMouseUp(e:#if jsapi Dynamic #else Event #end):Void {
+		if (!mouseEnabled)
+			return;
 		if (e != null) {
 			_mouseX = this.touchX;
 			_mouseY = this.touchY;

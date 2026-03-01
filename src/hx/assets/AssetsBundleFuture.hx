@@ -49,7 +49,7 @@ class AssetsBundleFuture extends Future<AssetsBundle, String> {
 	override function post() {
 		super.post();
 		#if wechat_zygame_dom
-		var id = path.withoutDirectory().withoutExtension();
+		var id = haxe.crypto.Md5.encode(path);
 		// 微信小游戏版本改进，将压缩包储存到本地，进行解压，如果压缩包已经存在，则不重复加载。使用Wx.downloadFile下载压缩包
 		var filePath = Path.join([Wx.env.USER_DATA_PATH, id + ".zip"]);
 		var target = Path.join([Wx.env.USER_DATA_PATH]);

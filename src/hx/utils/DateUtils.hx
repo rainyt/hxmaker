@@ -30,6 +30,18 @@ class DateUtils {
 	}
 
 	/**
+	 * 获取今天的时间的字符串格式2001-10-1 00:00:00
+	 * @param isMillisecond 是否返回毫秒级时间戳
+	 * @return Float
+	 */
+	public static function getTodayDateTime(isMillisecond:Bool = true):Float {
+		var newDate = Date.fromTime(Date.now().getTime() + 24 * 60 * 60 * 1000);
+		var str = '${DateTools.format(newDate, "%Y-%m-%d")} ' + "00:00:00";
+		var date = Date.fromString(str);
+		return isMillisecond ? date.getTime() : Std.int(date.getTime() / 1000);
+	}
+
+	/**
 	 * 获取明天的时间的字符串格式2001-10-1 00:00:00
 	 * @param curDate 当前时间
 	 * @param time 明天的时间，格式为00:00:00

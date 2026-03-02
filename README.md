@@ -1,5 +1,5 @@
 # hxmaker
-A unified game engine written in Haxe that can run on any game engine.
+A game engine that pursues fast development and rendering performance. It can freely implement game engine rendering backend, thereby enabling rendering to other engines.
 
 # Stats
 At present, the game engine is still under development and cannot be fully put into use.

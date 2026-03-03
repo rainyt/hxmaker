@@ -35,7 +35,7 @@ class DateUtils {
 	 * @return Float
 	 */
 	public static function getTodayDateTime(isMillisecond:Bool = true):Float {
-		var newDate = Date.fromTime(Date.now().getTime() + 24 * 60 * 60 * 1000);
+		var newDate = Date.fromTime(Date.now().getTime());
 		var str = '${DateTools.format(newDate, "%Y-%m-%d")} ' + "00:00:00";
 		var date = Date.fromString(str);
 		return isMillisecond ? date.getTime() : Std.int(date.getTime() / 1000);

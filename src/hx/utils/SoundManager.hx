@@ -1,11 +1,14 @@
 package hx.utils;
 
+import hx.assets.Assets;
 import hx.assets.Sound;
 import hx.events.SoundEvent;
 import haxe.Timer;
 import hx.ui.UIManager;
 import hx.assets.ISoundChannel;
 import hx.media.SoundTransform;
+
+using haxe.io.Path;
 
 /**
  * 音频管理器
@@ -34,6 +37,26 @@ class SoundManager {
 	public var effectTimeInterval:Float = 0.06;
 
 	private function new() {}
+
+	/**
+	 * 播放音效（异步）
+	 * @param path 音效路径
+	 * @param isLoop 是否循环播放
+	 */
+	public function playEffectFromPath(path:String, isLoop:Bool = false):Void {
+		var id = path.withoutExtension().withoutDirectory();
+		if (UIManager.getSound(id) != null) {
+			playEffect(id, isLoop);
+		} else {
+			// 异步加载
+			var assets = new Assets();
+			assets.loadSound(path, false);
+			assets.onComplete((a) -> {
+				playEffectSound(a.getSound(id), isLoop);
+			});
+			assets.start();
+		}
+	}
 
 	/**
 	 * 播放音效
@@ -152,6 +175,14 @@ class SoundManager {
 			if (channel != null)
 				channel.setVolume(__effectSoundTransform.volume, __effectSoundTransform.pan);
 		}
+		setMusicSoundTransform(__musicSoundTransform);
+	}
+
+	/**
+	 * 更新音量
+	 */
+	public function updateVolume():Void {
+		setEffectSoundTransform(__effectSoundTransform);
 		setMusicSoundTransform(__musicSoundTransform);
 	}
 

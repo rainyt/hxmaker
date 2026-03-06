@@ -38,6 +38,18 @@ class System {
 	 */
 	public static var isPc(get, never):Bool;
 
+	public static function getPlatform():String {
+		#if android
+		return "android";
+		#elseif ios
+		return "ios";
+		#elseif wechat_zygame_dom
+		return Window.platform;
+		#else
+		return "web";
+		#end
+	}
+
 	private static function get_isPc():Bool {
 		#if (android || ios || minigame)
 		return false;

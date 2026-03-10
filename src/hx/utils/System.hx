@@ -44,7 +44,7 @@ class System {
 		#elseif ios
 		return "ios";
 		#elseif wechat_zygame_dom
-		return Window.platform;
+		return untyped window.platform;
 		#else
 		return "web";
 		#end

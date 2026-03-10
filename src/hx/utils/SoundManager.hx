@@ -52,6 +52,9 @@ class SoundManager {
 			var assets = new Assets();
 			assets.loadSound(path, false);
 			assets.onComplete((a) -> {
+				#if sound_debug
+				trace("[SoundManager] playEffectFromPath: " + id);
+				#end
 				playEffectSound(a.getSound(id), isLoop);
 			});
 			assets.start();
@@ -71,9 +74,15 @@ class SoundManager {
 		var now = Timer.stamp();
 		if (!isForce && __soundEffects.exists(id)) {
 			if (now - __soundEffects.get(id) < effectTimeInterval) {
+				#if sound_debug
+				trace("[SoundManager] ignore playEffect: " + id);
+				#end
 				return null;
 			}
 		}
+		#if sound_debug
+		trace("[SoundManager] playEffect: " + id);
+		#end
 		__soundEffects.set(id, now);
 		var sound = UIManager.getSound(id);
 		return this.playEffectSound(sound, isLoop);

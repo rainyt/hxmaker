@@ -104,4 +104,20 @@ class ColorTransform {
 		blueOffset = color.blueOffset;
 		alphaOffset = color.alphaOffset;
 	}
+
+	/**
+	 * 插值
+	 * @param color 
+	 * @param t 
+	 */
+	public function interpolate(color:ColorTransform, t:Float):Void {
+		redMultiplier = redMultiplier * (1 - t) + color.redMultiplier * t;
+		greenMultiplier = greenMultiplier * (1 - t) + color.greenMultiplier * t;
+		blueMultiplier = blueMultiplier * (1 - t) + color.blueMultiplier * t;
+		alphaMultiplier = alphaMultiplier * (1 - t) + color.alphaMultiplier * t;
+		redOffset = redOffset * (1 - t) + color.redOffset * t;
+		greenOffset = greenOffset * (1 - t) + color.greenOffset * t;
+		blueOffset = blueOffset * (1 - t) + color.blueOffset * t;
+		alphaOffset = alphaOffset * (1 - t) + color.alphaOffset * t;
+	}
 }

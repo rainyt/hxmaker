@@ -7,8 +7,6 @@ class OneTweenAttribute extends TweenAttribute {
 }
 
 class OneTweenChildAttribute extends WeightTweenAttribute {
-	public var attribute:Attribute;
-
 	public function new(weight:Float, attribute:Attribute) {
 		super(weight);
 		this.attribute = attribute;

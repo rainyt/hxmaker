@@ -53,24 +53,24 @@ class TweenAttribute {
 				if (value.aliveTimeScale >= aliveTime) {
 					if (index == 0) {
 						this.startOffset = 0;
-						this.endOffset = value.asFourAttribute().aliveTimeScale;
+						this.endOffset = value.aliveTimeScale;
 						this.start = groupStart;
-						this.end = value.asFourAttribute().attribute;
+						this.end = value.attribute;
 						return;
 					} else {
-						this.startOffset = attributes[index - 1].asFourAttribute().aliveTimeScale;
-						this.endOffset = value.asFourAttribute().aliveTimeScale;
-						this.start = attributes[index - 1].asFourAttribute().attribute;
-						this.end = value.asFourAttribute().attribute;
+						this.startOffset = attributes[index - 1].aliveTimeScale;
+						this.endOffset = value.aliveTimeScale;
+						this.start = attributes[index - 1].attribute;
+						this.end = value.attribute;
 						return;
 					}
 				}
 			}
 			var value = attributes[0];
 			this.startOffset = 0;
-			this.endOffset = value.asFourAttribute().aliveTimeScale;
+			this.endOffset = value.aliveTimeScale;
 			this.start = groupStart;
-			this.end = value.asFourAttribute().attribute;
+			this.end = value.attribute;
 		} else {
 			this.startOffset = 0;
 			this.endOffset = 1;

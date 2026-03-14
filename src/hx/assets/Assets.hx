@@ -18,6 +18,11 @@ import hx.display.BitmapData;
  */
 class Assets extends Future<Assets, Dynamic> {
 	/**
+	 * 检测音乐是否为音乐
+	 */
+	public static var isMusic:String->Bool;
+
+	/**
 	 * 最大尝试重新载入次数，如果连续失败6次，则会触发全局事件`Event.ASSETS_LOAD_ERROR`
 	 */
 	public static var MAX_TRY_LOAD_TIMES = 6;
@@ -270,7 +275,10 @@ class Assets extends Future<Assets, Dynamic> {
 		#if !hxmaker_editer
 		path = getNativePath(path);
 		var future = new hx.assets.SoundFuture(path, false);
-		future.isMusic = isMusic;
+		if (Assets.isMusic != null && Assets.isMusic(path)) {
+			future.isMusic = true;
+		} else
+			future.isMusic = isMusic;
 		pushFuture(future);
 		#end
 	}
@@ -350,6 +358,9 @@ class Assets extends Future<Assets, Dynamic> {
 	 * @param path 
 	 */
 	public function loadString(path:String) {
+		if (path.indexOf("//") != -1) {
+			trace("?");
+		}
 		path = getNativePath(path);
 		pushFuture(new hx.assets.StringFuture(path, false));
 	}
@@ -774,6 +785,7 @@ class Assets extends Future<Assets, Dynamic> {
 			super.errorValue(data);
 		} else {
 			// 1秒后重试
+			trace("加载失败", data);
 			Timer.getInstance().setTimeout(() -> {
 				trace("Assets: 重试加载 futures.length=", futures.length, __tryLoadTimes);
 				this.isError = false;

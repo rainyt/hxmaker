@@ -7,7 +7,11 @@ class FourTweenAttribute extends TweenAttribute {
 }
 
 class FourTweenChildAttribute extends WeightTweenAttribute {
-	public var attribute:FourAttribute;
+	public var fourAttribute(get, never):FourAttribute;
+
+	private function get_fourAttribute():FourAttribute {
+		return cast attribute;
+	}
 
 	public function new(weight:Float, attribute:FourAttribute) {
 		super(weight);

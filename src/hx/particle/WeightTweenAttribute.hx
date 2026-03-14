@@ -6,6 +6,8 @@ import hx.particle.FourTweenAttribute.FourTweenChildAttribute;
 class WeightTweenAttribute {
 	public var weight:Float = 1;
 
+	public var attribute:Attribute;
+
 	/**
 	 * 生命周期比例
 	 */

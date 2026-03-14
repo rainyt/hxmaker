@@ -427,6 +427,7 @@ class Assets extends Future<Assets, Dynamic> {
 			this.stop();
 			return;
 		}
+		__assets.push(this);
 		// 对资源进行排序，优先加载assetsBundle
 		futures.sort(function(a, b) {
 			var isAssetsBundleA = a is AssetsBundleFuture;
@@ -445,7 +446,6 @@ class Assets extends Future<Assets, Dynamic> {
 		this.totalCounts = futures.length;
 		this.loadedCounts = 0;
 		loadNext();
-		__assets.push(this);
 	}
 
 	/**

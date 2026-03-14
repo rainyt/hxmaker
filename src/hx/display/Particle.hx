@@ -258,12 +258,18 @@ class Particle extends Box {
 			}
 			if (key == "time")
 				continue;
-			if (Reflect.hasField(this, key)) {
-				if (key == "counts")
-					counts = Std.parseInt(data.get(key));
-				else
-					Reflect.setProperty(this, key, Std.parseFloat(data.get(key)));
+			if (key == "counts") {
+				counts = Std.parseInt(data.get(key));
 			}
+			#if cpp
+			try {
+				Reflect.setProperty(this, key, Std.parseFloat(data.get(key)));
+			} catch (e:Dynamic) {}
+			#else
+			if (Reflect.hasField(this, key)) {
+				Reflect.setProperty(this, key, Std.parseFloat(data.get(key)));
+			}
+			#end
 		}
 		for (item in data.elements()) {
 			var array = this.getAttributeArray(item);

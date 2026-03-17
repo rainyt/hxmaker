@@ -57,6 +57,15 @@ class ArrayCollection extends EventDispatcher {
 	}
 
 	/**
+	 * 设置指定索引的元素
+	 * @param index 元素的索引
+	 * @param item 要设置的元素
+	 */
+	public function set(index:Int, item:Dynamic):Void {
+		source[index] = item;
+	}
+
+	/**
 	 * 清空所有元素
 	 * 会为每个被删除的元素分发REMOVED事件
 	 */

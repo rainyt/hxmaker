@@ -606,7 +606,7 @@ class Assets extends Future<Assets, Dynamic> {
 		if (error is FutureErrorEvent)
 			this.errorValue(error);
 		else
-			this.errorValue(FutureErrorEvent.create(FutureErrorEvent.LOAD_ERROR, -1, "Load fail:" + error));
+			this.errorValue(FutureErrorEvent.create(FutureErrorEvent.LOAD_ERROR, -1, "Load fail:" + error, "Assets Manager"));
 	}
 
 	/**

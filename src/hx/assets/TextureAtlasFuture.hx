@@ -16,7 +16,8 @@ class TextureAtlasFuture extends Future<XmlAtlas, TextureAtlasFutureLoadData> {
 					completeValue(xmlAtlas);
 				} catch (e:Exception) {
 					trace(e.stack.toString());
-					this.errorValue(FutureErrorEvent.create(FutureErrorEvent.LOAD_ERROR, -1, "xml file " + this.path + " parse error:" + xmlString));
+					this.errorValue(FutureErrorEvent.create(FutureErrorEvent.LOAD_ERROR, -1, "xml file " + this.path + " parse error:" + xmlString,
+						data.png + "/" + data.xml));
 				}
 			}).onError(this.errorValue);
 		}).onError(this.errorValue);

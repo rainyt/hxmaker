@@ -81,13 +81,13 @@ class AssetsBundle {
 		lime.graphics.Image.loadFromBase64(Base64.encode(bytes), getImageType(bytes)).onComplete((img) -> {
 			if (img == null) {
 				Timer.getInstance().nextFrame(function() {
-					future.errorValue(FutureErrorEvent.create(FutureErrorEvent.LOAD_ERROR, -1, "load bitmap data failed"));
+					future.errorValue(FutureErrorEvent.create(FutureErrorEvent.LOAD_ERROR, -1, "load bitmap data failed", name));
 				});
 			} else {
 				future.completeValue(BitmapData.formData(new OpenFlBitmapData(openfl.display.BitmapData.fromImage(img))));
 			}
 		}).onError(function(error:String) {
-			future.errorValue(FutureErrorEvent.create(FutureErrorEvent.LOAD_ERROR, -1, error));
+			future.errorValue(FutureErrorEvent.create(FutureErrorEvent.LOAD_ERROR, -1, error, name));
 		});
 		#else
 		throw "AssetsBundle.loadBitmapData() not support";

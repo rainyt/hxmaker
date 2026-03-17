@@ -101,7 +101,7 @@ class System {
 		#if (ks || wechat)
 		if (Wx.getClipboardData == null) {
 			Actuate.timer(0.016).onComplete(() -> {
-				future.errorValue(FutureErrorEvent.create(FutureErrorEvent.LOAD_ERROR, -1, "读取剪切板失败！"));
+				future.errorValue(FutureErrorEvent.create(FutureErrorEvent.LOAD_ERROR, -1, "读取剪切板失败！", null));
 			});
 		} else {
 			Wx.getClipboardData({
@@ -110,7 +110,7 @@ class System {
 				},
 				fail: (res) -> {
 					trace("读取剪切板失败：", res);
-					future.errorValue(FutureErrorEvent.create(FutureErrorEvent.LOAD_ERROR, -1, "读取剪切板失败！"));
+					future.errorValue(FutureErrorEvent.create(FutureErrorEvent.LOAD_ERROR, -1, "读取剪切板失败！", null));
 				}
 			});
 		}
@@ -118,7 +118,7 @@ class System {
 		Actuate.timer(0.016).onComplete(() -> {
 			v4.NativeApi.readClipboardData((text) -> {
 				if (text == null) {
-					future.errorValue(FutureErrorEvent.create(FutureErrorEvent.LOAD_ERROR, -1, "读取剪切板失败！"));
+					future.errorValue(FutureErrorEvent.create(FutureErrorEvent.LOAD_ERROR, -1, "读取剪切板失败！", null));
 				} else {
 					future.completeValue(text);
 				}
@@ -126,7 +126,7 @@ class System {
 		});
 		#else
 		Actuate.timer(0.016).onComplete(() -> {
-			future.errorValue(FutureErrorEvent.create(FutureErrorEvent.LOAD_ERROR, -1, "读取剪切板失败！"));
+			future.errorValue(FutureErrorEvent.create(FutureErrorEvent.LOAD_ERROR, -1, "读取剪切板失败！", null));
 		});
 		#end
 		return future;

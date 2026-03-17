@@ -16,12 +16,17 @@ class FutureErrorEvent extends Event {
 	 * @param error 
 	 * @return FutureErrorEvent
 	 */
-	public static function create(type:String, errorCode:Int, error:String):FutureErrorEvent {
+	public static function create(type:String, errorCode:Int, error:String, path:String):FutureErrorEvent {
 		var e:FutureErrorEvent = new FutureErrorEvent(type);
 		e.errorCode = errorCode;
 		e.error = error;
 		return e;
 	}
+
+	/**
+	 * 加载路径
+	 */
+	public var path:String;
 
 	/**
 	 * 错误码
@@ -34,6 +39,6 @@ class FutureErrorEvent extends Event {
 	public var error:String;
 
 	public override function toString():String {
-		return "FutureErrorEvent[errorCode=" + errorCode + ", error=" + error + "]";
+		return "FutureErrorEvent[errorCode=" + errorCode + ", error=" + error + ", path=" + path + "]";
 	}
 }

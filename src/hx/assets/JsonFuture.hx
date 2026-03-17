@@ -12,7 +12,7 @@ class JsonFuture extends Future<Dynamic, String> {
 				var object = Json.parse(text);
 				this.completeValue(object);
 			} catch (err:Exception) {
-				this.errorValue(FutureErrorEvent.create(FutureErrorEvent.LOAD_ERROR, -1, "json parser error."));
+				this.errorValue(FutureErrorEvent.create(FutureErrorEvent.LOAD_ERROR, -1, "json parser error.", this.getLoadData()));
 			}
 		}).onError(errorValue);
 	}

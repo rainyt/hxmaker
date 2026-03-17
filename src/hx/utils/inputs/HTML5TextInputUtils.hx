@@ -1,5 +1,6 @@
 package hx.utils.inputs;
 
+#if html5
 import hx.events.Event;
 import hx.geom.Point;
 import hx.display.InputLabel;
@@ -91,3 +92,4 @@ class HTML5TextInputUtils {
 		}
 	}
 }
+#end

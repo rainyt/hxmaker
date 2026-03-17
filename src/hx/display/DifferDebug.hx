@@ -1,4 +1,4 @@
-package game.worlds;
+package hx.display;
 
 #if differ
 import hx.display.Graphics;

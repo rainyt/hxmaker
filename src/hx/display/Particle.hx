@@ -459,7 +459,8 @@ class Particle extends Box {
 			_isPlay = false;
 			this.updateEnabled = false;
 		} else {
-			finalTime = Math.min(0, this.time - this.life + this.lifeVariance);
+			// finalTime = Math.min(0, this.time - this.life - this.lifeVariance);
+			finalTime = this.time;
 		}
 	}
 

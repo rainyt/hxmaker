@@ -116,6 +116,9 @@ class ParticleChild {
 	 * @return Bool
 	 */
 	public function isDie():Bool {
+		if (this.particle.finalTime != null) {
+			return this.particle.time >= this.particle.finalTime + life;
+		}
 		return maxlife != -1 && this.particle.time >= maxlife + life;
 	}
 
@@ -124,6 +127,8 @@ class ParticleChild {
 	 * @return Bool
 	 */
 	public function onReset():Bool {
+		if(particle.finalTime != null)
+			return false;
 		var nowtime:Float = particle.time - life * random;
 		if (_init) {
 			aliveTime = mod(nowtime, life);
@@ -282,7 +287,9 @@ class ParticleChild {
 		var timeScale = aliveTime / life;
 
 		var nowtime:Float = time - life * random;
-		if (particle.duration != -1 && nowtime > maxlife || nowtime < 0) {
+		if (((particle.duration != -1) && nowtime > maxlife)
+			|| (particle.finalTime != null && nowtime > Math.max(life, Std.int(particle.finalTime / this.life) * this.life))
+			|| nowtime < 0) {
 			if (this.image.visible)
 				this.image.visible = false;
 			return;

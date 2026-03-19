@@ -222,7 +222,8 @@ class Particle extends Box {
 
 	public function new(?json:JSONParticleData, ?texture:BitmapData) {
 		super();
-		textures.push(texture);
+		if (texture != null)
+			textures.push(texture);
 		if (json != null) {
 			this.applyJsonData(json);
 		}
@@ -441,11 +442,25 @@ class Particle extends Box {
 		_isPlay = true;
 		this.updateEnabled = true;
 		this.time = startTime;
+		this.finalTime = null;
 	}
 
-	public function stop() {
-		_isPlay = false;
-		this.updateEnabled = false;
+	/**
+	 * 停止发射粒子的最后剩余时光状态
+	 */
+	public var finalTime:Null<Float> = null;
+
+	/**
+	 * 停止发射粒子
+	 * @param force 是否强制停止，如果强制停止，则会将isPlay设置为false，否则会将剩下的粒子完全播放完毕后才会停止
+	 */
+	public function stop(force:Bool = true) {
+		if (force) {
+			_isPlay = false;
+			this.updateEnabled = false;
+		} else {
+			finalTime = Math.min(0, this.time - this.life + this.lifeVariance);
+		}
 	}
 
 	override public function onUpdate(dt:Float) {
@@ -465,7 +480,7 @@ class Particle extends Box {
 			value.update(dt);
 		}
 		this.invalidate();
-		if (this.duration != -1 && particleLiveCounts == 0) {
+		if ((this.duration != -1 || this.finalTime != null) && particleLiveCounts == 0) {
 			this.time = 0;
 			this.stop();
 			this.dispatchEvent(new Event(Event.COMPLETE));

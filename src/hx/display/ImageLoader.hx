@@ -1,5 +1,6 @@
 package hx.display;
 
+import hx.geom.Rectangle;
 import hx.geom.ColorTransform;
 import hx.events.Event;
 import hx.ui.UIManager;
@@ -100,5 +101,20 @@ class ImageLoader extends Box implements IDataProider<Dynamic> {
 		if (this.image != null)
 			this.image.colorTransform = value;
 		return super.set_colorTransform(value);
+	}
+
+	/**
+	 * 九宫格缩放矩形，会根据矩形的left/right/top/bottom的值来裁剪位图，并拉伸填充。
+	 * 这将图像分为九个区域，其角落将始终保持其原始大小。中心区域在两个方向上延伸以填充剩余空间；侧部区域将相应地在水平或垂直方向上拉伸。
+	 */
+	public var scale9Grid(get, set):Rectangle;
+
+	private function get_scale9Grid():Rectangle {
+		return image.scale9Grid;
+	}
+
+	private function set_scale9Grid(value:Rectangle):Rectangle {
+		image.scale9Grid = value;
+		return value;
 	}
 }

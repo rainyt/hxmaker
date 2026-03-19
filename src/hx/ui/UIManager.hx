@@ -391,6 +391,12 @@ class UIManager {
 				else
 					obj.data = xml.get("src");
 			}
+			if (xml.exists("scale9Grid")) {
+				var rect = xml.get("scale9Grid");
+				var rects = rect.split(" ");
+				var grid = new Rectangle(Std.parseFloat(rects[0]), Std.parseFloat(rects[1]), Std.parseFloat(rects[2]), Std.parseFloat(rects[3]));
+				obj.scale9Grid = grid;
+			}
 			if (xml.exists("scaleWidth"))
 				obj.scaleWidth = Std.parseFloat(xml.get("scaleWidth"));
 			if (xml.exists("scaleHeight"))

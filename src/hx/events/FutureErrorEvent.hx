@@ -16,7 +16,7 @@ class FutureErrorEvent extends Event {
 	 * @param error 
 	 * @return FutureErrorEvent
 	 */
-	public static function create(type:String, errorCode:Int, error:String, path:String):FutureErrorEvent {
+	public static function create(type:String, errorCode:Int, error:String, path:String = null):FutureErrorEvent {
 		var e:FutureErrorEvent = new FutureErrorEvent(type);
 		e.errorCode = errorCode;
 		e.error = error;

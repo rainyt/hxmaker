@@ -150,7 +150,7 @@ class Stage extends Box {
 	 * @param needHitTest 是否需要进行命中测试
 	 * @return 是否成功处理了鼠标事件
 	 */
-	public function handleMouseEvent(event:hx.events.MouseEvent, needHitTest:Bool):Bool {
+	public function handleMouseEvent(event:hx.events.MouseEvent, needHitTest:Bool, dispatch:Bool = true):Bool {
 		var touchList = [];
 		if (needHitTest && __hitTest(event.stageX, event.stageY, touchList)) {
 			for (index => object in touchList) {
@@ -176,7 +176,8 @@ class Stage extends Box {
 					if (Timer.stamp() - __lastClickTime < 0.3) {
 						var event = new MouseEvent(MouseEvent.DOUBLE_CLICK, false, true);
 						event.target = focus;
-						focus.dispatchEvent(event);
+						if (dispatch)
+							focus.dispatchEvent(event);
 						__lastClickTime = 0;
 					} else
 						__lastClickTime = Timer.stamp();
@@ -188,30 +189,36 @@ class Stage extends Box {
 			__stageX = event.stageX;
 			__stageY = event.stageY;
 
-			var i = touchList.length;
-			while (i-- > 0) {
-				var object = touchList[i];
-				event.target = display;
-				object.dispatchEvent(event);
-			}
-			if (event.type == MouseEvent.MOUSE_MOVE) {
-				if (__overDisplayObject != display) {
-					if (__overDisplayObject != null) {
-						var event = new MouseEvent(MouseEvent.MOUSE_OUT, false, true);
+			if (dispatch) {
+				var i = touchList.length;
+				while (i-- > 0) {
+					var object = touchList[i];
+					event.target = display;
+					object.dispatchEvent(event);
+					if (event.isDefaultPrevented) {
+						return true;
+					}
+				}
+
+				if (event.type == MouseEvent.MOUSE_MOVE) {
+					if (__overDisplayObject != display) {
+						if (__overDisplayObject != null) {
+							var event = new MouseEvent(MouseEvent.MOUSE_OUT, false, true);
+							event.target = __overDisplayObject;
+							__overDisplayObject.dispatchEvent(event);
+							__overDisplayObject = null;
+						}
+						__overDisplayObject = display;
+						var event = new MouseEvent(MouseEvent.MOUSE_OVER, false, true);
 						event.target = __overDisplayObject;
 						__overDisplayObject.dispatchEvent(event);
-						__overDisplayObject = null;
 					}
-					__overDisplayObject = display;
-					var event = new MouseEvent(MouseEvent.MOUSE_OVER, false, true);
-					event.target = __overDisplayObject;
-					__overDisplayObject.dispatchEvent(event);
 				}
+				return true;
+			} else {
+				event.target = this;
+				this.dispatchEvent(event);
 			}
-			return true;
-		} else {
-			event.target = this;
-			this.dispatchEvent(event);
 		}
 		return false;
 	}
@@ -225,8 +232,20 @@ class Stage extends Box {
 		if (this.__currentMouseDownDisplay != null) {
 			__mouseDownDt += dt;
 			if (this.__mouseDownDt > 0.5) {
-				var event = new MouseEvent(MouseEvent.MOUSE_LONG_CLICK, false, true);
-				this.__currentMouseDownDisplay.dispatchEvent(event);
+				var touchList = [];
+				this.__hitTest(this.__stageX, this.__stageY, touchList);
+				for (index => object in touchList) {
+					if (object is DisplayObjectContainer && !cast(object, DisplayObjectContainer).mouseChildren) {
+						touchList.splice(index + 1, touchList.length - index - 1);
+						break;
+					}
+				}
+				if (touchList.length > 0 && touchList[touchList.length - 1] == this.__currentMouseDownDisplay) {
+					var event = new MouseEvent(MouseEvent.MOUSE_LONG_CLICK, false, true);
+					event.stageX = this.__stageX;
+					event.stageY = this.__stageY;
+					this.__currentMouseDownDisplay.dispatchEvent(event);
+				}
 			}
 		}
 	}

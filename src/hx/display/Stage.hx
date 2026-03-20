@@ -1,5 +1,7 @@
 package hx.display;
 
+import hx.core.Hxmaker;
+import hx.core.Engine;
 import haxe.Timer;
 import hx.utils.KeyboardTools;
 import hx.events.Keyboard;
@@ -162,7 +164,8 @@ class Stage extends Box {
 			return __dispatchMouseEvent(touchList, event, dispatch);
 		} else {
 			// 无可触摸的情况下，应该触发stage的事件
-			__dispatchMouseEvent([this], event, dispatch);
+			event.target = this;
+			this.dispatchEvent(event);
 		}
 		return false;
 	}
@@ -318,5 +321,9 @@ class Stage extends Box {
 	public function onDeactivate():Void {
 		this.dispatchEvent(new Event(Event.DEACTIVATE));
 		SoundManager.getInstance().stopAllSound();
+	}
+
+	override public function toString():String {
+		return "[" + Type.getClassName(Type.getClass(this)) + " Stage " + Hxmaker.engine.stages.indexOf(this) + "]";
 	}
 }

@@ -159,66 +159,74 @@ class Stage extends Box {
 					break;
 				}
 			}
-			var display:DisplayObject = touchList[touchList.length - 1];
+			return __dispatchMouseEvent(touchList, event, dispatch);
+		} else {
+			// 无可触摸的情况下，应该触发stage的事件
+			__dispatchMouseEvent([this], event, dispatch);
+		}
+		return false;
+	}
+
+	private function __dispatchMouseEvent(touchList:Array<DisplayObject>, event:MouseEvent, dispatch:Bool = true):Bool {
+		var display:DisplayObject = touchList[touchList.length - 1];
+
+		if (event.type == MouseEvent.MOUSE_MOVE) {
+			this.__mouseDownDt = 0;
+		} else if (event.type == MouseEvent.MOUSE_DOWN) {
+			this.__currentMouseDownDisplay = display;
+			this.__mouseDownDt = 0;
+			this.focus = display;
+		} else if (event.type == MouseEvent.MOUSE_UP) {
+			this.__currentMouseDownDisplay = null;
+		}
+
+		if (event.type == MouseEvent.CLICK) {
+			if (focus == display) {
+				if (Timer.stamp() - __lastClickTime < 0.3) {
+					var event = new MouseEvent(MouseEvent.DOUBLE_CLICK, false, true);
+					event.target = focus;
+					if (dispatch)
+						focus.dispatchEvent(event);
+					__lastClickTime = 0;
+				} else
+					__lastClickTime = Timer.stamp();
+			} else {
+				return false;
+			}
+		}
+
+		__stageX = event.stageX;
+		__stageY = event.stageY;
+
+		if (dispatch) {
+			var i = touchList.length;
+			while (i-- > 0) {
+				var object = touchList[i];
+				event.target = display;
+				object.dispatchEvent(event);
+				if (event.isDefaultPrevented) {
+					return true;
+				}
+			}
 
 			if (event.type == MouseEvent.MOUSE_MOVE) {
-				this.__mouseDownDt = 0;
-			} else if (event.type == MouseEvent.MOUSE_DOWN) {
-				this.__currentMouseDownDisplay = display;
-				this.__mouseDownDt = 0;
-				this.focus = display;
-			} else if (event.type == MouseEvent.MOUSE_UP) {
-				this.__currentMouseDownDisplay = null;
-			}
-
-			if (event.type == MouseEvent.CLICK) {
-				if (focus == display) {
-					if (Timer.stamp() - __lastClickTime < 0.3) {
-						var event = new MouseEvent(MouseEvent.DOUBLE_CLICK, false, true);
-						event.target = focus;
-						if (dispatch)
-							focus.dispatchEvent(event);
-						__lastClickTime = 0;
-					} else
-						__lastClickTime = Timer.stamp();
-				} else {
-					return false;
-				}
-			}
-
-			__stageX = event.stageX;
-			__stageY = event.stageY;
-
-			if (dispatch) {
-				var i = touchList.length;
-				while (i-- > 0) {
-					var object = touchList[i];
-					event.target = display;
-					object.dispatchEvent(event);
-					if (event.isDefaultPrevented) {
-						return true;
-					}
-				}
-
-				if (event.type == MouseEvent.MOUSE_MOVE) {
-					if (__overDisplayObject != display) {
-						if (__overDisplayObject != null) {
-							var event = new MouseEvent(MouseEvent.MOUSE_OUT, false, true);
-							event.target = __overDisplayObject;
-							__overDisplayObject.dispatchEvent(event);
-							__overDisplayObject = null;
-						}
-						__overDisplayObject = display;
-						var event = new MouseEvent(MouseEvent.MOUSE_OVER, false, true);
+				if (__overDisplayObject != display) {
+					if (__overDisplayObject != null) {
+						var event = new MouseEvent(MouseEvent.MOUSE_OUT, false, true);
 						event.target = __overDisplayObject;
 						__overDisplayObject.dispatchEvent(event);
+						__overDisplayObject = null;
 					}
+					__overDisplayObject = display;
+					var event = new MouseEvent(MouseEvent.MOUSE_OVER, false, true);
+					event.target = __overDisplayObject;
+					__overDisplayObject.dispatchEvent(event);
 				}
-				return true;
-			} else {
-				event.target = this;
-				this.dispatchEvent(event);
 			}
+			return true;
+		} else {
+			event.target = this;
+			this.dispatchEvent(event);
 		}
 		return false;
 	}

@@ -13,6 +13,16 @@ class FPS extends DisplayObjectContainer {
 
 	public var label:Label;
 
+	/**
+	 * 是否自动显示顶部
+	 */
+	public var autoShowTop:Bool = true;
+
+	public function new(autoShowTop:Bool = true) {
+		super();
+		this.autoShowTop = autoShowTop;
+	}
+
 	override function onInit() {
 		super.onInit();
 		this.mouseEnabled = false;
@@ -50,7 +60,7 @@ class FPS extends DisplayObjectContainer {
 		this.label.data = stats.join("\n");
 		this.__bg.width = label.width + 10;
 		this.__bg.height = label.height + 10;
-		if (this.parent != null && this.parent.children[this.parent.children.length - 1] != this) {
+		if (autoShowTop && this.parent != null && this.parent.children[this.parent.children.length - 1] != this) {
 			this.parent.addChild(this);
 		}
 	}

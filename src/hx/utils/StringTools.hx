@@ -27,4 +27,13 @@ class StringTools {
 	public static function replace(str:String, old:String, r:String):String {
 		return StringToolsCore.replace(str, old, r);
 	}
+
+	/**
+	 * 判断字符串是否为空
+	 * @param str 
+	 * @return Bool
+	 */
+	public static function isNull(str:String):Bool {
+		return str == null || str == "";
+	}
 }

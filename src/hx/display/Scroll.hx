@@ -199,13 +199,16 @@ class Scroll extends BoxContainer {
 
 		updateScrollPosition();
 
-		if (this.autoVisible && __dirty) {
+		if (__dirty) {
 			if (this.vScrollBar != null) {
 				this.vScrollBar.measure();
 			}
 			if (this.hScrollBar != null) {
 				this.hScrollBar.measure();
 			}
+		}
+
+		if (this.autoVisible && __dirty) {
 			var maskRect = new Rectangle(0, 0, this.width, this.height);
 			var counts = 0;
 			for (i in 0...this.numChildren) {

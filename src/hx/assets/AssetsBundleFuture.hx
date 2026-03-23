@@ -32,6 +32,26 @@ class AssetsBundleFuture extends Future<AssetsBundle, String> {
 			targetPath: targetPath,
 			success: function(res:Dynamic):Void {
 				trace("解压成功", res);
+				Wx.getFileSystemManager().unlink({
+					filePath: filePath,
+					fail: function(res:Dynamic):Void {
+						trace("删除文件失败", res, filePath);
+					},
+					success: function(res:Dynamic):Void {
+						// 将文件缓存起来，避免下次重复下载
+						var cachePath = StringTools.replace(filePath, ".zip", ".cache");
+						Wx.getFileSystemManager().writeFile({
+							filePath: cachePath,
+							data: "ok",
+							success: function(res:Dynamic):Void {
+								trace("缓存文件成功", res, cachePath);
+							},
+							fail: function(res:Dynamic):Void {
+								trace("缓存文件失败", res, cachePath);
+							}
+						});
+					}
+				});
 				var assetsBundle = new AssetsBundle();
 				this.completeValue(assetsBundle);
 			},
@@ -52,25 +72,31 @@ class AssetsBundleFuture extends Future<AssetsBundle, String> {
 		var id = haxe.crypto.Md5.encode(path);
 		// 微信小游戏版本改进，将压缩包储存到本地，进行解压，如果压缩包已经存在，则不重复加载。使用Wx.downloadFile下载压缩包
 		var filePath = Path.join([Wx.env.USER_DATA_PATH, id + ".zip"]);
+		var cachePath = Path.join([Wx.env.USER_DATA_PATH, id + ".cache"]);
 		var target = Path.join([Wx.env.USER_DATA_PATH]);
 		trace("download bundle:", filePath, ">", target);
-		if (!existBundle(filePath))
-			Wx.downloadFile({
-				url: hx.assets.Assets.getDefaultNativePath(this.path),
-				filePath: filePath,
-				timeout: 60000,
-				enableHttp2: true,
-				success: function(res:Dynamic):Void {
-					unzip(filePath, target);
-				},
-				fail: function(data:Dynamic) {
-					// 临时文件无法下载，意味着资源无法被下载
-					trace("wx.donwloadFile fail:", path, data);
-				}
-			});
-		else {
-			trace("skin bundle exist:", filePath, ">", target);
-			unzip(filePath, target);
+		if (!existBundle(cachePath)) {
+			if (!existBundle(filePath))
+				Wx.downloadFile({
+					url: hx.assets.Assets.getDefaultNativePath(this.path),
+					filePath: filePath,
+					timeout: 60000,
+					enableHttp2: true,
+					success: function(res:Dynamic):Void {
+						unzip(filePath, target);
+					},
+					fail: function(data:Dynamic) {
+						// 临时文件无法下载，意味着资源无法被下载
+						trace("wx.donwloadFile fail:", path, data);
+					}
+				});
+			else {
+				trace("skin bundle exist:", filePath, ">", target);
+				unzip(filePath, target);
+			}
+		} else {
+			var assetsBundle = new AssetsBundle();
+			this.completeValue(assetsBundle);
 		}
 		#else
 		new BytesFuture(this.path, true).onComplete(function(bytes:Bytes) {

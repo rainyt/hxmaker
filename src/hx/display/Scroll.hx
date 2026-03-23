@@ -165,6 +165,7 @@ class Scroll extends BoxContainer {
 	private function set_vScrollBar(value:IScrollBar):IScrollBar {
 		this.vScrollBar = value;
 		value.scroll = this;
+		this.invalidate();
 		return value;
 	}
 
@@ -176,6 +177,7 @@ class Scroll extends BoxContainer {
 	private function set_hScrollBar(value:IScrollBar):IScrollBar {
 		this.hScrollBar = value;
 		value.scroll = this;
+		this.invalidate();
 		return value;
 	}
 

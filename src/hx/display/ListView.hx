@@ -43,6 +43,7 @@ class ListView extends Scroll implements IDataProider<ArrayCollection> {
 	public function set_data(value:ArrayCollection):ArrayCollection {
 		this.__data = value;
 		this.__dataDirty = true;
+		this.invalidate();
 		return value;
 	}
 

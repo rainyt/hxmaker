@@ -26,14 +26,28 @@ class EchoDebug extends Debug {
 	}
 
 	override public inline function draw_line(from_x:Float, from_y:Float, to_x:Float, to_y:Float, color:Int, alpha:Float = 1.) {
-		canvas.beginLineStyle(color, 1);
+		canvas.beginLineStyle(__color ?? color, 1);
 		canvas.moveTo(from_x, from_y);
-		canvas.lineTo(to_x, to_y, true, alpha);
+		canvas.lineTo(to_x, to_y, true, __alpha ?? alpha);
+	}
+
+	private var __color:Null<Int> = null;
+
+	private var __alpha:Null<Float> = null;
+
+	public function beginColor(color:Int, alpha:Float = 1.) {
+		__color = color;
+		__alpha = alpha;
+	}
+
+	public function clearBeginColor() {
+		__color = null;
+		__alpha = null;
 	}
 
 	override public inline function draw_rect(min_x:Float, min_y:Float, width:Float, height:Float, color:Int, ?stroke:Int, alpha:Float = 1.) {
-		canvas.beginFill(color);
-		canvas.drawRect(min_x, min_y, width, height, alpha);
+		canvas.beginFill(__color ?? color);
+		canvas.drawRect(min_x, min_y, width, height, __alpha ?? alpha);
 		if (stroke != null) {
 			canvas.beginLineStyle(stroke, 1);
 			canvas.moveTo(min_x, min_y);
@@ -45,7 +59,7 @@ class EchoDebug extends Debug {
 	}
 
 	override public inline function draw_circle(x:Float, y:Float, radius:Float, color:Int, ?stroke:Int, alpha:Float = 1.) {
-		canvas.beginLineStyle(color, 3);
+		canvas.beginLineStyle(__color ?? color, 3);
 		canvas.drawCircleLine(x, y, radius, 2);
 	}
 

@@ -35,6 +35,11 @@ class ListView extends Scroll implements IDataProider<ArrayCollection> {
 
 	private var __selectedIndexDirty:Bool = false;
 
+	/**
+	 * 列表是否允许右键点击来选择
+	 */
+	public var rightClickSelectEnabled:Bool = true;
+
 	public function set_data(value:ArrayCollection):ArrayCollection {
 		this.__data = value;
 		this.__dataDirty = true;
@@ -52,9 +57,12 @@ class ListView extends Scroll implements IDataProider<ArrayCollection> {
 		layout.horizontalFill = true;
 		this.layout = layout;
 		this.addEventListener(MouseEvent.CLICK, onSelectedItem);
+		this.addEventListener(MouseEvent.RIGHT_CLICK, onSelectedItem);
 	}
 
 	private function onSelectedItem(e:MouseEvent) {
+		if (e.type == MouseEvent.RIGHT_CLICK && !rightClickSelectEnabled)
+			return;
 		var child:DisplayObject = cast e.target;
 		var itemRenderer = __getItemRendererByChild(child);
 		var index = this.getChildIndexAt(itemRenderer);

@@ -41,4 +41,22 @@ class DisplayTools {
 		});
 		return arr;
 	}
+
+	/**
+	 * 判断容器是否包含目标对象
+	 * @param display 
+	 * @param target 
+	 * @return 
+	 */
+	public static function contains(display:DisplayObjectContainer, target:DisplayObject):Bool {
+		var isContains = false;
+		map(display, function(d) {
+			if (d == target) {
+				isContains = true;
+				return false;
+			}
+			return true;
+		});
+		return isContains;
+	}
 }

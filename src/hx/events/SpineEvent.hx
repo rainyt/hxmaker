@@ -2,8 +2,10 @@ package hx.events;
 
 #if spine_hx
 import spine.AnimationState.TrackEntry;
-#else
+#elseif spine_haxe
 import spine.animation.TrackEntry;
+#else
+typedef TrackEntry = Dynamic;
 #end
 
 /**

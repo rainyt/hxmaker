@@ -1,5 +1,6 @@
 package hx.assets;
 
+#if (spine_haxe || spine_hx)
 import spine.SkeletonJson;
 import spine.attachments.AtlasAttachmentLoader;
 #if spine_haxe
@@ -32,3 +33,4 @@ typedef SpineLoadData = {
 	atlas:String
 } &
 	LoadData;
+#end

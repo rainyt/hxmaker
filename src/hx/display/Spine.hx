@@ -1,5 +1,6 @@
 package hx.display;
 
+#if (spine_hx || spine_haxe)
 import hx.utils.ContextStats;
 import hx.events.SpineEvent;
 import hx.display.ISpine.ISpineDrawOrder;
@@ -404,3 +405,4 @@ class Spine extends Graphics implements ISpine {
 		__spineDrawDirty = true;
 	}
 }
+#end

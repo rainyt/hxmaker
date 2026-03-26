@@ -2,7 +2,6 @@ package hx.assets;
 
 import hx.utils.SoundManager;
 import hx.utils.Timer;
-import spine.SkeletonData;
 import hx.display.Spine;
 import hx.ui.UIManager;
 import hx.ui.UIAssets;
@@ -12,6 +11,11 @@ import hx.assets.Atlas;
 import haxe.io.Path;
 import hx.assets.StyleFuture;
 import hx.display.BitmapData;
+#if (spine_haxe || spine_hx)
+import spine.SkeletonData;
+#else
+typedef SkeletonData = Dynamic;
+#end
 
 /**
  * 资源管理器
@@ -226,9 +230,11 @@ class Assets extends Future<Assets, Dynamic> {
 		if (future is TextureAtlasFuture && UIManager.getAtlas(id) != null) {
 			return true;
 		}
+		#if (spine_haxe || spine_hx)
 		if (future is SpineTextureAtlasFuture && UIManager.getSkeletonData(id) != null) {
 			return true;
 		}
+		#end
 		if (future is UIAssetsFuture && UIManager.getUIAssets(id) != null) {
 			return true;
 		}
@@ -337,11 +343,13 @@ class Assets extends Future<Assets, Dynamic> {
 	public function loadSpineAtlas(png:String, atlas:String) {
 		png = getNativePath(png);
 		atlas = getNativePath(atlas);
+		#if (spine_haxe || spine_hx)
 		pushFuture(new hx.assets.SpineTextureAtlasFuture({
 			png: png,
 			atlas: atlas,
 			path: png
 		}, false));
+		#end
 	}
 
 	/**
@@ -579,7 +587,7 @@ class Assets extends Future<Assets, Dynamic> {
 			bitmapDatas.set(formatName(future.getLoadData()), data);
 		} else if (data is Atlas) {
 			atlases.set(formatName(future.getLoadData()), data);
-		} else if (data is SpineTextureAtlas) {
+		} else if (#if (spine_haxe || spine_hx) data is SpineTextureAtlas #else false #end) {
 			atlases.set(formatName(future.getLoadData()), data);
 		} else {
 			objects.set(formatName(future.getLoadData()), data);
@@ -619,10 +627,12 @@ class Assets extends Future<Assets, Dynamic> {
 		if (json == null)
 			json = name;
 		var atlas:Atlas = getAtlas(name);
+		#if (spine_haxe || spine_hx)
 		if (atlas is SpineTextureAtlas) {
 			var spineAtlas:SpineTextureAtlas = cast atlas;
 			return spineAtlas.createSkeletonData(this.getString(json));
 		}
+		#end
 		return null;
 	}
 

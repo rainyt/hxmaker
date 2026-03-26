@@ -1,5 +1,6 @@
 package hx.assets;
 
+#if (spine_haxe || spine_hx)
 import spine.SkeletonData;
 import spine.SkeletonJson;
 #if spine_hx
@@ -102,4 +103,5 @@ class SkeletonDataFileHandle implements spine.support.files.FileHandle {
 		return _data;
 	}
 }
+#end
 #end

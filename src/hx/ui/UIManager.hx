@@ -17,7 +17,6 @@ import hx.display.Scroll;
 import hx.display.BitmapLabel;
 import hx.display.FlowBox;
 import hx.display.Stack;
-import spine.SkeletonData;
 import hx.display.Scene;
 import hx.geom.Point;
 import hx.geom.Rectangle;
@@ -37,6 +36,9 @@ import haxe.io.Path;
 import hx.assets.Assets;
 import hx.display.Image;
 import hx.display.DisplayObject;
+#if (spine_haxe || spine_hx)
+import spine.SkeletonData;
+#end
 
 using hx.utils.XmlTools;
 using StringTools;
@@ -538,6 +540,7 @@ class UIManager {
 				obj.scrollYEnable = xml.get("scrollYEnable") == "true";
 			}
 		});
+		#if (spine_haxe || spine_hx)
 		addCreateInstance(Spine, function(xml:Xml):Spine {
 			var id = xml.getStringId("src");
 			var spine = new Spine(UIManager.getSkeletonData(id));
@@ -546,6 +549,7 @@ class UIManager {
 			}
 			return spine;
 		});
+		#end
 		addCreateInstance(Particle, function(xml:Xml):Particle {
 			var id = xml.getStringId("src");
 			var json = xml.getStringId("json");
@@ -571,12 +575,14 @@ class UIManager {
 				}
 			}
 		});
+		#if (spine_haxe || spine_hx)
 		addAttributesParse(Spine, function(obj:Spine, xml:Xml, assets:Assets) {
 			if (xml.exists("action")) {
 				var id = xml.getStringId("action");
 				obj.play(id);
 			}
 		});
+		#end
 		addAttributesParse(MovieClip, function(obj:MovieClip, xml:Xml, assets:Assets) {
 			if (xml.exists("src")) {
 				var id = xml.getStringId("src");

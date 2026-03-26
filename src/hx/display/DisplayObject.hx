@@ -217,6 +217,11 @@ class DisplayObject extends EventDispatcher {
 	}
 
 	/**
+	 * 是否添加混合模式
+	 */
+	@:noCompletion private var __addBlendMode:Int = 0;
+
+	/**
 	 * 混合模式决定了对象如何与下面的对象混合。
 	 */
 	public var blendMode(get, set):BlendMode;
@@ -245,6 +250,7 @@ class DisplayObject extends EventDispatcher {
 	private function set_blendMode(value:BlendMode):BlendMode {
 		if (__blendMode != value) {
 			this.blendFilter = null;
+			this.__addBlendMode = 0;
 			switch value {
 				case ALPHA, NORMAL, ERASE:
 				case SCREEN:
@@ -254,6 +260,8 @@ class DisplayObject extends EventDispatcher {
 				case ADD:
 					if (this is DisplayObjectContainer) {
 						this.blendFilter = new hx.filters.AddFilter();
+					} else {
+						__addBlendMode = 1;
 					}
 				case MULTIPLY:
 					this.blendFilter = new hx.filters.MultiplyFilter();

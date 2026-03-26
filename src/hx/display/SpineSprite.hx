@@ -1,5 +1,6 @@
 package hx.display;
 
+#if (spine_hx || spine_haxe)
 import hx.geom.ColorTransform;
 import spine.Slot;
 import hx.display.ISpine.ISpineDrawOrder;
@@ -322,3 +323,4 @@ typedef DisplayObjectDraw = {
 	display:DisplayObject,
 	drawFunction:DisplayObject->Void
 }
+#end

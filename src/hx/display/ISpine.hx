@@ -1,7 +1,7 @@
 package hx.display;
 
+#if (spine_hx || spine_haxe)
 import hx.geom.ColorTransform;
-import spine.Slot;
 #if spine_hx
 import spine.AnimationState.TrackEntry;
 import spine.utils.SkeletonClipping;
@@ -16,6 +16,7 @@ import spine.Physics;
 import spine.animation.AnimationStateData;
 import spine.animation.AnimationState;
 #end
+import spine.Slot;
 import spine.attachments.MeshAttachment;
 import spine.attachments.RegionAttachment;
 import spine.attachments.ClippingAttachment;
@@ -80,3 +81,4 @@ interface ISpineDrawOrder {
 
 	public function onEnd():Void;
 }
+#end

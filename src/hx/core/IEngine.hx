@@ -18,6 +18,17 @@ interface IEngine extends IEventDispatcher {
 	public var renderer:IRender;
 
 	/**
+	 * 缩放因子，用于调整引擎的渲染缩放比例
+	 * 一般为1.0，在Retina屏幕上为2.0
+	 */
+	public var scaleFactor:Float;
+
+	/**
+	 * 着色器缩放因子，用于调整着色器的渲染缩放比例
+	 */
+	public var shaderScaleFactor:Float;
+
+	/**
 	 * 舞台列表，存储所有添加到引擎的舞台对象
 	 * 每个舞台可以包含多个显示对象，构成显示树
 	 */

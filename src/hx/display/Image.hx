@@ -237,8 +237,10 @@ class Image extends DisplayObject implements IDataProider<BitmapData> implements
 	public var smoothing(get, set):Bool;
 
 	private function set_smoothing(value:Bool):Bool {
-		__smoothing = value;
-		setTransformDirty();
+		if (__smoothing != value) {
+			__smoothing = value;
+			setTransformDirty();
+		}
 		return value;
 	}
 

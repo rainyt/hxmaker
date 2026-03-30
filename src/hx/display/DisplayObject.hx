@@ -849,7 +849,7 @@ class DisplayObject extends EventDispatcher {
 	 */
 	private function setDirty(value:Bool = true):Void {
 		this.__dirty = value;
-		if (value && stage != null && stage != this) {
+		if (value && stage != null && stage != this && !stage.__dirty) {
 			this.stage.setDirty();
 		}
 	}

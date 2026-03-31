@@ -23,10 +23,12 @@ interface IEngine extends IEventDispatcher {
 	 */
 	public var scaleFactor:Float;
 
+	#if (hxmaker_openfl >= '0.1.0')
 	/**
 	 * 着色器缩放因子，用于调整着色器的渲染缩放比例
 	 */
 	public var shaderScaleFactor:Float;
+	#end
 
 	/**
 	 * 舞台列表，存储所有添加到引擎的舞台对象

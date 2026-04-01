@@ -76,6 +76,8 @@ class UIMoudle {
 					}
 				}
 			}
+		} else if (type.indexOf(".") != -1) {
+			return type;
 		}
 		if (classed.exists(type)) {
 			return classed.get(type).className;

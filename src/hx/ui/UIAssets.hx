@@ -233,17 +233,7 @@ class UIAssets extends Assets {
 			if (item.nodeName.indexOf("xml:") == 0) {
 				var ui = StringTools.replace(item.nodeName, "xml:", "");
 				if (moudle.classed.exists(ui)) {
-					var type = Type.resolveClass(moudle.classed.get(ui).className);
-					var uiDisplay:DisplayObject = UIManager.getInstance().createInstance(type, item);
-					parent.addChild(uiDisplay);
-					var __ui_id__ = Reflect.getProperty(uiDisplay, "__ui_id__");
-					if (__ui_id__ != null) {
-						var assetsUi = UIManager.getUIAssets(Assets.formatName(__ui_id__));
-						if (assetsUi != null) {
-							UIManager.getInstance().applyAttributes(uiDisplay, assetsUi.viewXml.firstElement(), this, true);
-						}
-					}
-					UIManager.getInstance().applyAttributes(uiDisplay, item, this);
+					var uiDisplay = resolveDisplayObject(moudle.classed.get(ui).className, parent, item);
 					if (uiDisplay.name != null && ids != null) {
 						ids.set(uiDisplay.name, uiDisplay);
 					}
@@ -269,6 +259,15 @@ class UIAssets extends Assets {
 						return parent;
 					}
 				}
+			} else if (item.nodeName.indexOf(".") != -1) {
+				var uiDisplay = resolveDisplayObject(item.nodeName, parent, item);
+				if (uiDisplay.name != null && ids != null) {
+					ids.set(uiDisplay.name, uiDisplay);
+				}
+				parent = cast uiDisplay;
+				if (autoBuildUi && parent is DisplayObjectContainer) {
+					buildUi(item, cast parent, ids);
+				}
 			} else if (item.nodeName.indexOf("child:") == 0) {
 				// 访问当前节点的子节点
 				var name = item.nodeName.split(":")[1];
@@ -289,6 +288,26 @@ class UIAssets extends Assets {
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * 解析类型
+	 * @param type 类型
+	 * @return String
+	 */
+	private function resolveDisplayObject(type:String, parent:DisplayObjectContainer, item:Xml):DisplayObject {
+		var cType = Type.resolveClass(type);
+		var uiDisplay:DisplayObject = UIManager.getInstance().createInstance(cType, item);
+		parent.addChild(uiDisplay);
+		var __ui_id__ = Reflect.getProperty(uiDisplay, "__ui_id__");
+		if (__ui_id__ != null) {
+			var assetsUi = UIManager.getUIAssets(Assets.formatName(__ui_id__));
+			if (assetsUi != null) {
+				UIManager.getInstance().applyAttributes(uiDisplay, assetsUi.viewXml.firstElement(), this, true);
+			}
+		}
+		UIManager.getInstance().applyAttributes(uiDisplay, item, this);
+		return uiDisplay;
 	}
 
 	/**

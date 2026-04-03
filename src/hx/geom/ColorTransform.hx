@@ -88,11 +88,18 @@ class ColorTransform {
 		this.greenOffset = greenOffset;
 		this.blueOffset = blueOffset;
 		this.alphaOffset = alphaOffset;
+		__enabledColorTransform = redMultiplier != 1 || greenMultiplier != 1 || blueMultiplier != 1 || alphaMultiplier != 1 || redOffset != 0
+			|| greenOffset != 0 || blueOffset != 0 || alphaOffset != 0;
 	}
 
 	public function clone():ColorTransform {
 		return new ColorTransform(redMultiplier, greenMultiplier, blueMultiplier, alphaMultiplier, redOffset, greenOffset, blueOffset, alphaOffset);
 	}
+
+	/**
+	 * 是否启用颜色变换，当rgbMultiplier和rgbOffset都为1时，不启用颜色变换，rgbOffset为0时，也不启用颜色变换
+	 */
+	@:noCompletion private var __enabledColorTransform = false;
 
 	public function setTo(color:ColorTransform):Void {
 		redMultiplier = color.redMultiplier;
@@ -103,6 +110,8 @@ class ColorTransform {
 		greenOffset = color.greenOffset;
 		blueOffset = color.blueOffset;
 		alphaOffset = color.alphaOffset;
+		__enabledColorTransform = redMultiplier != 1 || greenMultiplier != 1 || blueMultiplier != 1 || alphaMultiplier != 1 || redOffset != 0
+			|| greenOffset != 0 || blueOffset != 0 || alphaOffset != 0;
 	}
 
 	/**

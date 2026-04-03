@@ -1,5 +1,6 @@
 package hx.display;
 
+import hx.utils.SoundManager;
 import haxe.Timer;
 import hx.events.MouseEvent;
 import hx.events.Event;
@@ -36,6 +37,11 @@ class ListView extends Scroll implements IDataProider<ArrayCollection> {
 	private var __selectedIndexDirty:Bool = false;
 
 	/**
+	 * 切换选择时播放的音效ID
+	 */
+	public var changedSoundId:String = null;
+
+	/**
 	 * 列表是否允许右键点击来选择
 	 */
 	public var rightClickSelectEnabled:Bool = true;
@@ -67,8 +73,12 @@ class ListView extends Scroll implements IDataProider<ArrayCollection> {
 		var child:DisplayObject = cast e.target;
 		var itemRenderer = __getItemRendererByChild(child);
 		var index = this.getChildIndexAt(itemRenderer);
-		if (index >= 0)
+		if (index >= 0) {
 			this.selectedIndex = index;
+			if (changedSoundId != null) {
+				SoundManager.getInstance().playEffect(changedSoundId);
+			}
+		}
 	}
 
 	private function __getItemRendererByChild(child:DisplayObject):DisplayObject {

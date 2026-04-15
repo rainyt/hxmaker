@@ -1,5 +1,6 @@
 package hx.assets;
 
+import hx.utils.Log;
 import haxe.Json;
 #if echo
 import echo.Body;
@@ -58,6 +59,10 @@ class WorldObjectData {
 		var config = getObjectDataById(id);
 		switch config.collisionType {
 			case POLYGON:
+				if (config.points == null) {
+					Log.warring("WorldObjectData.createEchoCollision id: " + id + ", points is null");
+					return null;
+				}
 				var points:Array<Vector2> = [];
 				var len = Std.int(config.points.length / 2);
 				for (i in 0...len) {

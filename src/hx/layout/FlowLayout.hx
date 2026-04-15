@@ -31,6 +31,10 @@ class FlowLayout extends Layout {
 		var offsetY = 0.;
 		var nextOffsetY = 0.;
 		for (object in children) {
+			if (offsetX + object.width > width) {
+				offsetX = 0.;
+				offsetY = nextOffsetY;
+			}
 			object.x = offsetX;
 			object.y = offsetY;
 			var aX = object.width + gapX;
@@ -38,10 +42,6 @@ class FlowLayout extends Layout {
 			offsetX += aX;
 			if (nextOffsetY < offsetY + aY) {
 				nextOffsetY = offsetY + aY;
-			}
-			if (offsetX + object.width > width) {
-				offsetX = 0.;
-				offsetY = nextOffsetY;
 			}
 		}
 	}

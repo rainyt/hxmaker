@@ -68,7 +68,7 @@ class WorldObjectData {
 					return null;
 				}
 				var points:Array<Vector2> = [];
-				var sweepPoints:Array<Point> = [];
+				// var sweepPoints:Array<Point> = [];
 				var len = Std.int(config.points.length / 2);
 				for (i in 0...len) {
 					points.push(new Vector2(config.points[i * 2], config.points[i * 2 + 1]));

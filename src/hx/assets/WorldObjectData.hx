@@ -1,5 +1,9 @@
 package hx.assets;
 
+// import org.poly2tri.VisiblePolygon;
+// import org.poly2tri.Point;
+// import org.poly2tri.SweepContext;
+// import org.poly2tri.Sweep;
 import hx.utils.Log;
 import haxe.Json;
 #if echo
@@ -64,10 +68,45 @@ class WorldObjectData {
 					return null;
 				}
 				var points:Array<Vector2> = [];
+				var sweepPoints:Array<Point> = [];
 				var len = Std.int(config.points.length / 2);
 				for (i in 0...len) {
 					points.push(new Vector2(config.points[i * 2], config.points[i * 2 + 1]));
+					// sweepPoints.push(new Point(config.points[i * 2], config.points[i * 2 + 1]));
 				}
+				forceClockwise(points);
+				// if (false && isConcave(points)) {
+				// 	for (vector2 in points) {
+				// 		sweepPoints.push(new Point(vector2.x, vector2.y));
+				// 	}
+				// 	// TODO 这里需要实现凹凸碰撞块，拆分多个碰撞块，每个碰撞块的碰撞类型为POLYGON
+				// 	var polygon = new VisiblePolygon();
+				// 	polygon.addPolyline(sweepPoints);
+				// 	polygon.performTriangulationOnce();
+				// 	var triangles = polygon.getVerticesAndTriangles();
+				// 	// trace("三角形：", triangles);
+
+				// 	var trianglesCount:Int = Std.int(triangles.triangles.length / 3);
+				// 	// 使用分割处理，将三角形拆分成多个碰撞块
+				// 	var vertices = triangles.vertices;
+				// 	var body = new Body({
+				// 		mass: STATIC
+				// 	});
+				// 	for (i in 0...trianglesCount) {
+				// 		var a = triangles.triangles[i * 3];
+				// 		var b = triangles.triangles[i * 3 + 1];
+				// 		var c = triangles.triangles[i * 3 + 2];
+				// 		body.create_shape({
+				// 			type: POLYGON,
+				// 			vertices: [
+				// 				new Vector2(vertices[a * 3], vertices[a * 3 + 1]),
+				// 				new Vector2(vertices[b * 3], vertices[b * 3 + 1]),
+				// 				new Vector2(vertices[c * 3], vertices[c * 3 + 1])
+				// 			]
+				// 		});
+				// 	}
+				// 	return body;
+				// } else {
 				return new Body({
 					mass: STATIC,
 					shape: {
@@ -75,6 +114,7 @@ class WorldObjectData {
 						vertices: points
 					}
 				});
+			// }
 
 			case CIRCLE:
 				return new Body({
@@ -87,6 +127,65 @@ class WorldObjectData {
 					}
 				});
 		}
+	}
+	#end
+
+	#if echo
+	/**
+	 * 确保点集是顺时针方向
+	 * @param points 顶点数组 [{x:Float, y:Float}]
+	 * @param yUp 是否为笛卡尔坐标系（y轴向上）。如果y轴向下（普通屏幕坐标），请传 false。
+	 */
+	public function forceClockwise(points:Array<Vector2>, yUp:Bool = false):Void {
+		var area:Float = 0;
+
+		for (i in 0...points.length) {
+			var p1 = points[i];
+			var p2 = points[(i + 1) % points.length];
+			// 鞋带公式计算有符号面积
+			area += (p2.x - p1.x) * (p2.y + p1.y);
+		}
+
+		// 在 y 轴向下的坐标系中：
+		// area > 0 表示顺时针 (CW)
+		// area < 0 表示逆时针 (CCW)
+
+		var isCurrentlyClockwise = yUp ? (area < 0) : (area > 0);
+
+		if (isCurrentlyClockwise) {
+			points.reverse(); // 如果不是顺时针，直接原地翻转
+		}
+	}
+
+	/**
+	 * 判断是否是凹边形
+	 * @param points 
+	 * @return Bool
+	 */
+	public function isConcave(points:Array<Vector2>):Bool {
+		if (points.length < 4)
+			return false; // 三角形必定是凸的
+
+		var lastSign:Float = 0;
+		var n = points.length;
+
+		for (i in 0...n) {
+			var p1 = points[i];
+			var p2 = points[(i + 1) % n];
+			var p3 = points[(i + 2) % n];
+
+			// 计算向量 (p2-p1) 和 (p3-p2) 的叉积
+			var crossProduct = (p2.x - p1.x) * (p3.y - p2.y) - (p2.y - p1.y) * (p3.x - p2.x);
+
+			if (crossProduct != 0) {
+				if (lastSign == 0) {
+					lastSign = crossProduct;
+				} else if ((crossProduct > 0 && lastSign < 0) || (crossProduct < 0 && lastSign > 0)) {
+					return true; // 转向改变，说明是凹的
+				}
+			}
+		}
+		return false;
 	}
 	#end
 

@@ -640,9 +640,14 @@ class Scroll extends BoxContainer {
 	 * 滚动到指定位置
 	 */
 	public function scrollTo(x:Float, y:Float, duration:Float = 0.2):Void {
-		Actuate.tween(this, duration, {
+		stopFreeSliding();
+		var data = getMoveingToData({
 			scrollX: x,
 			scrollY: y
+		});
+		Actuate.tween(this, duration, {
+			scrollX: data.scrollX,
+			scrollY: data.scrollY
 		});
 	}
 }

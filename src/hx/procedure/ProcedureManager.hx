@@ -7,7 +7,7 @@ package hx.procedure;
  * 1. 创建 IProcedure 实现类
  * 2. 通过 switchProcedure() 切换流程，未注册时会自动注册
  * 3. 也可手动 registerProcedure() 提前注册
- * 4. 在游戏主循环中调用 update() 驱动当前流程的 onUpdate
+ * 4. 在游戏主循环中调用 update() 驱动当前流程的 onUpdate，请注意，该方法会用后端引擎进行调用，无需手动调用
  *
  * 流程管理器与渲染/显示系统完全解耦，可独立使用。
  */

@@ -5,8 +5,8 @@ package hx.procedure;
  *
  * 使用方式：
  * 1. 创建 IProcedure 实现类
- * 2. 通过 registerProcedure() 注册流程
- * 3. 通过 switchProcedure() 切换当前活动流程
+ * 2. 通过 switchProcedure() 切换流程，未注册时会自动注册
+ * 3. 也可手动 registerProcedure() 提前注册
  * 4. 在游戏主循环中调用 update() 驱动当前流程的 onUpdate
  *
  * 流程管理器与渲染/显示系统完全解耦，可独立使用。
@@ -27,9 +27,9 @@ class ProcedureManager {
 	}
 
 	/**
-	 * 所有已注册的流程，以流程类为键
+	 * 所有已注册的流程，以流程类全限定名为键（用于兼容 JS 目标）
 	 */
-	private var procedures:Map<Class<IProcedure>, IProcedure> = [];
+	private var procedures:Map<String, IProcedure> = [];
 
 	/**
 	 * 当前活动的流程
@@ -60,26 +60,29 @@ class ProcedureManager {
 	 * @param procedure 要注册的流程实例
 	 */
 	public function registerProcedure<T:IProcedure>(procedure:T):T {
-		var clazz = Type.getClass(procedure);
-		if (procedures.exists(clazz)) {
-			throw '流程 ${Type.getClassName(clazz)} 已经注册';
+		var key = Type.getClassName(Type.getClass(procedure));
+		if (procedures.exists(key)) {
+			throw '流程 $key 已经注册';
 		}
-		procedures.set(clazz, procedure);
+		procedures.set(key, procedure);
 		procedure.onInit();
 		return procedure;
 	}
 
 	/**
 	 * 切换到指定类型的流程
+	 * 如果目标流程未注册，会自动通过 Type.createInstance 创建实例并注册
 	 * 如果当前有活动流程，会先调用其 onLeave()，再调用目标流程的 onEnter()
-	 * 如果目标流程未注册，会抛出异常
 	 * @param clazz 目标流程的类
 	 * @return 切换后的流程实例
 	 */
 	public function switchProcedure<T:IProcedure>(clazz:Class<T>):T {
-		var target = procedures.get(clazz);
+		var key = Type.getClassName(clazz);
+		var target:IProcedure = procedures.get(key);
 		if (target == null) {
-			throw '流程 ${Type.getClassName(clazz)} 未注册，请先调用 registerProcedure';
+			target = Type.createInstance(clazz, []);
+			procedures.set(key, target);
+			target.onInit();
 		}
 
 		// 如果目标流程就是当前流程，不执行切换
@@ -105,7 +108,7 @@ class ProcedureManager {
 	 * @return 流程实例，未注册时返回 null
 	 */
 	public function getProcedure<T:IProcedure>(clazz:Class<T>):T {
-		return cast procedures.get(clazz);
+		return cast procedures.get(Type.getClassName(clazz));
 	}
 
 	/**
@@ -115,7 +118,8 @@ class ProcedureManager {
 	 * @return 是否成功移除
 	 */
 	public function removeProcedure<T:IProcedure>(clazz:Class<T>):Bool {
-		var target = procedures.get(clazz);
+		var key = Type.getClassName(clazz);
+		var target = procedures.get(key);
 		if (target == null) {
 			return false;
 		}
@@ -126,7 +130,7 @@ class ProcedureManager {
 		}
 
 		target.onDestroy();
-		return procedures.remove(clazz);
+		return procedures.remove(key);
 	}
 
 	/**

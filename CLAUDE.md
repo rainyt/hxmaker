@@ -53,6 +53,15 @@ haxe tools/tools.hxml
 
 使用 Future 模式进行异步资源加载，位于 `hx.assets` 包。`Assets` 类作为统一入口，支持图片、音频、图集、XML、JSON、Spine 骨骼数据等多种格式。每种资源类型有对应的 Future 子类（如 `BitmapDataFuture`、`JsonFuture`、`SpineTextureAtlasFuture` 等）。
 
+### 流程系统（Procedure）
+
+位于 `hx.procedure` 包，提供与渲染/显示系统完全解耦的游戏流程管理功能，灵感来源于 Unity GameFramework 的 Procedure 机制。
+
+- **`IProcedure`** — 流程接口，定义五个生命周期方法：`onInit()`、`onEnter()`、`onUpdate(dt)`、`onLeave()`、`onDestroy()`
+- **`ProcedureManager`** — 流程管理器，以 Class<T> 为键注册和切换流程，每个类型只能注册一个实例。提供全局单例 `ProcedureManager.instance` 和独立的 new 实例化两种使用方式
+
+使用方法：在游戏主循环中调用 `ProcedureManager.instance.update(dt)` 驱动当前活动流程的 `onUpdate`。
+
 ### CLI 项目脚手架
 
 `tools/Tools.hx` 编译为 Neko 字节码 `run.n`，提供 `hxmaker create openfl <projectName>` 命令，通过 Haxe 模板引擎从 `tools/templates/openfl/` 生成新项目文件。
@@ -73,4 +82,4 @@ haxe tools/tools.hxml
 ## 代码风格
 
 - 注释使用中文，变量名/函数名/类名使用英文
-- 包结构：`hx.core` → 核心 | `hx.display` → 显示对象 | `hx.events` → 事件 | `hx.assets` → 资源 | `hx.geom` → 几何 | `hx.layout` → 布局 | `hx.ui` → UI 管理 | `hx.utils` → 工具 | `hx.macro` → 编译时宏
+- 包结构：`hx.core` → 核心 | `hx.display` → 显示对象 | `hx.events` → 事件 | `hx.assets` → 资源 | `hx.geom` → 几何 | `hx.layout` → 布局 | `hx.ui` → UI 管理 | `hx.utils` → 工具 | `hx.macro` → 编译时宏 | `hx.procedure` → 流程管理

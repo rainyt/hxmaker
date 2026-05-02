@@ -27,6 +27,16 @@ class InputLabel extends Box implements IDataProider<String> {
 	public var placeholder(default, set):String = "";
 
 	/**
+	 * 是否以密码模式显示文本（显示为密码掩码字符）
+	 */
+	public var displayAsPassword(default, set):Bool = false;
+
+	/**
+	 * 密码模式下的掩码字符，默认为"*"
+	 */
+	public var passwordChar(default, set):String = "*";
+
+	/**
 	 * 默认提示文案文本格式
 	 */
 	public var placeholderTextFormat(get, set):TextFormat;
@@ -63,16 +73,19 @@ class InputLabel extends Box implements IDataProider<String> {
 		__dt = 0;
 	}
 
+	private var __data:String = "";
+
 	public var data(get, set):String;
 
 	private function set_data(value:String):String {
-		this.label.data = value;
+		__data = value;
+		this.updateLabelDisplay();
 		this.updatePlaceholderVisibility();
 		return value;
 	}
 
 	private function get_data():String {
-		return this.label.data;
+		return __data;
 	}
 
 	/**
@@ -101,6 +114,35 @@ class InputLabel extends Box implements IDataProider<String> {
 		placeholderLabel.data = value;
 		this.updatePlaceholderVisibility();
 		return value;
+	}
+
+	private function set_displayAsPassword(value:Bool):Bool {
+		displayAsPassword = value;
+		this.updateLabelDisplay();
+		return value;
+	}
+
+	private function set_passwordChar(value:String):String {
+		passwordChar = value;
+		if (displayAsPassword) {
+			this.updateLabelDisplay();
+		}
+		return value;
+	}
+
+	/**
+	 * 更新Label的显示文本（根据密码模式决定显示实际文本还是掩码字符）
+	 */
+	private function updateLabelDisplay():Void {
+		if (displayAsPassword && __data != null && __data.length > 0) {
+			var masked = "";
+			for (i in 0...__data.length) {
+				masked += passwordChar;
+			}
+			this.label.data = masked;
+		} else {
+			this.label.data = __data;
+		}
 	}
 
 	/**

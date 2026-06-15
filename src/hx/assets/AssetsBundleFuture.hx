@@ -13,7 +13,7 @@ class AssetsBundleFuture extends Future<AssetsBundle, String> {
 	 */
 	public function existBundle(filePath:String):Bool {
 		// 同步接口
-		#if wechat_zygame_dom
+		#if (wechat_zygame_dom > '5.6.4')
 		try {
 			Wx.getFileSystemManager().accessSync(filePath);
 			return true;
@@ -26,7 +26,7 @@ class AssetsBundleFuture extends Future<AssetsBundle, String> {
 	 * 解压压缩包
 	 */
 	public function unzip(filePath:String, targetPath:String):Void {
-		#if wechat_zygame_dom
+		#if (wechat_zygame_dom > '5.6.4')
 		Wx.getFileSystemManager().unzip({
 			zipFilePath: filePath,
 			targetPath: targetPath,
@@ -68,7 +68,7 @@ class AssetsBundleFuture extends Future<AssetsBundle, String> {
 
 	override function post() {
 		super.post();
-		#if wechat_zygame_dom
+		#if (wechat_zygame_dom > '5.6.4')
 		var id = haxe.crypto.Md5.encode(path);
 		// 微信小游戏版本改进，将压缩包储存到本地，进行解压，如果压缩包已经存在，则不重复加载。使用Wx.downloadFile下载压缩包
 		var filePath = Path.join([Wx.env.USER_DATA_PATH, id + ".zip"]);

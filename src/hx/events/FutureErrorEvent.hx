@@ -10,6 +10,11 @@ class FutureErrorEvent extends Event {
 	public inline static var LOAD_ERROR = "loadError";
 
 	/**
+	 * 解密失败
+	 */
+	public inline static var ABD_DECODE_ERROR = "abnDecodeError";
+
+	/**
 	 * 创建一个FtureErrorEvent对象
 	 * @param type 
 	 * @param errorCode 

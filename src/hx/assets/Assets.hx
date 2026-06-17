@@ -54,7 +54,7 @@ class Assets extends Future<Assets, Dynamic> {
 	/**
 	 * 资源引用对象列表
 	 */
-	private var __assetsObjects:Array<AssetsObject<Dynamic>> = [];
+	private var __assetsObjects:Array<AssetObject<Dynamic>> = [];
 
 	public static function getDefaultNativePath(path:String):String {
 		if (path.indexOf("http") == 0) {
@@ -429,7 +429,7 @@ class Assets extends Future<Assets, Dynamic> {
 		}
 		futures.push(future);
 		future.onComplete((data) -> {
-			// data 是 AssetsObject，由 Future.completeValue 自动包装
+			// data 是 AssetObject，由 Future.completeValue 自动包装
 			__assetsObjects.push(data);
 			onCompleted(future, data.data);
 		});
@@ -543,9 +543,9 @@ class Assets extends Future<Assets, Dynamic> {
 		for (key => value in assets.bundles) {
 			this.bundles.set(key, value);
 		}
-		// 为合并过来的资源创建 AssetsObject 追踪，并增加引用计数
+		// 为合并过来的资源创建 AssetObject 追踪，并增加引用计数
 		for (obj in assets.__assetsObjects) {
-			var newObj = new AssetsObject(obj.nativePath, obj.data);
+			var newObj = new AssetObject(obj.nativePath, obj.data);
 			newObj.retain();
 			this.__assetsObjects.push(newObj);
 		}

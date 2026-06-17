@@ -100,6 +100,7 @@ class AssetsBundleFuture extends Future<AssetsBundle, String> {
 		}
 		#else
 		new BytesFuture(this.path, true).onComplete(function(bytes) {
+			this.addAssetObject(bytes);
 			// 加载完成
 			var assetsBundle = new AssetsBundle(bytes.data);
 			this.completeValue(assetsBundle);

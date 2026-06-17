@@ -18,6 +18,7 @@ class UIAssetsFuture extends Future<UIAssets, String> {
 		uiAssets.tryLoadTimes = 0;
 		uiAssets.nativePath = nativePath;
 		uiAssets.onComplete((data) -> {
+			this.addAssetObject(data);
 			this.completeValue(cast data);
 		}).onError(this.errorValue);
 		uiAssets.start();

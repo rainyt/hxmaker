@@ -6,6 +6,7 @@ package hx.assets;
 class XmlFuture extends Future<Xml, String> {
 	override function post() {
 		new StringFuture(this.getLoadData()).onComplete((text) -> {
+				this.addAssetObject(text);
 			this.completeValue(Xml.parse(text.data));
 		}).onError(this.errorValue);
 	}

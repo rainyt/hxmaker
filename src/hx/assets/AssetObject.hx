@@ -32,6 +32,9 @@ class AssetObject<T> {
 	 * 例如 pushAssets 将资源从一个 Assets 合并到另一个时
 	 */
 	public function retain():Void {
+		for (object in childAssetObjects) {
+			object.retain();
+		}
 		#if openfl
 		hx.net.RequestQueue.retain(this.nativePath);
 		#end

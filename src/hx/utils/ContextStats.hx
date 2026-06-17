@@ -217,4 +217,14 @@ class ContextStats {
 		return 0;
 		#end
 	}
+
+	/**
+	 * 资源总引用计数（由 RequestQueue 更新）
+	 */
+	public static var totalRefCount:Int = 0;
+
+	/**
+	 * 缓存资源总数（由 RequestQueue 更新）
+	 */
+	public static var totalCacheCount:Int = 0;
 }

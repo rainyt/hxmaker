@@ -223,26 +223,26 @@ class Assets extends Future<Assets, Dynamic> {
 	 */
 	public function hasLoading(future:Future<Dynamic, Dynamic>):Bool {
 		var id = Assets.formatName(future.path);
-		// if (future is BitmapDataFuture && UIManager.getBitmapData(id) != null) {
-		// 	return true;
-		// }
-		// if (future is SoundFuture && UIManager.getSound(id) != null) {
-		// 	return true;
-		// }
-		// if (future is StringFuture && UIManager.getString(id) != null) {
-		// 	return true;
-		// }
-		// if (future is TextureAtlasFuture && UIManager.getAtlas(id) != null) {
-		// 	return true;
-		// }
-		// #if (spine_haxe || spine_hx)
-		// if (future is SpineTextureAtlasFuture && UIManager.getSkeletonData(id) != null) {
-		// 	return true;
-		// }
-		// #end
-		// if (future is UIAssetsFuture && UIManager.getUIAssets(id) != null) {
-		// 	return true;
-		// }
+		if (future is BitmapDataFuture && UIManager.getBitmapData(id) != null) {
+			return true;
+		}
+		if (future is SoundFuture && UIManager.getSound(id) != null) {
+			return true;
+		}
+		if (future is StringFuture && UIManager.getString(id) != null) {
+			return true;
+		}
+		if (future is TextureAtlasFuture && UIManager.getAtlas(id) != null) {
+			return true;
+		}
+		#if (spine_haxe || spine_hx)
+		if (future is SpineTextureAtlasFuture && UIManager.getSkeletonData(id) != null) {
+			return true;
+		}
+		#end
+		if (future is UIAssetsFuture && UIManager.getUIAssets(id) != null) {
+			return true;
+		}
 
 		for (f in futures) {
 			if (f.path == future.path) {

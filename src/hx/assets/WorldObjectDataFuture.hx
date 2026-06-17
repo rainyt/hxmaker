@@ -10,7 +10,8 @@ using haxe.io.Path;
 class WorldObjectDataFuture extends Future<WorldObjectData, String> {
 	override function post() {
 		new StringFuture(this.path).onComplete((text) -> {
-			WorldObjectData.current = new WorldObjectData(this.path.directory().directory(), Json.parse(text));
+			this.addAssetObject(text);
+			WorldObjectData.current = new WorldObjectData(this.path.directory().directory(), Json.parse(text.data));
 			this.completeValue(WorldObjectData.current);
 		}).onError(this.errorValue);
 	}

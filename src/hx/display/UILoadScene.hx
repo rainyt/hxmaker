@@ -105,5 +105,6 @@ class UILoadScene extends Scene {
 	override function dispose() {
 		super.dispose();
 		UIManager.unbindAssets(uiAssets);
+		uiAssets.clean();
 	}
 }

@@ -1,5 +1,6 @@
 package hx.display;
 
+import hx.assets.AssetObject;
 import hx.geom.Rectangle;
 import hx.geom.ColorTransform;
 import hx.events.Event;
@@ -11,6 +12,8 @@ import hx.assets.BitmapDataFuture;
  */
 class ImageLoader extends Box implements IDataProider<Dynamic> {
 	private var __data:Dynamic;
+
+	private var __assetObject:AssetObject<Dynamic>;
 
 	public var data(get, set):Dynamic;
 
@@ -30,6 +33,9 @@ class ImageLoader extends Box implements IDataProider<Dynamic> {
 				this.dispatchEvent(new Event(Event.CHANGE));
 			} else {
 				new BitmapDataFuture(__data, true).onComplete((data) -> {
+					if (__assetObject != null)
+						__assetObject.release();
+					__assetObject = data;
 					if (__data == v) {
 						var bmdObj = data;
 						image.data = data.data;
@@ -117,5 +123,12 @@ class ImageLoader extends Box implements IDataProider<Dynamic> {
 	private function set_scale9Grid(value:Rectangle):Rectangle {
 		image.scale9Grid = value;
 		return value;
+	}
+
+	override function dispose() {
+		super.dispose();
+		if (__assetObject != null)
+			__assetObject.release();
+		__assetObject = null;
 	}
 }

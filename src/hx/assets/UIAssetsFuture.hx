@@ -19,7 +19,7 @@ class UIAssetsFuture extends Future<UIAssets, String> {
 		uiAssets.nativePath = nativePath;
 		uiAssets.onComplete((data) -> {
 			this.addAssetObject(data);
-			this.completeValue(cast data);
+			this.completeValue(cast data.data);
 		}).onError(this.errorValue);
 		uiAssets.start();
 	}

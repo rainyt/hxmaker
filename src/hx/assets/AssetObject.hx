@@ -14,6 +14,8 @@ class AssetObject<T> {
 	 */
 	public var nativePath:String = "";
 
+	private var __isRelease = false;
+
 	/**
 	 * 子资源处理
 	 */
@@ -42,6 +44,9 @@ class AssetObject<T> {
 		for (object in childAssetObjects) {
 			object.release();
 		}
+		if (__isRelease)
+			return;
+		__isRelease = true;
 		#if openfl
 		hx.net.RequestQueue.release(this.nativePath);
 		#end

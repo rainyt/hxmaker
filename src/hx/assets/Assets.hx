@@ -54,7 +54,7 @@ class Assets extends Future<Assets, Dynamic> {
 	/**
 	 * 资源引用对象列表
 	 */
-	private var __assetsObjects:Array<AssetObject<Dynamic>> = [];
+	public var assetObjects:Array<AssetObject<Dynamic>> = [];
 
 	public static function getDefaultNativePath(path:String):String {
 		if (path.indexOf("http") == 0) {
@@ -223,33 +223,26 @@ class Assets extends Future<Assets, Dynamic> {
 	 */
 	public function hasLoading(future:Future<Dynamic, Dynamic>):Bool {
 		var id = Assets.formatName(future.path);
-		if (future is BitmapDataFuture && UIManager.getBitmapData(id) != null) {
-			return true;
-		}
-		if (future is SoundFuture && UIManager.getSound(id) != null) {
-			return true;
-		}
-		if (future is StringFuture && UIManager.getString(id) != null) {
-			return true;
-		}
-		if (future is TextureAtlasFuture && UIManager.getAtlas(id) != null) {
-			return true;
-		}
-		#if (spine_haxe || spine_hx)
-		if (future is SpineTextureAtlasFuture && UIManager.getSkeletonData(id) != null) {
-			return true;
-		}
-		#end
-		if (future is UIAssetsFuture && UIManager.getUIAssets(id) != null) {
-			return true;
-		}
-
-		// 检查全局 RequestQueue 缓存（跨 Assets 去重）
-		#if openfl
-		if (hx.net.RequestQueue.hasCache(future.path)) {
-			return true;
-		}
-		#end
+		// if (future is BitmapDataFuture && UIManager.getBitmapData(id) != null) {
+		// 	return true;
+		// }
+		// if (future is SoundFuture && UIManager.getSound(id) != null) {
+		// 	return true;
+		// }
+		// if (future is StringFuture && UIManager.getString(id) != null) {
+		// 	return true;
+		// }
+		// if (future is TextureAtlasFuture && UIManager.getAtlas(id) != null) {
+		// 	return true;
+		// }
+		// #if (spine_haxe || spine_hx)
+		// if (future is SpineTextureAtlasFuture && UIManager.getSkeletonData(id) != null) {
+		// 	return true;
+		// }
+		// #end
+		// if (future is UIAssetsFuture && UIManager.getUIAssets(id) != null) {
+		// 	return true;
+		// }
 
 		for (f in futures) {
 			if (f.path == future.path) {
@@ -430,7 +423,7 @@ class Assets extends Future<Assets, Dynamic> {
 		futures.push(future);
 		future.onComplete((data) -> {
 			// data 是 AssetObject，由 Future.completeValue 自动包装
-			__assetsObjects.push(data);
+			assetObjects.push(data);
 			onCompleted(future, data.data);
 		});
 		future.onError(__onError);
@@ -544,16 +537,16 @@ class Assets extends Future<Assets, Dynamic> {
 			this.bundles.set(key, value);
 		}
 		// 为合并过来的资源创建 AssetObject 追踪，并增加引用计数
-		for (obj in assets.__assetsObjects) {
+		for (obj in assets.assetObjects) {
 			var newObj = new AssetObject(obj.nativePath, obj.data);
 			newObj.retain();
-			this.__assetsObjects.push(newObj);
+			this.assetObjects.push(newObj);
 		}
 
 	}
 
 	public function clean(dispose:Bool = true):Void {
-		for (object in __assetsObjects) {
+		for (object in assetObjects) {
 			object.release();
 		}
 		if (dispose) {
@@ -570,7 +563,7 @@ class Assets extends Future<Assets, Dynamic> {
 		this.xmls.clear();
 		this.strings.clear();
 		this.bundles.clear();
-		this.__assetsObjects = [];
+		this.assetObjects = [];
 	}
 
 	/**

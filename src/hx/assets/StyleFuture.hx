@@ -6,7 +6,7 @@ class StyleFuture extends Future<StyleAssets, String> {
 	override function post() {
 		super.post();
 		new StringFuture(getLoadData()).onComplete(data -> {
-			var xml = Xml.parse(data);
+			var xml = Xml.parse(data.data);
 			var assets = new StyleAssets();
 			assets.nativePath = this.nativePath;
 			var nameId = Assets.formatName(this.getLoadData());

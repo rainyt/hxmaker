@@ -9,7 +9,7 @@ class JsonFuture extends Future<Dynamic, String> {
 		super.post();
 		new StringFuture(this.getLoadData()).onComplete(text -> {
 			try {
-				var object = Json.parse(text);
+				var object = Json.parse(text.data);
 				this.completeValue(object);
 			} catch (err:Exception) {
 				this.errorValue(FutureErrorEvent.create(FutureErrorEvent.LOAD_ERROR, -1, "json parser error.", this.getLoadData()));

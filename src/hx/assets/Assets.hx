@@ -51,6 +51,11 @@ class Assets extends Future<Assets, Dynamic> {
 	 */
 	public static var defaultNativePath:String = null;
 
+	/**
+	 * 资源引用对象列表
+	 */
+	private var __assetsObjects:Array<AssetsObject<Dynamic>> = [];
+
 	public static function getDefaultNativePath(path:String):String {
 		if (path.indexOf("http") == 0) {
 			return path;
@@ -239,6 +244,13 @@ class Assets extends Future<Assets, Dynamic> {
 			return true;
 		}
 
+		// 检查全局 RequestQueue 缓存（跨 Assets 去重）
+		#if openfl
+		if (hx.net.RequestQueue.hasCache(future.path)) {
+			return true;
+		}
+		#end
+
 		for (f in futures) {
 			if (f.path == future.path) {
 				return true;
@@ -417,7 +429,9 @@ class Assets extends Future<Assets, Dynamic> {
 		}
 		futures.push(future);
 		future.onComplete((data) -> {
-			onCompleted(future, data);
+			// data 是 AssetsObject，由 Future.completeValue 自动包装
+			__assetsObjects.push(data);
+			onCompleted(future, data.data);
 		});
 		future.onError(__onError);
 	}
@@ -529,13 +543,20 @@ class Assets extends Future<Assets, Dynamic> {
 		for (key => value in assets.bundles) {
 			this.bundles.set(key, value);
 		}
+		// 为合并过来的资源创建 AssetsObject 追踪，并增加引用计数
+		for (obj in assets.__assetsObjects) {
+			var newObj = new AssetsObject(obj.nativePath, obj.data);
+			newObj.retain();
+			this.__assetsObjects.push(newObj);
+		}
+
 	}
 
 	public function clean(dispose:Bool = true):Void {
+		for (object in __assetsObjects) {
+			object.release();
+		}
 		if (dispose) {
-			for (data in this.bitmapDatas) {
-				// TODO 应该清理
-			}
 			for (assets in this.uiAssetses) {
 				assets.clean();
 			}
@@ -549,6 +570,7 @@ class Assets extends Future<Assets, Dynamic> {
 		this.xmls.clear();
 		this.strings.clear();
 		this.bundles.clear();
+		this.__assetsObjects = [];
 	}
 
 	/**

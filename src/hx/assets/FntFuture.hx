@@ -10,8 +10,8 @@ class FntFuture extends Future<FntAtlas, FntFutureLoadData> {
 		new BitmapDataFuture(data.png).onComplete((bitmapData) -> {
 			new StringFuture(data.xml).onComplete(xmlString -> {
 				try {
-					var xml = Xml.parse(xmlString);
-					var atlas = new FntAtlas(bitmapData, xml);
+					var xml = Xml.parse(xmlString.data);
+					var atlas = new FntAtlas(bitmapData.data, xml);
 					completeValue(atlas);
 				} catch (e:Exception) {
 					this.errorValue(FutureErrorEvent.create(FutureErrorEvent.LOAD_ERROR, -1, "xml file " + this.path + " parse error:" + xmlString,

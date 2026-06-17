@@ -31,7 +31,8 @@ class ImageLoader extends Box implements IDataProider<Dynamic> {
 			} else {
 				new BitmapDataFuture(__data, true).onComplete((data) -> {
 					if (__data == v) {
-						image.data = data;
+						var bmdObj = data;
+						image.data = data.data;
 						updateScale();
 						this.dispatchEvent(new Event(Event.CHANGE));
 					}

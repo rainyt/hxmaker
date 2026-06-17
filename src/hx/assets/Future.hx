@@ -4,7 +4,7 @@ import haxe.Timer;
 import hx.events.FutureErrorEvent;
 
 class Future<T, DATA = Dynamic> {
-	@:noCompletion private var __completes:Array<T->Void> = [];
+	@:noCompletion private var __completes:Array<AssetsObject<T>->Void> = [];
 	@:noCompletion private var __progresses:Array<Float->Void> = [];
 	@:noCompletion private var __errors:Array<FutureErrorEvent->Void> = [];
 	@:noCompletion private var __dones:Array<Void->Void> = [];
@@ -44,7 +44,7 @@ class Future<T, DATA = Dynamic> {
 		return this;
 	}
 
-	public function onComplete(listener:T->Void):Future<T, DATA> {
+	public function onComplete(listener:AssetsObject<T>->Void):Future<T, DATA> {
 		__completes.push(listener);
 		return this;
 	}
@@ -96,8 +96,9 @@ class Future<T, DATA = Dynamic> {
 		}
 		this.isComplete = true;
 		this.value = value;
+		var assetsObject = new AssetsObject(this.path, value);
 		for (cb in __completes) {
-			cb(this.value);
+			cb(assetsObject);
 		}
 		for (cb in __dones) {
 			cb();

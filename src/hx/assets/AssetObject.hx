@@ -47,9 +47,6 @@ class AssetObject<T> {
 		for (object in childAssetObjects) {
 			object.release();
 		}
-		if (__isRelease)
-			return;
-		__isRelease = true;
 		#if openfl
 		hx.net.RequestQueue.release(this.nativePath);
 		#end

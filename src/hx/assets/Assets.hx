@@ -539,6 +539,7 @@ class Assets extends Future<Assets, Dynamic> {
 		// 为合并过来的资源创建 AssetObject 追踪，并增加引用计数
 		for (obj in assets.assetObjects) {
 			var newObj = new AssetObject(obj.nativePath, obj.data);
+			newObj.childAssetObjects = obj.childAssetObjects.copy();
 			newObj.retain();
 			this.assetObjects.push(newObj);
 		}

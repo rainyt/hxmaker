@@ -54,6 +54,7 @@ class FPS extends DisplayObjectContainer {
 			"timerTask:" + ContextStats.timerTaskCount,
 			"blendModeFilter:" + ContextStats.blendModeFilterDrawCall,
 			"stageBitmapDatas:" + StageBitmapData.counts,
+			"resourceRef:" + ContextStats.totalRefCount + "/" + ContextStats.totalCacheCount,
 			"cacheAsBitmap:" + Hxmaker.engine.renderer.cacheAsBitmap,
 			"devicePixelRatio:" + Hxmaker.engine.devicePixelRatio,
 		];

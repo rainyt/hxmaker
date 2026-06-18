@@ -93,23 +93,35 @@ class Scroll extends BoxContainer {
 	override function set_width(value:Float):Float {
 		this.maskRect.width = value;
 		this.quad.width = value;
+		__cachedMaxSize = null;
+		setDirty();
 		return super.set_width(value);
 	}
 
 	override function set_height(value:Float):Float {
 		this.maskRect.height = value;
 		this.quad.height = value;
+		__cachedMaxSize = null;
+		setDirty();
 		return super.set_height(value);
 	}
 
 	override function addChild(child:DisplayObject) {
+		__cachedMaxSize = null;
 		setDirty();
 		super.addChild(child);
 	}
 
 	override function addChildAt(child:DisplayObject, index:Int) {
+		__cachedMaxSize = null;
 		setDirty();
 		super.addChildAt(child, index);
+	}
+
+	override function removeChild(child:DisplayObject) {
+		__cachedMaxSize = null;
+		setDirty();
+		super.removeChild(child);
 	}
 
 	override function onAddToStage() {
@@ -187,7 +199,10 @@ class Scroll extends BoxContainer {
 		return value;
 	}
 
-	private var __logDt:Float = 0;
+	/**
+	 * 缓存内容最大滚动尺寸，内容变化时置null失效
+	 */
+	private var __cachedMaxSize:Point = null;
 
 	override function onUpdate(dt:Float) {
 		super.onUpdate(dt);
@@ -234,6 +249,7 @@ class Scroll extends BoxContainer {
 				}
 			}
 		}
+		__dirty = false;
 	}
 
 	/**
@@ -564,7 +580,7 @@ class Scroll extends BoxContainer {
 		if (!isOverScrollEnbaled) {
 			// 原本的逻辑
 			this.__scrollOldX -= __lastStepX;
-			this.__scrollOldX -= __lastStepY;
+			this.__scrollOldY -= __lastStepY;
 
 			if (this.__scrollOldX > 0 || maxWidth < 0) {
 				this.__scrollOldX = 0;
@@ -599,12 +615,15 @@ class Scroll extends BoxContainer {
 	 * 获取可活动空间大小
 	 */
 	private function getMaxSize():Point {
-		var ret = box.__superGetBounds();
-		if (!scrollYEnable)
-			ret.height = 0;
-		if (!scrollXEnable)
-			ret.width = 0;
-		return new Point(ret.width - this.width, ret.height - this.height);
+		if (__cachedMaxSize == null) {
+			var ret = box.__superGetBounds();
+			if (!scrollYEnable)
+				ret.height = 0;
+			if (!scrollXEnable)
+				ret.width = 0;
+			__cachedMaxSize = new Point(ret.width - this.width, ret.height - this.height);
+		}
+		return __cachedMaxSize;
 	}
 
 	/**

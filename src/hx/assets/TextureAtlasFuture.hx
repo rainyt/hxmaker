@@ -9,10 +9,12 @@ class TextureAtlasFuture extends Future<XmlAtlas, TextureAtlasFutureLoadData> {
 		super.post();
 		var data:TextureAtlasFutureLoadData = getLoadData();
 		new BitmapDataFuture(data.png).onComplete((bitmapData) -> {
+				this.addAssetObject(bitmapData);
 			new StringFuture(data.xml).onComplete(xmlString -> {
+					this.addAssetObject(xmlString);
 				try {
-					var xml = Xml.parse(xmlString);
-					var xmlAtlas = new XmlAtlas(bitmapData, xml);
+					var xml = Xml.parse(xmlString.data);
+					var xmlAtlas = new XmlAtlas(bitmapData.data, xml);
 					completeValue(xmlAtlas);
 				} catch (e:Exception) {
 					trace(e.stack.toString());

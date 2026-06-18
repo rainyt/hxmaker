@@ -4,11 +4,12 @@ import haxe.Timer;
 import hx.events.FutureErrorEvent;
 
 class Future<T, DATA = Dynamic> {
-	@:noCompletion private var __completes:Array<T->Void> = [];
+	@:noCompletion private var __completes:Array<AssetObject<T>->Void> = [];
 	@:noCompletion private var __progresses:Array<Float->Void> = [];
 	@:noCompletion private var __errors:Array<FutureErrorEvent->Void> = [];
 	@:noCompletion private var __dones:Array<Void->Void> = [];
 	@:noCompletion private var __data:DATA;
+	@:noCompletion private var __assetObjects:Array<AssetObject<Dynamic>> = [];
 
 	public var error(default, null):FutureErrorEvent;
 	public var isComplete(default, null):Bool;
@@ -44,7 +45,7 @@ class Future<T, DATA = Dynamic> {
 		return this;
 	}
 
-	public function onComplete(listener:T->Void):Future<T, DATA> {
+	public function onComplete(listener:AssetObject<T>->Void):Future<T, DATA> {
 		__completes.push(listener);
 		return this;
 	}
@@ -84,10 +85,18 @@ class Future<T, DATA = Dynamic> {
 	}
 
 	/**
+	 * 添加资源对象，以便释放时，一起释放
+	 * @param assetObject 
+	 */
+	public function addAssetObject(assetObject:AssetObject<Dynamic>):Void {
+		__assetObjects.push(assetObject);
+	}
+
+	/**
 	 * 当请求成功，则返回值
 	 * @param value 
 	 */
-	public function completeValue(value:T):Void {
+	public function completeValue(value:T, path:String = null):Void {
 		if (__customCompleteValue != null) {
 			var redayCb = __customCompleteValue;
 			__customCompleteValue = null;
@@ -96,8 +105,11 @@ class Future<T, DATA = Dynamic> {
 		}
 		this.isComplete = true;
 		this.value = value;
+		var assetObject = new AssetObject(path, value);
+		assetObject.retain();
+		assetObject.childAssetObjects = __assetObjects;
 		for (cb in __completes) {
-			cb(this.value);
+			cb(assetObject);
 		}
 		for (cb in __dones) {
 			cb();

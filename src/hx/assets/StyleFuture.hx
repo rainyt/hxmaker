@@ -6,18 +6,19 @@ class StyleFuture extends Future<StyleAssets, String> {
 	override function post() {
 		super.post();
 		new StringFuture(getLoadData()).onComplete(data -> {
-			var xml = Xml.parse(data);
+			this.addAssetObject(data);
+			var xml = Xml.parse(data.data);
 			var assets = new StyleAssets();
 			assets.nativePath = this.nativePath;
 			var nameId = Assets.formatName(this.getLoadData());
 			for (item in xml.firstElement().elements()) {
-				trace("样式：", item);
 				assets.styles.set(nameId + ":" + item.nodeName, item);
 				if (item.exists("src")) {
 					assets.loadBitmapData(item.get("src"));
 				}
 			}
 			assets.onComplete((data) -> {
+				this.addAssetObject(data);
 				completeValue(assets);
 			}).onError(errorValue);
 			assets.start();

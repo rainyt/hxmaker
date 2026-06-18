@@ -55,7 +55,7 @@ class SoundManager {
 				#if sound_debug
 				trace("[SoundManager] playEffectFromPath: " + id);
 				#end
-				playEffectSound(a.getSound(id), isLoop);
+				playEffectSound(a.data.getSound(id), isLoop);
 			});
 			assets.start();
 		}

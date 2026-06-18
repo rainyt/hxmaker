@@ -54,11 +54,12 @@ class UIAssets extends Assets {
 			return;
 		}
 		// 这里需要解析这个xml所需要的所有资源
-		new StringFuture(__path).onComplete((xml:String) -> {
+		new StringFuture(__path).onComplete((xml) -> {
+			var str:String = xml.data;
 			// 缓存xml
-			strings.set(id, xml);
-			__stringCache.set(__path, xml);
-			parserXmlString(xml);
+			strings.set(id, str);
+			__stringCache.set(__path, str);
+			parserXmlString(str);
 		}).onError(errorValue);
 	}
 

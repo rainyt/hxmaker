@@ -17,10 +17,12 @@ class SpineTextureAtlasFuture extends Future<SpineTextureAtlas, SpineLoadData> {
 	override function post() {
 		super.post();
 		new BitmapDataFuture(this.getLoadData().png).onComplete((bitmapData) -> {
+			this.addAssetObject(bitmapData);
 			new StringFuture(this.getLoadData().atlas).onComplete((atlasString) -> {
+				this.addAssetObject(atlasString);
 				// 加成完成，处理精灵图
-				var spineTextureAtlas = new SpineTextureAtlas(bitmapData);
-				var atlas:TextureAtlas = new TextureAtlas(atlasString, spineTextureAtlas);
+				var spineTextureAtlas = new SpineTextureAtlas(bitmapData.data);
+				var atlas:TextureAtlas = new TextureAtlas(atlasString.data, spineTextureAtlas);
 				spineTextureAtlas.skeletonJson = new SkeletonJson(new AtlasAttachmentLoader(atlas));
 				this.completeValue(spineTextureAtlas);
 			}).onError(errorValue);

@@ -106,8 +106,8 @@ class Future<T, DATA = Dynamic> {
 		this.isComplete = true;
 		this.value = value;
 		var assetObject = new AssetObject(path, value);
-		assetObject.childAssetObjects = __assetObjects;
 		assetObject.retain();
+		assetObject.childAssetObjects = __assetObjects;
 		for (cb in __completes) {
 			cb(assetObject);
 		}

@@ -242,7 +242,7 @@ class ParticleChild {
 
 		// 生命+生命方差实现
 		if (this.life == 0) {
-			var rlife = particle.life + Math.random() * particle.lifeVariance;
+			var rlife = Math.max(0.001, particle.life + (Math.random() * 2 - 1) * particle.lifeVariance);
 			this.life = rlife;
 			var r = particle.randomLife.getValue();
 			this.random = r;

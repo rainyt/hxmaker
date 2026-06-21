@@ -157,7 +157,7 @@ class System {
 	}
 
 	/**
-	 * 清理GC内存
+	 * 清理GC内存，资源内存等
 	 */
 	public static function gc():Void {
 		RequestQueue.sweepCache();

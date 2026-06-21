@@ -1,5 +1,6 @@
 package hx.utils;
 
+import hx.net.RequestQueue;
 import hx.events.FutureErrorEvent;
 import motion.Actuate;
 import hx.assets.Future;
@@ -152,6 +153,16 @@ class System {
 		return future;
 		#else
 		throw "Not support existFile on this platform";
+		#end
+	}
+
+	/**
+	 * 清理GC内存
+	 */
+	public static function gc():Void {
+		RequestQueue.sweepCache();
+		#if openfl
+		openfl.system.System.gc();
 		#end
 	}
 }

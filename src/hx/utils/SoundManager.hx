@@ -100,11 +100,11 @@ class SoundManager {
 			var channel = sound.root.play(isLoop);
 			if (channel != null) {
 				channel.setVolume(__effectSoundTransform.volume, __effectSoundTransform.pan);
+				__effectSoundChannel.push(channel);
+				channel.addEventListener(SoundEvent.SOUND_COMPLETE, (e) -> {
+					__effectSoundChannel.remove(channel);
+				});
 			}
-			__effectSoundChannel.push(channel);
-			channel.addEventListener(SoundEvent.SOUND_COMPLETE, (e) -> {
-				__effectSoundChannel.remove(channel);
-			});
 			return channel;
 		} else {
 			return null;

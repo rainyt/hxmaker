@@ -20,6 +20,16 @@ class Button extends BoxContainer {
 	public static var clickSoundEffectId:String;
 
 	/**
+	 * 按钮自身的点击音效，当存在`selfSoundEffectId`时，优先播放此音效
+	 */
+	public var selfSoundEffectId:String;
+
+	/**
+	 * 是否启用音效，默认为 `true`
+	 */
+	public var enableSoundEffect:Bool = true;
+
+	/**
 	 * 按钮的容器，用于放置额外的子元素
 	 */
 	private var __box:Box;
@@ -218,8 +228,11 @@ class Button extends BoxContainer {
 				this.box.scale = 0.94;
 				this.box.originX = pWidth * 0.03;
 				this.box.originY = pHeight * 0.03;
-				if (clickSoundEffectId != null) {
-					SoundManager.getInstance().playEffect(clickSoundEffectId);
+				if (enableSoundEffect) {
+					if (selfSoundEffectId != null)
+						SoundManager.getInstance().playEffect(selfSoundEffectId);
+					else if (clickSoundEffectId != null)
+						SoundManager.getInstance().playEffect(clickSoundEffectId);
 				}
 			case MouseEvent.MOUSE_UP:
 				this.box.scaleX = 1;

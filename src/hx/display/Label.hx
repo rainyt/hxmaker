@@ -85,10 +85,22 @@ class Label extends DisplayObject implements IDataProider<String> implements IRo
 		return __root;
 	}
 
+	override function onAddToStage() {
+		super.onAddToStage();
+		#if hxmaker_openfl
+		// 登记到文本渲染队列，让它的字符在正式渲染之前写入图集
+		hx.text.TextFieldQueue.add(this);
+		#end
+	}
+
 	override function onRemoveToStage() {
 		super.onRemoveToStage();
 		// if (root != null)
 		// this.root.release();
+		#if hxmaker_openfl
+		// 该方法会被重复调用，队列内部保证幂等
+		hx.text.TextFieldQueue.remove(this);
+		#end
 	}
 
 	/**
@@ -101,6 +113,10 @@ class Label extends DisplayObject implements IDataProider<String> implements IRo
 			__data = value;
 			this.setDirty();
 			this.setFilterDirty();
+			#if hxmaker_openfl
+			// 文本内容变更不会走`setTextFormatDirty`，需要单独通知文本渲染队列
+			hx.text.TextFieldQueue.invalidate(this);
+			#end
 		}
 		return __data;
 	}
@@ -248,6 +264,10 @@ class Label extends DisplayObject implements IDataProider<String> implements IRo
 			}
 		}
 		this.setDirty();
+		#if hxmaker_openfl
+		if (value)
+			hx.text.TextFieldQueue.invalidate(this);
+		#end
 	}
 
 	/**

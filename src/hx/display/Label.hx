@@ -16,21 +16,11 @@ import hx.providers.IRootDataProvider;
 @:keep
 class Label extends DisplayObject implements IDataProider<String> implements IRootDataProvider<ITextFieldDataProvider> {
 	/**
-	 * 设置文本缓存器
-	 */
-	public static function setTextFieldContextBitmapData(textCacheId:Int, bitmapData:TextCacheBitmapData):Void {
-		#if hxmaker_openfl
-		hx.render.TextFieldRender.setTextFieldContextBitmapData(textCacheId,
-			new hx.text.TextFieldContextBitmapData(bitmapData.size, bitmapData.textureWidth, bitmapData.textureHeight, bitmapData.offestX, bitmapData.offestY));
-		#end
-	}
-
-	/**
 	 * 释放文本缓存器
 	 */
-	public static function disposeTextFieldContextBitmapData(textCacheId:Int):Void {
+	public static function disposeTextFieldContextBitmapData():Void {
 		#if hxmaker_openfl
-		hx.render.TextFieldRender.disposeTextFieldContextBitmapData(textCacheId);
+		hx.render.TextFieldRender.disposeTextFieldContextBitmapData();
 		#end
 	}
 

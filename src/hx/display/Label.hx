@@ -41,15 +41,6 @@ class Label extends DisplayObject implements IDataProider<String> implements IRo
 
 	public var __smoothing:Bool = true;
 
-	/**
-	 * 文本缓存ID，默认为`0`，用于决定使用哪个文本缓存器。如果需要使用多个文本缓存器，你需要检查`引擎后端`是否支持。当前`openfl`后端能够正常使用，请参考例子：
-	 * ```haxe
-	 * Label.setTextFieldContextBitmapData(1, new TextCacheBitmapData(50, 2048, 2048, 5, 5));
-	 * ```
-	 * 如果不设置则也会有一个默认的文本缓存器，请注意内存的使用率，每多一个文本缓存器，则意味着增加了一张2048的图片；
-	 */
-	public var textCacheId:Int = 0;
-
 	@:privateAccess private var __textFormatDirty:Bool = true;
 
 	/**

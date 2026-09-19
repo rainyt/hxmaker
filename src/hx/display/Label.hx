@@ -21,7 +21,8 @@ class Label extends DisplayObject implements IDataProider<String> implements IRo
 	public static function setTextFieldContextBitmapData(textCacheId:Int, bitmapData:TextCacheBitmapData):Void {
 		#if hxmaker_openfl
 		hx.render.TextFieldRender.setTextFieldContextBitmapData(textCacheId,
-			new hx.text.TextFieldContextBitmapData(bitmapData.size, bitmapData.textureWidth, bitmapData.textureHeight, bitmapData.offestX, bitmapData.offestY));
+			new hx.text.TextFieldContextBitmapData(bitmapData.size, bitmapData.textureWidth, bitmapData.textureHeight, bitmapData.offestX, bitmapData.offestY,
+				bitmapData.maxPages));
 		#end
 	}
 
@@ -35,6 +36,20 @@ class Label extends DisplayObject implements IDataProider<String> implements IRo
 	}
 
 	/**
+	 * 清空文本缓存器的图集，回收已分配的纹理页（除首页外全部释放）。
+	 *
+	 * 写满时图集只会新开一页、不会原地重排，所以通常不需要调用；
+	 * 只在需要回收显存时用得上——建议在**切场景**这类文本会整体更替的安全时机调用，
+	 * 调用后当前所有文本都会在下一帧重新写入图集。
+	 * 若在渲染回调中调用，会自动推迟到下一次预写执行，不会破坏本帧已经入队的顶点。
+	 */
+	public static function clearTextFieldContextBitmapData(textCacheId:Int = 0):Void {
+		#if hxmaker_openfl
+		hx.render.TextFieldRender.clearTextFieldContextBitmapData(textCacheId);
+		#end
+	}
+
+	/**
 	 * 全局文本过滤实现
 	 */
 	public static var onGlobalCharFilter:String->String;
@@ -44,9 +59,11 @@ class Label extends DisplayObject implements IDataProider<String> implements IRo
 	/**
 	 * 文本缓存ID，默认为`0`，用于决定使用哪个文本缓存器。如果需要使用多个文本缓存器，你需要检查`引擎后端`是否支持。当前`openfl`后端能够正常使用，请参考例子：
 	 * ```haxe
-	 * Label.setTextFieldContextBitmapData(1, new TextCacheBitmapData(50, 2048, 2048, 5, 5));
+	 * Label.setTextFieldContextBitmapData(1, new TextCacheBitmapData(50, 1024, 1024, 5, 5));
 	 * ```
-	 * 如果不设置则也会有一个默认的文本缓存器，请注意内存的使用率，每多一个文本缓存器，则意味着增加了一张2048的图片；
+	 * 如果不设置则也会有一个默认的文本缓存器。请注意内存的使用率，每个文本缓存器最多会占用
+	 * `maxPages`张`textureWidth × textureHeight`的纹理（默认 4 张 1024²，约 16MB 显存）；
+	 * 文本量较大时建议在切场景等安全时机调用`clearTextFieldContextBitmapData`回收图集。
 	 */
 	public var textCacheId:Int = 0;
 

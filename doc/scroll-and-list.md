@@ -195,6 +195,60 @@ ListView 默认使用垂直布局（`VerticalLayout`），子项从上到下排�
 listView.layout = new HorizontalLayout();
 ```
 
+### 虚拟列表（大数据量）
+
+当数据量达到成千上万条时，为每一条数据都创建 ItemRenderer 会带来巨大的创建开销和渲染开销。把 `layout` 设置为**虚拟布局**（实现了 `hx.layout.IVirtualLayout` 的布局）即可开启虚拟列表：ListView 只创建**可见区域**（以及缓冲）内的 ItemRenderer，没有被渲染的数据区域由布局的占位对象支撑滚动范围，滚动过程中会自动复用 `itemRendererRecycler` 对象池中的 ItemRenderer。
+
+```haxe
+import hx.layout.VirtualVerticalLayout;
+
+var listView = new ListView();
+listView.width = 400;
+listView.height = 500;
+
+// 使用虚拟纵向布局，并指定每个 Item 的高度（必须大于 0）
+listView.layout = new VirtualVerticalLayout(80);
+
+// 上万条数据也可以流畅滑动
+listView.data = new ArrayCollection(bigDataArray);
+
+this.addChild(listView);
+```
+
+横向列表使用 `VirtualHorizontalLayout`，参数为每个 Item 的宽度：
+
+```haxe
+import hx.layout.VirtualHorizontalLayout;
+
+listView.layout = new VirtualHorizontalLayout(120);
+```
+
+虚拟布局与普通布局一样支持间距、填充与对齐参数：
+
+```haxe
+var layout = new VirtualVerticalLayout(80);
+layout.gap = 10;                  // Item 间距
+layout.horizontalFill = true;     // Item 宽度撑满列表
+layout.horizontalAlign = CENTER;  // 水平对齐
+listView.layout = layout;
+```
+
+滚动到指定数据索引（虚拟列表与普通列表都可用）：
+
+```haxe
+listView.scrollToIndex(5000);        // 带缓动
+listView.scrollToIndex(5000, 0);     // 立即定位
+```
+
+### 虚拟列表注意事项
+
+- `virtual` 是只读属性，由 `layout` 的类型自动决定（`layout is IVirtualLayout`），不需要也不允许手动开启
+- 每个 Item 的尺寸是固定的（`VirtualVerticalLayout` 为高度、`VirtualHorizontalLayout` 为宽度），必须大于 `0`
+- 请保证 ItemRenderer 的实际高度（宽度）不超过布局的 `itemSize`，否则相邻的 Item 会重叠
+- Item 的位置由虚拟布局负责（按数据索引排列），`children` 中会额外存在一个占位对象（`layout.spacer`，空容器不产生绘制开销），请不要把 `children` 直接当作数据项来遍历
+- 数据变化后同样需要调用 `updateAllData()` 才会刷新
+- 需要自定义虚拟布局时，实现 `IVirtualLayout` 接口：用 `slotSize` 提供槽位尺寸、`horizontal` 提供主轴方向、`spacer` 提供占位对象，并在 `getVisibleRange()` 中返回可见区间、在 `setItems()`/`update()` 中按数据索引排列 Item
+
 ### 主要属性
 
 | 属性 | 类型 | 说明 |
@@ -205,6 +259,8 @@ listView.layout = new HorizontalLayout();
 | `itemRendererRecycler` | DisplayObjectRecycler | Item 渲染器的对象池 |
 | `changedSoundId` | String | 选择切换音效 ID |
 | `rightClickSelectEnabled` | Bool | 是否允许右键选择 |
+| `virtual` | Bool | 是否为虚拟列表（只读，`layout` 为虚拟布局时自动为 `true`） |
+| `virtualBufferCount` | Int | 可见区域上下（左右）额外渲染的 Item 数量，默认 `1` |
 
 ### ArrayCollection
 

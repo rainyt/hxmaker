@@ -57,6 +57,17 @@ class VirtualHorizontalLayout extends HorizontalLayout implements IVirtualLayout
 		return this.itemSize + this.gap;
 	}
 
+	public var contentSize(get, never):Float;
+
+	private function get_contentSize():Float {
+		var size = this.__total * this.slotSize - this.gap;
+		return size > 0 ? size : 0;
+	}
+
+	public function getItemOffset(index:Int):Float {
+		return index * this.slotSize;
+	}
+
 	public var horizontal(get, never):Bool;
 
 	private function get_horizontal():Bool {
@@ -80,7 +91,8 @@ class VirtualHorizontalLayout extends HorizontalLayout implements IVirtualLayout
 	}
 
 	public function getVisibleRange(data:{first:Int, last:Int}, total:Int, offset:Float, viewport:Float, bufferCount:Int):Void {
-		VirtualLayoutUtils.getVisibleRange(this.slotSize, total, offset, viewport, bufferCount, data);
+		// 横向列表每列只有一个Item
+		VirtualLayoutUtils.getVisibleRange(data, total, 1, this.slotSize, offset, viewport, bufferCount);
 	}
 
 	/**
@@ -117,13 +129,9 @@ class VirtualHorizontalLayout extends HorizontalLayout implements IVirtualLayout
 		if (this.__spacer == null) {
 			return;
 		}
-		var contentWidth = this.__total * this.slotSize - this.gap;
-		if (contentWidth < 0) {
-			contentWidth = 0;
-		}
 		this.__spacer.x = 0;
 		this.__spacer.y = 0;
-		this.__spacer.width = contentWidth;
+		this.__spacer.width = this.contentSize;
 		this.__spacer.height = this.parent != null ? this.parent.height : 0;
 	}
 }

@@ -233,6 +233,17 @@ layout.horizontalAlign = CENTER;  // 水平对齐
 listView.layout = layout;
 ```
 
+网格（流）列表使用 `VirtualFlowLayout`，参数为单元格的宽高，列数由列表宽度自动计算：
+
+```haxe
+import hx.layout.VirtualFlowLayout;
+
+var layout = new VirtualFlowLayout(100, 120);  // 单元格 100x120
+layout.gapX = 10;
+layout.gapY = 10;
+listView.layout = layout;
+```
+
 滚动到指定数据索引（虚拟列表与普通列表都可用）：
 
 ```haxe
@@ -243,11 +254,12 @@ listView.scrollToIndex(5000, 0);     // 立即定位
 ### 虚拟列表注意事项
 
 - `virtual` 是只读属性，由 `layout` 的类型自动决定（`layout is IVirtualLayout`），不需要也不允许手动开启
-- 每个 Item 的尺寸是固定的（`VirtualVerticalLayout` 为高度、`VirtualHorizontalLayout` 为宽度），必须大于 `0`
-- 请保证 ItemRenderer 的实际高度（宽度）不超过布局的 `itemSize`，否则相邻的 Item 会重叠
+- 每个 Item 的尺寸是固定的（`VirtualVerticalLayout`/`VirtualHorizontalLayout` 的 `itemSize`、`VirtualFlowLayout` 的 `itemWidth`/`itemHeight`），必须大于 `0`
+- 请保证 ItemRenderer 的实际尺寸不超过单元格尺寸，否则相邻的 Item 会重叠
 - Item 的位置由虚拟布局负责（按数据索引排列），`children` 中会额外存在一个占位对象（`layout.spacer`，空容器不产生绘制开销），请不要把 `children` 直接当作数据项来遍历
-- 数据变化后同样需要调用 `updateAllData()` 才会刷新
-- 需要自定义虚拟布局时，实现 `IVirtualLayout` 接口：用 `slotSize` 提供槽位尺寸、`horizontal` 提供主轴方向、`spacer` 提供占位对象，并在 `getVisibleRange()` 中返回可见区间、在 `setItems()`/`update()` 中按数据索引排列 Item
+- `virtualBufferCount` 是可见区域前后额外渲染的**行数**（纵向/横向列表每行一个 Item）
+- 数据变化后同样需要调用 `updateAllData()` 才会刷新；修改布局参数后如果内容尺寸没有变化，也可以调用它强制重排
+- 需要自定义虚拟布局时，实现 `IVirtualLayout` 接口：用 `horizontal` 提供主轴方向、`contentSize` 提供内容尺寸、`spacer` 提供占位对象、`getItemOffset()` 提供某个数据索引的主轴位置，并在 `getVisibleRange()` 中返回可见区间、在 `setItems()`/`update()` 中按数据索引排列 Item（可复用 `VirtualLayoutUtils`）
 
 ### 主要属性
 
@@ -260,7 +272,7 @@ listView.scrollToIndex(5000, 0);     // 立即定位
 | `changedSoundId` | String | 选择切换音效 ID |
 | `rightClickSelectEnabled` | Bool | 是否允许右键选择 |
 | `virtual` | Bool | 是否为虚拟列表（只读，`layout` 为虚拟布局时自动为 `true`） |
-| `virtualBufferCount` | Int | 可见区域上下（左右）额外渲染的 Item 数量，默认 `1` |
+| `virtualBufferCount` | Int | 可见区域上下（左右）额外渲染的行数，默认 `1` |
 
 ### ArrayCollection
 

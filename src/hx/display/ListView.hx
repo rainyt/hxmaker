@@ -196,15 +196,12 @@ class ListView extends Scroll implements IDataProider<ArrayCollection> {
 		var x = this.scrollX;
 		var y = this.scrollY;
 		if (this.virtual) {
-			var layout = this.__virtualLayout;
-			var slot = layout.slotSize;
-			if (slot <= 0) {
-				return;
-			}
-			if (layout.horizontal) {
-				x = -index * slot;
+			// 主轴位置由布局给出，网格（流）布局中同一行的Item位置相同
+			var offset = this.__virtualLayout.getItemOffset(index);
+			if (this.__virtualLayout.horizontal) {
+				x = -offset;
 			} else {
-				y = -index * slot;
+				y = -offset;
 			}
 		} else {
 			var itemRenderer = this.getChildAt(index);
@@ -233,8 +230,9 @@ class ListView extends Scroll implements IDataProider<ArrayCollection> {
 	 * 因此可以承载成千上万条数据，滚动过程中会自动复用`itemRendererRecycler`对象池中的ItemRenderer。
 	 *
 	 * 注意：
-	 * - Item尺寸由虚拟布局的`itemSize`指定，必须大于`0`
-	 * - 列表方向由虚拟布局决定，纵向使用`VirtualVerticalLayout`，横向使用`VirtualHorizontalLayout`
+	 * - Item尺寸由虚拟布局决定（`VirtualVerticalLayout`/`VirtualHorizontalLayout`的`itemSize`、`VirtualFlowLayout`的`itemWidth`/`itemHeight`），必须大于`0`
+	 * - 列表方向由虚拟布局决定，纵向使用`VirtualVerticalLayout`，横向使用`VirtualHorizontalLayout`，网格（流）使用`VirtualFlowLayout`
+	 * - `virtualBufferCount`是额外渲染的行数
 	 * - 虚拟模式下`children`中会额外存在一个占位对象，请不要把`children`直接当作数据项来遍历
 	 */
 	public var virtual(get, never):Bool;
@@ -244,7 +242,7 @@ class ListView extends Scroll implements IDataProider<ArrayCollection> {
 	}
 
 	/**
-	 * 虚拟列表在可见区域上下（左右）额外渲染的Item数量，可以减少快速滑动时的空白，默认`1`
+	 * 虚拟列表在可见区域上下（左右）额外渲染的行数，可以减少快速滑动时的空白，默认`1`
 	 */
 	public var virtualBufferCount:Int = 1;
 
@@ -269,9 +267,9 @@ class ListView extends Scroll implements IDataProider<ArrayCollection> {
 	private var __virtualRange:{first:Int, last:Int} = {first: -1, last: -1};
 
 	/**
-	 * 最近一次渲染时布局的槽位尺寸，用于检测Item尺寸与间距的变化
+	 * 最近一次渲染时布局的内容尺寸，用于检测Item尺寸、间距与列数等布局参数的变化
 	 */
-	private var __virtualSlotSize:Float = -1;
+	private var __virtualContentSize:Float = -1;
 
 	/**
 	 * 最近一次渲染时的数据总量
@@ -318,7 +316,9 @@ class ListView extends Scroll implements IDataProider<ArrayCollection> {
 	private function __updateVirtual():Void {
 		var layout = this.__virtualLayout;
 		var total = this.__data != null ? this.__data.source.length : 0;
-		var slotSize = layout.slotSize;
+		// 先把可见Item与数据总量同步给布局，布局的内容尺寸与可见区间都以它为准
+		layout.setItems(this.__virtualItems, total);
+		var contentSize = layout.contentSize;
 
 		var dataDirty = this.__dataDirty;
 		var selectedDirty = this.__virtualSelectedDirty || dataDirty;
@@ -333,8 +333,8 @@ class ListView extends Scroll implements IDataProider<ArrayCollection> {
 		var first = this.__virtualRange.first;
 		var last = this.__virtualRange.last;
 
-		// 可见区间、数据、槽位尺寸与列表尺寸都没有变化时，不需要刷新
-		if (!dataDirty && !selectedDirty && !this.__virtualSizeChanged() && slotSize == this.__virtualSlotSize
+		// 可见区间、数据、内容尺寸与列表尺寸都没有变化时，不需要刷新
+		if (!dataDirty && !selectedDirty && !this.__virtualSizeChanged() && contentSize == this.__virtualContentSize
 			&& total == this.__virtualTotal && first == this.__virtualFirst && last == this.__virtualLast) {
 			return;
 		}
@@ -344,7 +344,7 @@ class ListView extends Scroll implements IDataProider<ArrayCollection> {
 		}
 		this.__virtualFirst = first;
 		this.__virtualLast = last;
-		this.__virtualSlotSize = slotSize;
+		this.__virtualContentSize = contentSize;
 		this.__virtualTotal = total;
 		this.__virtualWidth = this.width;
 		this.__virtualHeight = this.height;
@@ -381,7 +381,6 @@ class ListView extends Scroll implements IDataProider<ArrayCollection> {
 		}
 
 		// Item的位置与尺寸、占位对象的内容尺寸都交给虚拟布局计算
-		layout.setItems(this.__virtualItems, total);
 		var spacer = layout.spacer;
 		if (spacer.parent == null) {
 			this.addChild(spacer);
@@ -438,10 +437,11 @@ class ListView extends Scroll implements IDataProider<ArrayCollection> {
 			this.itemRendererRecycler.release(child);
 		}
 		this.__virtualSpacer = null;
-		this.__virtualItems = new Map();
+		// 只清空不替换：虚拟布局持有该Map的引用，替换会导致布局读到失效的Map
+		this.__virtualItems.clear();
 		this.__virtualFirst = -1;
 		this.__virtualLast = -1;
-		this.__virtualSlotSize = -1;
+		this.__virtualContentSize = -1;
 		this.__virtualTotal = -1;
 		this.__virtualWidth = -1;
 		this.__virtualHeight = -1;

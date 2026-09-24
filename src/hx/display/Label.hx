@@ -1,5 +1,7 @@
 package hx.display;
 
+import hx.render.TextFieldRender;
+import hx.text.TextFieldContextBitmapData;
 import hx.filters.StrokeFilter;
 #if openfl
 import hx.shader.StrokeShader;
@@ -380,14 +382,16 @@ class Label extends DisplayObject implements IDataProider<String> implements IRo
 
 	public function getTextWidth():Float {
 		if (__dirty) {
-			Hxmaker.engine.renderer.renderLabel(this, true);
+			// Hxmaker.engine.renderer.renderLabel(this, true);
+			TextFieldRender.prepareLabel(this);
 		}
 		return root == null ? 0 : root.getTextWidth();
 	}
 
 	public function getTextHeight():Float {
 		if (__dirty) {
-			Hxmaker.engine.renderer.renderLabel(this, true);
+			// Hxmaker.engine.renderer.renderLabel(this, true);
+			TextFieldRender.prepareLabel(this);
 		}
 		return root == null ? 0 : root.getTextHeight();
 	}

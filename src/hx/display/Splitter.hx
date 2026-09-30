@@ -9,8 +9,8 @@ import hx.layout.SplitterLayout;
 /**
  * 分割条
  * 可拖动的分隔条，用于在面板之间拖拽调整空间分配：
- * - 父容器使用`hx.layout.SplitterLayout`时（推荐，可直接使用`SplitterBox`），拖动会改写相邻面板的布局尺寸，
- *   弹性面板自动吸收剩余空间，可实现类似VSCode的拖拽分栏效果
+ * - 父容器使用`hx.layout.SplitterLayout`时（推荐，可直接使用`SplitterBox`），拖动时位移只转移给前面板
+ *   与它和下一条分割条之间的区域，其它分割条的位置保持不变，与VSCode的拖拽分栏行为一致
  * - 父容器为普通容器时，设置`autoResizeNeighbors`为`true`，拖动会直接改变相邻面板的尺寸与位置
  * 拖动过程中会连续派发`Event.CHANGE`，拖动结束时派发`Event.COMPLETE`
  */
@@ -177,7 +177,8 @@ class Splitter extends Box {
 	private function applyDelta(delta:Float):Void {
 		var layout = this.parent != null ? this.parent.layout : null;
 		if (layout != null && layout is SplitterLayout) {
-			cast(layout, SplitterLayout).adjustSplitter(this, delta);
+			// 布局可能受0尺寸钳制影响而少应用一部分位移，以实际生效的为准
+			delta = cast(layout, SplitterLayout).adjustSplitter(this, delta);
 		} else if (this.autoResizeNeighbors) {
 			this.resizeNeighbors(delta);
 		}

@@ -615,6 +615,16 @@ class Tree extends Scroll {
 	}
 
 	/**
+	 * 当前的可见行数量（展开路径扁平化后的行数，随展开/折叠变化）
+	 */
+	public var rowCount(get, never):Int;
+
+	private function get_rowCount():Int {
+		this.__ensureRows();
+		return this.__rows.length;
+	}
+
+	/**
 	 * 获得节点所在的行索引，节点不可见（自身或祖先被折叠）时返回`-1`
 	 */
 	public function getRowOfItem(item:TreeItem):Int {

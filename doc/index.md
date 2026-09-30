@@ -35,6 +35,7 @@ Hxmaker 是一个使用 **Haxe** 语言编写的统一 2D 游戏引擎。它将�
 - [按钮组件](button.md) — Button 按钮的创建与使用
 - [容器与布局](containers-and-layout.md) — Box、HBox、VBox、FlowBox、Stack 及布局系统
 - [滚动与列表](scroll-and-list.md) — Scroll 滚动容器、ListView 列表视图
+- [树形列表](tree.md) — Tree 树形列表（VSCode 资源管理器风格、虚拟列表）
 - [动画系统](animation.md) — MovieClip 帧动画、Spine 骨骼动画、Particle 粒子系统
 
 ### 系统功能

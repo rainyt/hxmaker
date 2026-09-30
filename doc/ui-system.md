@@ -87,6 +87,7 @@ assets.start();
 | `Scene` | Scene | 场景 |
 | `Scroll` | Scroll | 滚动容器 |
 | `ListView` | ListView | 列表视图 |
+| `Tree` | Tree | 树形列表 |
 | `InputLabel` | InputLabel | 输入框 |
 | `ImageLoader` | ImageLoader | 异步图片加载 |
 | `BitmapLabel` | BitmapLabel | 位图字体 |

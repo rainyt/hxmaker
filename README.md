@@ -30,6 +30,7 @@ All common display objects (see the list below) and BlendMode.ADD can be automat
 | hx.display.Scroll | Scroll container for implementing scrolling, requires masking so drawcall is consumed | ✅ | ❌ |
 | hx.display.BitmapLabel | Bitmap texture support | ✅ | ✅ |
 | hx.display.ListView | List view for implementing lists, requires masking so drawcall is consumed | ✅ | ❌ |
+| hx.display.Tree | Tree list view (VSCode explorer style) with virtual list support, requires masking so drawcall is consumed | ✅ | ❌ |
 | hx.display.CustomDisplayObject | Custom display object, using it for rendering will definitely produce 1 draw | ✅ | ❌ |
 | hx.display.Stage | Game engine stage | ✅ | ✅ |
 | hx.display.BoxContainer | Base container class for box-based layouts | ✅ | ✅ |
@@ -37,6 +38,8 @@ All common display objects (see the list below) and BlendMode.ADD can be automat
 | hx.display.VScrollBar | Vertical scroll bar | ✅ | ✅ |
 | hx.display.InputLabel | Input text field | ✅ | ✅ |
 | hx.display.ItemRenderer | Base item renderer for lists | ✅ | ✅ |
+| hx.display.TreeItem | Tree data node for Tree | ✅ | ✅ |
+| hx.display.TreeItemRenderer | Default item renderer for Tree | ✅ | ✅ |
 | hx.display.DefaultItemRenderer | Default item renderer for ListView | ✅ | ✅ |
 | hx.display.ImageLoader | Image loader component | ✅ | ✅ |
 | hx.display.Particle | Particle system | ✅ | ✅ |

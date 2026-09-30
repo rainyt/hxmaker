@@ -86,6 +86,7 @@ EventDispatcher          — 事件分发基类
             │    └─ BoxContainer  — 内部包含 Box 的容器
             │         └─ Scroll   — 滚动容器
             │              └─ ListView — 列表视图
+            │              └─ Tree     — 树形列表
             └─ Sprite            — 轻量容器
        └─ Image                 — 纹理图片
        └─ Quad                  — 纯色矩形

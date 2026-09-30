@@ -13,6 +13,7 @@ import hx.display.Quad;
 import hx.display.MovieClip;
 import hx.display.Spine;
 import hx.display.ListView;
+import hx.display.Tree;
 import hx.display.Scroll;
 import hx.display.BitmapLabel;
 import hx.display.FlowBox;
@@ -571,6 +572,23 @@ class UIManager {
 			}
 			if (xml.exists("scrollYEnable")) {
 				obj.scrollYEnable = xml.get("scrollYEnable") == "true";
+			}
+		});
+		addAttributesParse(Tree, function(obj:Tree, xml:Xml, assets:Assets) {
+			if (xml.exists("rowHeight")) {
+				obj.rowHeight = xml.getFloatValue("rowHeight");
+			}
+			if (xml.exists("indent")) {
+				obj.indent = xml.getFloatValue("indent");
+			}
+			if (xml.exists("virtualBufferCount")) {
+				obj.virtualBufferCount = Std.parseInt(xml.get("virtualBufferCount"));
+			}
+			if (xml.exists("toggleFolderOnClick")) {
+				obj.toggleFolderOnClick = xml.get("toggleFolderOnClick") == "true";
+			}
+			if (xml.exists("rightClickSelectEnabled")) {
+				obj.rightClickSelectEnabled = xml.get("rightClickSelectEnabled") == "true";
 			}
 		});
 		#if (spine_haxe || spine_hx)

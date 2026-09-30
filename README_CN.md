@@ -30,6 +30,7 @@
 | hx.display.Scroll | 滚动容器，用于实现滚动，需要遮罩因此需要消耗drawcall | ✅ | ❌ |
 | hx.display.BitmapLabel | 位图纹理支持 | ✅ | ✅ |
 | hx.display.ListView | 列表视图，用于实现列表，需要遮罩因此需要消耗drawcall | ✅ | ❌ |
+| hx.display.Tree | 树形列表，类似VSCode资源管理器，支持虚拟列表，需要遮罩因此需要消耗drawcall | ✅ | ❌ |
 | hx.display.CustomDisplayObject | 自定义显示对象，使用它进行渲染必然会产生1次绘制 | ✅ | ❌ |
 | hx.display.Stage | 游戏引擎舞台 | ✅ | ✅ |
 | hx.display.BoxContainer | 基于box布局的基础容器类 | ✅ | ✅ |
@@ -37,6 +38,8 @@
 | hx.display.VScrollBar | 垂直滚动条 | ✅ | ✅ |
 | hx.display.InputLabel | 输入文本框 | ✅ | ✅ |
 | hx.display.ItemRenderer | 列表的基础项渲染器 | ✅ | ✅ |
+| hx.display.TreeItem | Tree的树数据节点 | ✅ | ✅ |
+| hx.display.TreeItemRenderer | Tree的默认行渲染器 | ✅ | ✅ |
 | hx.display.DefaultItemRenderer | ListView的默认项渲染器 | ✅ | ✅ |
 | hx.display.ImageLoader | 图片加载组件 | ✅ | ✅ |
 | hx.display.Particle | 粒子系统 | ✅ | ✅ |

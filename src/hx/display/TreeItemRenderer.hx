@@ -25,6 +25,9 @@ class TreeItemRenderer extends ItemRenderer {
 
 	/**
 	 * 行背景，选中与悬停时可见
+	 *
+	 * 它同时作为整行的点击热区：未高亮时保持显示但`alpha = 0`（渲染时会跳过`alpha == 0`的对象，不产生绘制开销），
+	 * 高亮时`alpha = 1`。请勿将它设置为不可见或关闭鼠标事件，否则点击行的空白区域将无法命中
 	 */
 	public var backgroundQuad:Quad = new Quad(0, 0, 0xffffff);
 
@@ -42,8 +45,7 @@ class TreeItemRenderer extends ItemRenderer {
 
 	override function onInit() {
 		super.onInit();
-		this.backgroundQuad.mouseEnabled = false;
-		this.backgroundQuad.visible = false;
+		// 背景块保持可点击，作为整行的点击热区，未高亮时以全透明显示
 		this.addChild(this.backgroundQuad);
 		this.twisty.mouseEnabled = false;
 		this.addChild(this.twisty);
@@ -75,6 +77,7 @@ class TreeItemRenderer extends ItemRenderer {
 			this.label.color = this.tree.labelColor;
 		}
 		this.label.data = row.item.label;
+
 		// 文本与文件夹的箭头对齐：叶子节点在箭头位置留白（VSCode对齐方式）
 		this.label.x = row.depth * indent + twistySize;
 		this.label.y = (rowHeight - this.label.height) / 2;
@@ -99,13 +102,14 @@ class TreeItemRenderer extends ItemRenderer {
 
 	private function __updateBackground():Void {
 		if (this.selected) {
-			this.backgroundQuad.visible = true;
+			this.backgroundQuad.alpha = 1;
 			this.backgroundQuad.data = this.tree != null ? this.tree.selectionColor : 0x04395E;
 		} else if (this.__hovered) {
-			this.backgroundQuad.visible = true;
+			this.backgroundQuad.alpha = 1;
 			this.backgroundQuad.data = this.tree != null ? this.tree.hoverColor : 0x2A2D2E;
 		} else {
-			this.backgroundQuad.visible = false;
+			// 渲染时会跳过alpha == 0的对象，同时它仍然参与命中测试，保证整行可点击
+			this.backgroundQuad.alpha = 0;
 		}
 	}
 

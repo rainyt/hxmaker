@@ -27,11 +27,15 @@ import hx.display.DisplayObjectContainer;
 import hx.display.BitmapData;
 import hx.display.HBox;
 import hx.display.VBox;
+import hx.display.Splitter;
+import hx.display.SplitterBox;
+import hx.display.Direction;
 import hx.display.Button;
 import hx.display.TextFormat;
 import hx.display.Label;
 import hx.layout.AnchorLayout;
 import hx.layout.AnchorLayoutData;
+import hx.layout.SplitterLayoutData;
 import haxe.io.Path;
 import hx.assets.Assets;
 import hx.display.Image;
@@ -326,6 +330,17 @@ class UIManager {
 					case "left", "right", "top", "bottom", "centerX", "centerY", "fill":
 						// 意味着需要使用AnchorLayoutData数据
 						useAnchor = true;
+					case "size", "percentSize":
+						// 分割布局的尺寸声明，配合SplitterLayout使用
+						if (!(display.layoutData is SplitterLayoutData)) {
+							display.layoutData = new SplitterLayoutData();
+						}
+						var splitData:SplitterLayoutData = cast display.layoutData;
+						if (key == "size") {
+							splitData.size = xml.getFloatValue("size");
+						} else {
+							splitData.percentSize = xml.getFloatValue("percentSize");
+						}
 					case "blendMode":
 						display.blendMode = xml.get("blendMode");
 					case "colorTransform":
@@ -521,6 +536,24 @@ class UIManager {
 			}
 			if (xml.exists("vAlign")) {
 				obj.verticalAlign = xml.get("vAlign");
+			}
+		});
+		addAttributesParse(SplitterBox, function(obj:SplitterBox, xml:Xml, assets:Assets) {
+			if (xml.exists("direction")) {
+				obj.direction = xml.get("direction") == "vertical" ? Direction.VERTICAL : Direction.HORIZONTAL;
+			}
+		});
+		addAttributesParse(Splitter, function(obj:Splitter, xml:Xml, assets:Assets) {
+			if (xml.exists("direction")) {
+				obj.direction = xml.get("direction") == "vertical" ? Direction.VERTICAL : Direction.HORIZONTAL;
+			}
+			if (xml.exists("color")) {
+				if (obj.thumb is Quad) {
+					cast(obj.thumb, Quad).data = Std.parseInt(xml.get("color"));
+				}
+			}
+			if (xml.exists("autoResize")) {
+				obj.autoResizeNeighbors = xml.get("autoResize") == "true";
 			}
 		});
 		addAttributesParse(Scene, function(obj:Scene, xml:Xml, assets:Assets) {});

@@ -25,6 +25,7 @@ class Splitter extends Box {
 	/**
 	 * 分割条的视觉对象
 	 * 默认为颜色`0x888888`的色块，沿分割条的拉伸方向自动铺满
+	 * 同时也是分割条的命中区域，自定义时如需扩大点击范围，请让视觉对象铺满整个分割条区域
 	 */
 	public var thumb(default, null):DisplayObject;
 
@@ -85,7 +86,6 @@ class Splitter extends Box {
 	override function onInit() {
 		super.onInit();
 		this.layout = new AnchorLayout();
-		this.mouseClickEnabled = true;
 	}
 
 	/**
@@ -128,6 +128,14 @@ class Splitter extends Box {
 	}
 
 	private function onMouseDown(e:MouseEvent) {
+		// 判断命中的是否为分割条自身区域，避免父级容器命中间接触发时误开始拖动
+		var hitObject:DisplayObject = e.target;
+		while (hitObject != null && hitObject != this) {
+			hitObject = hitObject.parent;
+		}
+		if (hitObject != this) {
+			return;
+		}
 		this.__dragging = true;
 		this.__lastStageX = e.stageX;
 		this.__lastStageY = e.stageY;

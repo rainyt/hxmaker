@@ -12,7 +12,9 @@ import hx.display.Splitter;
  * - 声明了`SplitterLayoutData.percentSize`的面板按百分比分配尺寸
  * - 未声明的面板作为弹性面板，均分剩余空间
  * 拖动分割条时，位移只发生在该分割条前面板与它和下一条分割条之间的区域，
- * 其它分割条的位置保持不变，与VSCode的拖拽分栏行为一致
+ * 其它分割条的位置保持不变，与VSCode的拖拽分栏行为一致；
+ * 拖拽会把弹性/百分比面板换算为百分比尺寸（声明固定尺寸的面板保持像素模式），
+ * 因此窗口缩放时已拖拽调整过的面板会按比例缩放，始终铺满容器
  */
 class SplitterLayout extends Layout {
 	/**
@@ -130,7 +132,8 @@ class SplitterLayout extends Layout {
 	/**
 	 * 拖动分割条时由`Splitter`回调，将位移量转移为面板的尺寸变化
 	 * 遵循VSCode的拖拽逻辑：前面板吸收`delta`，拖动分割条与下一条分割条（或容器末尾）之间的区域吸收`-delta`，
-	 * 区域内优先由弹性面板吸收，没有弹性面板时由区域内最后一个面板吸收，因此其它分割条的位置保持不变
+	 * 区域内优先由弹性面板吸收，没有弹性面板时由区域内最后一个面板吸收，因此其它分割条的位置保持不变；
+	 * 拖拽后弹性/百分比面板以百分比尺寸记存，窗口缩放时按比例缩放
 	 * @param splitter 分割条
 	 * @param delta 沿拖动轴的位移量
 	 * @return 实际生效的位移量，受0尺寸钳制影响可能小于`delta`
@@ -178,6 +181,15 @@ class SplitterLayout extends Layout {
 			return 0;
 		}
 		var horizontal = this.direction == Direction.HORIZONTAL;
+		// 计算排列轴的可用空间（与update保持一致），供百分比尺寸换算使用
+		var total = horizontal ? container.width : container.height;
+		var splitterTotal = 0.;
+		for (child in children) {
+			if (child is Splitter) {
+				splitterTotal += horizontal ? child.width : child.height;
+			}
+		}
+		var available = total - splitterTotal - this.gap * (children.length - 1);
 		var prevBase = horizontal ? prev.width : prev.height;
 		var absorberBase = horizontal ? absorber.width : absorber.height;
 		// 前面板增长，吸收面板缩小，任一侧到达0时把剩余位移交还对方，保证区域总量不变
@@ -191,10 +203,28 @@ class SplitterLayout extends Layout {
 			prevSize += absorberSize;
 			absorberSize = 0;
 		}
-		this.getLayoutData(prev).size = prevSize;
-		this.getLayoutData(absorber).size = absorberSize;
+		this.applyPanelSize(prev, prevSize, available);
+		this.applyPanelSize(absorber, absorberSize, available);
 		container.updateLayout();
 		return prevSize - prevBase;
+	}
+
+	/**
+	 * 将面板尺寸写回布局数据
+	 * 声明了固定尺寸（`size`）的面板保持像素模式，其余面板（弹性/百分比）写为百分比尺寸，
+	 * 这样被拖拽调整过的面板在窗口缩放时会按比例缩放，而声明固定尺寸的面板保持像素不变
+	 * @param child 面板
+	 * @param size 目标尺寸（沿排列轴的像素值）
+	 * @param available 排列轴当前的可用空间
+	 */
+	private function applyPanelSize(child:DisplayObject, size:Float, available:Float):Void {
+		var data = this.getLayoutData(child);
+		if (data.size != null && data.percentSize == null) {
+			data.size = size;
+			return;
+		}
+		data.size = null;
+		data.percentSize = available <= 0 ? 0 : size / available * 100;
 	}
 
 	/**

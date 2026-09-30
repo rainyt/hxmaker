@@ -2,18 +2,31 @@ package hx.display;
 
 import haxe.Timer;
 import hx.events.Event;
+import hx.events.Keyboard;
 import hx.events.MouseEvent;
 import hx.geom.Point;
 import hx.layout.ILayout;
 import hx.layout.IVirtualLayout;
 import hx.layout.VerticalLayout;
 import hx.layout.VirtualVerticalLayout;
+import hx.utils.KeyboardTools;
 
 /**
  * 树列表，类似VSCode资源管理器的树形列表
  *
- * `Tree`继承自`Scroll`，通过`data`设置根节点（`TreeItem`），支持展开/折叠、选择、悬停高亮与滚动定位，
+ * `Tree`继承自`Scroll`，通过`data`设置根节点（`TreeItem`），支持展开/折叠、单选与多选、悬停高亮与滚动定位，
  * 默认渲染器`TreeItemRenderer`提供展开箭头（twisty）、缩进与文本展示，自定义展示时继承`TreeItemRenderer`即可。
+ *
+ * ### 多选
+ *
+ * 与VSCode资源管理器一致的选择行为，选择变化时派发`Event.CHANGE`：
+ * - 点击：只选中该行
+ * - `Ctrl`/`Cmd`+点击：切换单个节点的选中状态（追加/移除多选）
+ * - `Shift`+点击：选中锚点到当前行的区间（替换整个选择）
+ * - `Ctrl`/`Cmd`+`Shift`+点击：把区间追加到当前选择
+ * - 右键：只把未选中的节点改为单选，已选中的节点保留多选（配合右键菜单）
+ *
+ * 多选结果通过`selectedItems`读取，`selectedItem`是最后交互的主选中项（始终在`selectedItems`中）。
  *
  * ### 虚拟列表
  *
@@ -160,11 +173,21 @@ class Tree extends Scroll {
 	private var __selectedIndex:Int = -1;
 
 	/**
-	 * 当前选中的节点，祖先被折叠时节点仍然保持选中（行不可见），`null`表示未选中
+	 * 当前选中的节点（主选中项，最后交互的节点），祖先被折叠时节点仍然保持选中（行不可见），`null`表示未选中
 	 */
 	public var selectedItem(get, set):TreeItem;
 
 	private var __selectedItem:TreeItem;
+
+	/**
+	 * 多选的节点集合（保持选择的先后顺序），`__selectedItem`始终在集合中
+	 */
+	private var __selectedItems:Array<TreeItem> = [];
+
+	/**
+	 * Shift+点击范围选择的锚点行对应的节点
+	 */
+	private var __selectionAnchor:TreeItem = null;
 
 	private var __selectedDirty:Bool = false;
 
@@ -418,14 +441,7 @@ class Tree extends Scroll {
 
 	private function set_selectedIndex(value:Int):Int {
 		this.__ensureRows();
-		if (this.__selectedIndex == value) {
-			return value;
-		}
-		this.__selectedIndex = value;
-		this.__selectedItem = value >= 0 && value < this.__rows.length ? this.__rows[value].item : null;
-		this.__selectedDirty = true;
-		this.invalidate();
-		this.dispatchEvent(new Event(Event.CHANGE));
+		this.__selectSingleItem(value >= 0 && value < this.__rows.length ? this.__rows[value].item : null);
 		return value;
 	}
 
@@ -434,22 +450,70 @@ class Tree extends Scroll {
 	}
 
 	private function set_selectedItem(value:TreeItem):TreeItem {
-		if (this.__selectedItem == value) {
-			return value;
-		}
-		this.__selectedItem = value;
-		this.__selectedIndex = value != null ? this.getRowOfItem(value) : -1;
-		this.__selectedDirty = true;
-		this.invalidate();
-		this.dispatchEvent(new Event(Event.CHANGE));
+		// 允许选中隐藏（祖先折叠）的节点，行索引可能为-1
+		this.__selectSingleItem(value);
 		return value;
+	}
+
+	/**
+	 * 当前选中的全部节点（多选，保持选择的先后顺序）
+	 *
+	 * `selectedItem`是最后交互的主选中项，它始终在选中集合中；请勿直接修改返回的数组，
+	 * 程序化修改请使用`selectedItem`与`clearSelection()`
+	 */
+	public var selectedItems(get, never):Array<TreeItem>;
+
+	private function get_selectedItems():Array<TreeItem> {
+		return this.__selectedItems;
 	}
 
 	/**
 	 * 清除选中状态
 	 */
 	public function clearSelection():Void {
-		this.selectedItem = null;
+		this.__selectSingleItem(null);
+	}
+
+	/**
+	 * 单选语义：清空多选集合，只选中一个节点，并把Shift+点击的锚点设置到该节点
+	 */
+	private function __selectSingleItem(item:TreeItem):Void {
+		this.__ensureRows();
+		var same = this.__selectedItems.length == 1 && this.__selectedItems[0] == item;
+		this.__selectedItem = item;
+		this.__selectionAnchor = item;
+		this.__selectedIndex = item != null ? this.__getRowOfItem(item) : -1;
+		this.__selectedItems.resize(0);
+		if (item != null) {
+			this.__selectedItems.push(item);
+		}
+		if (!same) {
+			this.__selectedDirty = true;
+			this.invalidate();
+			this.dispatchEvent(new Event(Event.CHANGE));
+		}
+	}
+
+	/**
+	 * 节点是否在选中集合中
+	 */
+	private function __isSelected(item:TreeItem):Bool {
+		return item != null && this.__selectedItems.indexOf(item) >= 0;
+	}
+
+	/**
+	 * 把节点加入/移出选中集合
+	 */
+	private function __setItemSelected(item:TreeItem, selected:Bool):Void {
+		if (item == null) {
+			return;
+		}
+		var index = this.__selectedItems.indexOf(item);
+		if (selected && index < 0) {
+			this.__selectedItems.push(item);
+		} else if (!selected && index >= 0) {
+			this.__selectedItems.splice(index, 1);
+		}
 	}
 
 	// ============================== 展开/折叠 ==============================
@@ -689,9 +753,53 @@ class Tree extends Scroll {
 			this.toggleItem(rowData.item);
 			return;
 		}
-		if (this.__selectedIndex != row) {
-			this.selectedIndex = row;
+		// 右键：只把未选中的节点改为单选，已选中的保留多选（VSCode行为，配合右键菜单）
+		if (e.type == MouseEvent.RIGHT_CLICK) {
+			if (!this.__isSelected(rowData.item)) {
+				this.__selectSingleItem(rowData.item);
+			}
+			return;
 		}
+		if (e.isCtrlOrCommand) {
+			// Ctrl/Cmd+点击：切换单个节点的选中状态，范围选择的锚点移动到该行
+			var selected = !this.__isSelected(rowData.item);
+			this.__setItemSelected(rowData.item, selected);
+			if (selected) {
+				this.__selectedItem = rowData.item;
+			} else if (this.__selectedItem == rowData.item) {
+				// 主选中项始终保持在选中集合中，被取消时转移到最近一次选中的节点
+				this.__selectedItem = this.__selectedItems.length > 0 ? this.__selectedItems[this.__selectedItems.length - 1] : null;
+			}
+			this.__selectionAnchor = rowData.item;
+			this.__selectedIndex = this.__selectedItem != null ? this.getRowOfItem(this.__selectedItem) : -1;
+			this.__selectedDirty = true;
+			this.invalidate();
+			this.dispatchEvent(new Event(Event.CHANGE));
+			return;
+		}
+		if (KeyboardTools.isKeyDown(Keyboard.SHIFT)) {
+			// Shift+点击：选中锚点到当前行的区间，Ctrl+Shift为追加区间，Shift为替换整个选择
+			var anchorRow = this.__selectionAnchor != null ? this.getRowOfItem(this.__selectionAnchor) : -1;
+			if (anchorRow < 0) {
+				anchorRow = row;
+			}
+			var from = anchorRow < row ? anchorRow : row;
+			var to = anchorRow < row ? row : anchorRow;
+			if (!e.isCtrlOrCommand) {
+				this.__selectedItems.resize(0);
+			}
+			for (r in from...to + 1) {
+				this.__setItemSelected(this.__rows[r].item, true);
+			}
+			this.__selectedItem = rowData.item;
+			this.__selectedIndex = row;
+			this.__selectedDirty = true;
+			this.invalidate();
+			this.dispatchEvent(new Event(Event.CHANGE));
+			return;
+		}
+		// 普通点击：只选中该行；文件夹默认同时切换展开状态
+		this.__selectSingleItem(rowData.item);
 		if (rowData.item.isFolder && this.toggleFolderOnClick) {
 			this.toggleItem(rowData.item);
 		}
@@ -927,8 +1035,19 @@ class Tree extends Scroll {
 		}
 		this.__rowsDirty = false;
 		// 已经不在树中的选中项不再保持选中
+		if (this.__selectedItems.length > 0) {
+			var i = this.__selectedItems.length;
+			while (i-- > 0) {
+				if (!this.__isItemAttached(this.__selectedItems[i])) {
+					this.__selectedItems.splice(i, 1);
+				}
+			}
+		}
 		if (this.__selectedItem != null && !this.__isItemAttached(this.__selectedItem)) {
 			this.__selectedItem = null;
+		}
+		if (this.__selectionAnchor != null && !this.__isItemAttached(this.__selectionAnchor)) {
+			this.__selectionAnchor = null;
 		}
 		this.__selectedIndex = this.__selectedItem != null ? this.__getRowOfItem(this.__selectedItem) : -1;
 	}
@@ -990,8 +1109,7 @@ class Tree extends Scroll {
 	private function __setRendererSelected(renderer:DisplayObject, index:Int):Void {
 		if (renderer is ISelectProider) {
 			var proider:ISelectProider = cast renderer;
-			proider.selected = this.__selectedItem != null && index >= 0 && index < this.__rows.length
-				&& this.__rows[index].item == this.__selectedItem;
+			proider.selected = index >= 0 && index < this.__rows.length && this.__isSelected(this.__rows[index].item);
 		}
 	}
 

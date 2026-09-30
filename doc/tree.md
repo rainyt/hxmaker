@@ -64,6 +64,33 @@ tree.clearSelection();             // 清除选择
 - 选中项的祖先被折叠时，选中项保持不变（行暂时不可见），再次展开祖先即可恢复显示
 - 被移除出树的选中项会在 `refresh()` 后自动清除
 
+### 多选（Ctrl/Shift + 点击）
+
+与 VSCode 资源管理器一致的交互行为：
+
+| 操作 | 行为 |
+|------|------|
+| 点击 | 只选中该行 |
+| `Ctrl`/`Cmd` + 点击 | 切换该节点的选中状态（追加/移除多选） |
+| `Shift` + 点击 | 选中锚点到当前行的区间（替换整个选择） |
+| `Ctrl`/`Cmd` + `Shift` + 点击 | 把区间追加到当前选择 |
+| 右键点击 | 只把未选中的节点改为单选，已选中的保留多选（配合右键菜单） |
+
+带修饰键的点击只改变选择，不会触发文件夹的展开/折叠。范围选择的**锚点**是最近一次普通点击或 `Ctrl`+点击的行，`Shift`+点击不会移动锚点，因此可以在同一锚点上反复扩展区间。
+
+多选结果通过 `selectedItems` 读取（保持选择的先后顺序）：
+
+```haxe
+tree.addEventListener(Event.CHANGE, function(event) {
+    trace('选中 ${tree.selectedItems.length} 项');
+    trace('主选中项：' + tree.selectedItem.label);
+});
+```
+
+`selectedItem` 是最后交互的**主选中项**，它始终在 `selectedItems` 中（`Ctrl`+点击取消主选中项时，会转移到最近一次选中的节点）。
+
+### 交互行为
+
 交互行为与 VSCode 资源管理器一致：
 
 - 点击展开箭头（twisty）：只切换展开状态，不改变选择
@@ -195,7 +222,8 @@ tree.layout = new VerticalLayout();       // 关闭虚拟列表
 | 属性 | 类型 | 说明 |
 |------|------|------|
 | `data` | Array&lt;TreeItem&gt; | 树数据源（根节点列表） |
-| `selectedItem` | TreeItem | 当前选中的节点（`null` 表示未选中） |
+| `selectedItem` | TreeItem | 当前选中的主选中项（最后交互的节点，`null` 表示未选中） |
+| `selectedItems` | Array&lt;TreeItem&gt; | 当前选中的全部节点（多选，保持选择顺序，只读） |
 | `selectedIndex` | Int | 当前选中的可见行索引（-1 表示未选中） |
 | `itemRendererRecycler` | DisplayObjectRecycler | 行渲染器的对象池 |
 | `rowHeight` | Float | 行高，默认 `22` |

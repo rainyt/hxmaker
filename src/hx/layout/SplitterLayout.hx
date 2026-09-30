@@ -11,8 +11,8 @@ import hx.display.Splitter;
  * - 声明了`SplitterLayoutData.size`的面板使用固定尺寸
  * - 声明了`SplitterLayoutData.percentSize`的面板按百分比分配尺寸
  * - 未声明的面板作为弹性面板，均分剩余空间
- * 拖动分割条时，布局会改写其前面板的固定尺寸（前面板不存在时改写后面板），
- * 弹性面板随即自动吸收剩余空间，以此实现类似VSCode的拖拽分栏效果
+ * 拖动分割条时，位移只发生在该分割条前面板与它和下一条分割条之间的区域，
+ * 其它分割条的位置保持不变，与VSCode的拖拽分栏行为一致
  */
 class SplitterLayout extends Layout {
 	/**
@@ -128,15 +128,16 @@ class SplitterLayout extends Layout {
 	}
 
 	/**
-	 * 拖动分割条时由`Splitter`回调，将位移量转移为相邻面板的尺寸变化
-	 * 默认改写分割条前面板的固定尺寸（前面板不存在时改写后面板，位移取反），
-	 * 弹性面板会自动吸收剩余空间
+	 * 拖动分割条时由`Splitter`回调，将位移量转移为面板的尺寸变化
+	 * 遵循VSCode的拖拽逻辑：前面板吸收`delta`，拖动分割条与下一条分割条（或容器末尾）之间的区域吸收`-delta`，
+	 * 区域内优先由弹性面板吸收，没有弹性面板时由区域内最后一个面板吸收，因此其它分割条的位置保持不变
 	 * @param splitter 分割条
 	 * @param delta 沿拖动轴的位移量
+	 * @return 实际生效的位移量，受0尺寸钳制影响可能小于`delta`
 	 */
-	public function adjustSplitter(splitter:DisplayObject, delta:Float):Void {
+	public function adjustSplitter(splitter:DisplayObject, delta:Float):Float {
 		if (this.parent == null || !(this.parent is DisplayObjectContainer) || delta == 0) {
-			return;
+			return 0;
 		}
 		var container:DisplayObjectContainer = cast this.parent;
 		// 与update保持一致，仅在可见子项中查找
@@ -148,32 +149,74 @@ class SplitterLayout extends Layout {
 				break;
 			}
 		}
-		if (index == -1) {
-			return;
+		// 前面板不存在时无法调整
+		if (index < 1 || children[index - 1] is Splitter) {
+			return 0;
 		}
-		// 默认调整前面板，前面板不存在时调整后面板（位移取反）
-		var target:DisplayObject = null;
-		var sign = 1.;
-		if (index > 0) {
-			target = children[index - 1];
-		} else if (index < children.length - 1) {
-			target = children[index + 1];
-			sign = -1;
+		var prev = children[index - 1];
+		// 查找拖动分割条与下一个分割条（或容器末尾）之间的区域
+		var endIndex = children.length;
+		for (i in index + 1...children.length) {
+			if (children[i] is Splitter) {
+				endIndex = i;
+				break;
+			}
 		}
-		if (target == null || target is Splitter) {
-			return;
+		// 区域内优先由弹性面板吸收位移，没有弹性面板时由区域内最后一个面板吸收
+		var absorber:DisplayObject = null;
+		for (i in index + 1...endIndex) {
+			if (this.__isFlex(children[i])) {
+				absorber = children[i];
+				break;
+			}
 		}
-		var data = target.layoutData is SplitterLayoutData ? cast target.layoutData : null;
-		if (data == null) {
-			data = new SplitterLayoutData();
-			target.layoutData = data;
+		if (absorber == null && endIndex - 1 > index) {
+			absorber = children[endIndex - 1];
 		}
-		var current = this.direction == Direction.HORIZONTAL ? target.width : target.height;
-		var size = current + delta * sign;
-		if (size < 0) {
-			size = 0;
+		if (absorber == null) {
+			// 区域内没有可吸收位移的面板，放弃本次调整
+			return 0;
 		}
-		data.size = size;
+		var horizontal = this.direction == Direction.HORIZONTAL;
+		var prevBase = horizontal ? prev.width : prev.height;
+		var absorberBase = horizontal ? absorber.width : absorber.height;
+		// 前面板增长，吸收面板缩小，任一侧到达0时把剩余位移交还对方，保证区域总量不变
+		var prevSize = prevBase + delta;
+		var absorberSize = absorberBase - delta;
+		if (prevSize < 0) {
+			absorberSize += prevSize;
+			prevSize = 0;
+		}
+		if (absorberSize < 0) {
+			prevSize += absorberSize;
+			absorberSize = 0;
+		}
+		this.getLayoutData(prev).size = prevSize;
+		this.getLayoutData(absorber).size = absorberSize;
 		container.updateLayout();
+		return prevSize - prevBase;
+	}
+
+	/**
+	 * 判断面板是否为弹性面板（未声明`size`与`percentSize`）
+	 */
+	private function __isFlex(child:DisplayObject):Bool {
+		if (child.layoutData != null && child.layoutData is SplitterLayoutData) {
+			var data:SplitterLayoutData = cast child.layoutData;
+			return data.size == null && data.percentSize == null;
+		}
+		return true;
+	}
+
+	/**
+	 * 获得面板的分割布局数据，不存在时创建
+	 */
+	private function getLayoutData(child:DisplayObject):SplitterLayoutData {
+		if (child.layoutData != null && child.layoutData is SplitterLayoutData) {
+			return cast child.layoutData;
+		}
+		var data = new SplitterLayoutData();
+		child.layoutData = data;
+		return data;
 	}
 }

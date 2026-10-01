@@ -193,6 +193,7 @@ class ListView extends Scroll implements IDataProider<ArrayCollection> {
 		if (index < 0 || this.__data == null || index >= this.__data.source.length) {
 			return;
 		}
+		__updateVirtual();
 		var x = this.scrollX;
 		var y = this.scrollY;
 		if (this.virtual) {

@@ -1178,7 +1178,11 @@ class FinderView extends Scroll {
 		if (this.__data == null) {
 			return false;
 		}
+		// 说明已经达到了最顶点
 		var current = item;
+		if(current == null){
+			return true;
+		}
 		while (current.parent != null) {
 			current = current.parent;
 		}

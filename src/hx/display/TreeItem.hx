@@ -24,6 +24,23 @@ class TreeItem {
 	public var children:Array<TreeItem> = null;
 
 	/**
+	 * 克隆此节点的子节点列表，返回的子节点的`parent`为`null`
+	 * @return Array<TreeItem>
+	 */
+	public function cloneChildren():Array<TreeItem> {
+		if (this.children == null) {
+			return null;
+		}
+		var result:Array<TreeItem> = [];
+		for (child in this.children) {
+			var newChild = new TreeItem(child.label, child.cloneChildren(), child.expanded);
+			newChild.data = child.data;
+			result.push(newChild);
+		}
+		return result;
+	}
+
+	/**
 	 * 是否处于展开状态，只有文件夹节点有效
 	 */
 	public var expanded:Bool = false;

@@ -13,6 +13,7 @@ import hx.display.Quad;
 import hx.display.MovieClip;
 import hx.display.Spine;
 import hx.display.ListView;
+import hx.display.FinderView;
 import hx.display.Tree;
 import hx.display.Scroll;
 import hx.display.BitmapLabel;
@@ -586,6 +587,26 @@ class UIManager {
 			}
 			if (xml.exists("toggleFolderOnClick")) {
 				obj.toggleFolderOnClick = xml.get("toggleFolderOnClick") == "true";
+			}
+			if (xml.exists("rightClickSelectEnabled")) {
+				obj.rightClickSelectEnabled = xml.get("rightClickSelectEnabled") == "true";
+			}
+		});
+		addAttributesParse(FinderView, function(obj:FinderView, xml:Xml, assets:Assets) {
+			if (xml.exists("rowHeight")) {
+				obj.rowHeight = xml.getFloatValue("rowHeight");
+			}
+			if (xml.exists("iconSize")) {
+				obj.iconSize = xml.getFloatValue("iconSize");
+			}
+			if (xml.exists("virtualBufferCount")) {
+				obj.virtualBufferCount = Std.parseInt(xml.get("virtualBufferCount"));
+			}
+			if (xml.exists("foldersFirst")) {
+				obj.foldersFirst = xml.get("foldersFirst") == "true";
+			}
+			if (xml.exists("showParentRow")) {
+				obj.showParentRow = xml.get("showParentRow") == "true";
 			}
 			if (xml.exists("rightClickSelectEnabled")) {
 				obj.rightClickSelectEnabled = xml.get("rightClickSelectEnabled") == "true";

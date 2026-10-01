@@ -1040,6 +1040,11 @@ class Tree extends Scroll {
 			this.__flattenItems(this.__data, 0);
 		}
 		this.__rowsDirty = false;
+		// 行映射已经变化，所有可见Item都必须重新绑定数据。
+		// 查询接口（rowCount/getRowOfItem/getItemAt等）可能在渲染前通过__ensureRows消费掉__rowsDirty，
+		// 重绑标记必须在这里同步置位，否则__updateVirtual会认为数据没有变化而跳过可见行的重绑，
+		// 导致展开图标、选中样式等视图状态与数据不一致
+		this.__dataDirty = true;
 		// 已经不在树中的选中项不再保持选中
 		if (this.__selectedItems.length > 0) {
 			var i = this.__selectedItems.length;

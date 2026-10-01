@@ -272,6 +272,7 @@ class Tree extends Scroll {
 		this.addEventListener(MouseEvent.RIGHT_CLICK, onRowClick);
 		this.addEventListener(MouseEvent.MOUSE_OVER, onRowMouseOver);
 		this.addEventListener(MouseEvent.MOUSE_OUT, onRowMouseOut);
+		this.scrollXEnable = false;
 	}
 
 	private function get_data():Array<TreeItem> {
@@ -947,8 +948,13 @@ class Tree extends Scroll {
 		this.__selectedDirty = false;
 
 		// 可见区间、数据、内容尺寸与列表尺寸都没有变化时，不需要刷新
-		if (!dataDirty && !selectedDirty && contentSize == this.__lastContentSize && total == this.__lastTotal && first == this.__lastFirst
-			&& last == this.__lastLast && !this.__virtualSizeChanged()) {
+		if (!dataDirty
+			&& !selectedDirty
+			&& contentSize == this.__lastContentSize
+			&& total == this.__lastTotal
+			&& first == this.__lastFirst
+			&& last == this.__lastLast
+			&& !this.__virtualSizeChanged()) {
 			return;
 		}
 		if (!this.__virtualReady) {

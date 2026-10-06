@@ -174,6 +174,7 @@ class InputLabel extends Box implements IDataProider<String> {
 		this.label.charFilterEnabled = false;
 		this.updateEnabled = true;
 		this.addEventListener(MouseEvent.CLICK, onClick);
+		this.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
 		this.layout = new AnchorLayout();
 		this.label.layoutData = AnchorLayoutData.fill();
 		this.placeholderLabel.layoutData = AnchorLayoutData.fill();
@@ -186,8 +187,15 @@ class InputLabel extends Box implements IDataProider<String> {
 		this.updatePlaceholderVisibility();
 	}
 
+	private var __isClicked = false;
+
+	private function onMouseDown(event:MouseEvent):Void {
+		__isClicked = false;
+	}
+
 	private function onClick(event:MouseEvent):Void {
 		// 确定光标位置
+		__isClicked = true;
 		var movePoint = this.globalToLocal(new Point(event.stageX, event.stageY));
 		this.selectionStart = this.selectionEnd = this.label.data.length;
 		var charRect:Rectangle = new Rectangle();
@@ -230,7 +238,7 @@ class InputLabel extends Box implements IDataProider<String> {
 		super.onUpdate(dt);
 		__dt += dt;
 		if (!line.visible) {
-			if (stage.focus == this) {
+			if (stage.focus == this && __isClicked) {
 				line.visible = true;
 				this.updateLine(1);
 			}

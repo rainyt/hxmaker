@@ -6,6 +6,8 @@ import hx.utils.SoundManager;
 import hx.layout.AnchorLayoutData;
 import hx.layout.AnchorLayout;
 import hx.events.MouseEvent;
+import hx.display.button.IAnimateBehavior;
+import hx.display.button.Default;
 
 /**
  * 按钮类，用于创建可点击的UI按钮
@@ -28,6 +30,31 @@ class Button extends BoxContainer {
 	 * 是否启用音效，默认为 `true`
 	 */
 	public var enableSoundEffect:Bool = true;
+
+	/**
+	 * 全局按钮动画行为代理
+	 * 默认为`hx.display.button.Default`，设置后可一次性覆盖所有按钮的动画表现
+	 */
+	public static var animateBehavior:IAnimateBehavior = new Default();
+
+	/**
+	 * 按钮自身的动画行为代理，当存在`selfAnimateBehavior`时，优先于全局`animateBehavior`生效
+	 */
+	public var selfAnimateBehavior:IAnimateBehavior;
+
+	/**
+	 * 当前生效的动画行为代理
+	 * 优先使用按钮自身的`selfAnimateBehavior`，未设置时使用全局的`animateBehavior`
+	 */
+	private var currentAnimateBehavior(get, never):IAnimateBehavior;
+
+	/**
+	 * 获取当前生效的动画行为代理
+	 * @return 当前生效的动画行为代理
+	 */
+	private function get_currentAnimateBehavior():IAnimateBehavior {
+		return selfAnimateBehavior != null ? selfAnimateBehavior : animateBehavior;
+	}
 
 	/**
 	 * 按钮的容器，用于放置额外的子元素
@@ -216,18 +243,16 @@ class Button extends BoxContainer {
 
 	/**
 	 * 处理鼠标事件
+	 * 按下/抬起/点击时的动画表现交由动画行为代理控制
 	 * @param e 鼠标事件对象
 	 */
 	private function onMouseEvent(e:MouseEvent) {
 		switch e.type {
 			case MouseEvent.MOUSE_DOWN:
 				__isDown = true;
-				this.box.scale = 1;
-				var pWidth = this.width;
-				var pHeight = this.height;
-				this.box.scale = 0.94;
-				this.box.originX = pWidth * 0.03;
-				this.box.originY = pHeight * 0.03;
+				var behavior = currentAnimateBehavior;
+				if (behavior != null)
+					behavior.onMouseDown(this);
 				if (enableSoundEffect) {
 					if (selfSoundEffectId != null)
 						SoundManager.getInstance().playEffect(selfSoundEffectId);
@@ -235,12 +260,14 @@ class Button extends BoxContainer {
 						SoundManager.getInstance().playEffect(clickSoundEffectId);
 				}
 			case MouseEvent.MOUSE_UP:
-				this.box.scaleX = 1;
-				this.box.scaleY = 1;
-				this.box.originX = 0;
-				this.box.originY = 0;
 				__isDown = false;
+				var behavior = currentAnimateBehavior;
+				if (behavior != null)
+					behavior.onMouseUp(this);
 			case MouseEvent.CLICK:
+				var behavior = currentAnimateBehavior;
+				if (behavior != null)
+					behavior.onMouseClick(this);
 				if (clickEvent != null) {
 					clickEvent();
 				}

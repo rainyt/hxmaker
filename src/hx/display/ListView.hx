@@ -40,6 +40,16 @@ class ListView extends Scroll implements IDataProider<ArrayCollection> {
 	private var __selectedIndexDirty:Bool = false;
 
 	/**
+	 * 普通模式分帧创建的进度：下一个待创建的数据索引
+	 */
+	private var __createIndex:Int = 0;
+
+	/**
+	 * 普通模式分帧创建的目标数量
+	 */
+	private var __createTotal:Int = 0;
+
+	/**
 	 * 切换选择时播放的音效ID
 	 */
 	public var changedSoundId:String = null;
@@ -117,7 +127,15 @@ class ListView extends Scroll implements IDataProider<ArrayCollection> {
 			// 虚拟列表只需要刷新可见Item的选中状态
 			this.__virtualSelectedDirty = true;
 		} else {
-			this.__dataDirty = true;
+			// 普通模式的Item都在子对象列表中（分帧创建时为已创建的部分），原地刷新选中状态，避免整表重建
+			var children = this.children;
+			for (i in 0...children.length) {
+				var child = children[i];
+				if (child is ISelectProider) {
+					var proider:ISelectProider = cast child;
+					proider.selected = i == value;
+				}
+			}
 		}
 		this.__selectedIndexDirty = true;
 		this.dispatchEvent(new Event(Event.CHANGE));
@@ -153,30 +171,36 @@ class ListView extends Scroll implements IDataProider<ArrayCollection> {
 			this.__clearChildren();
 		}
 		if (this.__dataDirty) {
-			// 删除所有容器
+			// 删除所有容器，重置分帧创建进度
 			this.__clearChildren();
-			// 重新创建所有容器
-			if (__data != null) {
-				for (i in 0...__data.source.length) {
-					var itemRenderer:DisplayObject = itemRendererRecycler.create();
-					this.addChild(itemRenderer);
-					if (itemRenderer is IDataProider) {
-						var proider:IDataProider<Dynamic> = cast itemRenderer;
-						proider.data = __data.source[i];
-					}
-					if (itemRenderer is ISelectProider) {
-						var proider:ISelectProider = cast itemRenderer;
-						proider.selected = selectedIndex == i;
-					}
-				}
-				if (__selectedIndexDirty && this.selectedIndex >= 0) {
-					this.updateLayout();
-				}
-			}
+			this.__createIndex = 0;
+			this.__createTotal = __data != null ? __data.source.length : 0;
 			this.__dataDirty = false;
 			if (autoVisible) {
 				Timer.delay(this.invalidate, 16);
 			}
+		}
+		if (this.__createIndex < this.__createTotal) {
+			// 分帧创建：单帧耗时超过预算时中断，剩余的Item推迟到后续帧继续创建
+			var startTime = Timer.stamp();
+			while (this.__createIndex < this.__createTotal) {
+				var i = this.__createIndex++;
+				var itemRenderer:DisplayObject = itemRendererRecycler.create();
+				this.addChild(itemRenderer);
+				if (itemRenderer is IDataProider) {
+					var proider:IDataProider<Dynamic> = cast itemRenderer;
+					proider.data = __data.source[i];
+				}
+				if (itemRenderer is ISelectProider) {
+					var proider:ISelectProider = cast itemRenderer;
+					proider.selected = selectedIndex == i;
+				}
+				if (this.creationTimeBudget > 0 && Timer.stamp() - startTime > this.creationTimeBudget / 1000) {
+					break;
+				}
+			}
+			// 每批创建完立刻布局，让已创建的Item当帧可见
+			this.updateLayout();
 		}
 	}
 
@@ -248,6 +272,15 @@ class ListView extends Scroll implements IDataProider<ArrayCollection> {
 	public var virtualBufferCount:Int = 1;
 
 	/**
+	 * 分帧创建ItemRenderer的单帧时间预算（毫秒）
+	 *
+	 * 一次性需要创建大量Item时（普通模式设置数据、虚拟列表进入新的可见区间等），单帧创建耗时超过该预算后，
+	 * 剩余的Item会推迟到后续帧继续创建（每帧至少创建一个），避免长时间阻塞主循环造成ANR。
+	 * `0`表示不限制，一次性创建完，默认`4`
+	 */
+	public var creationTimeBudget:Float = 4;
+
+	/**
 	 * 当前的虚拟布局，`null`表示`layout`不是虚拟布局
 	 */
 	private var __virtualLayout:IVirtualLayout = null;
@@ -297,6 +330,11 @@ class ListView extends Scroll implements IDataProider<ArrayCollection> {
 	private var __virtualReady:Bool = false;
 
 	/**
+	 * 虚拟列表的可见区间中还有ItemRenderer没有创建，需要继续分帧创建
+	 */
+	private var __virtualPending:Bool = false;
+
+	/**
 	 * 虚拟列表的选中状态是否发生变化
 	 */
 	private var __virtualSelectedDirty:Bool = false;
@@ -323,9 +361,7 @@ class ListView extends Scroll implements IDataProider<ArrayCollection> {
 
 		var dataDirty = this.__dataDirty;
 		var selectedDirty = this.__virtualSelectedDirty || dataDirty;
-		this.__dataDirty = false;
 		this.__selectedIndexDirty = false;
-		this.__virtualSelectedDirty = false;
 
 		// 计算可见（含缓冲）的数据索引区间
 		var offset = layout.horizontal ? -this.scrollX : -this.scrollY;
@@ -334,8 +370,8 @@ class ListView extends Scroll implements IDataProider<ArrayCollection> {
 		var first = this.__virtualRange.first;
 		var last = this.__virtualRange.last;
 
-		// 可见区间、数据、内容尺寸与列表尺寸都没有变化时，不需要刷新
-		if (!dataDirty && !selectedDirty && !this.__virtualSizeChanged() && contentSize == this.__virtualContentSize
+		// 可见区间、数据、内容尺寸与列表尺寸都没有变化（且分帧创建已完成）时，不需要刷新
+		if (!this.__virtualPending && !dataDirty && !selectedDirty && !this.__virtualSizeChanged() && contentSize == this.__virtualContentSize
 			&& total == this.__virtualTotal && first == this.__virtualFirst && last == this.__virtualLast) {
 			return;
 		}
@@ -365,6 +401,9 @@ class ListView extends Scroll implements IDataProider<ArrayCollection> {
 		}
 
 		// 创建（或者复用对象池中的）ItemRenderer，并绑定数据
+		// 单帧耗时超过预算时中断，剩余的Item推迟到后续帧继续创建
+		var startTime = Timer.stamp();
+		var completed = true;
 		for (index in first...last + 1) {
 			var renderer = this.__virtualItems.get(index);
 			var isNewRenderer = renderer == null;
@@ -379,6 +418,18 @@ class ListView extends Scroll implements IDataProider<ArrayCollection> {
 			if (isNewRenderer || selectedDirty) {
 				this.__setVirtualRendererSelected(renderer, index);
 			}
+			if (isNewRenderer && this.creationTimeBudget > 0 && Timer.stamp() - startTime > this.creationTimeBudget / 1000) {
+				completed = false;
+				break;
+			}
+		}
+		if (completed) {
+			// 本轮可见区间的Item已全部就绪后才能清除脏标记，否则中断的Item不会绑定数据与选中状态
+			this.__dataDirty = false;
+			this.__virtualSelectedDirty = false;
+			this.__virtualPending = false;
+		} else {
+			this.__virtualPending = true;
 		}
 
 		// Item的位置与尺寸、占位对象的内容尺寸都交给虚拟布局计算
@@ -447,6 +498,10 @@ class ListView extends Scroll implements IDataProider<ArrayCollection> {
 		this.__virtualWidth = -1;
 		this.__virtualHeight = -1;
 		this.__virtualReady = false;
+		this.__virtualPending = false;
+		// 重置普通模式的分帧创建进度
+		this.__createIndex = 0;
+		this.__createTotal = 0;
 	}
 }
 

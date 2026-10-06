@@ -451,7 +451,7 @@ class UIManager {
 				data = Path.withoutDirectory(Path.withoutExtension(data));
 				obj.atlas = getAtlas(data) ?? assets.atlases.get(data);
 			}
-			if (xml.exists("text")) {
+			if (xml.exists("text") && xml.get("autoClear") != "true") {
 				obj.data = xml.get("text");
 			}
 			if (xml.exists("fontName")) {
@@ -468,7 +468,7 @@ class UIManager {
 			}
 		});
 		addAttributesParse(Label, function(obj:Label, xml:Xml, assets:Assets) {
-			if (xml.exists("text")) {
+			if (xml.exists("text") && xml.get("autoClear") != "true") {
 				obj.data = xml.get("text");
 				var color = xml.get("color");
 				var fontSize = xml.get("fontSize");
@@ -489,7 +489,7 @@ class UIManager {
 			}
 		});
 		addAttributesParse(InputLabel, function(obj:InputLabel, xml:Xml, assets:Assets) {
-			if (xml.exists("text")) {
+			if (xml.exists("text") && xml.get("autoClear") != "true") {
 				obj.data = xml.get("text");
 			}
 			var color = xml.get("color");

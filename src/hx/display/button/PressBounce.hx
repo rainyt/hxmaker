@@ -46,7 +46,7 @@ class PressBounce implements IAnimateBehavior {
 	 * @param button 触发事件的按钮
 	 */
 	public function onMouseClick(button:Button):Void {
-		Actuate.stop(button.box, true);
+		Actuate.stop(button.box, null, true, true);
 		button.updateLayoutEnabled = false;
 		button.box.scale = 1;
 		button.box.originX = 0;

@@ -6,7 +6,7 @@
   "description": "A unified game engine written in Haxe that can run on any game engine.",
   "version": "1.0.0",
   "releasenote": "首个正式版本：自动合批与多纹理渲染、XML UI 系统与虚拟列表组件、资源管理、粒子、Spine、事件与布局系统。",
-  "contributors": ["rainyt"],
+  "contributors": ["rainy"],
   "classPath": "src",
   "dependencies": {
 

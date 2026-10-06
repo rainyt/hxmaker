@@ -23,6 +23,11 @@ class DisplayObjectContainer extends DisplayObject {
 	@:noCompletion private var __layoutDirty:Bool = false;
 
 	/**
+	 * 是否可以更新容器布局
+	 */
+	public var updateLayoutEnabled:Bool = true;
+
+	/**
 	 * 布局
 	 */
 	public var layout(get, set):ILayout;
@@ -40,6 +45,9 @@ class DisplayObjectContainer extends DisplayObject {
 	}
 
 	private function __updateLayout() {
+		if (!updateLayoutEnabled) {
+			return;
+		}
 		if (__layoutDirty) {
 			__layoutDirty = false;
 			updateLayout();
@@ -54,7 +62,7 @@ class DisplayObjectContainer extends DisplayObject {
 			layout.update(this.children.filter((object) -> !object.hide));
 		}
 		for (object in this.children) {
-			if (object is DisplayObjectContainer) {
+			if (object is DisplayObjectContainer && cast(object, DisplayObjectContainer).updateLayoutEnabled) {
 				cast(object, DisplayObjectContainer).updateLayout();
 			}
 		}

@@ -24,7 +24,7 @@ class PressBounce implements IAnimateBehavior {
 	 * @param pressScale 点击瞬间缩小的比例，默认为0.9
 	 * @param duration 放大恢复的动画时长，单位为秒，默认为0.15
 	 */
-	public function new(pressScale:Float = 0.9, duration:Float = 0.15) {
+	public function new(pressScale:Float = 0.94, duration:Float = 0.15) {
 		this.pressScale = pressScale;
 		this.duration = duration;
 	}
@@ -46,13 +46,24 @@ class PressBounce implements IAnimateBehavior {
 	 * @param button 触发事件的按钮
 	 */
 	public function onMouseClick(button:Button):Void {
-		Actuate.stop(button.box);
+		Actuate.stop(button.box, true);
+		button.updateLayoutEnabled = false;
+		button.box.scale = 1;
+		button.box.originX = 0;
+		button.box.originY = 0;
 		var pWidth = button.width;
 		var pHeight = button.height;
 		// 原点偏移与缩放比例满足`origin = size * (1 - scale) / 2`，保证缩放始终以按钮中心为基准
 		button.box.scale = pressScale;
 		button.box.originX = pWidth * (1 - pressScale) / 2;
 		button.box.originY = pHeight * (1 - pressScale) / 2;
-		Actuate.tween(button.box, duration, {scaleX: 1, scaleY: 1, originX: 0, originY: 0}).ease(Quad.easeOut);
+		Actuate.tween(button.box, duration, {
+			scaleX: 1,
+			scaleY: 1,
+			originX: 0,
+			originY: 0
+		}).ease(Quad.easeOut).onComplete(() -> {
+			button.updateLayoutEnabled = true;
+		});
 	}
 }

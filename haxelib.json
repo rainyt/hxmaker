@@ -4,8 +4,8 @@
   "license": "MIT",
   "tags": [],
   "description": "A unified game engine written in Haxe that can run on any game engine.",
-  "version": "1.0.0",
-  "releasenote": "",
+  "version": "1.0.0-beta",
+  "releasenote": "新增TreeView树形列表组件（虚拟化渲染），抽取BaseVirtualList虚拟列表基类",
   "contributors": ["rainyt"],
   "classPath": "src",
   "dependencies": {

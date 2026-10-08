@@ -40,7 +40,7 @@ haxe tools/tools.hxml
 - **基础显示对象**：`Image`、`Label`、`Button`、`Quad`、`Graphics`
 - **容器类**：`Sprite`、`Scene`（场景管理）、`Stage`（根舞台）
 - **布局容器**：`Box`（虚拟盒子）、`VBox`、`HBox`、`FlowBox`
-- **特殊组件**：`Scroll`（滚动容器，需要遮罩）、`ListView`（列表视图）、`Spine`（骨骼动画）、`MovieClip`（帧动画）、`Particle`（粒子系统）
+- **特殊组件**：`Scroll`（滚动容器，需要遮罩）、`BaseVirtualList`（虚拟列表基类，配合`IVirtualLayout`只渲染可见区域）、`ListView`（列表视图）、`TreeView`（树形列表，类似VSCode资源管理器）、`Spine`（骨骼动画）、`MovieClip`（帧动画）、`Particle`（粒子系统）
 - **UI 组件**：`BitmapLabel`、`InputLabel`、`ImageLoader`、`ItemRenderer`、`VScrollBar`
 
 核心包：`hx.display`（显示对象）、`hx.events`（事件系统）、`hx.geom`（几何类型）、`hx.layout`（布局管理器）。

@@ -35,6 +35,7 @@ class Quad extends Graphics implements IDataProider<UInt> implements IRootDataPr
 	public function set_data(value:UInt):UInt {
 		_data = value;
 		__graphicsDirty = true;
+		this.invalidate();
 		return value;
 	}
 

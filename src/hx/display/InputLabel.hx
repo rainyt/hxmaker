@@ -315,6 +315,9 @@ class InputLabel extends Box implements IDataProider<String> {
 
 	private function onMouseDown(event:MouseEvent):Void {
 		__isClicked = false;
+		// 按下即进入激活态：拖拽产生的选区在失焦时需要被清理
+		// （若只在 CLICK 的 focus() 里激活，拖拽到外部抬起时收不到 CLICK，失焦清理会被跳过）
+		__isFocus = true;
 		// 按下即定位光标，并以此为锚点开始拖拽选区
 		var index:Int = this.getCharIndexAtPoint(event.stageX, event.stageY);
 		this.selectionAnchor = index;

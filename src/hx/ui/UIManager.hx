@@ -588,6 +588,9 @@ class UIManager {
 			if (xml.exists("toggleFolderOnClick")) {
 				obj.toggleFolderOnClick = xml.get("toggleFolderOnClick") == "true";
 			}
+			if (xml.exists("twistyToggleOnly")) {
+				obj.twistyToggleOnly = xml.get("twistyToggleOnly") == "true";
+			}
 			if (xml.exists("rightClickSelectEnabled")) {
 				obj.rightClickSelectEnabled = xml.get("rightClickSelectEnabled") == "true";
 			}

@@ -161,6 +161,13 @@ class Tree extends Scroll {
 	public var toggleFolderOnClick:Bool = true;
 
 	/**
+	 * 是否只允许点击展开箭头（twisty）来切换展开状态，默认`false`
+	 *
+	 * 开启后点击文件夹行的其他区域只改变选中状态，不再切换展开状态（优先于`toggleFolderOnClick`）
+	 */
+	public var twistyToggleOnly:Bool = false;
+
+	/**
 	 * 是否允许右键点击来选择
 	 */
 	public var rightClickSelectEnabled:Bool = true;
@@ -799,9 +806,9 @@ class Tree extends Scroll {
 			this.dispatchEvent(new Event(Event.CHANGE));
 			return;
 		}
-		// 普通点击：只选中该行；文件夹默认同时切换展开状态
+		// 普通点击：只选中该行；文件夹默认同时切换展开状态（twistyToggleOnly开启时只能点击箭头切换）
 		this.__selectSingleItem(rowData.item);
-		if (rowData.item.isFolder && this.toggleFolderOnClick) {
+		if (rowData.item.isFolder && this.toggleFolderOnClick && !this.twistyToggleOnly) {
 			this.toggleItem(rowData.item);
 		}
 	}

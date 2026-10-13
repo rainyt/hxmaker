@@ -35,6 +35,8 @@ class HTML5TextInputUtils {
 			textureArea.style.zIndex = "-1";
 			textureArea.oninput = onInput;
 			textureArea.onkeyup = onKeyUp;
+			// 侦听原生选区变化（如 Ctrl+A 全选），同步回引擎侧渲染高亮
+			textureArea.onselect = onNativeSelect;
 			Browser.document.getElementsByTagName("html")[0].appendChild(textureArea);
 			// 侦听窗口变化
 			Browser.document.onresize = onResize;
@@ -43,6 +45,7 @@ class HTML5TextInputUtils {
 		textureArea.style.visibility = "visible";
 		textureArea.selectionStart = input.selectionStart;
 		textureArea.selectionEnd = input.selectionEnd;
+		input.selectionAnchor = input.selectionEnd;
 		textureArea.focus();
 	}
 
@@ -67,15 +70,42 @@ class HTML5TextInputUtils {
 	}
 
 	/**
+	 * 原生输入框选区变化时（如 Ctrl+A 全选）同步回引擎侧，用于渲染选区高亮
+	 */
+	public static function onNativeSelect():Void {
+		if (input == null)
+			return;
+		input.selectionStart = textureArea.selectionStart;
+		input.selectionEnd = textureArea.selectionEnd;
+	}
+
+	/**
+	 * 将引擎侧选区同步到隐藏输入框，让原生键盘获得删除/替换选区的能力
+	 */
+	public static function syncSelectionToNative(input:InputLabel):Void {
+		if (HTML5TextInputUtils.input != input || textureArea == null)
+			return;
+		var start = input.selectionStart < input.selectionEnd ? input.selectionStart : input.selectionEnd;
+		var end = input.selectionStart < input.selectionEnd ? input.selectionEnd : input.selectionStart;
+		// 值相同时不写入，避免触发多余的 select 事件造成回环
+		if (textureArea.selectionStart != start)
+			textureArea.selectionStart = start;
+		if (textureArea.selectionEnd != end)
+			textureArea.selectionEnd = end;
+	}
+
+	/**
 	 * 侦听输入
 	 */
 	public static function onInput():Void {
 		if (input == null)
 			return;
-		input.data = textureArea.value.substr(0, 9999);
-		input.getTextWidth();
+		// 先同步选区再同步文本：input.data 的 setter 内部会把当前选区回写到这里，
+		// 若先改文本，过时的选区值会覆盖 textarea 刚更新的光标位置
 		input.selectionStart = textureArea.selectionStart;
 		input.selectionEnd = textureArea.selectionEnd;
+		input.data = textureArea.value.substr(0, 9999);
+		input.getTextWidth();
 		input.dispatchEvent(new Event(Event.CHANGE));
 	}
 

@@ -117,6 +117,11 @@ class WechatTextInputUtils {
 	public static function onKeyboardComplete(res:Dynamic):Void {
 		// 键盘收起时的处理
 	}
+
+	/**
+	 * 同步选区到原生输入通道（微信键盘不支持光标定位，为空实现）
+	 */
+	public static function syncSelectionToNative(input:InputLabel):Void {}
 }
 
 /**

@@ -16,5 +16,10 @@ class TextInputUtils {
 	public static function openInput(input:InputLabel):Void {}
 
 	public static function closeInput(label:InputLabel):Void {}
+
+	/**
+	 * 选区变化时同步到原生输入通道（默认实现为空）
+	 */
+	public static function syncSelectionToNative(input:InputLabel):Void {}
 }
 #end

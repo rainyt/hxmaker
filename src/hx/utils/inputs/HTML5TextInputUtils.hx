@@ -65,8 +65,7 @@ class HTML5TextInputUtils {
 	}
 
 	public static function onKeyUp():Void {
-		input.selectionStart = textureArea.selectionStart;
-		input.selectionEnd = textureArea.selectionEnd;
+		input.syncSelectionFromNative(textureArea.selectionStart, textureArea.selectionEnd);
 	}
 
 	/**
@@ -75,8 +74,7 @@ class HTML5TextInputUtils {
 	public static function onNativeSelect():Void {
 		if (input == null)
 			return;
-		input.selectionStart = textureArea.selectionStart;
-		input.selectionEnd = textureArea.selectionEnd;
+		input.syncSelectionFromNative(textureArea.selectionStart, textureArea.selectionEnd);
 	}
 
 	/**
@@ -100,11 +98,13 @@ class HTML5TextInputUtils {
 	public static function onInput():Void {
 		if (input == null)
 			return;
-		// 先同步选区再同步文本：input.data 的 setter 内部会把当前选区回写到这里，
-		// 若先改文本，过时的选区值会覆盖 textarea 刚更新的光标位置
-		input.selectionStart = textureArea.selectionStart;
-		input.selectionEnd = textureArea.selectionEnd;
+		// 先更新文本再同步选区：选区的范围校验依赖新文本长度（否则选区末尾会被
+		// 旧长度截断，光标落后一位）；文本更新期间挂起选区回写，避免用旧选区
+		// 覆盖 textarea 刚设置的光标
+		input.suspendNativeSync = true;
 		input.data = textureArea.value.substr(0, 9999);
+		input.suspendNativeSync = false;
+		input.syncSelectionFromNative(textureArea.selectionStart, textureArea.selectionEnd);
 		input.getTextWidth();
 		input.dispatchEvent(new Event(Event.CHANGE));
 	}

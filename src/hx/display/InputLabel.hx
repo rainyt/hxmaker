@@ -109,6 +109,13 @@ class InputLabel extends Box implements IDataProider<String> {
 	private var __dragging:Bool = false;
 
 	/**
+	 * 是否挂起选区向原生输入通道的回写。
+	 * 原生通道主动更新文本期间必须挂起：此时选区与文本都在过渡态，
+	 * 回写会用旧值覆盖原生输入框刚设置的光标
+	 */
+	public var suspendNativeSync:Bool = false;
+
+	/**
 	 * 光标所在字符的边界
 	 */
 	private var __caretRect:Rectangle;
@@ -144,7 +151,8 @@ class InputLabel extends Box implements IDataProider<String> {
 		__dt = 0;
 		this.updateSelectionHighlight();
 		// 将选区同步到原生输入通道（如 HTML5 的隐藏输入框），让原生键盘获得删除/替换选区的能力
-		TextInputUtils.syncSelectionToNative(this);
+		if (!suspendNativeSync)
+			TextInputUtils.syncSelectionToNative(this);
 	}
 
 	/**
@@ -167,6 +175,18 @@ class InputLabel extends Box implements IDataProider<String> {
 		this.selectionQuad.y = startRect.y + @:privateAccess this.label.__originWorldY;
 		this.selectionQuad.width = (endRect.x + endRect.width) - startRect.x;
 		this.selectionQuad.height = startRect.height > endRect.height ? startRect.height : endRect.height;
+	}
+
+	/**
+	 * 从原生输入通道一次性同步选区。
+	 * 回读原生选区时必须用此方法：若逐步设置 selectionStart/selectionEnd，
+	 * 第一步 setter 内部的选区回写会用另一个端点的旧值覆盖原生输入框刚建立的选区
+	 * （例如 Ctrl+A 全选会被截断，导致删除后遗留最后一个字符）。
+	 */
+	public function syncSelectionFromNative(start:Int, end:Int):Void {
+		__selectionStart = start;
+		__selectionEnd = end;
+		this.updateSelection();
 	}
 
 	private var __data:String = "";

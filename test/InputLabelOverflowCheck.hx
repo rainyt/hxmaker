@@ -7,6 +7,8 @@ import hx.geom.Point;
 import hx.geom.Rectangle;
 import hx.layout.AnchorLayout;
 import hx.layout.AnchorLayoutData;
+import hx.events.MouseEvent;
+import hx.events.Event;
 import hx.render.TextFieldRender;
 import hx.render.TextFieldRender.Text;
 import hx.text.TextFieldContextBitmapData;
@@ -33,6 +35,11 @@ class InputLabelOverflowCheck {
 	static function tick(input:InputLabel):Void {
 		input.onUpdate(0.016);
 		host.__updateTransform(null);
+	}
+	static function mouse(type:String, x:Float, y:Float):Void {
+		host.__updateTransform(null);
+		var event = new MouseEvent(type); event.stageX = x; event.stageY = y;
+		host.handleMouseEvent(event, true);
 	}
 	static function create(text:String, width:Float = 100, height:Float = 32, wrap:Bool = false):InputLabel {
 		var input = new InputLabel();
@@ -76,6 +83,9 @@ class InputLabelOverflowCheck {
 		var input = create("abc");
 		assert(input.__viewport.maskRect == null, "短文本不用遮罩");
 		assert(input.__scrollX == 0 && input.__scrollY == 0, "短文本无滚动");
+		input.height = 22; tick(input);
+		assert(input.getTextHeight() == 20 && input.__viewport.maskRect == null, "字形能放下时不因光标高度开启遮罩");
+		input.height = 32; tick(input);
 		var before = preparations;
 		for (i in 0...120) {
 			input.label.setTransformDirty();
@@ -186,6 +196,7 @@ class InputLabelOverflowCheck {
 		assert(input.__caretIndex == 0 && input.__scrollX == 0, "原生反向选区跟随活动端");
 		HTML5TextInputUtils.input = null; HTML5TextInputUtils.textureArea = null;
 
+		checkDragDeletion();
 		checkMasks();
 		#if overflow_browser_checks
 		checkMaskPixels(false);
@@ -195,8 +206,57 @@ class InputLabelOverflowCheck {
 		#if overflow_browser_checks
 		if (js.Browser.document.getElementById("result") != null)
 			js.Browser.document.getElementById("result").textContent = "输入框溢出行为验证通过：" + checks + " 项断言";
+		prepareNativeBackspace();
 		#end
 	}
+
+	/** 不触发 CLICK，验证在文本空白和输入框外抬起后仍可删除选区。 */
+	static function checkDragDeletion():Void {
+		#if !overflow_browser_checks
+		var native:Dynamic = { value: "", style: {}, selectionStart: 0, selectionEnd: 0, selectionDirection: "none",
+			focus: () -> {}, blur: () -> {} };
+		native.setSelectionRange = function(start:Int, end:Int, direction:String):Void {
+			native.selectionStart = start; native.selectionEnd = end; native.selectionDirection = direction;
+		};
+		HTML5TextInputUtils.textureArea = cast native;
+		#end
+		for (outside in [false, true]) {
+			var input = create("abcdef", 200); input.x = 400; input.y = 350;
+			host.focus = null;
+			mouse(MouseEvent.MOUSE_DOWN, 414, 366);
+			assert(HTML5TextInputUtils.input == input && host.focus == input, "按下就打开输入通道");
+			var x = outside ? 640. : 520.; var y = outside ? 400. : 366.;
+			mouse(MouseEvent.MOUSE_MOVE, x, y);
+			mouse(MouseEvent.MOUSE_UP, x, y);
+			var area = HTML5TextInputUtils.textureArea;
+			assert(!input.__dragging && area.selectionStart == 1 && area.selectionEnd == 6, "文字外抬起保留原生选区");
+			#if overflow_browser_checks
+			assert(js.Browser.document.activeElement == area, "外部抬起后原生输入框保持键盘焦点");
+			#end
+			// 模拟原生删除的 input 通知，验证回读不会收起选区或覆盖刚删除的内容。
+			area.value = area.value.substring(0, area.selectionStart) + area.value.substring(area.selectionEnd);
+			area.setSelectionRange(1, 1, "none"); HTML5TextInputUtils.onInput(); tick(input);
+			assert(input.data == "a" && input.selectionStart == 1 && input.selectionEnd == 1, "没有 CLICK 也能删除选区");
+			HTML5TextInputUtils.closeInput(input); host.removeChild(input);
+		}
+		HTML5TextInputUtils.textureArea = null;
+	}
+
+	#if overflow_browser_checks
+	/** 保留一次外部抬起后的真实原生选区，供浏览器发送 Backspace 验证。 */
+	static function prepareNativeBackspace():Void {
+		var input = create("abcdef", 200); input.x = 400; input.y = 350;
+		mouse(MouseEvent.MOUSE_DOWN, 414, 366);
+		mouse(MouseEvent.MOUSE_MOVE, 640, 400);
+		mouse(MouseEvent.MOUSE_UP, 640, 400);
+		input.addEventListener(Event.CHANGE, _ -> {
+			tick(input);
+			var success = input.data == "a" && input.selectionStart == 1 && input.selectionEnd == 1;
+			js.Browser.document.getElementById("native-result").textContent = success ? "外部松开后原生 Backspace 删除选区通过" : "原生删除验证失败：" + input.data;
+		});
+		js.Browser.document.getElementById("native-result").textContent = "已在输入框外松开，原生选区为 bcdef，等待 Backspace";
+	}
+	#end
 	static function checkMasks():Void {
 		// 遮罩状态测试不提交 GPU 绘制，因此不初始化依赖 GL 的多纹理着色器。
 		var shader = new openfl.display.Shader();

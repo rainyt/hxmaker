@@ -393,15 +393,15 @@ class InputLabel extends Box implements IDataProider<String> {
 
 	private function onMouseDown(event:MouseEvent):Void {
 		__isClicked = false;
-		// 按下即进入激活态：拖拽产生的选区在失焦时需要被清理
-		// （若只在 CLICK 的 focus() 里激活，拖拽到外部抬起时收不到 CLICK，失焦清理会被跳过）
-		__isFocus = true;
 		__dragStageX = event.stageX;
 		__dragStageY = event.stageY;
 		// 按下即定位光标，并以此为锚点开始拖拽选区
 		var index:Int = this.getCharIndexAtPoint(event.stageX, event.stageY);
 		this.selectionAnchor = index;
 		this.setSelectionCollapsed(index);
+		// 按下就接入原生键盘。拖拽到文字或输入框外抬起时可能没有 CLICK，
+		// 不能等 CLICK 才打开输入通道，否则选区虽然可见，却无法删除或替换。
+		this.focus();
 		__dragging = true;
 		// 在舞台上侦听移动/抬起，鼠标移出输入框后仍可继续扩展选区
 		if (this.stage != null) {
@@ -420,6 +420,9 @@ class InputLabel extends Box implements IDataProider<String> {
 
 	private function onStageMouseUp(event:MouseEvent):Void {
 		this.endDragSelection();
+		// 在外部抬起也恢复键盘焦点，保留拖拽选区；浏览器可能在按下的默认动作中转移焦点。
+		if (stage != null && stage.focus == this)
+			this.focus();
 	}
 
 	/**

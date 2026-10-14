@@ -16,6 +16,17 @@ class InputLabel extends Box implements IDataProider<String> {
 
 	public var label:Label = new Label();
 
+	public var wordWrap(get, set):Bool;
+
+	private function set_wordWrap(v:Bool):Bool {
+		label.wordWrap = v;
+		return v;
+	}
+
+	private function get_wordWrap():Bool {
+		return label.wordWrap;
+	}
+
 	/**
 	 * 默认提示文案Label
 	 */

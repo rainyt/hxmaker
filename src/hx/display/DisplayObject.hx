@@ -150,7 +150,10 @@ class DisplayObject extends EventDispatcher {
 	public var maskRect(get, set):Rectangle;
 
 	private function set_maskRect(value:Rectangle):Rectangle {
-		__maskRect = value;
+		if (__maskRect != value) {
+			__maskRect = value;
+			this.setDirty();
+		}
 		return value;
 	}
 

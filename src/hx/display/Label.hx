@@ -94,12 +94,8 @@ class Label extends DisplayObject implements IDataProider<String> implements IRo
 	private function set_data(value:String):String {
 		if (__data != value) {
 			__data = value;
-			this.setDirty();
+			this.setTextFormatDirty();
 			this.setFilterDirty();
-			#if hxmaker_openfl
-			// 文本内容变更不会走`setTextFormatDirty`，需要单独通知文本渲染队列
-			hx.text.TextFieldQueue.invalidate(this);
-			#end
 		}
 		return __data;
 	}
@@ -132,13 +128,17 @@ class Label extends DisplayObject implements IDataProider<String> implements IRo
 		rangeTextFormat.startIndex = startIndex;
 		rangeTextFormat.endIndex = startIndex + length;
 		__rangeTextFormats.push(rangeTextFormat);
+		this.setTextFormatDirty();
 	}
 
 	/**
 	 * 清空所有范围文本格式
 	 */
 	public function clearRangeTextFormats():Void {
+		if (__rangeTextFormats.length == 0)
+			return;
 		__rangeTextFormats = [];
+		this.setTextFormatDirty();
 	}
 
 	/**
@@ -199,13 +199,13 @@ class Label extends DisplayObject implements IDataProider<String> implements IRo
 	private var __wordWrap:Bool = true;
 
 	override function set_width(value:Float):Float {
-		if (wordWrap)
+		if (wordWrap && __width != value)
 			this.setTextFormatDirty();
 		return super.set_width(value);
 	}
 
 	override function set_height(value:Float):Float {
-		if (wordWrap)
+		if (wordWrap && __height != value)
 			this.setTextFormatDirty();
 		return super.set_height(value);
 	}
@@ -341,6 +341,7 @@ class Label extends DisplayObject implements IDataProider<String> implements IRo
 		if (root != null) {
 			switch __verticalAlign {
 				case TOP:
+					__originWorldY = 0;
 				case MIDDLE:
 					__originWorldY = (this.height - Math.min(this.height, this.root.getTextHeight())) / 2;
 				case BOTTOM:
@@ -348,6 +349,7 @@ class Label extends DisplayObject implements IDataProider<String> implements IRo
 			}
 			switch __horizontalAlign {
 				case LEFT:
+					__originWorldX = 0;
 				case CENTER:
 					__originWorldX = (this.width - Math.min(this.width, this.root.getTextWidth())) / 2;
 				case RIGHT:
@@ -381,7 +383,8 @@ class Label extends DisplayObject implements IDataProider<String> implements IRo
 	// }
 
 	public function getTextWidth():Float {
-		if (__dirty) {
+		// 变换和透明度标脏不影响文字布局，避免滚动或光标闪烁导致反复排字。
+		if (__textFormatDirty || root == null) {
 			// Hxmaker.engine.renderer.renderLabel(this, true);
 			TextFieldRender.prepareLabel(this);
 		}
@@ -389,7 +392,7 @@ class Label extends DisplayObject implements IDataProider<String> implements IRo
 	}
 
 	public function getTextHeight():Float {
-		if (__dirty) {
+		if (__textFormatDirty || root == null) {
 			// Hxmaker.engine.renderer.renderLabel(this, true);
 			TextFieldRender.prepareLabel(this);
 		}

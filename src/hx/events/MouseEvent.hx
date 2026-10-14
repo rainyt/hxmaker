@@ -4,6 +4,9 @@ package hx.events;
  * 鼠标事件
  */
 class MouseEvent extends Event {
+	/** 本次输入已被菜单绑定接管，供渲染后端阻止原生菜单。取消打开也算接管。 */
+	public var contextMenuHandled:Bool = false;
+	@:noCompletion public var contextMenuOwner:hx.display.DisplayObject;
 	/**
 	 * 点击事件
 	 */

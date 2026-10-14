@@ -51,7 +51,7 @@ class DisplayObjectContainer extends DisplayObject {
 	 */
 	public function updateLayout():Void {
 		if (layout != null) {
-			layout.update(this.children.filter((object) -> !object.hide));
+			layout.update(this.children.filter((object) -> !object.hide && object.includeInLayout));
 		}
 		for (object in this.children) {
 			if (object is DisplayObjectContainer) {
@@ -310,7 +310,7 @@ class DisplayObjectContainer extends DisplayObject {
 				return true;
 			}
 		}
-		if (mouseClickEnabled) {
+		if (mouseClickEnabled && this.__getWorldLocalBounds(__getRect()).containsPoint(x, y)) {
 			return true;
 		}
 		stacks.pop();

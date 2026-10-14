@@ -932,7 +932,60 @@ class DisplayObject extends EventDispatcher {
 	/**
 	 * 销毁所有有关显示对象的资源引用
 	 */
-	public function dispose():Void {}
+	public function dispose():Void {
+		isDisposed = true;
+		contextMenu = null;
+		removeEventListeners();
+	}
+
+	/** 是否已经销毁，用于防止菜单继续绑定以及恢复失效焦点。 */
+	public var isDisposed(default, null):Bool = false;
+
+	/** 右键菜单引用；绑定不会修改命中和选择策略，也不会转移菜单所有权。 */
+	public var contextMenu(get, set):ContextMenu;
+
+	/** 是否参与父容器布局；浮层保持显示和命中，但不参加普通内容布局。 */
+	public var includeInLayout:Bool = true;
+	private var __contextMenu:ContextMenu;
+
+	private function get_contextMenu():ContextMenu {
+		return __contextMenu;
+	}
+
+	private function set_contextMenu(value:ContextMenu):ContextMenu {
+		if (value != null && (isDisposed || value.isDisposed))
+			value = null;
+		if (__contextMenu == value)
+			return value;
+		if (__contextMenu != null) {
+			var previous = __contextMenu;
+			__contextMenu = null;
+			removeEventListener(hx.events.MouseEvent.RIGHT_CLICK, __onContextMenuClick);
+			removeEventListener(Event.REMOVED_FROM_STAGE, __onContextMenuRemoved);
+			previous.unbind(this);
+			// CLOSED 监听可能重新绑定对象，尊重监听建立的新绑定，避免留下重复监听。
+			if (__contextMenu != null)
+				return __contextMenu;
+		}
+		__contextMenu = value;
+		if (value != null) {
+			value.bind(this);
+			addEventListener(hx.events.MouseEvent.RIGHT_CLICK, __onContextMenuClick);
+			addEventListener(Event.REMOVED_FROM_STAGE, __onContextMenuRemoved);
+		}
+		return value;
+	}
+
+	private function __onContextMenuClick(event:hx.events.MouseEvent):Void {
+		// 舞台在整条事件路径分发完成后统一打开，避免与控件选择监听的注册顺序耦合。
+		if (event.contextMenuOwner == null && __contextMenu != null)
+			event.contextMenuOwner = this;
+	}
+
+	private function __onContextMenuRemoved(event:Event):Void {
+		if (__contextMenu != null && __contextMenu.context != null && __contextMenu.context.owner == this)
+			__contextMenu.close();
+	}
 
 	/**
 	 * 获得顶部渲染层

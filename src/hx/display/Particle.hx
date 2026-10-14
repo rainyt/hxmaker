@@ -525,6 +525,7 @@ class Particle extends Box {
 	}
 
 	override public function dispose():Void {
+		super.dispose();
 		if (childs != null)
 			for (index => value in this.childs) {
 				value.dispose();

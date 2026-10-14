@@ -15,6 +15,9 @@ import hx.events.KeyboardEvent;
  * 负责处理鼠标、触摸和键盘事件，以及管理舞台状态
  */
 class Stage extends Box {
+	/** 当前舞台已经打开的菜单；浮层遵守引擎已有的舞台叠放顺序。 */
+	public var openedContextMenu(default, null):ContextMenu;
+	private var __contextMenuEvents:EventDispatcher = new ContextMenuEventDispatcher();
 	/**
 	 * 舞台宽度的内部存储
 	 */
@@ -42,11 +45,14 @@ class Stage extends Box {
 	 * @return 设置后的焦点对象
 	 */
 	private function set_focus(value:DisplayObject):DisplayObject {
+		if (__focus == value)
+			return value;
 		if (__focus != null) {
 			__focus.dispatchEvent(new Event(Event.FOCUS_OUT, false, true));
 		}
 		__focus = value;
-		__focus.dispatchEvent(new Event(Event.FOCUS_OVER, false, true));
+		if (__focus != null)
+			__focus.dispatchEvent(new Event(Event.FOCUS_OVER, false, true));
 		return __focus;
 	}
 
@@ -153,6 +159,12 @@ class Stage extends Box {
 	 * @return 是否成功处理了鼠标事件
 	 */
 	public function handleMouseEvent(event:hx.events.MouseEvent, needHitTest:Bool, dispatch:Bool = true):Bool {
+		if (!needHitTest) {
+			// 上层舞台已经命中时，本舞台只接收原有舞台通知，不打开菜单。
+			event.target = this;
+			this.dispatchEvent(event);
+			return false;
+		}
 		var touchList = [];
 		if (needHitTest && __hitTest(event.stageX, event.stageY, touchList)) {
 			for (index => object in touchList) {
@@ -165,13 +177,24 @@ class Stage extends Box {
 		} else {
 			// 无可触摸的情况下，应该触发stage的事件
 			event.target = this;
+			if (dispatch)
+				__contextMenuEvents.dispatchEvent(event);
 			this.dispatchEvent(event);
+			if (dispatch && event.type == MouseEvent.RIGHT_CLICK)
+				__openContextMenu(this, event);
 		}
-		return false;
+		return dispatch && event.type == MouseEvent.RIGHT_CLICK && event.contextMenuHandled;
 	}
 
 	private function __dispatchMouseEvent(touchList:Array<DisplayObject>, event:MouseEvent, dispatch:Bool = true):Bool {
 		var display:DisplayObject = touchList[touchList.length - 1];
+		var menuOwner = event.type == MouseEvent.RIGHT_CLICK ? __findContextMenuOwner(display) : null;
+		if (event.type == MouseEvent.RIGHT_CLICK && menuOwner == null && openedContextMenu != null && @:privateAccess openedContextMenu.containsTarget(display))
+			event.contextMenuHandled = true;
+		event.contextMenuOwner = menuOwner;
+		event.target = display;
+		if (dispatch)
+			__contextMenuEvents.dispatchEvent(event);
 
 		if (event.type == MouseEvent.MOUSE_MOVE) {
 			this.__mouseDownDt = 0;
@@ -208,9 +231,13 @@ class Stage extends Box {
 				event.target = display;
 				object.dispatchEvent(event);
 				if (event.isDefaultPrevented) {
-					return true;
+					if (event.type != MouseEvent.RIGHT_CLICK)
+						return true;
+					break;
 				}
 			}
+			if (event.type == MouseEvent.RIGHT_CLICK)
+				__openContextMenu(menuOwner, event);
 
 			if (event.type == MouseEvent.MOUSE_MOVE) {
 				if (__overDisplayObject != display) {
@@ -273,6 +300,10 @@ class Stage extends Box {
 	 */
 	public function handleKeyboardEvent(event:KeyboardEvent):Void {
 		event.target = this;
+		// 菜单的 Esc 优先于输入框；其他按键仍按原有焦点规则分发。
+		__contextMenuEvents.dispatchEvent(event);
+		if (event.isDefaultPrevented)
+			return;
 		if (focus != null && focus.stage != null && focus.stage == this) {
 			focus.dispatchEvent(event);
 		} else {
@@ -285,10 +316,56 @@ class Stage extends Box {
 	 * @param event 要分发的事件对象
 	 */
 	override function dispatchEvent(event:Event) {
+		if (event.type == Event.RESIZE || event.type == Event.DEACTIVATE)
+			__contextMenuEvents.dispatchEvent(event);
 		if (event.type == Event.RESIZE) {
 			this.updateLayout();
 		}
 		super.dispatchEvent(event);
+	}
+
+	private function __findContextMenuOwner(target:DisplayObject):DisplayObject {
+		var current = target;
+		while (current != null) {
+			if (current.contextMenu != null)
+				return current;
+			current = current.parent;
+		}
+		return null;
+	}
+
+	private function __openContextMenu(owner:DisplayObject, event:MouseEvent):Void {
+		if (owner == null || !owner.mouseEnabled || !owner.visible || owner.stage != this || owner.contextMenu == null || event.contextMenuHandled)
+			return;
+		event.contextMenuHandled = true;
+		@:privateAccess owner.contextMenu.open(owner, cast event.target, event.stageX, event.stageY);
+	}
+
+	/** 后端可在原生 contextmenu 先于 RIGHT_CLICK 到达时查询接管状态，不触发选择或菜单事件。 */
+	public function hasContextMenuAt(stageX:Float, stageY:Float):Bool {
+		if (!mouseEnabled || !visible)
+			return false;
+		var path:Array<DisplayObject> = [];
+		if (!__hitTest(stageX, stageY, path))
+			return contextMenu != null;
+		var target = path[path.length - 1];
+		for (object in path) {
+			if (object is DisplayObjectContainer && !cast(object, DisplayObjectContainer).mouseChildren) {
+				target = object;
+				break;
+			}
+		}
+		if (openedContextMenu != null && @:privateAccess openedContextMenu.containsTarget(target))
+			return true;
+		return __findContextMenuOwner(target) != null;
+	}
+
+	override public function dispose():Void {
+		if (openedContextMenu != null)
+			openedContextMenu.close();
+		if (focus != null && focus.stage == this)
+			focus = null;
+		super.dispose();
 	}
 
 	/**
@@ -326,4 +403,9 @@ class Stage extends Box {
 	override public function toString():String {
 		return "[" + Type.getClassName(Type.getClass(this)) + " Stage " + Hxmaker.engine.stages.indexOf(this) + "]";
 	}
+}
+
+/** 菜单打开期间使用的舞台输入侦听器，优先于焦点及冒泡处理。 */
+private class ContextMenuEventDispatcher extends EventDispatcher {
+	public function new() {}
 }

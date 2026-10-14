@@ -1,0 +1,9 @@
+<project>
+    <meta title="hxmaker 右键菜单示例" package="hxmaker.examples.contextmenu" version="1.0.0" />
+    <app main="Main" file="context-menu" path="Export" />
+    <source path="Source" />
+    <haxelib name="hxmaker-openfl" />
+    <haxelib name="spine-haxe" />
+    <haxelib name="actuate" />
+    <window width="800" height="600" background="#202020" />
+</project>

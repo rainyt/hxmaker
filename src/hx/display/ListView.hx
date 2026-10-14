@@ -30,12 +30,16 @@ class ListView extends Scroll implements IDataProider<ArrayCollection> {
 	}
 
 	public function updateAllData():Void {
+		++__dataRevision;
 		__dataDirty = true;
 	}
 
 	private var __data:ArrayCollection;
 
 	private var __dataDirty:Bool = false;
+	private var __dataRevision:Int = 0;
+	private var __renderedRevision:Int = -1;
+	private var __rendererData:Map<DisplayObject, Dynamic> = new Map();
 
 	private var __selectedIndexDirty:Bool = false;
 
@@ -50,6 +54,7 @@ class ListView extends Scroll implements IDataProider<ArrayCollection> {
 	public var rightClickSelectEnabled:Bool = true;
 
 	public function set_data(value:ArrayCollection):ArrayCollection {
+		++__dataRevision;
 		this.__data = value;
 		this.__dataDirty = true;
 		this.invalidate();
@@ -74,8 +79,7 @@ class ListView extends Scroll implements IDataProider<ArrayCollection> {
 		if (e.type == MouseEvent.RIGHT_CLICK && !rightClickSelectEnabled)
 			return;
 		var child:DisplayObject = cast e.target;
-		var itemRenderer = __getItemRendererByChild(child);
-		var index = this.__getItemRendererIndex(itemRenderer);
+		var index = getItemIndexByRenderer(child);
 		if (index >= 0) {
 			this.selectedIndex = index;
 			if (changedSoundId != null) {
@@ -100,10 +104,27 @@ class ListView extends Scroll implements IDataProider<ArrayCollection> {
 	}
 
 	private function __getItemRendererByChild(child:DisplayObject):DisplayObject {
-		if (child.parent != null && child.parent != box) {
-			return __getItemRendererByChild(child.parent);
-		}
+		while (child != null && child.parent != box)
+			child = child.parent;
 		return child;
+	}
+
+	/** 获取实际命中条目的数据索引，空白、回收对象和尚未完成刷新时返回 -1。 */
+	public function getItemIndexByRenderer(child:DisplayObject):Int {
+		if (__renderedRevision != __dataRevision)
+			return -1;
+		var renderer = __getItemRendererByChild(child);
+		if (renderer == null || renderer == __virtualSpacer)
+			return -1;
+		var index = __getItemRendererIndex(renderer);
+		return __data != null && index >= 0 && index < __data.source.length
+			&& __rendererData.exists(renderer) && __rendererData.get(renderer) == __data.source[index] ? index : -1;
+	}
+
+	/** 从条目内部任意显示对象查询当前数据，空白区域返回 null。 */
+	public function getItemByRenderer(child:DisplayObject):Dynamic {
+		var index = getItemIndexByRenderer(child);
+		return index >= 0 ? __data.source[index] : null;
 	}
 
 	/**
@@ -159,6 +180,7 @@ class ListView extends Scroll implements IDataProider<ArrayCollection> {
 			if (__data != null) {
 				for (i in 0...__data.source.length) {
 					var itemRenderer:DisplayObject = itemRendererRecycler.create();
+					__rendererData.set(itemRenderer, __data.source[i]);
 					this.addChild(itemRenderer);
 					if (itemRenderer is IDataProider) {
 						var proider:IDataProider<Dynamic> = cast itemRenderer;
@@ -174,6 +196,7 @@ class ListView extends Scroll implements IDataProider<ArrayCollection> {
 				}
 			}
 			this.__dataDirty = false;
+			__renderedRevision = __dataRevision;
 			if (autoVisible) {
 				Timer.delay(this.invalidate, 16);
 			}
@@ -360,6 +383,7 @@ class ListView extends Scroll implements IDataProider<ArrayCollection> {
 		for (index in expired) {
 			var renderer = this.__virtualItems.get(index);
 			this.__virtualItems.remove(index);
+			__rendererData.remove(renderer);
 			renderer.parent.removeChild(renderer);
 			this.itemRendererRecycler.release(renderer);
 		}
@@ -392,6 +416,7 @@ class ListView extends Scroll implements IDataProider<ArrayCollection> {
 		// 内容尺寸不再由ItemRenderer决定，失效Scroll的内容尺寸缓存
 		this.__cachedMaxSize = null;
 		this.__virtualReady = true;
+		__renderedRevision = __dataRevision;
 	}
 
 	/**
@@ -405,6 +430,7 @@ class ListView extends Scroll implements IDataProider<ArrayCollection> {
 	 * 绑定ItemRenderer的数据
 	 */
 	private function __setVirtualRendererData(renderer:DisplayObject, index:Int):Void {
+		__rendererData.set(renderer, __data.source[index]);
 		if (renderer is IDataProider) {
 			var proider:IDataProider<Dynamic> = cast renderer;
 			proider.data = this.__data.source[index];
@@ -425,6 +451,7 @@ class ListView extends Scroll implements IDataProider<ArrayCollection> {
 	 * 清理列表创建的所有子对象，全部回收到ItemRenderer的对象池
 	 */
 	private function __clearChildren():Void {
+		__rendererData.clear();
 		var i = this.children.length;
 		while (i-- > 0) {
 			var child = this.children[i];
@@ -447,6 +474,11 @@ class ListView extends Scroll implements IDataProider<ArrayCollection> {
 		this.__virtualWidth = -1;
 		this.__virtualHeight = -1;
 		this.__virtualReady = false;
+	}
+	override public function dispose():Void {
+		__rendererData.clear();
+		__virtualItems.clear();
+		super.dispose();
 	}
 }
 

@@ -209,6 +209,8 @@ class Tree extends Scroll {
 	 * 扁平化后的可见行，只包含展开路径上的节点
 	 */
 	private var __rows:Array<TreeRowData> = [];
+	// 记录当前渲染器实际绑定的行，刷新但尚未重绘时不能把旧渲染器映射到新数据。
+	private var __rendererRows:Map<DisplayObject, TreeRowData> = new Map();
 
 	/**
 	 * 展开状态或数据发生变化，需要重新扁平化
@@ -724,7 +726,7 @@ class Tree extends Scroll {
 			return null;
 		}
 		var row = this.__getRowIndexByRenderer(renderer);
-		return row >= 0 ? this.__rows[row].item : null;
+		return row >= 0 && row < __rows.length && __rendererRows.get(renderer) == __rows[row] ? __rows[row].item : null;
 	}
 
 	/**
@@ -750,14 +752,14 @@ class Tree extends Scroll {
 			return;
 		}
 		var row = this.__getRowIndexByRenderer(renderer);
-		if (row < 0) {
+		if (row < 0 || __rendererRows.get(renderer) != __rows[row]) {
 			return;
 		}
 		var rowData = this.__rows[row];
 		// 点击在展开箭头热区上时只切换展开状态，不改变选择（VSCode行为）
 		var localX = renderer.globalToLocal(new Point(e.stageX, e.stageY)).x;
 		var twistyStart = rowData.depth * this.indent;
-		if (rowData.item.isFolder && localX >= twistyStart && localX < twistyStart + this.twistySize) {
+		if (e.type != MouseEvent.RIGHT_CLICK && rowData.item.isFolder && localX >= twistyStart && localX < twistyStart + this.twistySize) {
 			this.toggleItem(rowData.item);
 			return;
 		}
@@ -983,6 +985,7 @@ class Tree extends Scroll {
 		for (index in expired) {
 			var renderer = this.__items.get(index);
 			this.__items.remove(index);
+			__rendererRows.remove(renderer);
 			if (renderer == this.__hoverRenderer) {
 				this.__setHoverRenderer(null);
 			}
@@ -1115,6 +1118,7 @@ class Tree extends Scroll {
 	 * 绑定ItemRenderer的行数据
 	 */
 	private function __setRendererData(renderer:DisplayObject, index:Int):Void {
+		__rendererRows.set(renderer, __rows[index]);
 		if (renderer is IDataProider) {
 			var proider:IDataProider<Dynamic> = cast renderer;
 			proider.data = this.__rows[index];
@@ -1135,6 +1139,7 @@ class Tree extends Scroll {
 	 * 清理树创建的所有子对象，全部回收到ItemRenderer的对象池
 	 */
 	private function __clearChildren():Void {
+		__rendererRows.clear();
 		var i = this.children.length;
 		while (i-- > 0) {
 			var child = this.children[i];
@@ -1160,5 +1165,12 @@ class Tree extends Scroll {
 		this.__lastWidth = -1;
 		this.__lastHeight = -1;
 		this.__virtualReady = false;
+	}
+
+	override public function dispose():Void {
+		__rendererRows.clear();
+		__items.clear();
+		__hoverRenderer = null;
+		super.dispose();
 	}
 }

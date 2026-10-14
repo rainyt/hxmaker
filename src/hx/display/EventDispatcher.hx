@@ -57,7 +57,8 @@ class EventDispatcher implements IEventDispatcher {
 	public function dispatchEvent(event:Event) {
 		if (__listeners.exists(event.type)) {
 			var listeners = __listeners.get(event.type);
-			for (listener in listeners) {
+			// 监听中关闭菜单会移除临时监听，使用快照避免跳过同一事件中的其他监听。
+			for (listener in listeners.copy()) {
 				listener(event);
 			}
 		}

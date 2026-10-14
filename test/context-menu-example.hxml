@@ -1,0 +1,15 @@
+--main Main
+--class-path src
+--class-path samples/context-menu/Source
+--library spine-haxe
+--library actuate
+--library openfl
+--library openfl-glsl
+--library vector-math
+--library lime
+--library hxmaker-openfl
+-D html5
+-D lime-html5
+-D lime-canvas
+--js bin/context-menu-example.js
+--no-output

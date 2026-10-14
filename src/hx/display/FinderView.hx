@@ -234,6 +234,8 @@ class FinderView extends Scroll {
 	 * 当前目录的子项平铺成的可见行（不做树形展开，只有一层）
 	 */
 	private var __rows:Array<TreeRowData> = [];
+	// 记录当前渲染器实际绑定的行，刷新但尚未重绘时不能把旧渲染器映射到新数据。
+	private var __rendererRows:Map<DisplayObject, TreeRowData> = new Map();
 
 	/**
 	 * 目录或数据发生变化，需要重新平铺
@@ -597,7 +599,7 @@ class FinderView extends Scroll {
 			return null;
 		}
 		var row = this.__getRowIndexByRenderer(renderer);
-		return row >= 0 && row < this.__rows.length ? this.__rows[row].item : null;
+		return row >= 0 && row < __rows.length && __rendererRows.get(renderer) == __rows[row] ? __rows[row].item : null;
 	}
 
 	/**
@@ -628,7 +630,7 @@ class FinderView extends Scroll {
 			return;
 		}
 		var row = this.__getRowIndexByRenderer(renderer);
-		if (row < 0 || row >= this.__rows.length) {
+		if (row < 0 || row >= this.__rows.length || __rendererRows.get(renderer) != __rows[row]) {
 			return;
 		}
 		var item = this.__rows[row].item;
@@ -692,7 +694,7 @@ class FinderView extends Scroll {
 			return;
 		}
 		var row = this.__getRowIndexByRenderer(renderer);
-		if (row < 0 || row >= this.__rows.length) {
+		if (row < 0 || row >= this.__rows.length || __rendererRows.get(renderer) != __rows[row]) {
 			return;
 		}
 		var item = this.__rows[row].item;
@@ -1050,6 +1052,7 @@ class FinderView extends Scroll {
 		for (index in expired) {
 			var renderer = this.__items.get(index);
 			this.__items.remove(index);
+			__rendererRows.remove(renderer);
 			if (renderer == this.__hoverRenderer) {
 				this.__setHoverRenderer(null);
 			}
@@ -1193,6 +1196,7 @@ class FinderView extends Scroll {
 	 * 绑定ItemRenderer的行数据
 	 */
 	private function __setRendererData(renderer:DisplayObject, index:Int):Void {
+		__rendererRows.set(renderer, __rows[index]);
 		if (renderer is IDataProider) {
 			var proider:IDataProider<Dynamic> = cast renderer;
 			proider.data = this.__rows[index];
@@ -1213,6 +1217,7 @@ class FinderView extends Scroll {
 	 * 清理所有子对象，全部回收到ItemRenderer的对象池
 	 */
 	private function __clearChildren():Void {
+		__rendererRows.clear();
 		var i = this.children.length;
 		while (i-- > 0) {
 			var child = this.children[i];
@@ -1238,5 +1243,12 @@ class FinderView extends Scroll {
 		this.__lastWidth = -1;
 		this.__lastHeight = -1;
 		this.__virtualReady = false;
+	}
+
+	override public function dispose():Void {
+		__rendererRows.clear();
+		__items.clear();
+		__hoverRenderer = null;
+		super.dispose();
 	}
 }

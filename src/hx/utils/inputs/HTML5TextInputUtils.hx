@@ -43,8 +43,7 @@ class HTML5TextInputUtils {
 		}
 		textureArea.value = input.data;
 		textureArea.style.visibility = "visible";
-		textureArea.selectionStart = input.selectionStart;
-		textureArea.selectionEnd = input.selectionEnd;
+		syncSelectionToNative(input);
 		input.selectionAnchor = input.selectionEnd;
 		textureArea.focus();
 	}
@@ -65,7 +64,8 @@ class HTML5TextInputUtils {
 	}
 
 	public static function onKeyUp():Void {
-		input.syncSelectionFromNative(textureArea.selectionStart, textureArea.selectionEnd);
+		if (input != null)
+			syncSelectionFromNative();
 	}
 
 	/**
@@ -74,7 +74,16 @@ class HTML5TextInputUtils {
 	public static function onNativeSelect():Void {
 		if (input == null)
 			return;
-		input.syncSelectionFromNative(textureArea.selectionStart, textureArea.selectionEnd);
+		syncSelectionFromNative();
+	}
+
+	/** 反向选区的活动端在开头，滚动应跟随活动端。 */
+	private static function syncSelectionFromNative():Void {
+		var caret = textureArea.selectionDirection == "backward" ? textureArea.selectionStart : textureArea.selectionEnd;
+		var previous = input.suspendNativeSync;
+		input.suspendNativeSync = true;
+		input.syncSelectionFromNative(textureArea.selectionStart, textureArea.selectionEnd, caret);
+		input.suspendNativeSync = previous;
 	}
 
 	/**
@@ -86,10 +95,9 @@ class HTML5TextInputUtils {
 		var start = input.selectionStart < input.selectionEnd ? input.selectionStart : input.selectionEnd;
 		var end = input.selectionStart < input.selectionEnd ? input.selectionEnd : input.selectionStart;
 		// 值相同时不写入，避免触发多余的 select 事件造成回环
-		if (textureArea.selectionStart != start)
-			textureArea.selectionStart = start;
-		if (textureArea.selectionEnd != end)
-			textureArea.selectionEnd = end;
+		var direction = start == end ? "none" : @:privateAccess input.__caretIndex == start ? "backward" : "forward";
+		if (textureArea.selectionStart != start || textureArea.selectionEnd != end || textureArea.selectionDirection != direction)
+			textureArea.setSelectionRange(start, end, direction);
 	}
 
 	/**
@@ -104,7 +112,7 @@ class HTML5TextInputUtils {
 		input.suspendNativeSync = true;
 		input.data = textureArea.value.substr(0, 9999);
 		input.suspendNativeSync = false;
-		input.syncSelectionFromNative(textureArea.selectionStart, textureArea.selectionEnd);
+		syncSelectionFromNative();
 		input.getTextWidth();
 		input.dispatchEvent(new Event(Event.CHANGE));
 	}

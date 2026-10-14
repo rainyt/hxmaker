@@ -6,6 +6,7 @@ import hx.layout.AnchorLayoutData;
 import hx.layout.AnchorLayout;
 import hx.utils.TextInputUtils;
 import hx.events.MouseEvent;
+import hx.providers.ITextFieldLayoutProvider;
 import StringTools;
 
 /**
@@ -16,10 +17,33 @@ class InputLabel extends Box implements IDataProider<String> {
 
 	public var label:Label = new Label();
 
+	/** 视口固定，文字、选区和光标一起在内容容器内滚动。 */
+	private var __viewport:Box = new Box();
+	private var __content:Box = new Box();
+	private var __clipRect:Rectangle = new Rectangle();
+	private var __textBounds:Rectangle = new Rectangle();
+	private var __selectionBounds:Rectangle = new Rectangle();
+	private var __selectionQuadCount:Int = 0;
+	private var __selectionQuads:Array<Quad> = [];
+	private var __selectionDirty:Bool = true;
+	private var __lastLayoutVersion:Int = -1;
+	private var __lastMeasuredLabel:Label;
+	private var __lastMeasuredData:String;
+	private var __lastTextWidth:Float = -1;
+	private var __lastTextHeight:Float = -1;
+	private var __lastLabelOriginX:Float = Math.NaN;
+	private var __lastLabelOriginY:Float = Math.NaN;
+	private var __scrollX:Float = 0;
+	private var __scrollY:Float = 0;
+	private var __refreshingViewport:Bool = false;
+	private var __dragStageX:Float = 0;
+	private var __dragStageY:Float = 0;
+
 	public var wordWrap(get, set):Bool;
 
 	private function set_wordWrap(v:Bool):Bool {
 		label.wordWrap = v;
+		placeholderLabel.wordWrap = v;
 		return v;
 	}
 
@@ -44,7 +68,8 @@ class InputLabel extends Box implements IDataProider<String> {
 
 	private function set_selectionColor(value:UInt):UInt {
 		selectionColor = value;
-		selectionQuad.data = value;
+		for (quad in __selectionQuads)
+			quad.data = value;
 		return value;
 	}
 
@@ -129,9 +154,9 @@ class InputLabel extends Box implements IDataProider<String> {
 	/**
 	 * 光标所在字符的边界
 	 */
-	private var __caretRect:Rectangle;
+	private var __caretRect:Rectangle = new Rectangle();
 
-	private function updateSelection():Void {
+	private function updateSelection(caretIndex:Int = -1):Void {
 		// 规范化选区：保证 selectionStart <= selectionEnd 且都在文本范围内
 		var length:Int = __data != null ? __data.length : 0;
 		var start:Int = __selectionStart;
@@ -156,11 +181,9 @@ class InputLabel extends Box implements IDataProider<String> {
 		if (__caretIndex > length)
 			__caretIndex = length;
 		if (!__dragging)
-			__caretIndex = __selectionEnd;
-		if (this.label.root != null)
-			__caretRect = this.label.root.getChatBounds(__caretIndex);
+			__caretIndex = caretIndex < 0 ? __selectionEnd : Std.int(Math.max(0, Math.min(length, caretIndex)));
 		__dt = 0;
-		this.updateSelectionHighlight();
+		__selectionDirty = true;
 		// 将选区同步到原生输入通道（如 HTML5 的隐藏输入框），让原生键盘获得删除/替换选区的能力
 		if (!suspendNativeSync)
 			TextInputUtils.syncSelectionToNative(this);
@@ -170,22 +193,56 @@ class InputLabel extends Box implements IDataProider<String> {
 	 * 更新选区高亮的显示
 	 */
 	private function updateSelectionHighlight():Void {
-		var hasSelection:Bool = __selectionEnd > __selectionStart && this.label.root != null;
-		if (!hasSelection) {
-			this.selectionQuad.visible = false;
-			return;
+		var count = 0;
+		__selectionBounds.setTo(0, 0, 0, 0);
+		var segment:Rectangle = null;
+		if (__selectionEnd > __selectionStart && label.root != null) {
+			var start = displayIndex(__selectionStart);
+			var end = displayIndex(__selectionEnd);
+			for (i in start...end) {
+				var rect = label.root.getChatBounds(i);
+				if (rect == null)
+					rect = caretBounds(i);
+				if (rect == null)
+					continue;
+				var right = rect.right;
+				var next = caretBounds(i + 1);
+				if (next != null && next.y == rect.y)
+					right = Math.max(right, next.x);
+				if (segment == null || segment.y != rect.y) {
+					if (segment != null)
+						setSelectionQuad(count++, segment);
+					segment = new Rectangle(rect.x, rect.y, Math.max(1, right - rect.x), rect.height);
+				} else {
+					segment.width = Math.max(segment.right, right) - segment.x;
+					segment.height = Math.max(segment.height, rect.height);
+				}
+			}
+			if (segment != null)
+				setSelectionQuad(count++, segment);
 		}
-		var startRect:Rectangle = this.label.root.getChatBounds(__selectionStart);
-		var endRect:Rectangle = this.label.root.getChatBounds(__selectionEnd - 1);
-		if (startRect == null || endRect == null) {
-			this.selectionQuad.visible = false;
-			return;
+		for (i in count...__selectionQuadCount)
+			__selectionQuads[i].visible = false;
+		__selectionQuadCount = count;
+		__selectionDirty = false;
+	}
+
+	/** 复用每一行的高亮色块，兼容已有的 selectionQuad 属性。 */
+	private function setSelectionQuad(index:Int, rect:Rectangle):Void {
+		if (index == __selectionQuads.length) {
+			var quad = new Quad(1, 1, selectionColor);
+			quad.alpha = selectionQuad.alpha;
+			quad.includeInLayout = false;
+			__selectionQuads.push(quad);
+			__content.addChildAt(quad, index);
 		}
-		this.selectionQuad.visible = true;
-		this.selectionQuad.x = startRect.x + @:privateAccess this.label.__originWorldX;
-		this.selectionQuad.y = startRect.y + @:privateAccess this.label.__originWorldY;
-		this.selectionQuad.width = (endRect.x + endRect.width) - startRect.x;
-		this.selectionQuad.height = startRect.height > endRect.height ? startRect.height : endRect.height;
+		var quad = __selectionQuads[index];
+		quad.visible = true;
+		quad.x = rect.x + label.x + label.originX;
+		quad.y = rect.y + label.y + label.originY;
+		quad.width = rect.width;
+		quad.height = rect.height;
+		__selectionBounds.expand(quad.x, quad.y, quad.width, quad.height);
 	}
 
 	/**
@@ -194,10 +251,10 @@ class InputLabel extends Box implements IDataProider<String> {
 	 * 第一步 setter 内部的选区回写会用另一个端点的旧值覆盖原生输入框刚建立的选区
 	 * （例如 Ctrl+A 全选会被截断，导致删除后遗留最后一个字符）。
 	 */
-	public function syncSelectionFromNative(start:Int, end:Int):Void {
+	public function syncSelectionFromNative(start:Int, end:Int, caretIndex:Int = -1):Void {
 		__selectionStart = start;
 		__selectionEnd = end;
-		this.updateSelection();
+		this.updateSelection(caretIndex);
 	}
 
 	private var __data:String = "";
@@ -222,7 +279,7 @@ class InputLabel extends Box implements IDataProider<String> {
 	 * 更新默认提示文案的可见性
 	 */
 	private function updatePlaceholderVisibility():Void {
-		this.placeholderLabel.visible = (this.label.data == null || StringTools.trim(this.label.data) == "") && this.placeholder != "";
+		this.placeholderLabel.visible = (this.label.data == null || this.label.data.length == 0) && this.placeholder != null && this.placeholder != "";
 	}
 
 	public var textFormat(get, set):TextFormat;
@@ -253,11 +310,11 @@ class InputLabel extends Box implements IDataProider<String> {
 	}
 
 	private function set_passwordChar(value:String):String {
-		passwordChar = value;
+		passwordChar = value == null || value.length == 0 ? "*" : value;
 		if (displayAsPassword) {
 			this.updateLabelDisplay();
 		}
-		return value;
+		return passwordChar;
 	}
 
 	/**
@@ -309,16 +366,26 @@ class InputLabel extends Box implements IDataProider<String> {
 		this.layout = new AnchorLayout();
 		this.label.layoutData = AnchorLayoutData.fill();
 		this.placeholderLabel.layoutData = AnchorLayoutData.fill();
-		this.addChild(this.selectionQuad);
-		this.addChild(this.placeholderLabel);
-		this.addChild(this.label);
-		this.addChild(line);
+		__viewport.layoutData = AnchorLayoutData.fill();
+		this.addChild(__viewport);
+		__viewport.addChild(__content);
+		__selectionQuads.push(selectionQuad);
+		__content.addChild(selectionQuad);
+		__content.addChild(placeholderLabel);
+		__content.addChild(label);
+		__content.addChild(line);
+		selectionQuad.includeInLayout = false;
+		line.includeInLayout = false;
+		line.visible = false;
+		// 空白位置同样可以获得焦点，输入框自身负责边界命中。
+		this.mouseClickEnabled = true;
 		this.mouseChildren = false;
 		// 选区高亮默认隐藏，以半透明显示
 		this.selectionQuad.visible = false;
 		this.selectionQuad.alpha = 0.35;
 		// 默认提示文案颜色
-		this.placeholderTextFormat.color = 0x999999;
+		placeholderLabel.color = 0x999999;
+		__placeholderTextFormat.color = 0x999999;
 		this.updatePlaceholderVisibility();
 	}
 
@@ -329,6 +396,8 @@ class InputLabel extends Box implements IDataProider<String> {
 		// 按下即进入激活态：拖拽产生的选区在失焦时需要被清理
 		// （若只在 CLICK 的 focus() 里激活，拖拽到外部抬起时收不到 CLICK，失焦清理会被跳过）
 		__isFocus = true;
+		__dragStageX = event.stageX;
+		__dragStageY = event.stageY;
 		// 按下即定位光标，并以此为锚点开始拖拽选区
 		var index:Int = this.getCharIndexAtPoint(event.stageX, event.stageY);
 		this.selectionAnchor = index;
@@ -344,6 +413,8 @@ class InputLabel extends Box implements IDataProider<String> {
 	private function onStageMouseMove(event:MouseEvent):Void {
 		if (!__dragging)
 			return;
+		__dragStageX = event.stageX;
+		__dragStageY = event.stageY;
 		this.setDragSelection(this.getCharIndexAtPoint(event.stageX, event.stageY));
 	}
 
@@ -386,8 +457,9 @@ class InputLabel extends Box implements IDataProider<String> {
 		}
 		selectionAnchor = start;
 		__caretIndex = end;
-		this.selectionStart = start;
-		this.selectionEnd = end;
+		__selectionStart = start;
+		__selectionEnd = end;
+		this.updateSelection();
 		__isClicked = true;
 	}
 
@@ -408,8 +480,9 @@ class InputLabel extends Box implements IDataProider<String> {
 	 */
 	private function setSelectionCollapsed(index:Int):Void {
 		__caretIndex = index;
-		this.selectionStart = index;
-		this.selectionEnd = index;
+		__selectionStart = index;
+		__selectionEnd = index;
+		this.updateSelection();
 	}
 
 	/**
@@ -417,46 +490,46 @@ class InputLabel extends Box implements IDataProider<String> {
 	 */
 	private function setDragSelection(index:Int):Void {
 		__caretIndex = index;
-		if (index < this.selectionAnchor) {
-			this.selectionStart = index;
-			this.selectionEnd = this.selectionAnchor;
-		} else {
-			this.selectionStart = this.selectionAnchor;
-			this.selectionEnd = index;
-		}
+		__selectionStart = Std.int(Math.min(index, selectionAnchor));
+		__selectionEnd = Std.int(Math.max(index, selectionAnchor));
+		this.updateSelection(index);
 	}
 
 	/**
 	 * 获得指定舞台坐标处的字符索引（光标应落在的位置）
 	 */
 	public function getCharIndexAtPoint(stageX:Float, stageY:Float):Int {
-		var movePoint = this.globalToLocal(new Point(stageX, stageY));
-		var text:String = this.label.data != null ? this.label.data : "";
-		var charRect:Rectangle = new Rectangle();
-		for (i in 0...text.length) {
-			var rect = this.label.root.getChatBounds(i);
-			if (rect == null) {
+		refreshViewport(false);
+		if (label.root == null)
+			return 0;
+		// 使用文本局部坐标，同时消除滚动、对齐、组件缩放和父节点变换的影响。
+		var point = label.globalToLocal(new Point(stageX, stageY));
+		var length = __data == null ? 0 : __data.length;
+		var best = 0;
+		var bestY = Math.POSITIVE_INFINITY;
+		var bestX = Math.POSITIVE_INFINITY;
+		for (i in 0...length + 1) {
+			var rect = caretBounds(displayIndex(i));
+			if (rect == null)
 				continue;
-			}
-			rect.transform(charRect, @:privateAccess this.label.__worldTransform);
-			if (charRect.containsPoint(stageX, stageY)) {
-				if (movePoint.x - rect.x < rect.width / 2) {
-					// 如果点击位置在字符左边，则光标在左边
-					return i;
-				} else {
-					// 如果点击位置在字符右边，则光标在右边
-					return i + 1;
-				}
+			var dy = point.y < rect.y ? rect.y - point.y : point.y > rect.bottom ? point.y - rect.bottom : 0;
+			var dx = Math.abs(point.x - rect.x);
+			if (dy < bestY || (dy == bestY && dx < bestX)) {
+				best = i;
+				bestY = dy;
+				bestX = dx;
 			}
 		}
-		// 未命中任何字符：按文本中点判断光标落在开头还是结尾
-		return movePoint.x < this.getTextWidth() / 2 ? 0 : text.length;
+		return best;
 	}
 
 	private var __isFocus:Bool = false;
 
 	public function focus():Void {
 		__isFocus = true;
+		__isClicked = true;
+		if (stage != null)
+			stage.focus = this;
 		TextInputUtils.openInput(this);
 	}
 
@@ -485,14 +558,18 @@ class InputLabel extends Box implements IDataProider<String> {
 	override function onUpdate(dt:Float) {
 		super.onUpdate(dt);
 		__dt += dt;
-		if (stage == null || stage.focus != this) {
-			// 失焦后关闭输入通道（如 HTML5 的隐藏输入框），避免按键继续误入
+		var focused = stage != null && stage.focus == this;
+		if (!focused) {
 			if (__isFocus)
 				this.deactivate();
-			if (line.visible)
-				line.visible = false;
-			return;
+			line.visible = false;
 		}
+		// 失焦的输入框和提示文案也需要裁剪。
+		refreshViewport();
+		if (__dragging && focused)
+			updateDragScroll(dt);
+		if (!focused)
+			return;
 		if (!line.visible) {
 			if (__isClicked) {
 				line.visible = true;
@@ -502,32 +579,198 @@ class InputLabel extends Box implements IDataProider<String> {
 			// 闪缩
 			this.updateLine(__dt % 1 < 0.5 ? 1 : 0);
 		}
-		// 每帧刷新选区高亮，覆盖文本布局延迟导致的位置过期
-		if (__selectionEnd > __selectionStart)
-			this.updateSelectionHighlight();
+		// 光标显隐可能改变边界，但闪烁透明度不应反复切换遮罩。
+		updateClip();
 	}
 
 	private function updateLine(alpha:Float):Void {
 		#if disable_label_line_style
 		line.visible = false;
 		#else
-		line.x = __caretRect == null ? (__caretIndex == 0 ? 0 : getTextWidth() + 1) : __caretRect.x;
-		line.height = __caretRect == null ? textFormat.size + 2 : __caretRect.height;
-		line.alpha = alpha;
-		line.x += @:privateAccess label.__originWorldX;
-		if (__caretRect != null) {
-			line.y = __caretRect.y;
-			line.y += @:privateAccess label.__originWorldY;
-		} else {
-			switch label.verticalAlign {
-				case BOTTOM:
-					line.y = this.height - textFormat.size + 2;
-				case MIDDLE:
-					line.y = (this.height - textFormat.size + 2) / 2;
-				case TOP:
-					line.y = 0;
-			}
-		}
+		var x = __caretRect.x + label.x + label.originX;
+		var y = __caretRect.y + label.y + label.originY;
+		if (line.x != x) line.x = x;
+		if (line.y != y) line.y = y;
+		if (line.height != __caretRect.height) line.height = __caretRect.height;
+		if (line.alpha != alpha) line.alpha = alpha;
 		#end
+	}
+
+	/** 保留自动尺寸行为，内部视口的缓存尺寸不参与文本自然尺寸的计算。 */
+	override function get_width():Float {
+		return __width == null ? Math.max(label.getTextWidth(), placeholderLabel.visible ? placeholderLabel.getTextWidth() : 0) : __width;
+	}
+
+	override function get_height():Float {
+		return __height == null ? Math.max(label.getTextHeight(), placeholderLabel.visible ? placeholderLabel.getTextHeight() : 0) : __height;
+	}
+
+	override public function updateLayout():Void {
+		super.updateLayout();
+		var width = Math.max(0, __viewport.width);
+		var height = Math.max(0, __viewport.height);
+		if (__content.width != width) __content.width = width;
+		if (__content.height != height) __content.height = height;
+		if (__width == null) {
+			@:privateAccess label.__width = null;
+			@:privateAccess placeholderLabel.__width = null;
+		} else {
+			if (label.width != width) label.width = width;
+			if (placeholderLabel.width != width) placeholderLabel.width = width;
+		}
+		if (label.height != height) label.height = height;
+		if (placeholderLabel.height != height) placeholderLabel.height = height;
+	}
+
+	/** 先消费祖先的布局变更，避免按旧宽度测量文字或查询光标。 */
+	private function ensureLayout(object:DisplayObjectContainer):Void {
+		if (object.parent != null)
+			ensureLayout(object.parent);
+		@:privateAccess object.__updateLayout();
+	}
+
+	private function displayIndex(index:Int):Int {
+		return displayAsPassword ? index * passwordChar.length : index;
+	}
+
+	/** 优先使用插入位置接口；其他后端仍可使用原有字符边界。 */
+	private function caretBounds(index:Int):Rectangle {
+		if (Std.isOfType(label.root, ITextFieldLayoutProvider))
+			return cast(label.root, ITextFieldLayoutProvider).getCaretBounds(index);
+		if (label.root == null)
+			return null;
+		var rect = label.root.getChatBounds(index);
+		if (rect != null)
+			return new Rectangle(rect.x, rect.y, 1, rect.height);
+		if (index > 0) {
+			var previous = label.root.getChatBounds(index - 1);
+			if (previous != null)
+				return new Rectangle(previous.right, previous.y, 1, previous.height);
+		}
+		return new Rectangle(0, 0, 1, label.fontSize + 2);
+	}
+
+	/** 文本布局只在发生变动时扫描；静止输入框每帧仅比较缓存状态。 */
+	private function refreshViewport(followCaret:Bool = true):Void {
+		if (__refreshingViewport)
+			return;
+		__refreshingViewport = true;
+		ensureLayout(this);
+		var dirty = @:privateAccess label.__textFormatDirty;
+		label.getTextWidth();
+		label.getTextHeight();
+		if (__viewport.width != width || __viewport.height != height)
+			updateLayout();
+		@:privateAccess label.updateAlignTranform();
+		var active = placeholderLabel.visible ? placeholderLabel : label;
+		dirty = dirty || @:privateAccess active.__textFormatDirty;
+		var textWidth = active.getTextWidth();
+		var textHeight = active.getTextHeight();
+		@:privateAccess active.updateAlignTranform();
+		var provider:ITextFieldLayoutProvider = Std.isOfType(active.root, ITextFieldLayoutProvider) ? cast active.root : null;
+		var version = provider == null ? -1 : provider.layoutVersion;
+		if (dirty || __lastMeasuredLabel != active || __lastMeasuredData != active.data || __lastLayoutVersion != version
+			|| __lastTextWidth != textWidth || __lastTextHeight != textHeight) {
+			__textBounds.setTo(0, 0, textWidth, textHeight);
+			if (provider != null) {
+				var bounds = provider.getTextBounds();
+				__textBounds.setTo(bounds.x, bounds.y, bounds.width, bounds.height);
+			} else if (active.root != null) {
+				for (i in 0...active.data.length) {
+					var rect = active.root.getChatBounds(i);
+					if (rect != null)
+						__textBounds.expand(rect.x, rect.y, rect.width, rect.height);
+				}
+			}
+			__lastMeasuredLabel = active;
+			__lastMeasuredData = active.data;
+			__lastLayoutVersion = version;
+			__lastTextWidth = textWidth;
+			__lastTextHeight = textHeight;
+			__selectionDirty = true;
+		}
+		if (__lastLabelOriginX != label.x + label.originX || __lastLabelOriginY != label.y + label.originY) {
+			__lastLabelOriginX = label.x + label.originX;
+			__lastLabelOriginY = label.y + label.originY;
+			__selectionDirty = true;
+		}
+		var caret = caretBounds(displayIndex(__caretIndex));
+		if (caret != null)
+			__caretRect.setTo(caret.x, caret.y, caret.width, caret.height);
+		if (__selectionDirty)
+			updateSelectionHighlight();
+		var width = Math.max(0, __viewport.width);
+		var height = Math.max(0, __viewport.height);
+		var right = __textBounds.right + active.x + active.originX;
+		var bottom = __textBounds.bottom + active.y + active.originY;
+		var focused = stage != null && stage.focus == this;
+		if (focused && !placeholderLabel.visible) {
+			right = Math.max(right, __caretRect.right + label.x + label.originX);
+			bottom = Math.max(bottom, __caretRect.bottom + label.y + label.originY);
+		}
+		__scrollX = Math.max(0, Math.min(__scrollX, Math.max(0, right - width)));
+		__scrollY = Math.max(0, Math.min(__scrollY, Math.max(0, bottom - height)));
+		if (followCaret && focused && width > 0 && height > 0) {
+			var x = __caretRect.x + label.x + label.originX;
+			var y = __caretRect.y + label.y + label.originY;
+			if (x < __scrollX) __scrollX = Math.max(0, x);
+			else if (x + line.width > __scrollX + width) __scrollX = x + line.width - width;
+			if (y < __scrollY) __scrollY = Math.max(0, y);
+			else if (y + __caretRect.height > __scrollY + height) __scrollY = y + __caretRect.height - height;
+		}
+		applyScroll();
+		updateLine(line.alpha);
+		updateClip();
+		__refreshingViewport = false;
+	}
+
+	private function applyScroll():Void {
+		if (__content.x != -__scrollX) __content.x = -__scrollX;
+		if (__content.y != -__scrollY) __content.y = -__scrollY;
+	}
+
+	/** 只对越界的可见内容启用矩形裁剪；复用矩形并在尺寸变化时标脏。 */
+	private function updateClip():Void {
+		var active = placeholderLabel.visible ? placeholderLabel : label;
+		var x = __textBounds.x + active.x + active.originX - __scrollX;
+		var y = __textBounds.y + active.y + active.originY - __scrollY;
+		var right = x + __textBounds.width;
+		var bottom = y + __textBounds.height;
+		var overflow = __textBounds.width > 0 && (x < 0 || y < 0 || right > __viewport.width || bottom > __viewport.height);
+		if (line.visible && stage != null && stage.focus == this)
+			overflow = overflow || line.x - __scrollX < 0 || line.y - __scrollY < 0
+				|| line.x + line.width - __scrollX > __viewport.width || line.y + line.height - __scrollY > __viewport.height;
+		if (__selectionQuadCount > 0)
+			overflow = overflow || __selectionBounds.x - __scrollX < 0 || __selectionBounds.y - __scrollY < 0
+				|| __selectionBounds.right - __scrollX > __viewport.width || __selectionBounds.bottom - __scrollY > __viewport.height;
+		if (overflow) {
+			var width = Math.max(0, __viewport.width);
+			var height = Math.max(0, __viewport.height);
+			if (__clipRect.width != width || __clipRect.height != height) {
+				__clipRect.setTo(0, 0, width, height);
+				@:privateAccess __viewport.setDirty();
+			}
+			__viewport.maskRect = __clipRect;
+		} else {
+			__viewport.maskRect = null;
+		}
+	}
+
+	/** 鼠标停在视口外时继续滚动，支持选择当前看不到的字符。 */
+	private function updateDragScroll(dt:Float):Void {
+		var point = __viewport.globalToLocal(new Point(__dragStageX, __dragStageY));
+		var dx = point.x < 0 ? point.x : point.x > __viewport.width ? point.x - __viewport.width : 0;
+		var dy = point.y < 0 ? point.y : point.y > __viewport.height ? point.y - __viewport.height : 0;
+		if (dx == 0 && dy == 0)
+			return;
+		var maxX = Math.max(0, __textBounds.right + label.originX + line.width - __viewport.width);
+		var maxY = Math.max(0, __textBounds.bottom + label.originY - __viewport.height);
+		__scrollX = Math.max(0, Math.min(maxX, __scrollX + Math.max(-400, Math.min(400, dx * 6)) * dt));
+		__scrollY = Math.max(0, Math.min(maxY, __scrollY + Math.max(-400, Math.min(400, dy * 6)) * dt));
+		applyScroll();
+		var edge = __viewport.localToGlobal(new Point(Math.max(0, Math.min(__viewport.width, point.x)),
+			Math.max(0, Math.min(__viewport.height, point.y))));
+		setDragSelection(getCharIndexAtPoint(edge.x, edge.y));
+		refreshViewport();
 	}
 }

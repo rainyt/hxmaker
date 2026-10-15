@@ -27,6 +27,7 @@ class ContextMenu extends Box {
 	private var __defaultBackground:Quad;
 	private var __measuredWidth:Float = 0;
 	private var __measuredHeight:Float = 0;
+	private var __owner:DisplayObject;
 
 	override function get_width():Float return (__width != null ? __width : __measuredWidth) * scaleX;
 	override function get_height():Float return (__height != null ? __height : __measuredHeight) * scaleY;
@@ -99,15 +100,23 @@ class ContextMenu extends Box {
 			close();
 	}
 
-	private function open(owner:DisplayObject, target:DisplayObject, stageX:Float, stageY:Float):Void {
-		if (isDisposed || owner.stage == null)
+	/** 在指定对象所属舞台主动打开菜单，无需绑定右键。坐标使用舞台本地坐标。 */
+	public function show(owner:DisplayObject, stageX:Float, stageY:Float, ?target:DisplayObject):Void {
+		open(owner, target == null ? owner : target, stageX, stageY, false);
+	}
+
+	private function open(owner:DisplayObject, target:DisplayObject, stageX:Float, stageY:Float, requireBinding:Bool = true):Void {
+		if (isDisposed || owner == null || owner.isDisposed || owner.stage == null)
 			return;
 		close();
+		if (isDisposed || owner.isDisposed || owner.stage == null)
+			return;
 		var host = owner.stage;
 		if (host.openedContextMenu != null)
 			host.openedContextMenu.close();
 		// CLOSED 监听可以重新打开其他菜单，此时尊重已建立的新展示。
-		if (__context != null || host.openedContextMenu != null || owner.contextMenu != this)
+		if (isDisposed || owner.isDisposed || owner.stage != host || __context != null || host.openedContextMenu != null
+			|| (requireBinding && owner.contextMenu != this))
 			return;
 		var revision = ++__revision;
 		__context = {owner: owner, target: target, stageX: stageX, stageY: stageY};
@@ -121,7 +130,8 @@ class ContextMenu extends Box {
 		}
 		if (__revision != revision)
 			return;
-		if (opening.isDefaultPrevented || numChildren == 0 || isDisposed || owner.contextMenu != this || owner.stage != host) {
+		if (opening.isDefaultPrevented || numChildren == 0 || isDisposed || owner.isDisposed
+			|| (requireBinding && owner.contextMenu != this) || owner.stage != host) {
 			__context = null;
 			return;
 		}
@@ -130,6 +140,8 @@ class ContextMenu extends Box {
 			return;
 		}
 		__host = host;
+		__owner = owner;
+		owner.addEventListener(Event.REMOVED_FROM_STAGE, onRemoved);
 		__previousFocus = host.focus;
 		__viewport = new ContextMenuViewport();
 		__viewport.includeInLayout = false;
@@ -209,6 +221,9 @@ class ContextMenu extends Box {
 		__context = null;
 		__host = null;
 		__previousFocus = null;
+		if (__owner != null)
+			__owner.removeEventListener(Event.REMOVED_FROM_STAGE, onRemoved);
+		__owner = null;
 		removeEventListener(Event.REMOVED_FROM_STAGE, onRemoved);
 		if (host != null) {
 			var events = host.__contextMenuEvents;

@@ -44,6 +44,7 @@ class TextFormat {
 	 * @param textFormat 
 	 */
 	public function setTo(textFormat:TextFormat):Void {
+		this.font = textFormat.font;
 		this.size = textFormat.size;
 		this.color = textFormat.color;
 		this.outline = textFormat.outline;

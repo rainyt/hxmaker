@@ -1,0 +1,10 @@
+<project>
+    <meta title="hxmaker 面包屑导航示例" package="hxmaker.examples.breadcrumb" version="1.0.0" />
+    <app main="Main" file="breadcrumb-bar" path="Export" />
+    <source path="Source" />
+    <assets path="Assets" rename="assets" />
+    <haxelib name="hxmaker-openfl" />
+    <haxelib name="spine-haxe" />
+    <haxelib name="actuate" />
+    <window width="1920" height="1080" background="#202020" resizable="true" />
+</project>

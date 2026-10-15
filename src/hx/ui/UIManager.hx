@@ -14,6 +14,7 @@ import hx.display.MovieClip;
 import hx.display.Spine;
 import hx.display.ListView;
 import hx.display.FinderView;
+import hx.display.BreadcrumbBar;
 import hx.display.Tree;
 import hx.display.Scroll;
 import hx.display.BitmapLabel;
@@ -371,6 +372,39 @@ class UIManager {
 				layoutData.percentWidth = percentWidth;
 				layoutData.percentHeight = percentHeight;
 			}
+		});
+		addAttributesParse(BreadcrumbBar, function(obj:BreadcrumbBar, xml:Xml, assets:Assets) {
+			if (xml.exists("emptyText"))
+				obj.emptyText = xml.get("emptyText");
+			if (xml.exists("disabled"))
+				obj.disabled = xml.get("disabled") == "true";
+			var format = obj.textFormat;
+			if (xml.exists("font"))
+				format.font = xml.get("font");
+			if (xml.exists("fontSize")) {
+				var size = Std.parseInt(xml.get("fontSize"));
+				if (size != null)
+					format.size = size;
+			}
+			if (xml.exists("color")) {
+				var color = Std.parseInt(xml.get("color"));
+				if (color != null)
+					format.color = color;
+			}
+			obj.textFormat = format;
+			var appearance = obj.appearance;
+			for (key in ["currentColor", "disabledColor", "separatorColor", "hoverColor"]) {
+				if (xml.exists(key)) {
+					var value = Std.parseInt(xml.get(key));
+					if (value != null)
+					Reflect.setField(appearance, key, value);
+				}
+			}
+			for (key in ["padding", "itemPadding", "separatorWidth", "ellipsisWidth", "minimumCurrentWidth", "hoverAlpha"]) {
+				if (xml.exists(key))
+					Reflect.setField(appearance, key, Std.parseFloat(xml.get(key)));
+			}
+			obj.appearance = appearance;
 		});
 		addAttributesParse(Button, function(obj:Button, xml:Xml, assets:Assets) {
 			var color = xml.get("color");

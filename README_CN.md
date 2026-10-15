@@ -15,6 +15,7 @@
 | hx.display.Image | 图片，用于渲染游戏2D画面，自动批处理实现，支持九宫格图渲染 | ✅ | ✅ |
 | hx.display.Label | 文本，用于渲染文字 | ✅ | ✅ |
 | hx.display.Button | 按钮，普通的按钮 | ✅ | ✅ |
+| hx.display.BreadcrumbBar | [面包屑导航栏](docs/面包屑导航栏.md)，支持路径折叠、隐藏层级菜单与 XML，使用遮罩裁剪 | ✅ | ❌ |
 | hx.display.Sprite | 容器，用于组合其他对象 | ✅ | ✅ |
 | hx.display.Quad | 矩形显示对象 | ✅ | ✅ |
 | hx.display.Graphics | 矢量图形 | ✅ | ✅ |

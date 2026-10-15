@@ -1,0 +1,6 @@
+<Box id="demo" left="0" right="0" top="0" bottom="0">
+    <Label id="status" text="上方是通用导航，下方与 FinderView 组合。点击省略入口查看隐藏层级。" left="20" right="20" top="16" height="24" fontSize="14" color="0xcccccc"/>
+    <BreadcrumbBar id="generalBar" left="20" top="52" width="760" height="24" emptyText="没有路径" fontSize="14" color="0xcccccc" currentColor="0xffffff"/>
+    <BreadcrumbBar id="finderBar" left="20" right="20" top="180" height="24" emptyText="未打开项目"/>
+    <FinderView id="finder" left="20" right="20" top="214" bottom="20"/>
+</Box>

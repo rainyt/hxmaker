@@ -19,6 +19,7 @@ class InputLabel extends Box implements IDataProider<String> {
 
 	/** 视口固定，文字、选区和光标一起在内容容器内滚动。 */
 	private var __viewport:Box = new Box();
+
 	private var __content:Box = new Box();
 	private var __clipRect:Rectangle = new Rectangle();
 	private var __textBounds:Rectangle = new Rectangle();
@@ -39,11 +40,18 @@ class InputLabel extends Box implements IDataProider<String> {
 	private var __dragStageX:Float = 0;
 	private var __dragStageY:Float = 0;
 
+	/** 是否允许多行输入；关闭后不接收回车和换行符。 */
 	public var wordWrap(get, set):Bool;
 
 	private function set_wordWrap(v:Bool):Bool {
+		var changed = label.wordWrap != v;
 		label.wordWrap = v;
 		placeholderLabel.wordWrap = v;
+		if (changed) {
+			if (!v && normalizeInputText(__data) != __data)
+				this.data = __data;
+			TextInputUtils.syncTextToNative(this);
+		}
 		return v;
 	}
 
@@ -123,6 +131,30 @@ class InputLabel extends Box implements IDataProider<String> {
 		__selectionEnd = value;
 		this.updateSelection();
 		return value;
+	}
+
+	public var horizontalAlign(get, set):HorizontalAlign;
+
+	private function set_horizontalAlign(value:HorizontalAlign):HorizontalAlign {
+		this.label.horizontalAlign = value;
+		this.placeholderLabel.horizontalAlign = value;
+		return this.label.horizontalAlign;
+	}
+
+	private function get_horizontalAlign():HorizontalAlign {
+		return this.label.horizontalAlign;
+	}
+
+	public var verticalAlign(get, set):VerticalAlign;
+
+	private function set_verticalAlign(value:VerticalAlign):VerticalAlign {
+		this.label.verticalAlign = value;
+		this.placeholderLabel.verticalAlign = value;
+		return this.label.verticalAlign;
+	}
+
+	private function get_verticalAlign():VerticalAlign {
+		return this.label.verticalAlign;
 	}
 
 	private var __selectionStart:Int = 0;
@@ -261,14 +293,50 @@ class InputLabel extends Box implements IDataProider<String> {
 
 	public var data(get, set):String;
 
+	/** 所有输入入口共用约束，密码模式也先过滤原文。 */
+	public function normalizeInputText(value:String):String {
+		if (value == null || wordWrap || (value.indexOf("\r") < 0 && value.indexOf("\n") < 0))
+			return value;
+		return StringTools.replace(StringTools.replace(value, "\r", ""), "\n", "");
+	}
+
+	/** 将过滤前的插入位置映射到过滤后的文本，CRLF 的两个字符分别计数。 */
+	public function getNormalizedInputIndex(value:String, index:Int):Int {
+		if (value == null)
+			return 0;
+		var end = Std.int(Math.max(0, Math.min(value.length, index)));
+		var result = end;
+		if (!wordWrap && (value.indexOf("\r") >= 0 || value.indexOf("\n") >= 0)) {
+			for (i in 0...end) {
+				var code = StringTools.fastCodeAt(value, i);
+				if (code == 13 || code == 10)
+					result--;
+			}
+		}
+		return result;
+	}
+
 	private function set_data(value:String):String {
-		__data = value;
+		var normalized = normalizeInputText(value);
+		var filtered = normalized != value;
+		var caret = filtered ? getNormalizedInputIndex(value, __caretIndex) : -1;
+		var anchor = filtered ? getNormalizedInputIndex(value, selectionAnchor) : 0;
+		if (filtered) {
+			__selectionStart = getNormalizedInputIndex(value, __selectionStart);
+			__selectionEnd = getNormalizedInputIndex(value, __selectionEnd);
+			__caretIndex = caret;
+		}
+		var previous = suspendNativeSync;
+		suspendNativeSync = true;
+		__data = normalized;
 		this.updateLabelDisplay();
 		this.updatePlaceholderVisibility();
-		// 文本变化后收拢锚点，并校正选区范围（选区可能超出新文本长度）
-		this.selectionAnchor = this.selectionEnd;
-		this.updateSelection();
-		return value;
+		this.updateSelection(caret);
+		this.selectionAnchor = filtered ? anchor : __selectionEnd;
+		suspendNativeSync = previous;
+		if (!previous)
+			TextInputUtils.syncTextToNative(this);
+		return __data;
 	}
 
 	private function get_data():String {
@@ -279,7 +347,9 @@ class InputLabel extends Box implements IDataProider<String> {
 	 * 更新默认提示文案的可见性
 	 */
 	private function updatePlaceholderVisibility():Void {
-		this.placeholderLabel.visible = (this.label.data == null || this.label.data.length == 0) && this.placeholder != null && this.placeholder != "";
+		this.placeholderLabel.visible = (this.label.data == null || this.label.data.length == 0)
+			&& this.placeholder != null
+			&& this.placeholder != "";
 	}
 
 	public var textFormat(get, set):TextFormat;
@@ -592,10 +662,14 @@ class InputLabel extends Box implements IDataProider<String> {
 		#else
 		var x = __caretRect.x + label.x + label.originX;
 		var y = __caretRect.y + label.y + label.originY;
-		if (line.x != x) line.x = x;
-		if (line.y != y) line.y = y;
-		if (line.height != __caretRect.height) line.height = __caretRect.height;
-		if (line.alpha != alpha) line.alpha = alpha;
+		if (line.x != x)
+			line.x = x;
+		if (line.y != y)
+			line.y = y;
+		if (line.height != __caretRect.height)
+			line.height = __caretRect.height;
+		if (line.alpha != alpha)
+			line.alpha = alpha;
 		#end
 	}
 
@@ -612,17 +686,23 @@ class InputLabel extends Box implements IDataProider<String> {
 		super.updateLayout();
 		var width = Math.max(0, __viewport.width);
 		var height = Math.max(0, __viewport.height);
-		if (__content.width != width) __content.width = width;
-		if (__content.height != height) __content.height = height;
+		if (__content.width != width)
+			__content.width = width;
+		if (__content.height != height)
+			__content.height = height;
 		if (__width == null) {
 			@:privateAccess label.__width = null;
 			@:privateAccess placeholderLabel.__width = null;
 		} else {
-			if (label.width != width) label.width = width;
-			if (placeholderLabel.width != width) placeholderLabel.width = width;
+			if (label.width != width)
+				label.width = width;
+			if (placeholderLabel.width != width)
+				placeholderLabel.width = width;
 		}
-		if (label.height != height) label.height = height;
-		if (placeholderLabel.height != height) placeholderLabel.height = height;
+		if (label.height != height)
+			label.height = height;
+		if (placeholderLabel.height != height)
+			placeholderLabel.height = height;
 	}
 
 	/** 先消费祖先的布局变更，避免按旧宽度测量文字或查询光标。 */
@@ -672,8 +752,8 @@ class InputLabel extends Box implements IDataProider<String> {
 		@:privateAccess active.updateAlignTranform();
 		var provider:ITextFieldLayoutProvider = Std.isOfType(active.root, ITextFieldLayoutProvider) ? cast active.root : null;
 		var version = provider == null ? -1 : provider.layoutVersion;
-		if (dirty || __lastMeasuredLabel != active || __lastMeasuredData != active.data || __lastLayoutVersion != version
-			|| __lastTextWidth != textWidth || __lastTextHeight != textHeight) {
+		if (dirty || __lastMeasuredLabel != active || __lastMeasuredData != active.data || __lastLayoutVersion != version || __lastTextWidth != textWidth
+			|| __lastTextHeight != textHeight) {
 			__textBounds.setTo(0, 0, textWidth, textHeight);
 			if (provider != null) {
 				var bounds = provider.getTextBounds();
@@ -716,10 +796,14 @@ class InputLabel extends Box implements IDataProider<String> {
 		if (followCaret && focused && width > 0 && height > 0) {
 			var x = __caretRect.x + label.x + label.originX;
 			var y = __caretRect.y + label.y + label.originY;
-			if (x < __scrollX) __scrollX = Math.max(0, x);
-			else if (x + line.width > __scrollX + width) __scrollX = x + line.width - width;
-			if (y < __scrollY) __scrollY = Math.max(0, y);
-			else if (y + __caretRect.height > __scrollY + height) __scrollY = y + __caretRect.height - height;
+			if (x < __scrollX)
+				__scrollX = Math.max(0, x);
+			else if (x + line.width > __scrollX + width)
+				__scrollX = x + line.width - width;
+			if (y < __scrollY)
+				__scrollY = Math.max(0, y);
+			else if (y + __caretRect.height > __scrollY + height)
+				__scrollY = y + __caretRect.height - height;
 		}
 		applyScroll();
 		updateLine(line.alpha);
@@ -728,8 +812,10 @@ class InputLabel extends Box implements IDataProider<String> {
 	}
 
 	private function applyScroll():Void {
-		if (__content.x != -__scrollX) __content.x = -__scrollX;
-		if (__content.y != -__scrollY) __content.y = -__scrollY;
+		if (__content.x != -__scrollX)
+			__content.x = -__scrollX;
+		if (__content.y != -__scrollY)
+			__content.y = -__scrollY;
 	}
 
 	/** 只对越界的可见内容启用矩形裁剪；复用矩形并在尺寸变化时标脏。 */
@@ -741,11 +827,17 @@ class InputLabel extends Box implements IDataProider<String> {
 		var bottom = y + __textBounds.height;
 		var overflow = __textBounds.width > 0 && (x < 0 || y < 0 || right > __viewport.width || bottom > __viewport.height);
 		if (line.visible && stage != null && stage.focus == this)
-			overflow = overflow || line.x - __scrollX < 0 || line.y - __scrollY < 0
-				|| line.x + line.width - __scrollX > __viewport.width || line.y + line.height - __scrollY > __viewport.height;
+			overflow = overflow
+				|| line.x - __scrollX < 0
+				|| line.y - __scrollY < 0
+				|| line.x + line.width - __scrollX > __viewport.width
+				|| line.y + line.height - __scrollY > __viewport.height;
 		if (__selectionQuadCount > 0)
-			overflow = overflow || __selectionBounds.x - __scrollX < 0 || __selectionBounds.y - __scrollY < 0
-				|| __selectionBounds.right - __scrollX > __viewport.width || __selectionBounds.bottom - __scrollY > __viewport.height;
+			overflow = overflow
+				|| __selectionBounds.x - __scrollX < 0
+				|| __selectionBounds.y - __scrollY < 0
+				|| __selectionBounds.right - __scrollX > __viewport.width
+				|| __selectionBounds.bottom - __scrollY > __viewport.height;
 		if (overflow) {
 			var width = Math.max(0, __viewport.width);
 			var height = Math.max(0, __viewport.height);
@@ -771,8 +863,7 @@ class InputLabel extends Box implements IDataProider<String> {
 		__scrollX = Math.max(0, Math.min(maxX, __scrollX + Math.max(-400, Math.min(400, dx * 6)) * dt));
 		__scrollY = Math.max(0, Math.min(maxY, __scrollY + Math.max(-400, Math.min(400, dy * 6)) * dt));
 		applyScroll();
-		var edge = __viewport.localToGlobal(new Point(Math.max(0, Math.min(__viewport.width, point.x)),
-			Math.max(0, Math.min(__viewport.height, point.y))));
+		var edge = __viewport.localToGlobal(new Point(Math.max(0, Math.min(__viewport.width, point.x)), Math.max(0, Math.min(__viewport.height, point.y))));
 		setDragSelection(getCharIndexAtPoint(edge.x, edge.y));
 		refreshViewport();
 	}

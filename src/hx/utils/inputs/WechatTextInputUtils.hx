@@ -21,6 +21,7 @@ class WechatTextInputUtils {
 	 * 是否已注册事件监听器
 	 */
 	private static var isEventRegistered:Bool = false;
+	private static var __multiple:Bool = true;
 
 	/**
 	 * 打开输入
@@ -28,6 +29,7 @@ class WechatTextInputUtils {
 	public static function openInput(input:InputLabel):Void {
 		 WechatTextInputUtils.input = input;
 		inputValue = input.data;
+		__multiple = input.wordWrap;
 		
 		// 防止重复注册事件监听器
 		if (!isEventRegistered) {
@@ -46,6 +48,10 @@ class WechatTextInputUtils {
 		// 显示文字输入键盘
 		Wx.showKeyboard({
 			defaultValue: input.data,
+			multiple: input.wordWrap,
+			maxLength: 9999,
+			confirmType: "done",
+			confirmHold: false,
 			placeholder: "",
 			success: function(res) {
 				// 键盘显示成功
@@ -91,10 +97,7 @@ class WechatTextInputUtils {
 			return;
 		}
 		
-		inputValue = res.value;
-		input.data = inputValue.substr(0, 9999);
-		input.getTextWidth();
-		input.dispatchEvent(new Event(Event.CHANGE));
+		acceptInput(res.value);
 	}
 
 	/**
@@ -105,10 +108,18 @@ class WechatTextInputUtils {
 			return;
 		}
 		
-		inputValue = res.value;
-		input.data = inputValue.substr(0, 9999);
-		input.getTextWidth();
-		input.dispatchEvent(new Event(Event.CHANGE));
+		acceptInput(res.value);
+	}
+
+	private static function acceptInput(value:String):Void {
+		var previous = input.data;
+		inputValue = value;
+		input.data = input.normalizeInputText(value).substr(0, 9999);
+		input.syncSelectionFromNative(input.data.length, input.data.length);
+		if (input.data != previous) {
+			input.getTextWidth();
+			input.dispatchEvent(new Event(Event.CHANGE));
+		}
 	}
 
 	/**
@@ -122,6 +133,18 @@ class WechatTextInputUtils {
 	 * 同步选区到原生输入通道（微信键盘不支持光标定位，为空实现）
 	 */
 	public static function syncSelectionToNative(input:InputLabel):Void {}
+
+	/** 保持键盘文本一致；输入模式变化时重新配置多行选项。 */
+	public static function syncTextToNative(input:InputLabel):Void {
+		if (WechatTextInputUtils.input != input || input.suspendNativeSync)
+			return;
+		if (__multiple != input.wordWrap) {
+			openInput(input);
+		} else if (inputValue != input.data) {
+			inputValue = input.data;
+			Wx.updateKeyboard({value: input.data == null ? "" : input.data});
+		}
+	}
 }
 
 /**
@@ -133,6 +156,9 @@ extern class Wx {
 	 * 显示文字输入键盘
 	 */
 	public static function showKeyboard(options:Dynamic):Void;
+
+	/** 更新键盘输入框内容。 */
+	public static function updateKeyboard(options:Dynamic):Void;
 	
 	/**
 	 * 隐藏文字输入键盘

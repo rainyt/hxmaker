@@ -733,6 +733,30 @@ class InputLabel extends Box implements IDataProider<String> {
 		return new Rectangle(0, 0, 1, label.fontSize + 2);
 	}
 
+	/** 空文本没有字形高度，光标按自身尺寸对齐并抵消文字的原点偏移。 */
+	private function alignEmptyCaret():Void {
+		var availableWidth = Math.max(0, label.width - line.width);
+		var availableHeight = Math.max(0, label.height - __caretRect.height);
+		switch label.horizontalAlign {
+			case LEFT:
+				__caretRect.x = -label.originX;
+			case CENTER:
+				__caretRect.x = availableWidth / 2 - label.originX;
+			case RIGHT:
+				__caretRect.x = availableWidth - label.originX;
+			default:
+		}
+		switch label.verticalAlign {
+			case TOP:
+				__caretRect.y = -label.originY;
+			case MIDDLE:
+				__caretRect.y = availableHeight / 2 - label.originY;
+			case BOTTOM:
+				__caretRect.y = availableHeight - label.originY;
+			default:
+		}
+	}
+
 	/** 文本布局只在发生变动时扫描；静止输入框每帧仅比较缓存状态。 */
 	private function refreshViewport(followCaret:Bool = true):Void {
 		if (__refreshingViewport)
@@ -780,6 +804,8 @@ class InputLabel extends Box implements IDataProider<String> {
 		var caret = caretBounds(displayIndex(__caretIndex));
 		if (caret != null)
 			__caretRect.setTo(caret.x, caret.y, caret.width, caret.height);
+		if (label.data.length == 0)
+			alignEmptyCaret();
 		if (__selectionDirty)
 			updateSelectionHighlight();
 		var width = Math.max(0, __viewport.width);

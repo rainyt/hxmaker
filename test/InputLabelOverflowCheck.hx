@@ -196,6 +196,7 @@ class InputLabelOverflowCheck {
 		assert(input.__caretIndex == 0 && input.__scrollX == 0, "原生反向选区跟随活动端");
 		HTML5TextInputUtils.input = null; HTML5TextInputUtils.textureArea = null;
 
+		checkEmptyCaretAlignment();
 		checkDragDeletion();
 		checkMasks();
 		#if overflow_browser_checks
@@ -208,6 +209,43 @@ class InputLabelOverflowCheck {
 			js.Browser.document.getElementById("result").textContent = "输入框溢出行为验证通过：" + checks + " 项断言";
 		prepareNativeBackspace();
 		#end
+	}
+
+	/** 空文本的光标需要按自身尺寸对齐，而不是沿用高度为零的文字原点。 */
+	static function checkEmptyCaretAlignment():Void {
+		var verticals:Array<VerticalAlign> = [TOP, MIDDLE, BOTTOM];
+		var horizontals:Array<HorizontalAlign> = [LEFT, CENTER, RIGHT];
+		for (placeholder in [false, true]) {
+			for (vertical in verticals) {
+				var input = create("", 100, 40);
+				input.verticalAlign = vertical;
+				if (placeholder)
+					input.placeholder = "提示";
+				for (horizontal in horizontals) {
+					input.horizontalAlign = horizontal;
+					activate(input, 0);
+					var expectedY = vertical == MIDDLE ? (40 - input.line.height) / 2 : vertical == BOTTOM ? 40 - input.line.height : 0;
+					var expectedX = horizontal == CENTER ? (100 - input.line.width) / 2 : horizontal == RIGHT ? 100 - input.line.width : 0;
+					assert(near(input.line.y - input.__scrollY, expectedY) && near(input.line.x - input.__scrollX, expectedX),
+						"空文本和提示文案下的光标按自身宽高对齐：" + horizontal + "," + vertical);
+					assert(input.__scrollX == 0 && input.__scrollY == 0 && input.__viewport.maskRect == null,
+						"能放下的空文本光标不触发滚动或遮罩");
+				}
+				host.removeChild(input);
+			}
+		}
+		var input = create("a", 100, 40);
+		input.verticalAlign = MIDDLE; activate(input, 1);
+		input.data = ""; tick(input);
+		assert(near(input.line.y, (input.height - input.line.height) / 2) && input.__scrollY == 0,
+			"删除最后一个字符后光标保持居中且不产生额外滚动");
+		input.height = 64; input.label.fontSize = 30; tick(input);
+		assert(near(input.line.y, 16) && input.line.height == 32, "改变高度和字号后刷新空文本光标位置");
+		var before = preparations;
+		for (i in 0...120) tick(input);
+		assert(preparations == before && input.__viewport.maskRect == null, "空文本光标闪烁不重建文本或开启遮罩");
+		var provider:hx.providers.ITextFieldLayoutProvider = cast input.label.root;
+		assert(provider.getCaretBounds(0).y == 0, "对齐补偿不修改后端持有的光标矩形");
 	}
 
 	/** 不触发 CLICK，验证在文本空白和输入框外抬起后仍可删除选区。 */

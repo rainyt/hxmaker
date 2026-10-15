@@ -470,12 +470,12 @@ class UIManager {
 		addAttributesParse(Label, function(obj:Label, xml:Xml, assets:Assets) {
 			if (xml.exists("text") && xml.get("autoClear") != "true") {
 				obj.data = xml.get("text");
-				var color = xml.get("color");
-				var fontSize = xml.get("fontSize");
-				var textformat = createTextformat(color, fontSize);
-				if (textformat != null) {
-					obj.textFormat = textformat;
-				}
+			}
+			var color = xml.get("color");
+			var fontSize = xml.get("fontSize");
+			var textformat = createTextformat(color, fontSize);
+			if (textformat != null) {
+				obj.textFormat = textformat;
 			}
 			if (xml.exists("hAlign")) {
 				obj.horizontalAlign = xml.get("hAlign");

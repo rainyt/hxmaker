@@ -48,7 +48,10 @@
 | hx.events.KeyboardEvent | 键盘事件 | ✅ | / |
 | hx.assets.Assets | 资源加载器，支持图片、音频、精灵图、XML、JSON等常见资源格式加载 | ✅ | / |
 
+基础 3D 框架已加入首版代码，尚未编译与运行验收，参阅[使用说明](docs/基础3D框架使用说明.md)和[示例](samples/basic-3d/README.md)。
+
 # 布局支持
+
 | 布局 | 名称 | 描述 |
 --- | --- | --- |
 | hx.layout.FlowLayout | 流式布局 | 可通过`hx.display.Box`虚拟盒子配合布局实现流式布局 |

@@ -1,0 +1,13 @@
+<project>
+    <meta title="hxmaker 基础 3D" package="samples.hxmaker.basic3d" version="1.0.0" />
+    <app main="Main" file="Basic3D" path="Export" />
+    <source path="Source" />
+    <haxelib name="hxmaker" />
+    <haxelib name="hxmaker-openfl" />
+    <haxelib name="openfl" />
+    <haxelib name="openfl-glsl" />
+    <haxelib name="vector-math" />
+    <haxelib name="actuate" />
+    <haxelib name="spine-haxe" />
+    <window width="960" height="640" background="#172033" hardware="true" allow-high-dpi="true" />
+</project>

@@ -33,10 +33,13 @@ class Model3D extends Node3D {
 	private var materials:Map<Int, Material3D> = [];
 	private var previousClip:AnimationClip3D;
 	private var useLighting:Bool;
+	private var sourceAsset:GlbAsset;
 	private function get_meshes():Array<MeshObject> { return instances.copy(); }
 	public function new(asset:GlbAsset, sceneIndex:Int = -1, options:Model3DOptions = null) {
 		super();
 		if (asset == null) throw "模型源资产不能为空";
+		if (!asset.texturesReady) throw "GLB 图片尚未解码或已经释放，请通过 Assets.loadGlb 加载并保留资产";
+		sourceAsset = asset;
 		data = asset.data;
 		useLighting = options != null && options.lightingEnabled == true;
 		if (sceneIndex < 0) sceneIndex = data.scene;
@@ -67,9 +70,16 @@ class Model3D extends Node3D {
 			var primitive = primitives[i], material = materials.get(primitive.material);
 			if (material == null) {
 				material = useLighting ? new LambertTextureMaterial() : new UnlitTextureMaterial();
+				material.colorMultiplyLinear = true;
 				if (primitive.material >= 0) {
 					var source = data.materials[primitive.material];
 					material.color = source.color; material.opacity = source.opacity;
+					if (source.baseColorTexture >= 0) {
+						var texture = data.textures[source.baseColorTexture];
+						material.texture = sourceAsset.getTexture(source.baseColorTexture);
+						material.smoothing = texture.smoothing; material.textureMinSmoothing = texture.minSmoothing;
+						material.textureWrapU = texture.wrapU; material.textureWrapV = texture.wrapV;
+					}
 					material.alphaMode = switch (source.alphaMode) { case "MASK": AlphaMode3D.MASK; case "BLEND": AlphaMode3D.BLEND; default: AlphaMode3D.OPAQUE; };
 					material.alphaCutoff = source.alphaCutoff; material.cullMode = source.doubleSided ? CullMode3D.NONE : CullMode3D.BACK;
 				}
@@ -135,6 +145,6 @@ class Model3D extends Node3D {
 		for (material in materials) material.dispose();
 		for (skin in skins) skin.dispose();
 		nodes = []; instances = []; geometries = []; materials.clear(); skins.clear();
-		translations = []; rotations = []; scales = []; globals = []; active = []; data = null; previousClip = null;
+		translations = []; rotations = []; scales = []; globals = []; active = []; data = null; sourceAsset = null; previousClip = null;
 	}
 }

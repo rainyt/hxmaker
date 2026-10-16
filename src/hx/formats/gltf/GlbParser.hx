@@ -10,6 +10,8 @@ import hx.formats.gltf.GltfData.GltfNodeData;
 import hx.formats.gltf.GltfData.GltfPrimitiveData;
 import hx.formats.gltf.GltfData.GltfMaterialData;
 import hx.formats.gltf.GltfData.GltfSkinData;
+import hx.formats.gltf.GltfData.GltfImageData;
+import hx.formats.gltf.GltfData.GltfTextureData;
 
 private typedef AccessorData = {
 	var values:Array<Float>;
@@ -27,6 +29,8 @@ class GlbParser {
 	private var views:Array<Dynamic>;
 	private var accessors:Array<Dynamic>;
 	private var cache:Map<Int, AccessorData> = [];
+	private var textures:Array<GltfTextureData>;
+	private var materials:Array<GltfMaterialData>;
 	private var warnings:Array<String> = ["GLB 外观以基础颜色为主，尚未实现 PBR 金属度和粗糙度。"];
 	private function new() {}
 	public static function parse(bytes:Bytes):GltfData { return new GlbParser().read(bytes); }
@@ -61,15 +65,14 @@ class GlbParser {
 		var required = list(document, "extensionsRequired");
 		if (required.length > 0) throw "暂不支持必需 glTF 扩展：" + required.join(", ");
 		for (extension in list(document, "extensionsUsed")) warn("未实现的可选 glTF 扩展：" + Std.string(extension));
-		if (list(document, "images").length > 0 || list(document, "textures").length > 0)
-			throw "首版 GLB 加载器暂不支持图片和纹理材质";
 		var buffers = list(document, "buffers");
 		if (buffers.length != 1 || field(buffers[0], "uri") != null) throw "首版只支持一个内嵌 BIN 缓冲，不支持外部 URI";
 		bufferLength = integer(buffers[0], "byteLength", -1);
 		if (bufferLength < 1 || bufferLength > binary.length || binary.length - bufferLength > 3) throw "GLB BIN 与 buffer 长度不一致";
 		views = list(document, "bufferViews"); accessors = list(document, "accessors");
 		for (i in 0...views.length) validateView(i);
-		var materials = readMaterials(), meshes = readMeshes(materials.length), nodes = readNodes(meshes.length);
+		var images = readImages(); textures = readTextures(images.length); materials = readMaterials();
+		var meshes = readMeshes(materials.length), nodes = readNodes(meshes.length);
 		var parents = [for (_ in nodes) -1];
 		for (i in 0...nodes.length) for (child in nodes[i].children) {
 			if (parents[child] != -1) throw "节点有重复父级：" + child;
@@ -107,17 +110,63 @@ class GlbParser {
 				for (joint in primitive.joints) checkIndex(joint, skins[node.skin].joints.length, "顶点关节索引");
 			}
 		}
-		return {nodes:nodes, parents:parents, scenes:scenes, scene:scene, meshes:meshes, materials:materials,
+		return {nodes:nodes, parents:parents, scenes:scenes, scene:scene, meshes:meshes, materials:materials, images:images, textures:textures,
 			skins:skins, animations:readAnimations(nodes), warnings:warnings};
+	}
+	private function readImages():Array<GltfImageData> {
+		var result:Array<GltfImageData> = [];
+		for (image in list(document, "images")) {
+			if (field(image, "uri") != null) throw "GLB 图片目前只支持内嵌 bufferView，不支持外部 URI 或 data URI";
+			var index = integer(image, "bufferView", -1); checkIndex(index, views.length, "图片 bufferView");
+			var view = views[index];
+			if (field(view, "byteStride") != null || field(view, "target") != null) throw "图片 bufferView 不能声明 byteStride 或 target";
+			var mime = text(image, "mimeType", "");
+			if (["image/png", "image/jpeg"].indexOf(mime) < 0) throw "GLB 图片只支持 PNG / JPEG";
+			var data = binary.sub(integer(view, "byteOffset", 0), integer(view, "byteLength", 0));
+			if (mime == "image/png") {
+				if (data.length < 8 || data.get(0) != 137 || data.getString(1, 3) != "PNG" || data.get(4) != 13 || data.get(5) != 10 || data.get(6) != 26 || data.get(7) != 10)
+					throw "GLB PNG 图片签名无效";
+			} else if (data.length < 3 || data.get(0) != 255 || data.get(1) != 216 || data.get(2) != 255) throw "GLB JPEG 图片签名无效";
+			result.push({name:text(image, "name", "图片 " + result.length), mimeType:mime, bytes:data});
+		}
+		return result;
+	}
+	private function readTextures(imageCount:Int):Array<GltfTextureData> {
+		var samplers = list(document, "samplers"), settings:Array<GltfTextureData> = [];
+		for (sampler in samplers) {
+			var wrapU = integer(sampler, "wrapS", 10497), wrapV = integer(sampler, "wrapT", 10497);
+			if ([33071,10497,33648].indexOf(wrapU) < 0 || [33071,10497,33648].indexOf(wrapV) < 0) throw "GLB 纹理包裹模式无效";
+			var mag = integer(sampler, "magFilter", 9729), min = integer(sampler, "minFilter", 9729);
+			if ([9728,9729].indexOf(mag) < 0 || [9728,9729,9984,9985,9986,9987].indexOf(min) < 0) throw "GLB 纹理过滤模式无效";
+			if (min >= 9984) warn("GLB mipmap 过滤暂降级为对应的基础层过滤，尚未生成 mipmap。");
+			settings.push({source:-1, wrapU:wrapU, wrapV:wrapV, smoothing:mag == 9729, minSmoothing:[9729,9985,9987].indexOf(min) >= 0});
+		}
+		var result:Array<GltfTextureData> = [];
+		for (texture in list(document, "textures")) {
+			var source = integer(texture, "source", -1); checkIndex(source, imageCount, "纹理图片");
+			var sampler = integer(texture, "sampler", -1);
+			if (sampler < -1) throw "纹理 sampler 索引无效";
+			if (sampler >= 0) checkIndex(sampler, settings.length, "纹理 sampler");
+			var setting = sampler < 0 ? {source:-1, wrapU:10497, wrapV:10497, smoothing:true, minSmoothing:true} : settings[sampler];
+			result.push({source:source, wrapU:setting.wrapU, wrapV:setting.wrapV, smoothing:setting.smoothing, minSmoothing:setting.minSmoothing});
+		}
+		return result;
 	}
 
 	private function readMaterials():Array<GltfMaterialData> {
 		var result:Array<GltfMaterialData> = [];
 		for (material in list(document, "materials")) {
 			var pbr = field(material, "pbrMetallicRoughness");
-			if (field(pbr, "baseColorTexture") != null || field(pbr, "metallicRoughnessTexture") != null
+			if (field(pbr, "metallicRoughnessTexture") != null
 				|| field(material, "normalTexture") != null || field(material, "occlusionTexture") != null || field(material, "emissiveTexture") != null)
-				throw "首版 GLB 加载器暂不支持纹理材质";
+				throw "GLB 当前只支持基础颜色贴图，不支持金属粗糙度、法线、遮蔽或自发光贴图";
+			var textureInfo = field(pbr, "baseColorTexture"), textureIndex = -1;
+			if (textureInfo != null) {
+				textureIndex = integer(textureInfo, "index", -1); checkIndex(textureIndex, textures.length, "基础颜色纹理");
+				if (integer(textureInfo, "texCoord", 0) != 0) throw "基础颜色贴图当前只支持 TEXCOORD_0";
+				if (field(textureInfo, "extensions") != null && Reflect.fields(field(textureInfo, "extensions")).length > 0)
+					throw "基础颜色贴图暂不支持纹理坐标扩展";
+			}
 			var color = vector(pbr, "baseColorFactor", [1.,1.,1.,1.]);
 			for (value in color) if (value < 0 || value > 1) throw "材质基础颜色超出 0～1";
 			var metallic = number(pbr, "metallicFactor", 1), roughness = number(pbr, "roughnessFactor", 1);
@@ -129,7 +178,7 @@ class GlbParser {
 			if (field(material, "emissiveFactor") != null) warn("自发光颜色尚未参与渲染。");
 			result.push({name:text(material, "name", "材质 " + result.length), baseColorFactor:color, metallicFactor:metallic, roughnessFactor:roughness, emissiveFactor:emissive,
 				color:(colorByte(color[0]) << 16) | (colorByte(color[1]) << 8) | colorByte(color[2]),
-				opacity:color[3], alphaMode:alpha, alphaCutoff:cutoff, doubleSided:boolean(material, "doubleSided", false)});
+				opacity:color[3], alphaMode:alpha, alphaCutoff:cutoff, doubleSided:boolean(material, "doubleSided", false), baseColorTexture:textureIndex});
 		}
 		return result;
 	}
@@ -183,6 +232,7 @@ class GlbParser {
 				}
 				var material = integer(primitive, "material", -1); if (material < -1) throw "材质索引无效";
 				if (material >= 0) checkIndex(material, materialCount, "材质");
+				if (material >= 0 && materials[material].baseColorTexture >= 0 && uv == null) throw "带基础颜色贴图的网格必须提供 TEXCOORD_0";
 				primitives.push({positions:position.values, normals:normal == null ? [] : normal.values,
 					uvs:uv == null ? [for (_ in 0...(count*2)) 0.] : uv.values, indices:indices, joints:joints, weights:weights, material:material});
 			}

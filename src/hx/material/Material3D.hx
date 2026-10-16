@@ -7,6 +7,13 @@ import hx.render3d.Math3D;
 
 /** 基础三维材质；共享修改通过 CHANGE 通知所有引用模型。 */
 class Material3D extends EventDispatcher {
+	private var __colorMultiplyLinear:Bool = false;
+	/** glTF 的基础颜色因子需在线性空间与贴图相乘；旧手工材质默认保持显示空间行为。 */
+	public var colorMultiplyLinear(get, set):Bool;
+	private function get_colorMultiplyLinear():Bool { return __colorMultiplyLinear; }
+	private function set_colorMultiplyLinear(value:Bool):Bool {
+		if (__colorMultiplyLinear != value) { __colorMultiplyLinear = value; invalidate(); } return value;
+	}
 	private var __lightingEnabled:Bool = false;
 	public var lightingEnabled(get, set):Bool;
 	private function get_lightingEnabled():Bool { return __lightingEnabled; }
@@ -72,6 +79,28 @@ class Material3D extends EventDispatcher {
 		if (__depthWrite != value) { __depthWrite = value; invalidate(); } return value;
 	}
 	private var __smoothing:Bool = true;
+	private var __textureMinSmoothing:Null<Bool> = null;
+	/** null 表示缩小时沿用 smoothing；GLB 可分别指定缩小与放大过滤。 */
+	public var textureMinSmoothing(get, set):Null<Bool>;
+	private function get_textureMinSmoothing():Null<Bool> { return __textureMinSmoothing; }
+	private function set_textureMinSmoothing(value:Null<Bool>):Null<Bool> {
+		if (__textureMinSmoothing != value) { __textureMinSmoothing = value; invalidate(); } return value;
+	}
+	private var __textureWrapU:TextureWrap3D = TextureWrap3D.CLAMP;
+	private var __textureWrapV:TextureWrap3D = TextureWrap3D.CLAMP;
+	public var textureWrapU(get, set):TextureWrap3D;
+	public var textureWrapV(get, set):TextureWrap3D;
+	private function get_textureWrapU():TextureWrap3D { return __textureWrapU; }
+	private function get_textureWrapV():TextureWrap3D { return __textureWrapV; }
+	private function set_textureWrapU(value:TextureWrap3D):TextureWrap3D {
+		validateWrap(value); if (__textureWrapU != value) { __textureWrapU = value; invalidate(); } return value;
+	}
+	private function set_textureWrapV(value:TextureWrap3D):TextureWrap3D {
+		validateWrap(value); if (__textureWrapV != value) { __textureWrapV = value; invalidate(); } return value;
+	}
+	private static function validateWrap(value:Int):Void {
+		if ([33071,10497,33648].indexOf(value) < 0) throw "纹理包裹模式无效";
+	}
 	public var smoothing(get, set):Bool;
 	private function get_smoothing():Bool { return __smoothing; }
 	private function set_smoothing(value:Bool):Bool {
@@ -98,7 +127,7 @@ class Material3D extends EventDispatcher {
 	/** uniform 数值复制后保存，避免后续批次覆盖前一个批次。 */
 	public function setUniform(name:String, values:Array<Float>):Void {
 		if (name == null || !~/^[A-Za-z_][A-Za-z0-9_]*$/.match(name) || StringTools.startsWith(name, "uSampler")
-			|| ["uViewProjection", "uAlphaMode", "uAlphaCutoff", "uAmbientColor", "uLightColor", "uLightDirection", "uLightViewProjection",
+			|| ["uViewProjection", "uAlphaMode", "uAlphaCutoff", "uLinearBaseColor", "uAmbientColor", "uLightColor", "uLightDirection", "uLightViewProjection",
 				"uShadowMap", "uReceiveShadow", "uShadowBias", "uShadowSlopeBias"].indexOf(name) >= 0) throw "自定义 uniform 名称无效或与内置变量冲突";
 		if (values == null || [1,2,3,4,16].indexOf(values.length) < 0) throw "uniform 只支持浮点标量、向量或四阶矩阵";
 		for (v in values) if (!Math3D.finite(v)) throw "uniform 包含无效数值";

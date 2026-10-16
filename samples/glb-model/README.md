@@ -82,7 +82,9 @@ scene.addEventListener(hx.events.Event.UPDATE, _ -> {
 
 支持 GLB 2.0 单个内嵌 BIN、场景层级、matrix / TRS、三角形、索引或无索引网格、POSITION / NORMAL / TEXCOORD_0、基础颜色与双面/透明配置、JOINTS_0 / WEIGHTS_0 蒙皮，以及 STEP / LINEAR 的位移、四元数旋转、缩放动画。解码处理 bufferView / accessor 偏移、byteStride、合法的 normalized 数据和无符号索引；最终超大批次仍由现有渲染器拆分。
 
-以下功能明确报错：图片或纹理材质、外部 URI、多 BIN、必需扩展、sparse、morph、额外顶点属性、非三角形模式、CUBICSPLINE。当前节点协议还要求可逆仿射矩阵，零缩放、极小缩放和跨越零的缩放动画暂不支持。可选扩展及未还原的外观属性会给出提示，不能将本实现视为完整 glTF 2.0 渲染器。
+后续新增内嵌 PNG/JPEG 基础颜色贴图支持，通过 Assets 等待图片解码后再实例化；此恐龙文件本身仍不含贴图。带贴图资源、生命周期和采样配置见[贴图动画角色示例](../textured-character/README.md)，新增路径尚未编译或运行。
+
+以下功能明确报错：外部图片 URI、非基础颜色贴图、多 BIN、必需扩展、sparse、morph、额外顶点属性、非三角形模式、CUBICSPLINE。当前节点协议还要求可逆仿射矩阵，零缩放、极小缩放和跨越零的缩放动画暂不支持。可选扩展及未还原的外观属性会给出提示，不能将本实现视为完整 glTF 2.0 渲染器。
 
 ## 可选回归入口
 

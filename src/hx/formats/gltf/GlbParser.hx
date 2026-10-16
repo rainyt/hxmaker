@@ -27,7 +27,7 @@ class GlbParser {
 	private var views:Array<Dynamic>;
 	private var accessors:Array<Dynamic>;
 	private var cache:Map<Int, AccessorData> = [];
-	private var warnings:Array<String> = ["当前为无光照预览，法线、金属度和粗糙度不参与渲染。"];
+	private var warnings:Array<String> = ["GLB 外观以基础颜色为主，尚未实现 PBR 金属度和粗糙度。"];
 	private function new() {}
 	public static function parse(bytes:Bytes):GltfData { return new GlbParser().read(bytes); }
 
@@ -126,7 +126,7 @@ class GlbParser {
 			for (value in emissive) if (value < 0 || value > 1) throw "材质自发光颜色超出 0～1";
 			var alpha = text(material, "alphaMode", "OPAQUE"), cutoff = number(material, "alphaCutoff", 0.5);
 			if (["OPAQUE", "MASK", "BLEND"].indexOf(alpha) < 0 || cutoff < 0 || cutoff > 1) throw "材质透明模式或阈值无效";
-			if (field(material, "emissiveFactor") != null) warn("自发光颜色未参与无光照预览。");
+			if (field(material, "emissiveFactor") != null) warn("自发光颜色尚未参与渲染。");
 			result.push({name:text(material, "name", "材质 " + result.length), baseColorFactor:color, metallicFactor:metallic, roughnessFactor:roughness, emissiveFactor:emissive,
 				color:(colorByte(color[0]) << 16) | (colorByte(color[1]) << 8) | colorByte(color[2]),
 				opacity:color[3], alphaMode:alpha, alphaCutoff:cutoff, doubleSided:boolean(material, "doubleSided", false)});

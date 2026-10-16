@@ -7,6 +7,10 @@ import hx.render3d.Math3D;
 
 /** 基础三维材质；共享修改通过 CHANGE 通知所有引用模型。 */
 class Material3D extends EventDispatcher {
+	private var __lightingEnabled:Bool = false;
+	public var lightingEnabled(get, set):Bool;
+	private function get_lightingEnabled():Bool { return __lightingEnabled; }
+	private function set_lightingEnabled(value:Bool):Bool { if (__lightingEnabled != value) { __lightingEnabled = value; invalidate(); } return value; }
 	public var version(default, null):Int = 0;
 	public var referenceCount(default, null):Int = 0;
 	public var isDisposed(default, null):Bool = false;
@@ -94,7 +98,8 @@ class Material3D extends EventDispatcher {
 	/** uniform 数值复制后保存，避免后续批次覆盖前一个批次。 */
 	public function setUniform(name:String, values:Array<Float>):Void {
 		if (name == null || !~/^[A-Za-z_][A-Za-z0-9_]*$/.match(name) || StringTools.startsWith(name, "uSampler")
-			|| ["uViewProjection", "uAlphaMode", "uAlphaCutoff"].indexOf(name) >= 0) throw "自定义 uniform 名称无效或与内置变量冲突";
+			|| ["uViewProjection", "uAlphaMode", "uAlphaCutoff", "uAmbientColor", "uLightColor", "uLightDirection", "uLightViewProjection",
+				"uShadowMap", "uReceiveShadow", "uShadowBias", "uShadowSlopeBias"].indexOf(name) >= 0) throw "自定义 uniform 名称无效或与内置变量冲突";
 		if (values == null || [1,2,3,4,16].indexOf(values.length) < 0) throw "uniform 只支持浮点标量、向量或四阶矩阵";
 		for (v in values) if (!Math3D.finite(v)) throw "uniform 包含无效数值";
 		__uniforms.set(name, values.copy()); invalidate();

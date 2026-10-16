@@ -1,6 +1,7 @@
 package hx.assets;
 
 import hx.display.Model3D;
+import hx.display.Model3DOptions;
 import hx.formats.gltf.GltfData;
 import hx.formats.gltf.GlbParser;
 import haxe.io.Bytes;
@@ -16,7 +17,7 @@ class GlbAsset {
 	public var animationNames(get, never):Array<String>;
 	private function new(data:GltfData) { this.data = data; }
 	public static function fromBytes(bytes:Bytes):GlbAsset { return new GlbAsset(GlbParser.parse(bytes)); }
-	public function createInstance(sceneIndex:Int = -1):Model3D { return new Model3D(this, sceneIndex); }
+	public function createInstance(sceneIndex:Int = -1, options:Model3DOptions = null):Model3D { return new Model3D(this, sceneIndex, options); }
 	private function get_nodeCount():Int { return data.nodes.length; }
 	private function get_meshCount():Int { return data.meshes.length; }
 	private function get_triangleCount():Int {

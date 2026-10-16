@@ -4,6 +4,7 @@ import hx.events.Event;
 import hx.geom.Bounds3D;
 import hx.geometry.Geometry3D;
 import hx.material.Material3D;
+import hx.render3d.Math3D;
 
 /** 三维网格节点；几何和材质可共享，销毁节点仅释放引用。 */
 class MeshObject extends Node3D {
@@ -11,11 +12,22 @@ class MeshObject extends Node3D {
 	public var material(get, set):Material3D;
 	public var pickable:Bool = true;
 	public var frustumCulling:Bool = true;
+	private var __castShadow:Bool = false;
+	private var __receiveShadow:Bool = true;
+	public var castShadow(get, set):Bool;
+	public var receiveShadow(get, set):Bool;
+	private function get_castShadow():Bool { return __castShadow; }
+	private function set_castShadow(value:Bool):Bool { if (__castShadow != value) { __castShadow = value; invalidate(); } return value; }
+	private function get_receiveShadow():Bool { return __receiveShadow; }
+	private function set_receiveShadow(value:Bool):Bool { if (__receiveShadow != value) { __receiveShadow = value; invalidate(); } return value; }
 	private var __geometry:Geometry3D;
 	private var __material:Material3D;
 	private var __vertices:Array<Float> = [];
 	private var __geometryVersion:Int = -1;
 	private var __worldVersion:Int = -1;
+	private var __normals:Array<Float> = [];
+	private var __normalGeometryVersion:Int = -1;
+	private var __normalWorldVersion:Int = -1;
 	public function new(geometry:Geometry3D, material:Material3D) {
 		super(); this.geometry = geometry; this.material = material;
 	}
@@ -25,7 +37,7 @@ class MeshObject extends Node3D {
 		if (value == __geometry) return value;
 		if (value != null) value.retain();
 		if (__geometry != null) { __geometry.removeEventListener(Event.CHANGE, onResourceChange); __geometry.release(); }
-		__geometry = value; __geometryVersion = -1;
+		__geometry = value; __geometryVersion = -1; __normalGeometryVersion = -1;
 		if (value != null) value.addEventListener(Event.CHANGE, onResourceChange);
 		invalidate(); return value;
 	}
@@ -53,8 +65,21 @@ class MeshObject extends Node3D {
 	public function getWorldBounds():Bounds3D {
 		return __geometry == null ? new Bounds3D() : __geometry.bounds.transformed(getWorldMatrix());
 	}
+	/** 世界法线与世界顶点分别缓存，无光照路径不生成或变换法线。 */
+	public function getWorldNormals():Array<Float> {
+		if (__geometry == null) return [];
+		var matrix = getWorldMatrix();
+		if (__normalGeometryVersion != __geometry.version || __normalWorldVersion != worldVersion) {
+			var source = __geometry.getNormals();
+			for (vertex in 0...Std.int(source.length / 3)) {
+				var i = vertex*3; Math3D.transformNormal(matrix.rawData, source[i], source[i+1], source[i+2], __normals, i);
+			}
+			__normals.resize(source.length); __normalGeometryVersion = __geometry.version; __normalWorldVersion = worldVersion;
+		}
+		return __normals;
+	}
 	override public function dispose():Void {
 		if (isDisposed) return;
-		geometry = null; material = null; __vertices = []; super.dispose();
+		geometry = null; material = null; __vertices = []; __normals = []; super.dispose();
 	}
 }

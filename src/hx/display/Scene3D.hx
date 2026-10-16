@@ -9,6 +9,7 @@ import hx.render3d.Scene3DStats;
 import hx.render3d.Math3D;
 import hx.render3d.IScene3DRenderer;
 import hx.core.Hxmaker;
+import hx.light.DirectionalLight3D;
 
 /** 二维显示树中的三维视口；三维对象通过 root 加入。 */
 @:access(hx.display.DisplayObject)
@@ -16,6 +17,19 @@ class Scene3D extends DisplayObject {
 	public static inline var DISPOSE:String = "scene3DDispose";
 	public var root(default, null):Node3D;
 	public var camera(get, set):Camera3D;
+	public var light(get, set):DirectionalLight3D;
+	public var ambientColor:Int = 0xffffff;
+	public var ambientIntensity:Float = 0.25;
+	private var __light:DirectionalLight3D;
+	private function get_light():DirectionalLight3D { return __light; }
+	private function set_light(value:DirectionalLight3D):DirectionalLight3D {
+		if (value != null && (value.scene != this || value.isDisposed)) throw "方向光必须属于当前场景";
+		if (__light != value) { __light = value; requestRender(); } return value;
+	}
+	public function lightingKey():String {
+		if (!Math3D.finite(ambientIntensity) || ambientIntensity < 0) throw "环境光强度必须为非负有限值";
+		return ambientColor + ":" + ambientIntensity + ":" + (light == null ? "无方向光" : light.settingsKey());
+	}
 	public var stats(default, null):Scene3DStats = new Scene3DStats();
 	public var autoRender:Bool = true;
 	public var renderScale:Float = 1;
@@ -60,8 +74,9 @@ class Scene3D extends DisplayObject {
 	}
 	override public function onUpdate(dt:Float):Void {
 		super.onUpdate(dt);
-		var settings = [renderScale, backgroundColor, backgroundAlpha, multiTextureEnabled ? 1 : 0,
-			camera == null ? 0 : camera.fieldOfView, camera == null ? 0 : camera.near, camera == null ? 0 : camera.far].join(":");
+		var values:Array<Dynamic> = [renderScale, backgroundColor, backgroundAlpha, multiTextureEnabled ? 1 : 0,
+			camera == null ? 0 : camera.fieldOfView, camera == null ? 0 : camera.near, camera == null ? 0 : camera.far, lightingKey()];
+		var settings = values.join(":");
 		if (settings != __settings) { __settings = settings; requestRender(); }
 		var current:DisplayObject = this;
 		while (current != null && current.visible && !current.hide) current = current.parent;
@@ -113,6 +128,6 @@ class Scene3D extends DisplayObject {
 	}
 	override public function dispose():Void {
 		if (isDisposed) return;
-		dispatchEvent(new Event(DISPOSE)); root.dispose(); __camera = null; super.dispose();
+		dispatchEvent(new Event(DISPOSE)); root.dispose(); __camera = null; __light = null; super.dispose();
 	}
 }

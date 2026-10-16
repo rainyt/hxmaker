@@ -119,6 +119,7 @@ class Node3D extends EventDispatcher {
 		var previous = scene;
 		scene = value;
 		if (previous != null && previous != value && previous.camera == this) previous.camera = null;
+		if (previous != null && previous != value && previous.light == this) previous.light = null;
 		for (child in __children) child.setScene(value);
 	}
 	public function invalidate():Void {

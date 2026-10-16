@@ -2,6 +2,7 @@ package hx.animation3d;
 
 import hx.display.MeshObject;
 import hx.geom.Matrix3D;
+import hx.render3d.Math3D;
 import hx.formats.gltf.GltfData.GltfPrimitiveData;
 import hx.formats.gltf.GltfData.GltfSkinData;
 
@@ -34,6 +35,8 @@ private class SkinBinding3D {
 	private var source:GltfPrimitiveData;
 	private var rigidJoint:Int = -1;
 	private var lastMatrix:Array<Float>;
+	private var restNormals:Array<Float>;
+	private var blended:Array<Float> = [for (_ in 0...16) 0.];
 	public function new(mesh:MeshObject, source:GltfPrimitiveData) {
 		this.mesh = mesh; this.source = source;
 		var candidate = -1, rigid = true;
@@ -49,6 +52,10 @@ private class SkinBinding3D {
 			if (influences != 1) rigid = false;
 		}
 		if (rigid) rigidJoint = candidate;
+		else {
+			restNormals = mesh.geometry.getNormals().copy();
+			mesh.geometry.setNormals(restNormals);
+		}
 	}
 	public function update(palette:Array<Matrix3D>):Void {
 		if (mesh.isDisposed || mesh.geometry == null) return;
@@ -62,14 +69,17 @@ private class SkinBinding3D {
 		for (vertex in 0...Std.int(input.length / 3)) {
 			var offset = vertex*3, x = input[offset], y = input[offset+1], z = input[offset+2];
 			var ox = 0., oy = 0., oz = 0.;
+			for (i in 0...16) blended[i] = 0;
 			for (slot in 0...4) {
 				var i = vertex*4+slot, weight = source.weights[i]; if (weight == 0) continue;
 				var m = palette[source.joints[i]].rawData;
+				for (column in 0...3) for (row in 0...3) blended[column*4+row] += m[column*4+row]*weight;
 				ox += (m[0]*x + m[4]*y + m[8]*z + m[12])*weight;
 				oy += (m[1]*x + m[5]*y + m[9]*z + m[13])*weight;
 				oz += (m[2]*x + m[6]*y + m[10]*z + m[14])*weight;
 			}
 			output[offset] = ox; output[offset+1] = oy; output[offset+2] = oz;
+			Math3D.transformNormal(blended, restNormals[offset], restNormals[offset+1], restNormals[offset+2], mesh.geometry.normals, offset);
 		}
 		mesh.geometry.invalidate();
 	}

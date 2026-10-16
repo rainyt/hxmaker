@@ -5,12 +5,18 @@ import haxe.Json;
 import haxe.io.Bytes;
 import haxe.io.BytesBuffer;
 import hx.assets.GlbAsset;
+import hx.geometry.Geometry3D;
+import hx.display.MeshObject;
+import hx.material.UnlitTextureMaterial;
+import hx.render3d.Math3D;
+import hx.geom.Vector3D;
 
 /** 可选回归入口；使用解析式期望值验证蒙皮空间，不依赖画面是否相似。 */
 class GlbRegression {
 	private static var checks:Int;
 	public static function run(asset:GlbAsset):Void {
 		checks = 0;
+		checkLightingMath();
 		expect(asset.nodeCount == 105 && asset.meshCount == 85 && asset.triangleCount == 1330, "输入资产统计");
 		var a = asset.createInstance(), b = asset.createInstance();
 		try {
@@ -28,6 +34,8 @@ class GlbRegression {
 			a.dispose(); expect(!b.isDisposed && b.meshes[0].geometry.positions.length > 0, "销毁实例不破坏另一个实例");
 		} catch (error:Dynamic) { a.dispose(); b.dispose(); throw error; }
 		a.dispose(); b.dispose();
+		var lit = asset.createInstance(-1, {lightingEnabled:true});
+		expect(lit.meshes[0].material.lightingEnabled && lit.meshes[0].geometry.normals != null, "GLB 光照实例使用材质与文件法线"); lit.dispose();
 
 		var synthetic = GlbAsset.fromBytes(fixture()).createInstance();
 		try {
@@ -40,6 +48,7 @@ class GlbRegression {
 			near(mesh.geometry.positions[0], 1.5, "LINEAR 位移蒙皮");
 			near(mesh.geometry.positions[3], 2, "四元数旋转插值后的 X");
 			near(mesh.geometry.positions[4], 0.5, "四元数旋转插值后的 Y");
+			near(mesh.geometry.normals[2], 1, "多权重蒙皮同步维护法线");
 			synthetic.animation.seek(0.25); near(synthetic.getBounds().min.y, 0, "动画重新定位刷新包围盒");
 			synthetic.animation.stop(); near(mesh.geometry.positions[0], 1, "停止恢复默认姿态");
 		} catch (error:Dynamic) { synthetic.dispose(); throw error; }
@@ -62,6 +71,23 @@ class GlbRegression {
 		for (mode in ["bounds", "cycle", "sparse", "extension", "interpolation", "weights", "version"])
 			expectFailure(function() { GlbAsset.fromBytes(fixture(mode)); }, "拒绝无效或未支持数据：" + mode);
 		trace("HXMAKER_GLB_CHECKS PASS 检查数：" + checks);
+	}
+	/** 解析式期望值覆盖逆转置、镜像、几何法线失效与正交深度方向。 */
+	private static function checkLightingMath():Void {
+		var geometry = new Geometry3D([0.,0.,0.,1.,0.,0.,0.,1.,0.], [0.,0.,1.,0.,0.,1.], [0,1,2]);
+		near(geometry.getNormals()[2], 1, "缺失法线按三角形生成");
+		geometry.positions[7] = -1; geometry.invalidate(); near(geometry.getNormals()[2], -1, "生成法线随位置失效");
+		geometry.positions[7] = 1; geometry.setNormals([1.,1.,0.,1.,1.,0.,1.,1.,0.]);
+		var material = new UnlitTextureMaterial(), mesh = new MeshObject(geometry, material);
+		mesh.setScale(2,1,1);
+		var normals = mesh.getWorldNormals();
+		near(normals[0], 1/Math.sqrt(5), "非均匀缩放使用逆转置 X"); near(normals[1], 2/Math.sqrt(5), "非均匀缩放使用逆转置 Y");
+		mesh.scaleX = -2; near(mesh.getWorldNormals()[0], -1/Math.sqrt(5), "负缩放保留正确法线方向");
+		mesh.dispose(); geometry.dispose(); material.dispose();
+		var projection = Math3D.orthographic(-2,2,-3,3,1,9);
+		near(projection.transformVector(new Vector3D(0,0,-1)).z, -1, "正交近面映射到裁剪深度负一");
+		near(projection.transformVector(new Vector3D(0,0,-9)).z, 1, "正交远面映射到裁剪深度正一");
+		near(projection.transformVector(new Vector3D(2,3,-1)).x, 1, "正交右侧范围");
 	}
 	private static function expect(value:Bool, label:String):Void { if (!value) throw "GLB 检查失败：" + label; checks++; }
 	private static function near(actual:Float, expected:Float, label:String):Void { expect(Math.isFinite(actual) && Math.abs(actual - expected) < 1e-5, label + "，实际 " + actual + "，预期 " + expected); }

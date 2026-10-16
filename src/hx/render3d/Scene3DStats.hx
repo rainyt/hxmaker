@@ -10,10 +10,17 @@ class Scene3DStats {
 	public var textureSlots:Int = 0;
 	public var compositeDrawCalls:Int = 0;
 	public var targetBytes:Int = 0;
+	public var shadowDrawCalls:Int = 0;
+	public var shadowTriangles:Int = 0;
+	public var shadowUploadedBytes:Int = 0;
+	public var shadowMapBytes:Int = 0;
+	public var shadowMapSize:Int = 0;
+	public var shadowStatus:String = "关闭";
 	public var splitReasons:Map<String, Int> = [];
 	public function new() {}
 	public function reset():Void {
 		drawCalls = triangles = visibleMeshes = culledMeshes = uploadedBytes = textureSlots = compositeDrawCalls = 0;
+		shadowDrawCalls = shadowTriangles = shadowUploadedBytes = shadowMapBytes = shadowMapSize = 0; shadowStatus = "关闭";
 		splitReasons.clear();
 	}
 	public function split(reason:String):Void {

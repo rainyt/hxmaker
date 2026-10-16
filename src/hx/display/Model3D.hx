@@ -10,6 +10,7 @@ import hx.geom.Bounds3D;
 import hx.geometry.Geometry3D;
 import hx.material.Material3D;
 import hx.material.UnlitTextureMaterial;
+import hx.material.LambertTextureMaterial;
 import hx.material.AlphaMode3D;
 import hx.material.CullMode3D;
 import hx.render3d.Math3D;
@@ -31,11 +32,13 @@ class Model3D extends Node3D {
 	private var geometries:Array<Geometry3D> = [];
 	private var materials:Map<Int, Material3D> = [];
 	private var previousClip:AnimationClip3D;
+	private var useLighting:Bool;
 	private function get_meshes():Array<MeshObject> { return instances.copy(); }
-	public function new(asset:GlbAsset, sceneIndex:Int = -1) {
+	public function new(asset:GlbAsset, sceneIndex:Int = -1, options:Model3DOptions = null) {
 		super();
 		if (asset == null) throw "模型源资产不能为空";
 		data = asset.data;
+		useLighting = options != null && options.lightingEnabled == true;
 		if (sceneIndex < 0) sceneIndex = data.scene;
 		if (sceneIndex >= data.scenes.length) throw "模型场景索引越界";
 		active = [for (_ in data.nodes) false]; globals = [for (_ in data.nodes) new Matrix3D()];
@@ -63,7 +66,7 @@ class Model3D extends Node3D {
 		for (i in 0...primitives.length) {
 			var primitive = primitives[i], material = materials.get(primitive.material);
 			if (material == null) {
-				material = new UnlitTextureMaterial();
+				material = useLighting ? new LambertTextureMaterial() : new UnlitTextureMaterial();
 				if (primitive.material >= 0) {
 					var source = data.materials[primitive.material];
 					material.color = source.color; material.opacity = source.opacity;
@@ -72,7 +75,7 @@ class Model3D extends Node3D {
 				}
 				materials.set(primitive.material, material);
 			}
-			var geometry = new Geometry3D(primitive.positions, primitive.uvs, primitive.indices); geometries.push(geometry);
+			var geometry = new Geometry3D(primitive.positions, primitive.uvs, primitive.indices, primitive.normals); geometries.push(geometry);
 			var mesh = new MeshObject(geometry, material); mesh.name = node.name + (primitives.length > 1 ? " / " + i : "");
 			instances.push(mesh); triangleCount += Std.int(primitive.indices.length / 3);
 			if (skin == null) nodes[index].addChild(mesh);

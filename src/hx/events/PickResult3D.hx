@@ -1,6 +1,8 @@
 package hx.events;
 
 import hx.display.MeshObject;
+import hx.display.Model3D;
+import hx.display.Node3D;
 import hx.geom.Vector3D;
 import hx.geom.Point;
 
@@ -11,6 +13,16 @@ class PickResult3D {
 	public var distance:Float;
 	public var triangleIndex:Int;
 	public var uv:Point;
+	/** 最近的所属模型；骨骼挂点附件同样沿父链解析，无所属模型时为 null。 */
+	public var model(get, never):Model3D;
+	private function get_model():Model3D {
+		var node:Node3D = object;
+		while (node != null) {
+			if (Std.isOfType(node, Model3D)) return cast node;
+			node = node.parent;
+		}
+		return null;
+	}
 	public function new(object:MeshObject, position:Vector3D, distance:Float, triangleIndex:Int, uv:Point) {
 		this.object = object; this.position = position; this.distance = distance;
 		this.triangleIndex = triangleIndex; this.uv = uv;

@@ -3,10 +3,10 @@ package hx.display;
 import hx.events.Event;
 import hx.events.PickResult3D;
 import hx.geom.Point;
-import hx.geom.Vector3D;
 import hx.geom.Ray3D;
 import hx.render3d.Scene3DStats;
 import hx.render3d.Math3D;
+import hx.render3d.Raycaster3D;
 import hx.render3d.IScene3DRenderer;
 import hx.core.Hxmaker;
 import hx.light.DirectionalLight3D;
@@ -84,49 +84,31 @@ class Scene3D extends DisplayObject {
 		while (current != null && current.visible && !current.hide) current = current.parent;
 		if (autoRender && current == null && width > 0 && height > 0) requestRender();
 	}
-	/** 输入为 hxmaker 舞台坐标；不会自动检查上方二维 UI 或纹理 Alpha。 */
-	public function pick(stageX:Float, stageY:Float):PickResult3D {
-		if (isDisposed || stage == null || camera == null || width <= 0 || height <= 0 || !visible || hide) return null;
-		if (stage != null) stage.__updateTransform(null);
+	/** 舞台坐标转逻辑视口坐标；不检查二维覆盖物和祖先遮罩。 */
+	public function stageToViewport(stageX:Float, stageY:Float):Point {
+		if (isDisposed || stage == null || width <= 0 || height <= 0 || !Math3D.finite(stageX) || !Math3D.finite(stageY)) return null;
+		var current:DisplayObject = this;
+		while (current != null) { if (!current.visible || current.isDisposed) return null; current = current.parent; }
+		stage.__updateTransform(null);
 		var m = __worldTransform, det = m.a * m.d - m.b * m.c;
 		if (Math.abs(det) < 1e-12) return null;
 		var dx = stageX - m.tx, dy = stageY - m.ty;
 		var x = (m.d * dx - m.c * dy) / det, y = (-m.b * dx + m.a * dy) / det;
-		if (x < 0 || y < 0 || x > width || y > height) return null;
-		var ray = camera.screenRay(x, y, width, height), viewProjection = camera.getViewProjection(width / height);
-		var best:PickResult3D = null;
-		function visit(node:Node3D):Void {
-			if (!node.visible || node.isDisposed) return;
-			if (Std.isOfType(node, MeshObject)) {
-				var mesh:MeshObject = cast node;
-				if (mesh.pickable && mesh.geometry != null && mesh.material != null && ray.intersectsBounds(mesh.getWorldBounds())) {
-					var world = mesh.getWorldMatrix(), inverse = world.clone();
-					if (inverse.invert()) {
-						var origin = inverse.transformVector(ray.origin), next = inverse.transformVector(ray.at(1));
-						var local = new Ray3D(origin, next.subtract(origin));
-						var g = mesh.geometry;
-						for (triangle in 0...Std.int(g.indices.length / 3)) {
-							var ids = [g.indices[triangle * 3], g.indices[triangle * 3 + 1], g.indices[triangle * 3 + 2]];
-							var p = [for (id in ids) new Vector3D(g.positions[id * 3], g.positions[id * 3 + 1], g.positions[id * 3 + 2])];
-							var hit = local.intersectTriangle(p[0], p[1], p[2]);
-							if (hit != null) {
-								var point = world.transformVector(local.at(hit[0]));
-								var distance = point.subtract(ray.origin).length;
-								var clip = viewProjection.transformVector(point);
-								if (clip.w > 0 && clip.z >= -clip.w && clip.z <= clip.w && (best == null || distance < best.distance)) {
-									var u = hit[1], v = hit[2], w = 1 - u - v;
-									var uv = new Point(g.uvs[ids[0]*2]*w + g.uvs[ids[1]*2]*u + g.uvs[ids[2]*2]*v,
-										g.uvs[ids[0]*2+1]*w + g.uvs[ids[1]*2+1]*u + g.uvs[ids[2]*2+1]*v);
-									best = new PickResult3D(mesh, point, distance, triangle, uv);
-								}
-							}
-						}
-					}
-				}
-			}
-			for (child in node.children) visit(child);
-		}
-		visit(root); return best;
+		return x < 0 || y < 0 || x > width || y > height ? null : new Point(x,y);
+	}
+	/** 射线起点位于相机近裁剪面，输入为 hxmaker 舞台坐标。 */
+	public function stageRay(stageX:Float, stageY:Float):Ray3D {
+		var point = stageToViewport(stageX,stageY);
+		return point == null || camera == null ? null : camera.screenRay(point.x,point.y,width,height);
+	}
+	/** 世界射线查询三维节点树；不使用视口近远裁剪，不检查二维 UI。 */
+	public function raycast(ray:Ray3D, maxDistance:Null<Float> = null, filter:MeshObject->Bool = null):PickResult3D {
+		return isDisposed ? null : Raycaster3D.intersect(root,ray,maxDistance,filter);
+	}
+	/** 输入为舞台坐标，保留视口与近远裁剪；maxDistance=null 表示不限距离。 */
+	public function pick(stageX:Float, stageY:Float, maxDistance:Null<Float> = null, filter:MeshObject->Bool = null):PickResult3D {
+		var ray = stageRay(stageX,stageY);
+		return ray == null ? null : Raycaster3D.intersect(root,ray,maxDistance,filter,camera.getViewProjection(width/height));
 	}
 	override public function dispose():Void {
 		if (isDisposed) return;

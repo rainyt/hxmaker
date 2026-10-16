@@ -27,10 +27,16 @@ class Camera3D extends Node3D {
 	}
 	/** 目标和上方向使用世界坐标，精确矩阵会抵消父节点变换。 */
 	public function lookAt(target:Vector3D, up:Vector3D = null):Void {
-		if (target == null) throw "观察目标不能为空";
+		lookFrom(getWorldPosition(), target, up);
+	}
+	/** 同时设置世界位置与观察目标，不把世界位置误作父节点局部坐标。 */
+	public function lookFrom(position:Vector3D, target:Vector3D, up:Vector3D = null):Void {
+		if (isDisposed) throw "相机已经销毁";
+		if (position == null || target == null) throw "相机位置与观察目标不能为空";
 		if (up == null) up = new Vector3D(0, 1, 0);
-		for (value in [target.x, target.y, target.z, up.x, up.y, up.z]) if (!Math3D.finite(value)) throw "相机观察参数必须是有限数值";
-		var position = getWorldPosition(), z = position.subtract(target);
+		for (value in [position.x, position.y, position.z, target.x, target.y, target.z, up.x, up.y, up.z])
+			if (!Math3D.finite(value)) throw "相机观察参数必须是有限数值";
+		var z = position.subtract(target);
 		if (z.normalize() < 1e-10) throw "相机与观察目标不能重合";
 		var x = up.crossProduct(z);
 		if (x.normalize() < 1e-10) throw "相机上方向与观察方向不能平行";
@@ -41,9 +47,13 @@ class Camera3D extends Node3D {
 			if (!inverse.invert()) throw "相机父节点矩阵不可逆";
 			world = Math3D.multiply(inverse, world);
 		}
-		setLocalMatrix(world);
+		var previous = getLocalMatrix(), changed = false;
+		for (i in 0...16) if (previous.rawData[i] != world.rawData[i]) { changed = true; break; }
+		if (changed) setLocalMatrix(world);
 	}
 	public function screenRay(localX:Float, localY:Float, width:Float, height:Float):Ray3D {
+		for (value in [localX, localY, width, height]) if (!Math3D.finite(value)) throw "视口射线坐标必须是有限数值";
+		if (width <= 0 || height <= 0 || isDisposed) throw "相机或视口尺寸无效";
 		var inverse = getViewProjection(width / height);
 		if (!inverse.invert()) throw "相机视图投影矩阵不可逆";
 		var x = localX / width * 2 - 1, y = 1 - localY / height * 2;

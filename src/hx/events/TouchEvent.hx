@@ -22,6 +22,8 @@ class TouchEvent extends MouseEvent {
 	 * 当用户在屏幕上移动手指时触发
 	 */
 	public static var TOUCH_MOVE:String = "touchMove";
+	/** 后端或自定义输入桥可通过舞台转发取消；也可直接取消三维输入适配。 */
+	public static inline var TOUCH_CANCEL:String = "touchCancel";
 
 	/**
 	 * 触摸点ID

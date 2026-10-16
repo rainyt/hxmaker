@@ -1,15 +1,36 @@
 package hx.geom;
 
+import hx.render3d.Math3D;
+
 /** 射线方向使用单位向量，距离均以世界单位表达。 */
 class Ray3D {
 	public var origin(default, null):Vector3D;
 	public var direction(default, null):Vector3D;
 	public function new(origin:Vector3D, direction:Vector3D) {
+		if (origin == null || direction == null) throw "射线起点与方向不能为空";
+		for (value in [origin.x,origin.y,origin.z,direction.x,direction.y,direction.z])
+			if (!Math3D.finite(value)) throw "射线必须包含有限坐标";
 		this.origin = origin.clone(); this.direction = direction.clone();
-		if (this.direction.normalize() < 1e-12) throw "射线方向不能为零";
+		var magnitude = Math.max(Math.abs(direction.x),Math.max(Math.abs(direction.y),Math.abs(direction.z)));
+		if (magnitude == 0) throw "射线方向不能为零";
+		this.direction.x /= magnitude; this.direction.y /= magnitude; this.direction.z /= magnitude;
+		this.direction.normalize();
 	}
 	public function at(distance:Float):Vector3D {
 		return new Vector3D(origin.x + direction.x * distance, origin.y + direction.y * distance, origin.z + direction.z * distance);
+	}
+	/** 平面方程 normal·position + constant = 0；平行或共面时返回 null。 */
+	public function intersectPlane(normal:Vector3D, constant:Float, maxDistance:Null<Float> = null):Null<Float> {
+		var limit:Float = maxDistance == null ? Math.POSITIVE_INFINITY : maxDistance;
+		if (normal == null || !Math3D.finite(constant) || Math.isNaN(limit) || limit < 0) throw "平面求交参数无效";
+		for (value in [normal.x,normal.y,normal.z]) if (!Math3D.finite(value)) throw "平面法线必须是有限数值";
+		var magnitude = Math.max(Math.abs(normal.x),Math.max(Math.abs(normal.y),Math.abs(normal.z)));
+		if (magnitude == 0) throw "平面法线不能为零";
+		var nx = normal.x/magnitude, ny = normal.y/magnitude, nz = normal.z/magnitude;
+		var length = Math.sqrt(nx*nx+ny*ny+nz*nz), denominator = nx*direction.x+ny*direction.y+nz*direction.z;
+		if (Math.abs(denominator) < 1e-10 * length) return null;
+		var distance = -(nx*origin.x+ny*origin.y+nz*origin.z+constant/magnitude) / denominator;
+		return Math3D.finite(distance) && distance >= 0 && distance <= limit ? distance : null;
 	}
 	public function intersectsBounds(bounds:Bounds3D):Bool {
 		if (bounds.isEmpty()) return false;

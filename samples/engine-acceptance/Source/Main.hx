@@ -248,12 +248,12 @@ class Main extends openfl.display.Sprite {
 		suiteRunning=soakRunning=pendingAdvance=false;
 		var probes = diagnostics.copy();
 		if (world != null && world.probe != null) probes.push({caseId:cases[selected].id,verified:world.probe.verified,nearestFrames:world.probe.nearestFrames,linearFrames:world.probe.linearFrames,failures:world.probe.failures.copy()});
-		var report = {schemaVersion:1,suiteVersion:"2026-10-16-v2-gl-state",environment:RuntimeInfo.environment(),assetManifest:manifest,
+		var report = {schemaVersion:1,suiteVersion:"2026-10-16-v4-glyph-recovery",environment:RuntimeInfo.environment(),assetManifest:manifest,
 			metricsNote:"3D 耗时为 CPU 墙钟提交时间，不是 GPU 时间；目标附件为估算；JS 堆可能不可用且包含记录器自身分配",
 			stateMetricsNote:"状态细分之和为 stateCpuMs；按需快照发生于主通道内部，与通道计时存在重叠，不相加计算整帧。旧报告 stateCpuMs 未覆盖按需纹理快照，跨版本优先比较 renderCpuMs。请求帧率按后端设计不等于严格更新上限。",
 			performance:recorder.results,comparisons:comparisons(),recordingInProgress:recorder.running,soakSampledMs:soakSampledMs,manualVisualChecks:recorder.manual,
 			samplers:probes,poolLoads:poolLoads,lifecycle:lifecycleReports,lifecycleInProgress:lifecycle != null && lifecycle.busy,events:recorder.events,errors:problems,
-			context:{lost:contextLost,restoredAtMs:contextRestoredAt,diagnosticSequence:contextSequence},resources:RuntimeInfo.resources(),
+			context:{lost:contextLost,restoredAtMs:contextRestoredAt,diagnosticSequence:contextSequence,backend:RuntimeInfo.contextRecovery()},resources:RuntimeInfo.resources(),
 			overallVerdict:"未自动判定",acceptanceNote:"需检查目标平台、所有必需案例及人工画面记录"};
 		var json = haxe.Json.stringify(report,null,"  "), filename="hxmaker-3d-baseline-"+Std.string(Date.now().getTime())+".json";
 		#if (js && html5)
@@ -302,6 +302,8 @@ class Main extends openfl.display.Sprite {
 				if (mode == 2) exportReport();
 				else {
 					if (mode == 0 && (contextLost || contextRestoredAt == 0)) return;
+					var backend = RuntimeInfo.contextRecovery();
+					if (mode == 0 && backend != null && (backend.lost || backend.pending || backend.recovered == 0)) return;
 					recorder.visual("context-restore",mode == 0,"通过独立恢复入口记录的人工画面结果");
 					if (mode == 0) recoveryPanel.style.display="none";
 				}

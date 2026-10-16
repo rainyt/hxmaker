@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "pure2D": true,
+  "sequence": 1,
+  "restoredEvents": 1,
+  "generation": 1,
+  "recovered": 1,
+  "lost": false,
+  "pending": false,
+  "manual": [
+    {
+      "passed": false,
+      "sequence": 1,
+      "restoredEvents": 1,
+      "generation": 1,
+      "recovered": 1,
+      "at": "2026-10-16 16:34:01"
+    }
+  ],
+  "errors": [],
+  "createdAt": "2026-10-16 16:34:02",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.6.2 Safari/605.1.15"
+}

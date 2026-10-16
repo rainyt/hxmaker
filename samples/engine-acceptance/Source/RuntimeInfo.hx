@@ -4,6 +4,12 @@ import hx.core.Hxmaker;
 import hx.utils.ContextStats;
 
 class RuntimeInfo {
+	public static function contextRecovery():Dynamic {
+		if (!(Hxmaker.engine is hx.core.Engine)) return null;
+		var engine = cast(Hxmaker.engine, hx.core.Engine);
+		return {generation:engine.contextGeneration,lost:engine.contextLost,pending:engine.contextRecoveryPending,recovered:engine.contextRecoveryCount,
+			text:hx.render.TextFieldRender.contextStats()};
+	}
 	public static function hidden():Bool {
 		#if (js && html5)
 		return js.Browser.document.hidden;

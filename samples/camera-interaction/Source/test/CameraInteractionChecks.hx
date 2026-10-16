@@ -78,6 +78,10 @@ class CameraInteractionChecks {
 			hit = view.raycast(viewportRay,null,mesh -> mesh == back); expect(hit != null,"世界查询不继承相机远裁剪");
 			view.x = 50; view.y = 40; view.scaleX = 0.8; view.scaleY = 0.9; view.rotation = 17;
 			view.stageToViewport(50,40); var center = view.localToGlobal(new Point(100,50));
+			var radians = 17*Math.PI/180;
+			near(center.x,50+Math.cos(radians)*80-Math.sin(radians)*45,"本地转舞台 X 使用原始坐标");
+			near(center.y,40+Math.sin(radians)*80+Math.cos(radians)*45,"本地转舞台 Y 使用原始坐标");
+			var local = view.globalToLocal(center); near(local.x,100,"旋转视口逆变换 X"); near(local.y,50,"旋转视口逆变换 Y");
 			hit = view.pick(center.x,center.y); expect(hit != null && hit.object == front,"二维视口缩放旋转后的拾取"); near(hit.distance,3,"视口命中距离从近裁剪面计算");
 			expect(view.stageRay(-100,-100) == null,"视口外不产生视口射线");
 			var ground = new Ray3D(new Vector3D(0,2,0),new Vector3D(0,-1,0)); near(ground.intersectPlane(new Vector3D(0,1,0),0),2,"地面射线求交");
@@ -149,7 +153,7 @@ class CameraInteractionChecks {
 	private static function mouse(stage:Stage,type:String,x:Float,y:Float):Void { var event = new MouseEvent(type); event.stageX = x; event.stageY = y; stage.handleMouseEvent(event,true); }
 	private static function touch(stage:Stage,type:String,x:Float,y:Float,id:Int):Void { var event = new TouchEvent(type); event.stageX = event.touchX = x; event.stageY = event.touchY = y; event.touchPointID = id; stage.handleMouseEvent(event,true); }
 	private static function vectorNear(actual:Vector3D,expected:Vector3D,label:String):Void { near(actual.x,expected.x,label+" X"); near(actual.y,expected.y,label+" Y"); near(actual.z,expected.z,label+" Z"); }
-	private static function near(actual:Float,expected:Float,label:String):Void { expect(Math.isFinite(actual) && Math.abs(actual-expected) < 1e-5,label); }
+	private static function near(actual:Float,expected:Float,label:String):Void { expect(Math.isFinite(actual) && Math.abs(actual-expected) < 1e-5,label+"，实际="+actual+"，预期="+expected); }
 	private static function expect(value:Bool,label:String):Void { if (!value) throw "相机交互检查失败："+label; checks++; }
 	private static function expectFailure(callback:Void->Void,label:String):Void { var failed = false; try { callback(); } catch (_:Dynamic) { failed = true; } expect(failed,label); }
 }

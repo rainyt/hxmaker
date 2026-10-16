@@ -13,6 +13,16 @@ class Scene3DStats {
 	public var mainCpuMs:Float = 0;
 	public var compositeCpuMs:Float = 0;
 	public var stateCpuMs:Float = 0;
+	/** 状态耗时细分；按需快照可能发生在主通道内部，不与各通道耗时相加。 */
+	public var stateFlushCpuMs:Float = 0;
+	public var stateSnapshotCpuMs:Float = 0;
+	public var stateRestoreCpuMs:Float = 0;
+	public var samplerRestoreCpuMs:Float = 0;
+	/** 保护器执行的同步状态查询数量，不包含初始化能力查询及业务诊断探针。 */
+	public var stateQueryCount:Int = 0;
+	public var stateTextureSlots:Int = 0;
+	public var stateCompositeOnly:Bool = false;
+	public var stateVao:Bool = false;
 	public var targetWidth:Int = 0;
 	public var targetHeight:Int = 0;
 	public var drawCalls:Int = 0;

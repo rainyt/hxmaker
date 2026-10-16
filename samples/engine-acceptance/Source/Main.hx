@@ -229,6 +229,8 @@ class Main extends openfl.display.Sprite {
 		}
 		if (lastInput != null) live.data="最近完成帧\n3D CPU："+f(lastInput.renderCpuMs)+" ms\n动画 CPU："+f(lastInput.animationCpuMs)+" ms\n主 / 阴影批次："+lastInput.mainDrawCalls+" / "+lastInput.shadowDrawCalls
 			+"\n三角形："+lastInput.mainTriangles+"\n上传："+f((lastInput.mainUploadedBytes+lastInput.shadowUploadedBytes)/1024)+" KiB\n目标估算："+f((lastInput.targetBytes+lastInput.shadowMapBytes)/1048576)+" MiB";
+		if (lastInput != null) live.data += "\n状态 CPU："+f(lastInput.stateCpuMs)+" ms；查询 "+lastInput.stateQueryCount
+			+"\n轻量 / VAO 场景："+lastInput.stateCompositeOnlyScenes+" / "+lastInput.stateVaoScenes;
 		var result:Dynamic = recorder.lastResult;
 		if (result != null && result.metrics.frameIntervalMs != null) summary.data="最近一组："+result.caseSpec.id+"\n有效完成："+result.complete+"\n平均观察 FPS："+f(result.meanObservedFps)
 			+"\n帧间隔 P50 / P95\n"+f(result.metrics.frameIntervalMs.p50)+" / "+f(result.metrics.frameIntervalMs.p95)+" ms\n3D CPU P95："+f(result.metrics.renderCpuMs.p95)+" ms\n超过 33.3 ms："+result.longFramesOver33ms;
@@ -246,8 +248,9 @@ class Main extends openfl.display.Sprite {
 		suiteRunning=soakRunning=pendingAdvance=false;
 		var probes = diagnostics.copy();
 		if (world != null && world.probe != null) probes.push({caseId:cases[selected].id,verified:world.probe.verified,nearestFrames:world.probe.nearestFrames,linearFrames:world.probe.linearFrames,failures:world.probe.failures.copy()});
-		var report = {schemaVersion:1,suiteVersion:"2026-10-16-v1",environment:RuntimeInfo.environment(),assetManifest:manifest,
+		var report = {schemaVersion:1,suiteVersion:"2026-10-16-v2-gl-state",environment:RuntimeInfo.environment(),assetManifest:manifest,
 			metricsNote:"3D 耗时为 CPU 墙钟提交时间，不是 GPU 时间；目标附件为估算；JS 堆可能不可用且包含记录器自身分配",
+			stateMetricsNote:"状态细分之和为 stateCpuMs；按需快照发生于主通道内部，与通道计时存在重叠，不相加计算整帧。旧报告 stateCpuMs 未覆盖按需纹理快照，跨版本优先比较 renderCpuMs。请求帧率按后端设计不等于严格更新上限。",
 			performance:recorder.results,comparisons:comparisons(),recordingInProgress:recorder.running,soakSampledMs:soakSampledMs,manualVisualChecks:recorder.manual,
 			samplers:probes,poolLoads:poolLoads,lifecycle:lifecycleReports,lifecycleInProgress:lifecycle != null && lifecycle.busy,events:recorder.events,errors:problems,
 			context:{lost:contextLost,restoredAtMs:contextRestoredAt,diagnosticSequence:contextSequence},resources:RuntimeInfo.resources(),

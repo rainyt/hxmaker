@@ -32,7 +32,7 @@ class RuntimeInfo {
 	public static function environment():Dynamic {
 		var result:Dynamic = {createdAt:Date.now().toString(),stageWidth:Hxmaker.engine.stageWidth,stageHeight:Hxmaker.engine.stageHeight,
 			devicePixelRatio:Hxmaker.engine.devicePixelRatio,targetFrameRate:Hxmaker.engine.frameRate,
-			platform:"原生",versionLabel:BuildInfo.label(),versions:BuildInfo.versions(),heapAvailable:heap() != null};
+			platform:"原生",versionLabel:BuildInfo.label(),versions:BuildInfo.versions(),stateGuard:BuildInfo.stateGuard(),heapAvailable:heap() != null};
 		#if (js && html5)
 		result.platform = "HTML5"; result.userAgent = js.Browser.navigator.userAgent;
 		result.windowWidth = js.Browser.window.innerWidth; result.windowHeight = js.Browser.window.innerHeight;

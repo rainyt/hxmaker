@@ -11,4 +11,10 @@ class BuildInfo {
 			openfl:haxe.macro.Context.definedValue("openfl"),lime:haxe.macro.Context.definedValue("lime"),
 			hxmaker:haxe.macro.Context.definedValue("hxmaker"),hxmakerOpenfl:haxe.macro.Context.definedValue("hxmaker_openfl")},haxe.macro.Context.currentPos());
 	}
+	public static macro function stateGuard():haxe.macro.Expr {
+		return haxe.macro.Context.makeExpr({
+			legacy:haxe.macro.Context.defined("hxmaker_3d_legacy_state_guard"),
+			disableVao:haxe.macro.Context.defined("hxmaker_3d_no_vao"),
+			fullSamplerQueries:haxe.macro.Context.defined("hxmaker_3d_full_state_queries")},haxe.macro.Context.currentPos());
+	}
 }

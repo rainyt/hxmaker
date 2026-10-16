@@ -29,6 +29,8 @@ class FrameSampler {
 		sizes = key;
 		var row:Dynamic = {frameIntervalMs:now-lastAt,animationCpuMs:world.lastAnimationMs,
 			renderCpuMs:0.,shadowCpuMs:0.,mainCpuMs:0.,compositeCpuMs:0.,stateCpuMs:0.,
+			stateFlushCpuMs:0.,stateSnapshotCpuMs:0.,stateRestoreCpuMs:0.,samplerRestoreCpuMs:0.,
+			stateQueryCount:0,stateTextureSlots:0,stateCompositeOnlyScenes:0,stateVaoScenes:0,
 			mainDrawCalls:0,shadowDrawCalls:0,compositeDrawCalls:0,mainTriangles:0,shadowTriangles:0,
 			mainUploadedBytes:0,shadowUploadedBytes:0,textureSlots:0,targetBytes:0,shadowMapBytes:0,visibleMeshes:0,culledMeshes:0,
 			redrawnScenes:0,cacheReferences:ContextStats.totalRefCount,cacheEntries:ContextStats.totalCacheCount,jsHeapBytes:RuntimeInfo.heap()};
@@ -38,6 +40,11 @@ class FrameSampler {
 			lastIds[i] = stats.renderId;
 			row.renderCpuMs += stats.renderCpuMs; row.shadowCpuMs += stats.shadowCpuMs; row.mainCpuMs += stats.mainCpuMs;
 			row.compositeCpuMs += stats.compositeCpuMs; row.stateCpuMs += stats.stateCpuMs;
+			row.stateFlushCpuMs += stats.stateFlushCpuMs; row.stateSnapshotCpuMs += stats.stateSnapshotCpuMs;
+			row.stateRestoreCpuMs += stats.stateRestoreCpuMs; row.samplerRestoreCpuMs += stats.samplerRestoreCpuMs;
+			row.stateQueryCount += stats.stateQueryCount; row.stateTextureSlots += stats.stateTextureSlots;
+			if (stats.stateCompositeOnly) row.stateCompositeOnlyScenes++;
+			if (stats.stateVao) row.stateVaoScenes++;
 			row.compositeDrawCalls += stats.compositeDrawCalls; row.targetBytes += stats.targetBytes; row.shadowMapBytes += stats.shadowMapBytes;
 			row.visibleMeshes += stats.visibleMeshes; row.culledMeshes += stats.culledMeshes;
 			if (stats.redrawThisFrame) {

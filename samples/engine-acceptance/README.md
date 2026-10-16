@@ -2,7 +2,7 @@
 
 这是独立的验收台，使用固定资源与负载记录性能、采样状态和资源生命周期。启动后仅显示场景，不自动运行性能套件、资源循环或上下文恢复诊断。
 
-**交付状态：代码与资产已准备，尚未编译、启动或执行验收。本目录目前没有实测基线。** 之前的贴图角色示例已由用户反馈正常，不能把该结果作为本示例通过的证据。
+原版本已由用户确认画面正常，并提供完整性能套件、5 分钟长跑和 20 轮资源循环报告，见 [Baselines](Baselines/README.md)。**当前新增的 GL 状态优化尚未编译或运行，等待用户测试。** 帧调度保持既有设计，请求 60 不代表严格限制每秒 60 次更新。
 
 ## 启动
 
@@ -70,6 +70,11 @@ arch -x86_64 lime test html5 -D hxmaker_baseline_label=before-optimization
 | renderCpuMs | 完整三维回调 CPU 墙钟时间，包括查询等待、状态保护、绘制、合成与恢复；双视口求和 |
 | shadowCpuMs / mainCpuMs | 阴影 pass，以及主场景清屏、剔除、合批和提交时间 |
 | compositeCpuMs / stateCpuMs | 最终纹理合成，以及状态快照和恢复时间 |
+| stateFlushCpuMs | 进入三维前 OpenFL 待提交状态同步的耗时 |
+| stateSnapshotCpuMs | 初始状态和首次触及纹理槽、共享采样参数的快照耗时 |
+| stateRestoreCpuMs / samplerRestoreCpuMs | GL 状态恢复与共享纹理采样恢复，二者不重叠 |
+| stateQueryCount / stateTextureSlots | 保护器同步查询次数，以及保存过原绑定的纹理槽数量；双视口求和 |
+| stateCompositeOnlyScenes / stateVaoScenes | 本帧采用轻量合成保护、独立 VAO 的场景数量；可用于确认实际路径 |
 | animationAndRenderCpuMs | 上述动画与三维回调的和，不是完整应用 CPU 耗时 |
 | mainDrawCalls / shadowDrawCalls | 本次实际重绘产生的提交；静态复用时为零 |
 | compositeDrawCalls | 三维结果合成次数，单视口通常为 1 |
@@ -79,6 +84,28 @@ arch -x86_64 lime test html5 -D hxmaker_baseline_label=before-optimization
 | jsHeapBytes | 浏览器提供时读取 JS 堆；可能不可用，且包含记录器自身分配与未回收对象 |
 
 每项输出样本数、均值、最小值、P50、P95、P99 和最大值。分位数采用最近秩；前台长帧不剔除。超过 33.3 ms 的帧单独计数。60 FPS、16.67 ms 帧预算和 P95 20.83 ms 容差仅作参考，不自动代表整个引擎通过。
+
+状态细分之和为 `stateCpuMs`。按需纹理快照会发生于主通道内部，细分与 `mainCpuMs` 存在重叠，不能把它们再次相加作为整帧耗时。旧报告的状态总计时口径不同，跨版本优先比较完整 `renderCpuMs`。查询数量仅覆盖保护器显式查询，不包含初始化能力查询、OpenFL 内部调用或诊断探针。
+
+## GL 状态优化对照
+
+默认路径按实际修改范围保存状态。静态纹理复用时不遍历三维网格，只保护合成所需状态；首次使用某个纹理槽时保存其绑定。HTML5 优先使用 WebGL 2 VAO 或 WebGL 1 的 `OES_vertex_array_object`，主通道、阴影、合成各自独立。无 VAO 时恢复逐属性保护，原生平台本轮仍使用该兼容路径。目标创建、首次上传、异常退出与共享采样恢复继续受到保护。
+
+由用户在本目录运行优化版本：
+
+```bash
+arch -x86_64 lime test html5 -D hxmaker_baseline_label=gl-state-optimized
+```
+
+同一份源码可关闭本轮状态保护优化，进行同环境对照：
+
+```bash
+arch -x86_64 lime test html5 -D hxmaker_3d_legacy_state_guard -D hxmaker_baseline_label=gl-state-legacy
+```
+
+此兼容开关关闭轻量保护、VAO 与按需纹理槽保存；缓存时跳过网格遍历的改进仍保留，因此不是逐字还原旧版本。独立使用 `-D hxmaker_3d_no_vao` 可验证无 VAO 的回退路径。已有 `hxmaker_3d_full_state_queries` 仅控制共享纹理采样参数的完整查询，不等同于上述兼容开关。所用开关写入报告 `environment.stateGuard`，实际 VAO 使用情况以采样结果为准。
+
+优先比较 empty、static-cached、two-views 的查询次数与 CPU 均值/P95，并确认 multi/single 主 DrawCall 与原负载相符。随后独立运行“采样状态诊断”，覆盖最近点和线性过滤，检查嵌套遮罩、二维贴图、阴影和双视口画面。再执行资源循环及上下文恢复诊断，确认新增 VAO 的销毁与重建。比较过程中保持窗口、DPR、负载和浏览器条件一致，重复运行并交叉顺序；性能探针不与浏览器录制叠加。
 
 采样通过新增的 `scene.profilingEnabled=true` 获取计时，普通业务场景默认关闭。`scene.stats.renderId` 每次完整成功回调递增，`redrawThisFrame` 表示是否重绘主场景。旧 `drawCalls` 等字段仍表示最近一次主场景重绘，示例在静态复用时按零计入本帧数据。
 

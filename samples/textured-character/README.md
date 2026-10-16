@@ -127,4 +127,4 @@ arch -x86_64 lime test html5 -D hxmaker_character_checks
 
 `AnimationSocketChecks.hx` 检查时间、姿态混合、中断连续性、缺失轨道回退、速度、暂停、定位、事件重入、真实蒙皮终点、实例隔离、挂点变换与销毁、重名和非活动节点及跨动作零缩放，通过时输出 `HXMAKER_ANIMATION_SOCKET_CHECKS PASS`。
 
-两个可选入口尚无独立执行记录，不替代画面、多纹理、过滤、重复加载和 GPU 状态恢复的实际验证。
+2026-10-17 已在无界面 Chrome 的软件 WebGL 中独立执行：角色 95 项、动画与挂点 398 项检查通过。该记录不替代所有平台上的画面、过滤、重复加载和 GPU 状态恢复验收，见[本轮记录](../../docs/3D导航验收记录.md)。

@@ -35,6 +35,6 @@ WASD／方向键按世界 X/Z 移动，空格起跳，Esc 停止目标移动。�
 arch -x86_64 lime test html5 -D hxmaker_terrain_checks
 ```
 
-准备了前一阶段箱体回归和新的地形数值检查，未执行。成功标记 HXMAKER_COLLISION_CHECKS PASS / HXMAKER_TERRAIN_CHECKS PASS 不代替浏览器画面与原生输入验收。
+2026-10-17 已在无界面 Chrome 的软件 WebGL 中通过碰撞 37 项、地形 28 项数值检查。成功标记 HXMAKER_COLLISION_CHECKS PASS / HXMAKER_TERRAIN_CHECKS PASS 不代替浏览器画面与原生输入验收。
 
 API、代理坐标、兼容性和资源所有权见[台阶与坡面说明](../../docs/3D台阶与坡面使用说明.md)。

@@ -57,7 +57,8 @@ class NavigationGraphChecks {
 		}
 		for (trial in 0...12) {
 			var g = new NavGraph3D(), nodes = [
-				for (i in 0...18) g.addNode(new Vector3D(random() * 20, random() * 5, random() * 20))
+				for (i in 0...18)
+					g.addNode(new Vector3D(random() * 20, random() * 5, random() * 20))
 			];
 			var distances = [for (i in 0...18) [for (j in 0...18) i == j ? 0. : Math.POSITIVE_INFINITY]];
 			for (i in 0...18)

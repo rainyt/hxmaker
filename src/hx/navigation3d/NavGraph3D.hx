@@ -231,10 +231,12 @@ private typedef NavQueueItem3D = {var node:NavNode3D; var g:Float; var f:Float;}
 
 /** 二叉最小堆，等成本时按节点编号稳定排序。 */
 private class NavHeap3D {
+	/** 当前队列条目数量，包含尚未弹出的过期候选。 */
 	public var length(get, never):Int;
 
 	private var items:Array<NavQueueItem3D> = [];
 
+	/** 创建空搜索队列。 */
 	public function new() {}
 
 	private function get_length():Int {
@@ -245,6 +247,7 @@ private class NavHeap3D {
 		return a.f < b.f || a.f == b.f && a.node.id < b.node.id;
 	}
 
+	/** 按估计成本和节点编号压入搜索候选。 */
 	public function push(item:NavQueueItem3D):Void {
 		var index = items.length;
 		items.push(item);
@@ -258,6 +261,7 @@ private class NavHeap3D {
 		items[index] = item;
 	}
 
+	/** 弹出当前最优候选；调用前须确认队列非空。 */
 	public function pop():NavQueueItem3D {
 		var first = items[0], last = items.pop();
 		if (items.length > 0) {

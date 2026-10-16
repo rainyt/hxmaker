@@ -9,6 +9,7 @@ import hx.events.FutureErrorEvent;
 
 /** 非 OpenFL 后端需实现图片字节解码，不发起额外网络请求。 */
 class BitmapDataBytesFuture extends Future<BitmapData, {bytes:Bytes, path:String}> {
+	/** 启动资源加载；完成与失败沿用 Future 的通知及引用计数约定。 */
 	override public function post():Void {
 		errorValue(FutureErrorEvent.create(FutureErrorEvent.LOAD_ERROR, -1, "当前后端尚未实现图片字节解码"));
 	}

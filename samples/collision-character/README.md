@@ -2,7 +2,7 @@
 
 纯 hxmaker API，使用 Main : HxmakerApplication → Game : Stage → CollisionCharacterScene : Scene 的标准结构，通过 Assets 加载内嵌贴图 GLB。机器人复用 textured-character 的原创资源，已随示例提供。
 
-本次核心和示例尚未编译或运行，等待用户验收。已确认正常的相机与完整角色流程示例不做输入改动。
+2026-10-17，用户反馈本阶段“测试通过”；未提供可选断言日志或独立性能报告。助手未自行编译或运行。后续公共代理、台阶与坡面扩展见 [terrain-character](../terrain-character/README.md)，该新增扩展及对本示例的回归仍等待用户验收。已有输入映射保持原样。
 
 ## 运行
 

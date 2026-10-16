@@ -42,4 +42,4 @@ class CollisionMath3D {
 	}
 }
 
-typedef CapsuleBoxSample3D = { var separation:Float; var normal:Vector3D; var point:Vector3D; }
+typedef CapsuleBoxSample3D = CollisionSample3D;

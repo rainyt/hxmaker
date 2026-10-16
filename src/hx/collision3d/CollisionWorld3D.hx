@@ -4,26 +4,26 @@ import hx.geom.Ray3D;
 import hx.geom.Vector3D;
 import hx.render3d.Math3D;
 
-/** 独立查询世界；借用显式注册的箱体，不注册帧回调，不驱动刚体。 */
+/** 独立查询世界；借用显式注册的碰撞代理，不注册帧回调，不驱动刚体。 */
 class CollisionWorld3D {
 	public var isDisposed(default, null):Bool = false;
-	public var colliders(get, never):Array<BoxCollider3D>;
-	private var entries:Array<BoxCollider3D> = [];
+	public var colliders(get, never):Array<Collider3D>;
+	private var entries:Array<Collider3D> = [];
 	public function new() {}
-	private function get_colliders():Array<BoxCollider3D> { return entries.copy(); }
+	private function get_colliders():Array<Collider3D> { return entries.copy(); }
 	private function checkAlive():Void { if (isDisposed) throw "碰撞世界已经销毁"; }
-	public function add(value:BoxCollider3D):BoxCollider3D {
+	public function add<T:Collider3D>(value:T):T {
 		checkAlive(); if (value == null) throw "碰撞体不能为空"; value.validate();
 		if (value.world == this) return value;
 		if (value.world != null) throw "碰撞体必须先从原世界注销";
 		entries.push(value); value.setWorld(this); return value;
 	}
-	public function remove(value:BoxCollider3D):Void {
+	public function remove(value:Collider3D):Void {
 		if (value != null && entries.remove(value)) value.setWorld(null);
 	}
 	public function clear():Void { for (value in entries) value.setWorld(null); entries = []; }
 	public function dispose():Void { if (isDisposed) return; clear(); isDisposed = true; }
-	private function accepts(value:BoxCollider3D,mask:Int,includeTriggers:Bool):Bool {
+	private function accepts(value:Collider3D,mask:Int,includeTriggers:Bool):Bool {
 		return !value.isDisposed && value.enabled && (value.layer & mask) != 0 && (includeTriggers || !value.isTrigger)
 			&& (value.node == null || !value.node.isDisposed);
 	}
@@ -34,8 +34,11 @@ class CollisionWorld3D {
 	public function overlapCapsule(center:Vector3D,radius:Float,height:Float,mask:Int = -1,includeTriggers:Bool = false):Array<CollisionHit3D> {
 		checkAlive(); CollisionMath3D.capsule(center,radius,height); var result:Array<CollisionHit3D> = [];
 		for (value in entries) if (accepts(value,mask,includeTriggers)) {
-			var sample = CollisionMath3D.sample(center,radius,height,value.getWorldBounds());
-			if (sample.separation <= 0) result.push(new CollisionHit3D(value,sample.point,sample.normal,0,0,-sample.separation));
+			var bounds = value.getWorldBounds();
+			if (center.x+radius < bounds.min.x || center.x-radius > bounds.max.x || center.y+height/2 < bounds.min.y
+				|| center.y-height/2 > bounds.max.y || center.z+radius < bounds.min.z || center.z-radius > bounds.max.z) continue;
+			var sample = value.sampleCapsule(center,radius,height);
+			if (sample.separation <= 0) result.push(new CollisionHit3D(value,sample.point,sample.normal,0,0,-sample.separation,false,sample.surfaceNormal));
 		}
 		return result;
 	}
@@ -57,10 +60,10 @@ class CollisionWorld3D {
 				|| Math.max(center.y,center.y+displacement.y)+height/2+skin < box.min.y || Math.min(center.y,center.y+displacement.y)-height/2-skin > box.max.y
 				|| Math.max(center.z,center.z+displacement.z)+radius+skin < box.min.z || Math.min(center.z,center.z+displacement.z)-radius-skin > box.max.z) continue;
 			for (iteration in 0...64) {
-				var sample = CollisionMath3D.sample(position,radius,height,box), closing = -sample.normal.dotProduct(displacement);
+				var sample = value.sampleCapsule(position,radius,height), closing = -sample.normal.dotProduct(displacement);
 				var initialOverlap = fraction == 0 && sample.separation < -1e-8;
 				if (initialOverlap || (sample.separation <= skin+1e-8 && closing > 1e-12) || iteration == 63) {
-					var hit = new CollisionHit3D(value,sample.point,sample.normal,length*fraction,fraction,Math.max(0,-sample.separation),iteration == 63 && sample.separation > skin+1e-8);
+					var hit = new CollisionHit3D(value,sample.point,sample.normal,length*fraction,fraction,Math.max(0,-sample.separation),iteration == 63 && sample.separation > skin+1e-8,sample.surfaceNormal);
 					if (best == null || hit.fraction < best.fraction) best = hit;
 					break;
 				}
@@ -72,31 +75,15 @@ class CollisionWorld3D {
 		}
 		return best;
 	}
-	/** 射线只查询碰撞代理，起点在箱内时返回 distance=0 与最近推出面法线。 */
+	/** 射线只查询碰撞代理，起点在代理内部时返回 distance=0 与最近推出面法线。 */
 	public function raycast(ray:Ray3D,maxDistance:Null<Float> = null,mask:Int = -1,includeTriggers:Bool = false):CollisionHit3D {
 		checkAlive(); if (ray == null) throw "碰撞射线不能为空";
 		var limit:Float = maxDistance == null ? Math.POSITIVE_INFINITY : maxDistance;
 		if (Math.isNaN(limit) || limit < 0) throw "射线距离无效";
 		var source = new Ray3D(ray.origin,ray.direction), best:CollisionHit3D = null;
 		for (value in entries) if (accepts(value,mask,includeTriggers)) {
-			var box = value.getWorldBounds(), near = 0., far = limit, normal = new Vector3D();
-			var origin = [source.origin.x,source.origin.y,source.origin.z], direction = [source.direction.x,source.direction.y,source.direction.z];
-			var lo = [box.min.x,box.min.y,box.min.z], hi = [box.max.x,box.max.y,box.max.z], valid = true;
-			for (axis in 0...3) {
-				if (Math.abs(direction[axis]) < 1e-12) { if (origin[axis] < lo[axis] || origin[axis] > hi[axis]) { valid = false; break; } }
-				else {
-					var a = (lo[axis]-origin[axis])/direction[axis], b = (hi[axis]-origin[axis])/direction[axis];
-					var entry = Math.min(a,b), exit = Math.max(a,b);
-					if (entry > near) {
-						near = entry; normal.setTo(0,0,0); var sign = direction[axis] > 0 ? -1 : 1;
-						if (axis == 0) normal.x = sign; else if (axis == 1) normal.y = sign; else normal.z = sign;
-					}
-					far = Math.min(far,exit); if (near > far) { valid = false; break; }
-				}
-			}
-			if (!valid || !Math3D.finite(near) || (best != null && near >= best.distance)) continue;
-			if (normal.length == 0) normal = CollisionMath3D.sample(source.origin,0,0,box).normal;
-			best = new CollisionHit3D(value,source.at(near),normal,near);
+			var hit = value.raycast(source,best == null ? limit : best.distance);
+			if (hit != null && (best == null || hit.distance < best.distance)) best = hit;
 		}
 		return best;
 	}

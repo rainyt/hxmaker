@@ -58,7 +58,9 @@
 
 新增[完整角色流程示例](samples/interactive-character/README.md)：通过独立 ProcedureManager 串起菜单、Assets 加载／取消、角色场景、错误重试和退出释放，支持手动启动五轮生命周期循环与输出诊断 JSON。本轮尚未编译或运行，见[项目示例说明](docs/完整3D角色项目示例说明.md)。
 
-新增[碰撞与角色控制示例](samples/collision-character/README.md)：显式箱体代理、球／竖直胶囊重叠与连续扫掠、碰撞层、阻挡滑动、落地及重力，核心 API 见[使用说明](docs/基础3D碰撞与角色控制使用说明.md)。本次代码和可选断言未编译或运行，等待用户验收，不改动已有左键操作或渲染后端。
+新增[碰撞与角色控制示例](samples/collision-character/README.md)：显式箱体代理、球／竖直胶囊重叠与连续扫掠、碰撞层、阻挡滑动、落地及重力，核心 API 见[使用说明](docs/基础3D碰撞与角色控制使用说明.md)。用户已反馈箱体阶段测试通过，未提供独立断言或性能日志。
+
+新增[台阶与坡面示例](samples/terrain-character/README.md)：封闭楔形坡道、角色跨步、上下坡贴地及坡度限制，见[使用说明](docs/3D台阶与坡面使用说明.md)。本次核心扩展和可选断言尚未编译或运行，等待用户验收，沿用既有输入和渲染体系。
 
 新增[引擎验收与性能基线示例](samples/engine-acceptance/README.md)：提供固定负载、阶段耗时、资源生命周期、二维混用及上下文诊断，并可导出 JSON。用户已提供实测基线并确认画面正常，结果见[最终报告分析](samples/engine-acceptance/Baselines/2026-10-16-最终分析.md)；各项诊断的覆盖范围以报告记录为准。
 

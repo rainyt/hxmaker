@@ -7,6 +7,9 @@ class CharacterMoveResult3D {
 	public var displacement:Vector3D = new Vector3D();
 	public var contacts:Array<CollisionHit3D> = [];
 	public var grounded:Bool = false;
+	public var groundNormal:Vector3D;
+	public var stepped:Bool = false;
+	public var slopeLimited:Bool = false;
 	public var hitCeiling:Bool = false;
 	public var blocked:Bool = false;
 	/** 滑动预算耗尽，未确认的剩余位移被舍弃。 */

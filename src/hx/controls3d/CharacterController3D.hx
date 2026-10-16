@@ -20,6 +20,9 @@ class CharacterController3D {
 	public var skinWidth:Float = 0.002;
 	public var groundSnapDistance:Float = 0.12;
 	public var minGroundNormalY:Float = 0.7;
+	/** 零保留原有行为；仅在有支撑且未起跳时尝试跨越台阶。 */
+	public var stepOffset:Float = 0;
+	public var maxSlopeAngle(get, set):Float;
 	public var gravity:Float = -20;
 	public var maxFallSpeed:Float = 30;
 	public var maxSlideIterations:Int = 8;
@@ -31,6 +34,11 @@ class CharacterController3D {
 	public var position(get, never):Vector3D;
 	private var feet:Vector3D;
 	private function get_position():Vector3D { return feet.clone(); }
+	private function get_maxSlopeAngle():Float { return Math.acos(minGroundNormalY)*180/Math.PI; }
+	private function set_maxSlopeAngle(value:Float):Float {
+		if (!Math3D.finite(value) || value < 0 || value >= 90) throw "坡度上限必须位于零至九十度之间，不含九十度";
+		minGroundNormalY = Math.cos(value*Math.PI/180); return value;
+	}
 	public function new(world:CollisionWorld3D,node:Node3D,radius:Float = 0.35,height:Float = 1.8) {
 		if (world == null || world.isDisposed || node == null || node.isDisposed) throw "角色控制器需要有效碰撞世界与节点";
 		this.world = world; this.node = node; this.radius = radius; this.height = height; feet = node.getWorldPosition(); validate();
@@ -38,9 +46,9 @@ class CharacterController3D {
 	private function validate():Void {
 		if (isDisposed || world == null || world.isDisposed || node == null || node.isDisposed) throw "角色控制器已经失效";
 		CollisionMath3D.capsule(feet,radius,height);
-		for (value in [skinWidth,groundSnapDistance,minGroundNormalY,gravity,maxFallSpeed]) if (!Math3D.finite(value)) throw "角色运动参数必须有限";
+		for (value in [skinWidth,groundSnapDistance,minGroundNormalY,gravity,maxFallSpeed,stepOffset]) if (!Math3D.finite(value)) throw "角色运动参数必须有限";
 		if (skinWidth <= 0 || skinWidth >= radius || groundSnapDistance < 0 || minGroundNormalY <= 0 || minGroundNormalY > 1
-			|| gravity > 0 || maxFallSpeed <= 0 || maxSlideIterations < 1 || maxSlideIterations > 64 || maxRecoveryIterations < 1 || maxRecoveryIterations > 64)
+			|| stepOffset < 0 || gravity > 0 || maxFallSpeed <= 0 || maxSlideIterations < 1 || maxSlideIterations > 64 || maxRecoveryIterations < 1 || maxRecoveryIterations > 64)
 			throw "角色运动参数范围无效";
 	}
 	private function parentInverse():Matrix3D {
@@ -54,6 +62,27 @@ class CharacterController3D {
 	}
 	private function center(position:Vector3D):Vector3D { return new Vector3D(position.x,position.y+height/2,position.z); }
 	private static function scaled(value:Vector3D,factor:Float):Vector3D { return new Vector3D(value.x*factor,value.y*factor,value.z*factor); }
+	private function probeGround(position:Vector3D,distance:Float):CollisionHit3D {
+		var hit = world.sweepCapsule(center(position),radius,height,new Vector3D(0,-distance,0),collisionMask,false,skinWidth);
+		return hit != null && !hit.conservative && hit.normal.y > 0 && hit.surfaceNormal.y >= minGroundNormalY ? hit : null;
+	}
+	/** 升起、前进、落脚都做胶囊扫掠，任一阶段空间不足就放弃，不修改真实节点。 */
+	private function tryStep(position:Vector3D,remaining:Vector3D):CharacterStep3D {
+		var horizontal = new Vector3D(remaining.x,0,remaining.z); if (horizontal.length <= skinWidth) return null;
+		var lift = stepOffset+skinWidth*2, up = new Vector3D(0,lift,0);
+		var ceiling = world.sweepCapsule(center(position),radius,height,up,collisionMask,false,skinWidth);
+		if (ceiling != null && ceiling.fraction < 1) return null;
+		var raised = position.add(up), obstacle = world.sweepCapsule(center(raised),radius,height,horizontal,collisionMask,false,skinWidth);
+		var fraction = obstacle == null ? 1. : obstacle.fraction;
+		if (horizontal.length*fraction <= skinWidth) return null;
+		var candidate = raised.add(scaled(horizontal,fraction)), landing = probeGround(candidate,lift+groundSnapDistance);
+		if (landing == null) return null;
+		candidate.y -= landing.distance;
+		var rise = candidate.y-position.y;
+		if (rise <= skinWidth/2 || rise > stepOffset+skinWidth*2 || landing.point.y-position.y > stepOffset+skinWidth*2) return null;
+		for (hit in world.overlapCapsule(center(candidate),radius,height,collisionMask)) if (hit.penetration > 1e-7) return null;
+		return {position:candidate,landing:landing};
+	}
 	/** 不扫描传送路径；随后 move 会解除目标处的初始重叠。 */
 	public function teleport(position:Vector3D):Void {
 		validate(); CollisionMath3D.vector(position); var inverse = parentInverse();
@@ -92,6 +121,11 @@ class CharacterController3D {
 		}
 		for (hit in world.overlapCapsule(center(position),radius,height,collisionMask)) if (hit.penetration > 1e-8) { result.stuck = true; result.blocked = true; break; }
 		var remaining = displacement.clone(), planes:Array<Vector3D> = [];
+		var support = !result.stuck && displacement.y <= 0 ? probeGround(position,skinWidth*2) : null;
+		if (support != null) {
+			// 保持请求的 X/Z 速度，在可行走支撑面上补足 Y；站立时不沿缓坡缓慢下滑。
+			var normal = support.surfaceNormal; remaining.y = -(normal.x*remaining.x+normal.z*remaining.z)/normal.y;
+		}
 		if (!result.stuck) for (iteration in 0...maxSlideIterations) {
 			if (remaining.length < 1e-10) break;
 			var hit = world.sweepCapsule(center(position),radius,height,remaining,collisionMask,false,skinWidth);
@@ -100,16 +134,28 @@ class CharacterController3D {
 			if (hit.normal.y < -minGroundNormalY) result.hitCeiling = true;
 			position = position.add(scaled(remaining,hit.fraction));
 			remaining.scaleBy(1-hit.fraction);
+			if (stepOffset > 0 && support != null && displacement.y <= 0 && hit.normal.y < minGroundNormalY) {
+				var step = tryStep(position,remaining);
+				if (step != null) {
+					position = step.position; remaining.setTo(0,0,0); result.stepped = true; result.grounded = true;
+					result.groundNormal = step.landing.surfaceNormal.clone(); result.contacts.push(step.landing); break;
+				}
+			}
 			var duplicate = false; for (normal in planes) if (normal.dotProduct(hit.normal) > 0.9999) duplicate = true;
 			if (!duplicate) planes.push(hit.normal);
+			if (hit.normal.y > 0 && hit.surfaceNormal.y > 0 && hit.surfaceNormal.y < minGroundNormalY) {
+				// 额外限制朝陡坡上方的水平运动；真实接触面仍保留，以允许重力下滑。
+				var wall = new Vector3D(hit.surfaceNormal.x,0,hit.surfaceNormal.z);
+				if (wall.length > 1e-8) { wall.normalize(); planes.push(wall); result.slopeLimited = true; }
+			}
 			remaining = slide(remaining,planes);
 		}
 		result.iterationLimited = !result.stuck && remaining.length >= 1e-10;
 		// 上升时不吸回地面；落地只接受朝上的支撑面，避免墙边被误判成站立。
 		if (!result.stuck && displacement.y <= 0) {
-			var ground = world.sweepCapsule(center(position),radius,height,new Vector3D(0,-Math.max(groundSnapDistance,skinWidth*2),0),collisionMask,false,skinWidth);
-			if (ground != null && !ground.conservative && ground.normal.y >= minGroundNormalY) {
-				position.y -= ground.distance; result.grounded = true; result.contacts.push(ground);
+			var ground = probeGround(position,Math.max(groundSnapDistance,skinWidth*2));
+			if (ground != null) {
+				position.y -= ground.distance; result.grounded = true; result.groundNormal = ground.surfaceNormal.clone(); result.contacts.push(ground);
 			}
 		}
 		CollisionMath3D.vector(position);
@@ -137,3 +183,5 @@ class CharacterController3D {
 	}
 	public function dispose():Void { if (isDisposed) return; isDisposed = true; world = null; node = null; lastResult = null; }
 }
+
+private typedef CharacterStep3D = { var position:Vector3D; var landing:CollisionHit3D; }

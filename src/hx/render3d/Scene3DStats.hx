@@ -2,6 +2,19 @@ package hx.render3d;
 
 /** 最近一次三维重绘的数据；最终合成次数在每次 GPU 回调更新。 */
 class Scene3DStats {
+	/** 成功完成的 GPU 回调编号；静态纹理复用时也递增，不是主场景重绘次数。 */
+	public var renderId:Int = 0;
+	public var redrawId:Int = 0;
+	public var redrawThisFrame:Bool = false;
+	public var profileReady:Bool = false;
+	/** 包含状态保护、三维绘制、二维合成与恢复，单位毫秒；不是 GPU 执行时间。 */
+	public var renderCpuMs:Float = 0;
+	public var shadowCpuMs:Float = 0;
+	public var mainCpuMs:Float = 0;
+	public var compositeCpuMs:Float = 0;
+	public var stateCpuMs:Float = 0;
+	public var targetWidth:Int = 0;
+	public var targetHeight:Int = 0;
 	public var drawCalls:Int = 0;
 	public var triangles:Int = 0;
 	public var visibleMeshes:Int = 0;

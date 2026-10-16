@@ -1,15 +1,27 @@
 #!/usr/bin/env python3
 """生成原创机器人、三张校准贴图及骨骼动画；仅使用 Python 标准库。"""
+import argparse
 import json
 import math
 import struct
 import zlib
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[1]
+parser = argparse.ArgumentParser(description='生成贴图动画机器人资源')
+parser.add_argument('--output-root', type=Path, help='可选输出示例目录，默认使用当前示例')
+parser.add_argument('--name', default='robot', help='GLB 文件名，不含扩展名')
+parser.add_argument('--subdivisions', type=int, default=1, help='每个盒子表面的网格细分数，1～16')
+parser.add_argument('--all-blended', action='store_true', help='让所有网格都使用双关节权重')
+parser.add_argument('--no-source-images', action='store_true', help='不另存 PNG 源文件')
+args = parser.parse_args()
+if not 1 <= args.subdivisions <= 16:
+    parser.error('细分数必须在 1～16 之间')
+if not args.name or any(c not in 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_' for c in args.name):
+    parser.error('文件名只允许英文字母、数字、短横线和下划线')
+ROOT = args.output_root.resolve() if args.output_root else Path(__file__).resolve().parents[1]
 OUT = ROOT / 'Assets'
-SOURCES = Path(__file__).resolve().parent
-OUT.mkdir(exist_ok=True)
+SOURCES = ROOT / 'SourceAssets'
+OUT.mkdir(parents=True, exist_ok=True)
 
 
 def png(size, pixel):
@@ -61,8 +73,10 @@ def limb_pixel(x, y):
 
 
 images = [('body', png(128, body_pixel)), ('screen', png(128, screen_pixel)), ('limbs', png(64, limb_pixel))]
-for name, data in images:
-    (SOURCES / (name + '.png')).write_bytes(data)
+if not args.no_source_images:
+    SOURCES.mkdir(parents=True, exist_ok=True)
+    for name, data in images:
+        (SOURCES / (name + '.png')).write_bytes(data)
 
 binary = bytearray()
 views, accessors, meshes, nodes = [], [], [], []
@@ -92,13 +106,14 @@ def accessor(values, kind, component=5126, bounds=False):
 
 
 # 关节以模型空间位置声明，节点中保存父级相对位移。
-joints, rest = [], []
+joints, rest, joint_parents = [], [], []
 def joint(name, position, parent=None):
     index = len(nodes)
     relative = position if parent is None else tuple(position[i]-rest[parent][i] for i in range(3))
     nodes.append({'name': name, 'translation': list(relative)})
     joints.append(index)
     rest.append(position)
+    joint_parents.append(parent)
     if parent is not None:
         nodes[joints[parent]].setdefault('children', []).append(index)
     return len(joints)-1
@@ -128,23 +143,46 @@ def box(name, center, dimensions, material, influence, blend=None):
              ((0, 1, 0), [(0,1,1),(1,1,1),(1,1,0),(0,1,0)]),
              ((0,-1, 0), [(0,0,0),(1,0,0),(1,0,1),(0,0,1)])]
     positions, normals, uvs, indices, weights, joint_ids = [], [], [], [], [], []
-    for normal, corners in faces:
-        offset = len(positions)//3
-        for corner, uv in zip(corners, [(0,1),(1,1),(1,0),(0,0)]):
-            position = [center[i] + (corner[i]-.5)*dimensions[i] for i in range(3)]
-            positions.extend(position)
-            normals.extend(normal)
-            uvs.extend(uv)
-            if blend is None:
+    def emit(corner, uv, normal):
+        position = [center[i] + (corner[i]-.5)*dimensions[i] for i in range(3)]
+        positions.extend(position)
+        normals.extend(normal)
+        uvs.extend(uv)
+        if blend is None:
+            if args.all_blended:
+                other = joint_parents[influence]
+                if other is None:
+                    other = spine
+                joint_ids.extend([influence, other, 0, 0])
+                weights.extend([.8, .2, 0, 0])
+            else:
                 joint_ids.extend([influence, 0, 0, 0])
                 weights.extend([1, 0, 0, 0])
-            else:
-                # 衣甲中部受两关节共同影响，覆盖实际多权重 CPU 蒙皮路径。
-                other, lower, upper = blend
-                amount = max(0, min(1, (position[1]-lower)/(upper-lower)))
-                joint_ids.extend([influence, other, 0, 0])
-                weights.extend([amount, 1-amount, 0, 0])
-        indices.extend([offset,offset+1,offset+2,offset,offset+2,offset+3])
+        else:
+            # 衣甲中部受两关节共同影响，覆盖实际多权重 CPU 蒙皮路径。
+            other, lower, upper = blend
+            amount = max(0, min(1, (position[1]-lower)/(upper-lower)))
+            joint_ids.extend([influence, other, 0, 0])
+            weights.extend([amount, 1-amount, 0, 0])
+    for normal, corners in faces:
+        offset = len(positions)//3
+        n = args.subdivisions
+        if n == 1:
+            # 默认生成顺序保持不变，已有示例的资产字节不因可选压力参数改变。
+            for corner, uv in zip(corners, [(0,1),(1,1),(1,0),(0,0)]):
+                emit(corner, uv, normal)
+            indices.extend([offset,offset+1,offset+2,offset,offset+2,offset+3])
+        else:
+            for iy in range(n+1):
+                for ix in range(n+1):
+                    u, v = ix/n, iy/n
+                    corner = [(1-u)*(1-v)*corners[0][i] + u*(1-v)*corners[1][i]
+                              + u*v*corners[2][i] + (1-u)*v*corners[3][i] for i in range(3)]
+                    emit(corner, (u,1-v), normal)
+            for iy in range(n):
+                for ix in range(n):
+                    a = offset+iy*(n+1)+ix
+                    indices.extend([a,a+1,a+n+2,a,a+n+2,a+n+1])
     primitive = {'attributes': {'POSITION': accessor(positions,'VEC3',bounds=True), 'NORMAL': accessor(normals,'VEC3'),
                  'TEXCOORD_0': accessor(uvs,'VEC2'), 'JOINTS_0': accessor(joint_ids,'VEC4',5121), 'WEIGHTS_0': accessor(weights,'VEC4')},
                  'indices': accessor(indices,'SCALAR',5123), 'material': material}
@@ -220,5 +258,5 @@ encoded = json.dumps(document,ensure_ascii=False,separators=(',',':')).encode('u
 encoded += b' ' * (-len(encoded)%4)
 binary.extend(b'\0' * (-len(binary)%4))
 glb = struct.pack('<III',0x46546c67,2,28+len(encoded)+len(binary)) + struct.pack('<II',len(encoded),0x4e4f534a) + encoded + struct.pack('<II',len(binary),0x004e4942) + binary
-(OUT/'robot.glb').write_bytes(glb)
-print('已生成 Assets/robot.glb：',len(glb),'字节，',len(meshes),'网格，',len(joints),'关节，3 张内嵌 PNG，Idle / Walk 动画。')
+(OUT/(args.name+'.glb')).write_bytes(glb)
+print('已生成 Assets/'+args.name+'.glb：',len(glb),'字节，',len(meshes),'网格，',len(joints),'关节，',192*args.subdivisions**2,'三角形，3 张内嵌 PNG，Idle / Walk 动画。')

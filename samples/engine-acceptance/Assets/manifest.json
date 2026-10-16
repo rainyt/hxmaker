@@ -1,0 +1,132 @@
+{
+  "schemaVersion": 1,
+  "description": "原创固定负载；高密度版本增加计算量，不代表美术复杂度",
+  "models": {
+    "robot": {
+      "triangles": 192,
+      "vertices": 384,
+      "joints": 15,
+      "meshes": 16,
+      "blendedMeshes": 1
+    },
+    "robot-dense": {
+      "triangles": 12288,
+      "vertices": 7776,
+      "joints": 15,
+      "meshes": 16,
+      "blendedMeshes": 16
+    }
+  },
+  "files": [
+    {
+      "name": "robot-dense.glb",
+      "bytes": 510904,
+      "sha256": "0b3734d49d1186b7db4bb63df3f57082862f323a6d4b1fd69b7d3d1cdebef7c0"
+    },
+    {
+      "name": "robot.glb",
+      "bytes": 53556,
+      "sha256": "18992fb4927ba4b183df74f8f3dd11b2d8e598486c240a2a884ffef6d58a3f12"
+    },
+    {
+      "name": "tile_00.png",
+      "bytes": 196,
+      "sha256": "34e3e4864ab1c55d6d1e90205cf400089b8f6daedf3b1d4c7e440dab285b8d04"
+    },
+    {
+      "name": "tile_01.png",
+      "bytes": 196,
+      "sha256": "37266a4976bf33273a97dff570b2bb1a36937c4a5d6f0958413bd0348ebc7bfe"
+    },
+    {
+      "name": "tile_02.png",
+      "bytes": 196,
+      "sha256": "437c9aadf9aaf88eb13cad099aa77a3ac6a26f2239b480594c75dfc11c8097f9"
+    },
+    {
+      "name": "tile_03.png",
+      "bytes": 197,
+      "sha256": "34b379c111fc7b428dd3a88e0d8e978eb008a411dcd06f7a2e4d2686cc3cf574"
+    },
+    {
+      "name": "tile_04.png",
+      "bytes": 197,
+      "sha256": "cc5d852aefe4d79a9ba1883f5c454cb5f85154ab413f481fc622b9859133ae39"
+    },
+    {
+      "name": "tile_05.png",
+      "bytes": 196,
+      "sha256": "b900d7ba421dea4b0ef5ffb0da8881d77cd03b2f23cb2cf7f9d272503b1fc16b"
+    },
+    {
+      "name": "tile_06.png",
+      "bytes": 196,
+      "sha256": "e594df8bd89e4b3837ba62f27b0b092f93ca996332f46976737e154931e689ad"
+    },
+    {
+      "name": "tile_07.png",
+      "bytes": 196,
+      "sha256": "ef1ad1b2fed47115b3c048695ff2624d11513c04bc50aed4ccfb1071f5f6f1a1"
+    },
+    {
+      "name": "tile_08.png",
+      "bytes": 195,
+      "sha256": "455c7a73ff312ca4f249dee1f617e1b452c63310a1ac0e9d3c8363820a0284a2"
+    },
+    {
+      "name": "tile_09.png",
+      "bytes": 197,
+      "sha256": "84b891cf458180baa2d133be529cd6e23e7f45d3d4f0228cc41eaaaf4db98d6a"
+    },
+    {
+      "name": "tile_10.png",
+      "bytes": 197,
+      "sha256": "7c639ebc2887f8484529b6f2a29977f19e4746c8db6048a33b3b089e55bbe8e1"
+    },
+    {
+      "name": "tile_11.png",
+      "bytes": 196,
+      "sha256": "11f6d019abf84d8e34771d47702912c2251fc6cf6982cfc6c1771e22d0660b1e"
+    },
+    {
+      "name": "tile_12.png",
+      "bytes": 196,
+      "sha256": "2d6be69b7d958e501dd116efc794d88e435de51a617e0dd0d8eb7fa75b943d43"
+    },
+    {
+      "name": "tile_13.png",
+      "bytes": 197,
+      "sha256": "fdb87635528f4e5ec132cc0a5d7b724ed73a98b7f13d77c09c639938a0d5b3b9"
+    },
+    {
+      "name": "tile_14.png",
+      "bytes": 197,
+      "sha256": "e32c59140a76fe3d520533dd91af70c0386cfbf2f0bd190744a649d60e7cc2b5"
+    },
+    {
+      "name": "tile_15.png",
+      "bytes": 192,
+      "sha256": "00d75e6d6b50972404bdcd00564cb37f02e59d92ba1437b26365898a296f0545"
+    },
+    {
+      "name": "tile_16.png",
+      "bytes": 197,
+      "sha256": "27bd94eb28cdf0186b92c71b9f64d4b2fb4a701b5bc5b70f60cf56c847223002"
+    },
+    {
+      "name": "tile_17.png",
+      "bytes": 197,
+      "sha256": "c7e59339f29d252a5bcdd2b16a3867c80544a57c72e79b6e755bb3c28e4830fc"
+    },
+    {
+      "name": "tile_18.png",
+      "bytes": 197,
+      "sha256": "371b617736b7b3f09a51efbceb5fa9c7cc7068d69cf7a63275e6650b09b2c989"
+    },
+    {
+      "name": "tile_19.png",
+      "bytes": 196,
+      "sha256": "550eb0b147cbb4f774ccc59165b204729401f475a852131e42d929c838853946"
+    }
+  ]
+}

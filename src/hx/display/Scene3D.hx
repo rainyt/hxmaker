@@ -31,6 +31,8 @@ class Scene3D extends DisplayObject {
 		return ambientColor + ":" + ambientIntensity + ":" + (light == null ? "无方向光" : light.settingsKey());
 	}
 	public var stats(default, null):Scene3DStats = new Scene3DStats();
+	/** 按需记录三维回调的 CPU 墙钟时间，普通场景默认不读取计时器。 */
+	public var profilingEnabled:Bool = false;
 	public var autoRender:Bool = true;
 	public var renderScale:Float = 1;
 	public var multiTextureEnabled:Bool = true;

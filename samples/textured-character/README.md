@@ -2,7 +2,7 @@
 
 通过 hxmaker 的 `Assets.loadGlb` 加载完整角色 GLB，文件内包含图片、UV、材质、骨架、权重与动画。默认显示三个共用源贴图、分别播放动画的机器人，并开启环境光、方向光与硬阴影。
 
-当前状态：源码和资源已准备，尚未执行 Haxe / Lime 编译、浏览器或回归断言。按用户要求交由用户测试；下文的画面与合批描述是验收目标。
+当前状态：用户已反馈贴图动画示例运行正常；未据此认定所有可选回归、边界情况和平台已经通过。后续用于系统验证的[引擎验收与性能基线示例](../engine-acceptance/README.md)已准备，本轮尚未编译或运行。
 
 ## 运行
 
@@ -33,6 +33,8 @@ python3 SourceAssets/generate_assets.py
 ```
 
 脚本仅用 Python 标准库生成 PNG 和 GLB，无需 Blender。它用于制作资源，不会编译或启动示例。
+
+生成器另提供 `--output-root`、`--name`、`--subdivisions`、`--all-blended` 和 `--no-source-images` 参数，供验收台构建固定压力资产；无参数时保持此示例原有的生成顺序与配置。
 
 ## 操作与验收
 

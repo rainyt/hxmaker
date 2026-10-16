@@ -152,6 +152,25 @@ class Node3D extends EventDispatcher {
 		__matrixOverride.rawData[3] = __matrixOverride.rawData[7] = __matrixOverride.rawData[11] = 0;
 		__matrixOverride.rawData[15] = 1; invalidate();
 	}
+	/** 动画混合可能跨越零缩放；保留精确姿态，退化网格由渲染与拾取跳过。 */
+	@:allow(hx.display.Model3D)
+	private function setAnimationTRS(translation:Array<Float>, rotation:Array<Float>, scale:Array<Float>):Void {
+		var matrix = Math3D.fromTRS(translation, rotation, scale);
+		for (value in matrix.rawData) if (!Math3D.finite(value)) throw "动画姿态包含无效数值";
+		// 已知精确 TRS，无需分解含负缩放或零缩放的矩阵，也避免临时矩阵和向量分配。
+		var qx = rotation[0], qy = rotation[1], qz = rotation[2], qw = rotation[3];
+		var r2 = Math.max(-1, Math.min(1, 2 * (qx*qz-qy*qw))), degrees = 180 / Math.PI;
+		__x = translation[0]; __y = translation[1]; __z = translation[2];
+		__rotationY = Math.asin(-r2) * degrees;
+		if (Math.abs(r2) < 1 - 1e-12) {
+			__rotationX = Math.atan2(2*(qy*qz+qx*qw),1-2*(qx*qx+qy*qy)) * degrees;
+			__rotationZ = Math.atan2(2*(qx*qy+qz*qw),1-2*(qy*qy+qz*qz)) * degrees;
+		} else {
+			__rotationX = Math.atan2((r2 < 0 ? 1 : -1)*2*(qx*qy-qz*qw),1-2*(qx*qx+qz*qz)) * degrees; __rotationZ = 0;
+		}
+		__scaleX = scale[0]; __scaleY = scale[1]; __scaleZ = scale[2];
+		__matrixOverride = matrix; invalidate();
+	}
 	public function getWorldMatrix():Matrix3D {
 		if (__worldDirty) {
 			__world = parent == null ? getLocalMatrix() : Math3D.multiply(parent.getWorldMatrix(), getLocalMatrix());

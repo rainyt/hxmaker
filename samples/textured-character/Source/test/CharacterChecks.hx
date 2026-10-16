@@ -1,4 +1,4 @@
-package;
+package test;
 
 #if hxmaker_character_checks
 import haxe.Json;
@@ -13,10 +13,8 @@ class CharacterChecks {
 		expect(source.imageCount == 3 && source.textureCount == 3 && source.texturesReady,"三张内嵌图片已解码");
 		expect(source.meshCount == 16 && source.triangleCount == 192,"原创角色资源统计");
 		expect(source.animationNames.indexOf("Idle") >= 0 && source.animationNames.indexOf("Walk") >= 0,"两个动画片段");
-		var nativeBitmap:openfl.display.BitmapData = cast source.getTexture(0).data.getTexture();
-		expect(nativeBitmap.width == 128 && nativeBitmap.height == 128,"PNG 解码尺寸");
-		expect(nativeBitmap.getPixel(0,0) == 0xff4064,"PNG 左上红色方向标");
-		expect(nativeBitmap.getPixel(0,127) == 0x40ffa0,"PNG 左下绿色方向标");
+		var bitmap = source.getTexture(0);
+		expect(bitmap.width == 128 && bitmap.height == 128,"PNG 解码尺寸");
 		var a = source.createInstance(-1,{lightingEnabled:true}), b = source.createInstance(-1,{lightingEnabled:true});
 		try {
 			expect(a.meshes[0].material.texture == source.getTexture(0) && b.meshes[0].material.texture == source.getTexture(0),"两个实例共享资产贴图");

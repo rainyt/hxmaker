@@ -10,5 +10,5 @@
     <haxelib name="vector-math" />
     <haxelib name="actuate" />
     <haxelib name="spine-haxe" />
-    <window width="960" height="720" background="#172033" hardware="true" allow-high-dpi="true" />
+    <window width="960" height="820" background="#172033" hardware="true" allow-high-dpi="true" />
 </project>

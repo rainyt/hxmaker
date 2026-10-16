@@ -28,18 +28,23 @@ class AnimationClip3D {
 		var t = time <= times[0] || next == low || track.interpolation == "STEP" ? 0. : (time - times[low]) / (times[next] - times[low]);
 		t = Math.max(0, Math.min(1, t));
 		var a = low * width, b = next * width, values = track.values;
-		if (width == 4) {
-			var dot = 0.; for (i in 0...4) dot += values[a + i] * values[b + i];
-			var sign = dot < 0 ? -1. : 1.; dot = Math.min(1, Math.abs(dot));
-			var wa = 1 - t, wb = t;
-			if (dot < 0.9995) {
-				var angle = Math.acos(dot), sine = Math.sin(angle);
-				wa = Math.sin((1 - t) * angle) / sine; wb = Math.sin(t * angle) / sine;
-			}
-			var length = 0.;
-			for (i in 0...4) { out[i] = values[a + i] * wa + values[b + i] * wb * sign; length += out[i] * out[i]; }
-			length = Math.sqrt(length); for (i in 0...4) out[i] /= length;
-		} else for (i in 0...width) out[i] = values[a + i] * (1 - t) + values[b + i] * t;
+		if (width == 4) blendRotation(values, a, values, b, t, out);
+		else for (i in 0...width) out[i] = values[a + i] * (1 - t) + values[b + i] * t;
+	}
+	/** 关键帧和跨片段混合使用相同的四元数最短路径插值。 */
+	public static function blendRotation(a:Array<Float>, offsetA:Int, b:Array<Float>, offsetB:Int, t:Float, out:Array<Float>):Void {
+		var dot = 0.; for (i in 0...4) dot += a[offsetA + i] * b[offsetB + i];
+		var sign = dot < 0 ? -1. : 1.; dot = Math.min(1, Math.abs(dot));
+		var wa = 1 - t, wb = t;
+		if (dot < 0.9995) {
+			var angle = Math.acos(dot), sine = Math.sin(angle);
+			wa = Math.sin((1 - t) * angle) / sine; wb = Math.sin(t * angle) / sine;
+		}
+		var length = 0.;
+		for (i in 0...4) { out[i] = a[offsetA + i] * wa + b[offsetB + i] * wb * sign; length += out[i] * out[i]; }
+		length = Math.sqrt(length);
+		if (length > 1e-12) for (i in 0...4) out[i] /= length;
+		else { out[0] = out[1] = out[2] = 0; out[3] = 1; }
 	}
 }
 

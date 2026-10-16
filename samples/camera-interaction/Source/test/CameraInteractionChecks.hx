@@ -118,6 +118,24 @@ class CameraInteractionChecks {
 			yaw = orbitB.yaw;
 			mouse(stage,MouseEvent.MOUSE_DOWN,100,60); mouse(stage,MouseEvent.MOUSE_MOVE,300,60); mouse(stage,MouseEvent.MOUSE_UP,300,60);
 			near(orbitB.yaw,yaw,"跨视口拖动不旋转另一相机"); expect(!ia.capturing && otherSelections == 0,"另一视口抬起不被误判为选择");
+			// 保留左键轻点／拖动，轻点的拾取固定在按下时，不随相机平滑更新漂移。
+			var selectedRay:hx.geom.Ray3D = null, selectedX:Float = -1, selectedY:Float = -1;
+			ia.addEventListener(Scene3DInputEvent.SELECT,function(event:Scene3DInputEvent) { selectedRay = event.ray; selectedX = event.stageX; selectedY = event.stageY; });
+			orbitA.rotate(45,0); orbitA.update(0.016);
+			var expectedRay = a.stageRay(100,60), selectedBefore = selections;
+			mouse(stage,MouseEvent.MOUSE_DOWN,100,60);
+			expect(selections == selectedBefore && ia.capturing,"按下先等待轻点／拖动判定，不提前移动角色");
+			orbitA.update(0.1); mouse(stage,MouseEvent.MOUSE_UP,102,60);
+			expect(selections == selectedBefore+1 && !ia.capturing,"相机仍在平滑转动时轻点正常生效");
+			vectorNear(selectedRay.direction,expectedRay.direction,"轻点使用按下时的射线");
+			vectorNear(selectedRay.origin,expectedRay.origin,"轻点使用按下时的射线起点");
+			near(selectedX,100,"轻点舞台 X 与按下射线一致"); near(selectedY,60,"轻点舞台 Y 与按下射线一致");
+			yaw = orbitA.yaw; selectedBefore = selections;
+			mouse(stage,MouseEvent.MOUSE_DOWN,100,60); mouse(stage,MouseEvent.MOUSE_MOVE,140,60);
+			expect(ia.dragging && orbitA.yaw != yaw,"左键拖动仍可旋转镜头");
+			mouse(stage,MouseEvent.MOUSE_UP,140,60);
+			expect(!ia.capturing && !ia.dragging && selections == selectedBefore,"左键旋转结束不下达角色移动指令");
+			yaw = orbitA.yaw; mouse(stage,MouseEvent.MOUSE_MOVE,180,60); near(orbitA.yaw,yaw,"释放左键后普通移动不旋转镜头");
 			mouse(stage,MouseEvent.MOUSE_DOWN,100,60); stage.dispatchEvent(new Event(Event.DEACTIVATE)); expect(!ia.capturing,"失焦取消捕获");
 			touch(stage,TouchEvent.TOUCH_BEGIN,100,60,7); yaw = orbitA.yaw;
 			touch(stage,TouchEvent.TOUCH_MOVE,150,60,8); touch(stage,TouchEvent.TOUCH_END,150,60,8);

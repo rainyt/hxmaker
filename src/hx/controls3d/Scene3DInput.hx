@@ -7,8 +7,10 @@ import hx.display.Scene3D;
 import hx.display.Stage;
 import hx.events.Event;
 import hx.events.MouseEvent;
+import hx.events.PickResult3D;
 import hx.events.Scene3DInputEvent;
 import hx.events.TouchEvent;
+import hx.geom.Ray3D;
 import hx.render3d.Math3D;
 
 /** 通过 hxmaker 视口事件接入选择、旋转和缩放，显式 dispose 解除监听。 */
@@ -34,6 +36,8 @@ class Scene3DInput extends EventDispatcher {
 	private var lastY:Float = 0;
 	private var pendingRelease:MouseEvent;
 	private var pendingTap:Bool = false;
+	private var pressRay:Ray3D;
+	private var pressHit:PickResult3D;
 	private var mouseBlockedUntil:Float = 0;
 	private function get_enabled():Bool { return active; }
 	private function set_enabled(value:Bool):Bool {
@@ -59,6 +63,11 @@ class Scene3DInput extends EventDispatcher {
 		if (capturing) return;
 		if (view.stageToViewport(event.stageX,event.stageY) == null) return;
 		validateSettings(); clearPending();
+		// 按下时固定射线与命中，避免确认轻点之前相机继续平滑转动而改变目标。
+		if (hasEventListener(Scene3DInputEvent.SELECT)) {
+			pressRay = view.stageRay(event.stageX,event.stageY);
+			if (pressRay != null) pressHit = view.pick(event.stageX,event.stageY,maxDistance,filter);
+		}
 		touch = isTouch; pointerId = isTouch ? cast(event,TouchEvent).touchPointID : -1;
 		if (touch) mouseBlockedUntil = Timer.stamp()+0.6;
 		startX = lastX = event.stageX; startY = lastY = event.stageY; capturing = true; dragging = false;
@@ -79,6 +88,7 @@ class Scene3DInput extends EventDispatcher {
 			validateSettings();
 			var dx = event.stageX-startX, dy = event.stageY-startY;
 			if (!dragging && dx*dx+dy*dy > dragThreshold*dragThreshold) {
+				pressRay = null; pressHit = null;
 				dragging = true; notify(Scene3DInputEvent.DRAG_BEGIN,event);
 			}
 			if (!capturing || !active || isDisposed) return;
@@ -89,18 +99,19 @@ class Scene3DInput extends EventDispatcher {
 			pendingTap = !dragging && movedX*movedX+movedY*movedY <= dragThreshold*dragThreshold;
 			pendingRelease = pendingTap ? event : null;
 			if (pendingTap) view.addEventListener(Event.UPDATE,clearPending);
+			else clearPending();
 			var wasDragging = dragging; capturing = false; dragging = false; releaseStage();
 			if (wasDragging) notify(Scene3DInputEvent.DRAG_END,event);
 		}
 	}
 	private function onRelease(event:MouseEvent):Void {
 		var select = pendingRelease == event && pendingTap;
+		var ray = pressRay, hit = pressHit;
 		clearPending();
 		if (!select || !active || isDisposed || event.isDefaultPrevented || event.target != view) return;
-		var ray = view.stageRay(event.stageX,event.stageY);
 		if (ray == null) return;
-		var hit = view.pick(event.stageX,event.stageY,maxDistance,filter);
-		var result = new Scene3DInputEvent(Scene3DInputEvent.SELECT,event.stageX,event.stageY,pointerId,touch,hit,ray);
+		if (hit != null && hit.object.isDisposed) hit = null;
+		var result = new Scene3DInputEvent(Scene3DInputEvent.SELECT,startX,startY,pointerId,touch,hit,ray);
 		result.target = this; dispatchEvent(result);
 	}
 	private function onWheel(event:MouseEvent):Void {
@@ -120,6 +131,7 @@ class Scene3DInput extends EventDispatcher {
 	private function onRemoved(event:Event):Void { if (event.type == Scene3D.DISPOSE) dispose(); else cancel(event.type); }
 	private function clearPending(event:Event = null):Void {
 		pendingRelease = null; pendingTap = false;
+		pressRay = null; pressHit = null;
 		if (view != null) view.removeEventListener(Event.UPDATE,clearPending);
 	}
 	private function releaseStage():Void {

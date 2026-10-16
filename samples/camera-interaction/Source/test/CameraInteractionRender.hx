@@ -93,9 +93,9 @@ class CameraInteractionRender extends Scene {
 		buildOverlay();
 		label("独立视口：拖动／滚轮缩放",848,409,14,0xd7e3fc);
 		sideStatus = label(lastSide,848,437,12,0xa9bad6);
-		label("点击角色：切换选择",848,476,14,0xa9bad6);
-		label("点击地面：设置移动目标",848,503,14,0xa9bad6);
-		label("拖动超过 5 像素：旋转相机",848,530,13,0xa9bad6);
+		label("左键点击角色：切换选择",848,476,14,0xa9bad6);
+		label("左键点击地面：设置目标",848,503,14,0xa9bad6);
+		label("左键拖动超过 5 像素：转镜头",848,530,13,0xa9bad6);
 		var pause = label("暂停／继续角色移动与动画",848,573,14,0x8ed6ff); pause.mouseEnabled = true;
 		pause.addEventListener(MouseEvent.CLICK,function(_) { paused = !paused; });
 		var cancel = label("取消当前拖动",848,605,14,0x8ed6ff); cancel.mouseEnabled = true;

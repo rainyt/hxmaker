@@ -48,7 +48,9 @@
 | hx.events.KeyboardEvent | 键盘事件 | ✅ | / |
 | hx.assets.Assets | 资源加载器，支持图片、音频、精灵图、XML、JSON等常见资源格式加载 | ✅ | / |
 
-基础 3D 框架已加入首版代码，尚未编译与运行验收，参阅[使用说明](docs/基础3D框架使用说明.md)和[示例](samples/basic-3d/README.md)。
+基础 3D 框架已加入首版代码，并通过 HTML5 基础示例验证；完整验收仍在进行，参阅[使用说明](docs/基础3D框架使用说明.md)、[示例](samples/basic-3d/README.md)和[验证记录](docs/基础3D框架验证记录.md)。
+
+另有通过 hxmaker 资源加载系统读取 GLB 的[恐龙模型示例](samples/glb-model/README.md)，包含基础蒙皮与 Idle 动画代码。用户已确认模型能够显示，完整回归尚待执行。
 
 # 布局支持
 

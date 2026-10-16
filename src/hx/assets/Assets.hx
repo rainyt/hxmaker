@@ -366,6 +366,19 @@ class Assets extends Future<Assets, Dynamic> {
 		pushFuture(new hx.assets.JsonFuture(path, false));
 	}
 
+	/** 加载 GLB 2.0 模型，完成后通过 getGlb 创建独立场景实例。 */
+	public function loadGlb(path:String):Void {
+		pushFuture(new GlbFuture(getNativePath(path), false));
+	}
+
+	/** 获取已解析的 GLB 资产；不与场景实例共享动画播放状态。 */
+	public function getGlb(name:String):GlbAsset {
+		var value = getObject(name);
+		if (value == null) return null;
+		if (!Std.isOfType(value, GlbAsset)) throw "资源不是 GLB 模型：" + name;
+		return cast value;
+	}
+
 	/**
 	 * 加载字符串
 	 * @param path 

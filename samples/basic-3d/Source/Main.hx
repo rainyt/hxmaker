@@ -68,6 +68,12 @@ class Main extends openfl.display.Sprite {
 			status.data = "多纹理：" + (scene.multiTextureEnabled ? "开启" : "关闭") + "　3D 批次：" + scene.stats.drawCalls
 				+ "　纹理槽位：" + scene.stats.textureSlots + "　三角形：" + scene.stats.triangles;
 		});
+		#if hxmaker_3d_regression
+		new Regression3D(sources[0]);
+		#if hxmaker_3d_regression_2d_only
+		scene.visible = false;
+		#end
+		#end
 	}
 	private function checker(color:Int):openfl.display.BitmapData {
 		var bitmap = new openfl.display.BitmapData(64, 64, true, 0xff000000 | color);

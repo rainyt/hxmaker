@@ -5,6 +5,17 @@ import hx.geom.Vector3D;
 
 /** 三维子系统统一使用列向量和列主序矩阵，避免依赖 append 的命名语义。 */
 class Math3D {
+	/** glTF 四元数使用 x、y、z、w 顺序，直接生成 T×R×S，避免欧拉角往返。 */
+	public static function fromTRS(t:Array<Float>, q:Array<Float>, s:Array<Float>):Matrix3D {
+		var x = q[0], y = q[1], z = q[2], w = q[3];
+		return new Matrix3D([
+			(1 - 2 * (y*y + z*z))*s[0], 2*(x*y + z*w)*s[0], 2*(x*z - y*w)*s[0], 0,
+			2*(x*y - z*w)*s[1], (1 - 2 * (x*x + z*z))*s[1], 2*(y*z + x*w)*s[1], 0,
+			2*(x*z + y*w)*s[2], 2*(y*z - x*w)*s[2], (1 - 2 * (x*x + y*y))*s[2], 0,
+			t[0], t[1], t[2], 1
+		]);
+	}
+
 	public static function multiply(a:Matrix3D, b:Matrix3D):Matrix3D {
 		var out = new Matrix3D();
 		for (column in 0...4) {

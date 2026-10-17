@@ -21,6 +21,9 @@ class Geometry3D extends EventDispatcher {
 	/** 顶点局部法线数组；未提供时由 getNormals 按需生成。 */
 	public var normals(default, null):Array<Float>;
 
+	/** 可选逐顶点 RGBA，范围 0 至 1；与材质颜色相乘，空数组表示白色。 */
+	public var colors(default, null):Array<Float> = [];
+
 	private var generatedNormals:Bool = false;
 
 	/** 最近一次 invalidate 计算的局部 AABB，应视为只读。 */
@@ -69,6 +72,11 @@ class Geometry3D extends EventDispatcher {
 			throw "几何数据已经销毁";
 		if (positions.length % 3 != 0 || uvs.length != Std.int(positions.length / 3) * 2 || indices.length % 3 != 0)
 			throw "三维几何的位置、UV 或三角形索引长度无效";
+		if (colors.length != 0 && colors.length != Std.int(positions.length / 3) * 4)
+			throw "三维顶点颜色数量与位置不一致";
+		for (value in colors)
+			if (!Math3D.finite(value) || value < 0 || value > 1)
+				throw "三维顶点颜色必须介于 0 和 1";
 		for (value in positions)
 			if (!Math3D.finite(value))
 				throw "三维顶点包含无效数值";
@@ -138,6 +146,7 @@ class Geometry3D extends EventDispatcher {
 			return;
 		isDisposed = true;
 		positions = [];
+		colors = [];
 		uvs = [];
 		indices = [];
 		normals = [];

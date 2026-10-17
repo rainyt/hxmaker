@@ -104,6 +104,20 @@ class Material3D extends EventDispatcher {
 		return value;
 	}
 
+	private var __blendMode:BlendMode3D = BlendMode3D.NORMAL;
+
+	/** 仅在 BLEND 通道生效；默认普通透明混合。 */
+	public var blendMode(get, set):BlendMode3D;
+
+	private function get_blendMode():BlendMode3D { return __blendMode; }
+
+	private function set_blendMode(value:BlendMode3D):BlendMode3D {
+		if (value != BlendMode3D.NORMAL && value != BlendMode3D.ADD)
+			throw "三维混合模式无效";
+		if (__blendMode != value) { __blendMode = value; invalidate(); }
+		return value;
+	}
+
 	private var __alphaMode:AlphaMode3D = AlphaMode3D.OPAQUE;
 
 	/** 透明处理模式，默认 OPAQUE；不同模式影响绘制排序和合批。 */
@@ -264,6 +278,54 @@ class Material3D extends EventDispatcher {
 		return value;
 	}
 
+	private static var nextBindingId:Int = 0;
+	private var bindingId:Int = ++nextBindingId;
+	private var __textureUniforms:Map<String, BitmapData> = [];
+	private var __fragmentUVCode:String = "";
+
+	/** 基础纹理采样前执行的代码，可修改相对于材质贴图区域的 localUV。 */
+	public var fragmentUVCode(get, set):String;
+	private function get_fragmentUVCode():String { return __fragmentUVCode; }
+	private function set_fragmentUVCode(value:String):String {
+		if (value == null) value = "";
+		if (__fragmentUVCode != value) { __fragmentUVCode = value; invalidate(); }
+		return value;
+	}
+
+	/** 绑定借用的辅助纹理；null 使用白色纹理，取消绑定请调用 removeTextureUniform。 */
+	public function setTextureUniform(name:String, bitmap:BitmapData):Void {
+		validateUniformName(name);
+		validateUniformName(name + "Rect"); validateUniformName(name + "Clamp");
+		if (__uniforms.exists(name) || __uniforms.exists(name + "Rect") || __uniforms.exists(name + "Clamp"))
+			throw "辅助纹理名称与数值 uniform 冲突";
+		for (key in __textureUniforms.keys())
+			if (key != name && (key == name + "Rect" || key == name + "Clamp" || name == key + "Rect" || name == key + "Clamp"))
+				throw "辅助纹理名称与区域参数冲突";
+		if (!__textureUniforms.exists(name) || __textureUniforms.get(name) != bitmap) {
+			__textureUniforms.set(name, bitmap); invalidate();
+		}
+	}
+
+	public function removeTextureUniform(name:String):Void {
+		if (__textureUniforms.remove(name)) invalidate();
+	}
+
+	/** 返回借用引用的映射副本；后端自动提供同名 Rect 与 Clamp 区域参数。 */
+	public function getTextureUniforms():Map<String, BitmapData> {
+		var result:Map<String, BitmapData> = [];
+		for (name => bitmap in __textureUniforms) result.set(name, bitmap);
+		return result;
+	}
+
+	public function textureUniformNames():Array<String> {
+		var result = [for (name in __textureUniforms.keys()) name]; result.sort(Reflect.compare); return result;
+	}
+
+	/** 带采样前处理或辅助纹理的材质按实例隔离批次，避免区域和纹理参数串用。 */
+	public function textureBindingKey():String {
+		return __fragmentUVCode != "" || textureUniformNames().length > 0 ? Std.string(bindingId) : "";
+	}
+
 	private var __fragmentCode:String = "";
 
 	/** 在基础纹理取样之后执行的 GLSL 片元代码，修改会改变程序兼容性。 */
@@ -306,13 +368,15 @@ class Material3D extends EventDispatcher {
 	/** 创建无贴图基础材质，默认无光照、不透明且启用深度。 */
 	public function new() {}
 
-	/** uniform 数值复制后保存，避免后续批次覆盖前一个批次。 */
-	public function setUniform(name:String, values:Array<Float>):Void {
+	/** 校验 GLSL 名称及引擎保留参数。 */
+	private function validateUniformName(name:String):Void {
 		if (name == null
 			|| !~/^[A-Za-z_][A-Za-z0-9_]*$/.match(name)
 			|| StringTools.startsWith(name, "uSampler")
 			|| [
 				"uViewProjection",
+				"uBaseUVRect",
+				"uBaseUVClamp",
 				"uAlphaMode",
 				"uAlphaCutoff",
 				"uLinearBaseColor",
@@ -326,11 +390,24 @@ class Material3D extends EventDispatcher {
 				"uShadowSlopeBias"
 			].indexOf(name) >= 0)
 			throw "自定义 uniform 名称无效或与内置变量冲突";
+	}
+
+	/** 数值与辅助纹理名称不能冲突；内置区域参数由后端设置。 */
+	public function setUniform(name:String, values:Array<Float>):Void {
+		validateUniformName(name);
+		for (key in __textureUniforms.keys())
+			if (name == key || name == key + "Rect" || name == key + "Clamp") throw "数值 uniform 与辅助纹理名称冲突";
 		if (values == null || [1, 2, 3, 4, 16].indexOf(values.length) < 0)
 			throw "uniform 只支持浮点标量、向量或四阶矩阵";
 		for (v in values)
 			if (!Math3D.finite(v))
 				throw "uniform 包含无效数值";
+		var previous = __uniforms.get(name);
+		if (previous != null && previous.length == values.length) {
+			var unchanged = true;
+			for (i in 0...values.length) if (previous[i] != values[i]) { unchanged = false; break; }
+			if (unchanged) return;
+		}
 		__uniforms.set(name, values.copy());
 		invalidate();
 	}
@@ -380,6 +457,7 @@ class Material3D extends EventDispatcher {
 		isDisposed = true;
 		__texture = null;
 		__uniforms.clear();
+		__textureUniforms.clear();
 		removeEventListeners();
 	}
 }

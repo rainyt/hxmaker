@@ -1,0 +1,13 @@
+<project>
+    <meta title="hxmaker 三维特效" package="samples.hxmaker.effects3d" version="1.0.0" />
+    <app main="Main" file="Effects3D" path="Export" />
+    <source path="Source" />
+    <haxelib name="hxmaker" />
+    <haxelib name="hxmaker-openfl" />
+    <haxelib name="openfl" />
+    <haxelib name="openfl-glsl" />
+    <haxelib name="vector-math" />
+    <haxelib name="actuate" />
+    <haxelib name="spine-haxe" />
+    <window width="960" height="640" background="#101827" hardware="true" allow-high-dpi="true" />
+</project>

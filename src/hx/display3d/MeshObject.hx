@@ -20,6 +20,16 @@ class MeshObject extends Node3D {
 	/** 是否启用相机视锥裁剪，默认 true。 */
 	public var frustumCulling:Bool = true;
 
+	private var __renderOrder:Int = 0;
+
+	/** 透明通道先按此值升序，再按深度排序；较大值后绘制。 */
+	public var renderOrder(get, set):Int;
+	private function get_renderOrder():Int { return __renderOrder; }
+	private function set_renderOrder(value:Int):Int {
+		if (__renderOrder != value) { __renderOrder = value; invalidate(); }
+		return value;
+	}
+
 	private var __castShadow:Bool = false;
 	private var __receiveShadow:Bool = true;
 

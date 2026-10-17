@@ -64,7 +64,8 @@ class Model3D extends Node3D {
 			throw "模型场景索引越界";
 		active = [for (_ in data.nodes) false];
 		activeNodes = data.sceneNodes[sceneIndex];
-		for (index in activeNodes) active[index] = true;
+		for (index in activeNodes)
+			active[index] = true;
 		// 第一次应用姿态时按父节点优先顺序填充，避免先分配马上被替换的单位矩阵。
 		globals = [for (_ in data.nodes) null];
 		restPose = asset.restPose;
@@ -245,7 +246,8 @@ class Model3D extends Node3D {
 		poseReady = true;
 		// 资产已预计算父节点优先顺序，姿态更新不再递归寻找祖先。
 		for (index in activeNodes) {
-			var parent = data.parents[index], local = nodes[index].getLocalMatrix();
+			var parent = data.parents[index],
+				local = nodes[index].getLocalMatrix();
 			globals[index] = parent >= 0 ? Math3D.multiply(globals[parent], local) : local;
 		}
 		for (skin in skins)

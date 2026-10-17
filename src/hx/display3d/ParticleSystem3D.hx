@@ -16,7 +16,11 @@ class ParticleSystem3D extends MeshObject {
 	public var emitting(default, null):Bool = false;
 	public var paused:Bool = false;
 	public var particleCount(get, never):Int;
-	private function get_particleCount():Int { return particles.length; }
+
+	private function get_particleCount():Int {
+		return particles.length;
+	}
+
 	private var particles:Array<ParticleState3D> = [];
 	private var pool:Array<ParticleState3D> = [];
 	private var elapsed:Float = 0;
@@ -28,60 +32,83 @@ class ParticleSystem3D extends MeshObject {
 	public function new(material:Material3D, settings:ParticleSettings3D = null) {
 		super(new Geometry3D([], [], []), material);
 		this.settings = settings == null ? new ParticleSettings3D() : settings;
-		this.settings.validate(); ownedGeometry = geometry;
-		pickable = false; receiveShadow = false;
+		this.settings.validate();
+		ownedGeometry = geometry;
+		pickable = false;
+		receiveShadow = false;
 	}
 
 	/** 从头播放，清除旧粒子并锁定模拟空间；需先挂到正确的父节点。 */
 	public function play():Void {
-		if (isDisposed) throw "粒子系统已经销毁";
-		settings.validate(); clear(); elapsed = 0; remainder = 0;
-		worldSpace = settings.worldSpace; paused = false; playing = emitting = true;
+		if (isDisposed)
+			throw "粒子系统已经销毁";
+		settings.validate();
+		clear();
+		elapsed = 0;
+		remainder = 0;
+		worldSpace = settings.worldSpace;
+		paused = false;
+		playing = emitting = true;
 		emit(settings.burst);
 	}
 
 	/** 停止发射，默认等待粒子自然结束；clearParticles=true 立即清空。 */
 	public function stop(clearParticles:Bool = false):Void {
-		if (isDisposed) return;
+		if (isDisposed)
+			return;
 		emitting = false;
-		if (clearParticles) clear();
+		if (clearParticles)
+			clear();
 		finishIfEmpty();
 	}
 
 	private function clear():Void {
-		for (p in particles) pool.push(p);
+		for (p in particles)
+			pool.push(p);
 		particles.resize(0);
-		BillboardGeometry3D.clear(ownedGeometry); ownedGeometry.invalidate();
+		BillboardGeometry3D.clear(ownedGeometry);
+		ownedGeometry.invalidate();
 	}
 
 	/** 立即爆发；不改变持续发射状态，支持运行中的额外命中爆发。 */
 	public function emit(count:Int):Void {
-		if (isDisposed || count < 0) throw "粒子系统或爆发数量无效";
+		if (isDisposed || count < 0)
+			throw "粒子系统或爆发数量无效";
 		settings.validate();
-		if (!playing) { worldSpace = settings.worldSpace; playing = true; }
+		if (!playing) {
+			worldSpace = settings.worldSpace;
+			playing = true;
+		}
 		var matrix = getWorldMatrix();
-		for (_ in 0...Std.int(Math.min(count, Math.max(0, settings.maxParticles - particles.length)))) spawn(matrix, 0);
+		for (_ in 0...Std.int(Math.min(count, Math.max(0, settings.maxParticles - particles.length))))
+			spawn(matrix, 0);
 	}
 
 	private function spawn(matrix:Matrix3D, age:Float):Void {
 		var lifetime = randomRange(settings.lifetimeMin, settings.lifetimeMax);
-		if (age >= lifetime) return;
+		if (age >= lifetime)
+			return;
 		var p = pool.length == 0 ? new ParticleState3D() : pool.pop();
 		var z = Math.random() * 2 - 1, a = Math.random() * Math.PI * 2;
-		var r = settings.radius * Math.pow(Math.random(), 1 / 3), radial = Math.sqrt(Math.max(0, 1 - z * z));
+		var r = settings.radius * Math.pow(Math.random(), 1 / 3),
+			radial = Math.sqrt(Math.max(0, 1 - z * z));
 		p.position.setTo(radial * Math.cos(a) * r, z * r, radial * Math.sin(a) * r);
 		var y = 1 - Math.random() * (1 - Math.cos(settings.coneAngle * Math.PI / 180));
-		a = Math.random() * Math.PI * 2; radial = Math.sqrt(Math.max(0, 1 - y * y));
+		a = Math.random() * Math.PI * 2;
+		radial = Math.sqrt(Math.max(0, 1 - y * y));
 		var speed = randomRange(settings.speedMin, settings.speedMax);
 		p.velocity.setTo(radial * Math.cos(a) * speed, y * speed, radial * Math.sin(a) * speed);
 		if (worldSpace) {
 			p.position = matrix.transformVector(p.position);
 			p.velocity = matrix.deltaTransformVector(p.velocity);
 		}
-		p.age = 0; p.lifetime = lifetime; p.serial = serial++;
+		p.age = 0;
+		p.lifetime = lifetime;
+		p.serial = serial++;
 		p.size = randomRange(settings.sizeMin, settings.sizeMax);
 		p.rotation = randomRange(settings.rotationMin, settings.rotationMax) * Math.PI / 180;
-		advance(p, age); particles.push(p);
+		advance(p, age);
+		particles.push(p);
 	}
 
 	private function advance(p:ParticleState3D, dt:Float):Void {
@@ -89,26 +116,36 @@ class ParticleSystem3D extends MeshObject {
 		p.position.x += p.velocity.x * dt + g.x * dt * dt * 0.5;
 		p.position.y += p.velocity.y * dt + g.y * dt * dt * 0.5;
 		p.position.z += p.velocity.z * dt + g.z * dt * dt * 0.5;
-		p.velocity.x += g.x * dt; p.velocity.y += g.y * dt; p.velocity.z += g.z * dt;
-		p.rotation += settings.angularVelocity * Math.PI / 180 * dt; p.age += dt;
+		p.velocity.x += g.x * dt;
+		p.velocity.y += g.y * dt;
+		p.velocity.z += g.z * dt;
+		p.rotation += settings.angularVelocity * Math.PI / 180 * dt;
+		p.age += dt;
 	}
 
 	/** 暂停时仍重建相机朝向；无相机时继续模拟，但不保留旧网格。 */
 	public function update(dt:Float, camera:Camera3D):Void {
-		if (isDisposed || !Math3D.finite(dt) || dt < 0) throw "粒子更新时间或状态无效";
+		if (isDisposed || !Math3D.finite(dt) || dt < 0)
+			throw "粒子更新时间或状态无效";
 		settings.validate();
 		if (playing && !paused) {
 			var survivors:Array<ParticleState3D> = [];
 			for (p in particles) {
 				advance(p, dt);
-				if (p.age >= p.lifetime || survivors.length >= settings.maxParticles) pool.push(p); else survivors.push(p);
+				if (p.age >= p.lifetime || survivors.length >= settings.maxParticles)
+					pool.push(p);
+				else
+					survivors.push(p);
 			}
 			particles = survivors;
 			if (emitting) {
 				var active = settings.duration == 0 ? dt : Math.max(0, Math.min(dt, settings.duration - elapsed));
-				var previous = remainder, total = previous + active * settings.emissionRate;
-				if (!Math3D.finite(total)) throw "粒子发射数量溢出";
-				var count = Math.floor(total); remainder = total - count;
+				var previous = remainder,
+					total = previous + active * settings.emissionRate;
+				if (!Math3D.finite(total))
+					throw "粒子发射数量溢出";
+				var count = Math.floor(total);
+				remainder = total - count;
 				var available = Std.int(Math.min(count, Math.max(0, settings.maxParticles - particles.length)));
 				var matrix = getWorldMatrix();
 				// 仅处理最近的有限次发射，防止大时间步或高发射率产生无界循环。
@@ -117,43 +154,66 @@ class ParticleSystem3D extends MeshObject {
 					spawn(matrix, Math.max(0, dt - birth));
 				}
 				elapsed += dt;
-				if (settings.duration > 0 && elapsed >= settings.duration) emitting = false;
+				if (settings.duration > 0 && elapsed >= settings.duration)
+					emitting = false;
 			}
 		}
-		rebuild(camera); finishIfEmpty();
+		rebuild(camera);
+		finishIfEmpty();
 	}
 
 	private function rebuild(camera:Camera3D):Void {
 		BillboardGeometry3D.clear(ownedGeometry);
 		var world = getWorldMatrix(), inverse = world.clone();
 		if (camera != null && !camera.isDisposed && particles.length > 0 && inverse.invert()) {
-			var view = camera.getViewMatrix(), axes = BillboardGeometry3D.axes(camera);
+			var view = camera.getViewMatrix(),
+				axes = BillboardGeometry3D.axes(camera);
 			for (p in particles) {
 				p.center = worldSpace ? p.position : world.transformVector(p.position);
 				p.depth = -view.transformVector(p.center).z;
 			}
-			particles.sort(function(a, b) { return a.depth == b.depth ? a.serial - b.serial : (a.depth > b.depth ? -1 : 1); });
+			particles.sort(function(a, b) {
+				return a.depth == b.depth ? a.serial - b.serial : (a.depth > b.depth ? -1 : 1);
+			});
 			for (p in particles) {
-				var t = p.age / p.lifetime, size = Math.max(0, p.size * settings.size.evaluate(t));
+				var t = p.age / p.lifetime,
+					size = Math.max(0, p.size * settings.size.evaluate(t));
 				BillboardGeometry3D.append(ownedGeometry, inverse, p.center, axes, size, size, p.rotation,
-					settings.sheet.frameUV(settings.sheet.lifeFrame(t)),
-					[unit(settings.red.evaluate(t)), unit(settings.green.evaluate(t)), unit(settings.blue.evaluate(t)), unit(settings.alpha.evaluate(t))]);
+					settings.sheet.frameUV(settings.sheet.lifeFrame(t)), [
+						unit(settings.red.evaluate(t)),
+						unit(settings.green.evaluate(t)),
+						unit(settings.blue.evaluate(t)),
+						unit(settings.alpha.evaluate(t))
+					]);
 			}
 		}
 		ownedGeometry.invalidate();
 	}
 
 	private function finishIfEmpty():Void {
-		if (playing && !emitting && particles.length == 0) { playing = false; dispatchEvent(new Event(Event.COMPLETE)); }
+		if (playing && !emitting && particles.length == 0) {
+			playing = false;
+			dispatchEvent(new Event(Event.COMPLETE));
+		}
 	}
-	private static function randomRange(a:Float, b:Float):Float { return a + Math.random() * (b - a); }
-	private static function unit(v:Float):Float { return Math.max(0, Math.min(1, v)); }
+
+	private static function randomRange(a:Float, b:Float):Float {
+		return a + Math.random() * (b - a);
+	}
+
+	private static function unit(v:Float):Float {
+		return Math.max(0, Math.min(1, v));
+	}
 
 	override public function dispose():Void {
-		if (isDisposed) return;
-		playing = emitting = false; particles = []; pool = [];
+		if (isDisposed)
+			return;
+		playing = emitting = false;
+		particles = [];
+		pool = [];
 		super.dispose();
-		if (ownedGeometry.referenceCount == 0) ownedGeometry.dispose();
+		if (ownedGeometry.referenceCount == 0)
+			ownedGeometry.dispose();
 	}
 }
 
@@ -168,5 +228,6 @@ private class ParticleState3D {
 	public var size:Float = 1;
 	public var rotation:Float = 0;
 	public var serial:Int = 0;
+
 	public function new() {}
 }

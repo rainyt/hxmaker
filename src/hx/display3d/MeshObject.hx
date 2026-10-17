@@ -24,9 +24,16 @@ class MeshObject extends Node3D {
 
 	/** 透明通道先按此值升序，再按深度排序；较大值后绘制。 */
 	public var renderOrder(get, set):Int;
-	private function get_renderOrder():Int { return __renderOrder; }
+
+	private function get_renderOrder():Int {
+		return __renderOrder;
+	}
+
 	private function set_renderOrder(value:Int):Int {
-		if (__renderOrder != value) { __renderOrder = value; invalidate(); }
+		if (__renderOrder != value) {
+			__renderOrder = value;
+			invalidate();
+		}
 		return value;
 	}
 

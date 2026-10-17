@@ -11,7 +11,8 @@ class SpriteSheet3D {
 	public function new(columns:Int = 1, rows:Int = 1, frameCount:Int = 0) {
 		if (columns <= 0 || rows <= 0 || frameCount < 0 || columns * 1.0 * rows > 65536 || frameCount > columns * rows)
 			throw "序列帧图集尺寸或帧数无效";
-		this.columns = columns; this.rows = rows;
+		this.columns = columns;
+		this.rows = rows;
 		this.frameCount = frameCount == 0 ? columns * rows : frameCount;
 	}
 
@@ -24,7 +25,8 @@ class SpriteSheet3D {
 
 	/** 按归一化寿命播放一次，末端停留最后一帧。 */
 	public function lifeFrame(t:Float):Int {
-		if (!Math3D.finite(t)) throw "序列帧时间必须有限";
+		if (!Math3D.finite(t))
+			throw "序列帧时间必须有限";
 		return Std.int(Math.max(0, Math.min(frameCount - 1, Math.floor(t * frameCount))));
 	}
 }

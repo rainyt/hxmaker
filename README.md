@@ -1,5 +1,5 @@
 # hxmaker
-A game engine that pursues fast development and rendering performance. It can freely implement game engine rendering backend, thereby enabling rendering to other engines.
+A Haxe game engine for 2D and foundational 3D development, focused on fast iteration and rendering performance. It can freely implement game engine rendering backend, thereby enabling rendering to other engines.
 
 # Stats
 At present, the game engine is still under development and cannot be fully put into use.
@@ -48,6 +48,48 @@ All common display objects (see the list below) and BlendMode.ADD can be automat
 | hx.events.MouseEvent | Mouse events | ✅ | / |
 | hx.events.KeyboardEvent | Keyboard events | ✅ | / |
 | hx.assets.Assets | Resource loader, supports loading of common resource formats such as images, audio, sprite sheets, XML, JSON, etc. | ✅ | / |
+
+# 3D Capabilities and New Rendering Technology
+
+hxmaker embeds 3D viewports in the 2D display tree through `hx.display.Scene3D`. Each viewport renders to its own color/depth target, then composites with text, buttons, and other UI in 2D display order. Nodes, cameras, and models live in `hx.display3d`; backends integrate through `IScene3DRenderer`. The current implementation primarily targets OpenGL/WebGL through the companion [hxmaker-openfl](https://github.com/rainyt/hxmaker-openfl) backend.
+
+**Start with the [3D beginner guide](docs/3D引擎新手指南.md)** for complete projects, APIs, ownership rules, and limitations. The linked technical guides are currently in Chinese. Existing projects should read the [3D API package migration guide](docs/3D显示API包迁移说明.md): old packages have no forwarding compatibility layer. New rendering features require matching core and backend source versions.
+
+| Area | Current capabilities |
+| --- | --- |
+| Scene and cameras | `Node3D` hierarchy transforms, `MeshObject`, perspective cameras, orbit/follow controls, multiple viewports, and 2D UI composition |
+| Models and assets | Unified `Assets.loadModel/getModel` loading for a GLB 2.0 subset and static FBX; independent instances through `ModelAsset`; ASCII and binary FBX support |
+| Asset preprocessing | Format-neutral asset construction prepares normals, local bounds, hierarchy traversal order, and rigid-skin classification to reduce repeated runtime preparation |
+| Animation and attachments | Independent playback, speed, loops, smooth transitions, animation events, and bone attachments; general CPU skinning and a single-joint rigid path |
+| Lighting and shadows | Ambient, directional, point, and spot lighting; up to four lights for Lambert shading; main directional-light hard shadows, PCF4 filtering, MASK silhouettes, and shadow caching |
+| Particles and effects | CPU particles, billboards, lifetime curves, sprite sheets, projectile trails, two-ended weapon ribbons, UV scrolling, mask/noise dissolve, and effect timelines |
+| Depth and post-processing | Soft-particle intersection fading against scene depth; viewport Bloom on ordinary RGBA8 targets, disabled by default |
+| Interaction and movement | Ray picking, mouse/touch adaptation, box and ramp proxies, sphere/upright-capsule queries and sweeps, sliding, gravity, jumping, steps, and slope limits |
+| Navigation and flow | Explicit waypoint graphs, A*, path following, dynamic-route replanning, and examples integrating Procedure, load cancellation, retries, and cleanup |
+| Rendering and diagnostics | Multi-texture batching, per-mesh frustum culling, static viewport reuse, on-demand GPU state protection, HTML5 VAO isolation, CPU phase timings, and resource statistics |
+
+## Examples and Technical Guides
+
+| Topic | Entry points |
+| --- | --- |
+| Basic scenes and 2D/3D composition | [Basic scene](samples/3d/basic-3d/README.md) · [Multiple viewports](samples/3d/multi-scene-3d/README.md) · [Framework guide](docs/基础3D框架使用说明.md) |
+| Model import and asset construction | [FBX / GLB comparison](samples/3d/fbx-model/README.md) · [Animated GLB](samples/3d/glb-model/README.md) · [Format-neutral assets](docs/3D模型中立资产与优化格式设计.md) · [FBX scope](docs/FBX模型加载器设计与使用说明.md) |
+| Animation and complete character flow | [Textured characters](samples/3d/textured-character/README.md) · [Transitions and attachments](docs/3D动画过渡与骨骼挂点使用说明.md) · [Complete character project](samples/3d/interactive-character/README.md) |
+| Multiple lights and shadows | [Multiple-light example](samples/3d/multi-light-3d/README.md) · [Lighting chapter](docs/3D引擎新手指南.md#10-光源与阴影) · [Shadow settings and caching](docs/基础3D光照与阴影使用说明.md) |
+| Particles, trails, and Bloom | [Effects example](samples/3d/effects-3d/README.md) · [Particles and billboards](docs/3D特效第一阶段使用说明.md) · [Trails and dynamic materials](docs/3D特效第二阶段使用说明.md) · [Soft particles and Bloom](docs/3D特效第三阶段使用说明.md) |
+| Cameras and interaction | [Camera example](samples/3d/camera-interaction/README.md) · [Interaction guide](docs/3D相机控制与交互使用说明.md) |
+| Collision, terrain, and navigation | [Collision example](samples/3d/collision-character/README.md) · [Steps and slopes](samples/3d/terrain-character/README.md) · [Navigation example](samples/3d/navigation-character/README.md) · [Navigation guide](docs/3D导航使用说明.md) |
+| Performance and lifecycle | [Acceptance and baseline example](samples/3d/engine-acceptance/README.md) · [Existing baseline analysis](samples/3d/engine-acceptance/Baselines/2026-10-16-最终分析.md) · [Rendering optimization notes](docs/基础3D渲染优化记录-20261016.md) |
+
+Browse all projects in the [3D examples directory](samples/3d/README.md). Application entry classes extend `hx.core.HxmakerApplication`, call `super()`, then initialize with `init(GameStage, width, height)`. Business stages extend `hx.display.Stage` and call the parent method first in `onStageInit()`. Keep scene, resource, and update logic in stages or scenes.
+
+## Limitations and Validation Status
+
+- 3D remains under active development. Basic scenes, animation and interaction, character flow, and the first two effects stages have execution records or user acceptance feedback. New multiple-light rendering, PCF4/MASK shadows and caching, soft particles, Bloom, and format-neutral/static-FBX assets still require their own acceptance checks; earlier results do not validate them.
+- GLB support is a defined subset; FBX skeletal animation is currently unsupported. No `.hx3d` file codec or export tool has been implemented. In-memory asset preprocessing does not imply an offline publishing format is available.
+- PBR, HDR, GPU skinning/instancing, automatic LOD, automatic NavMesh generation, and general rigid-body physics are not implemented. Bloom extracts bright areas across the viewport. Additive effects and Bloom do not illuminate nearby models. Point and spot lights do not cast shadows.
+- Each `Scene3D` has independent depth and composites in 2D order without sharing depth. Transparent meshes use object-level sorting, so intersecting transparent surfaces can still show ordering artifacts.
+- Evaluate performance on target devices with actual resolutions and assets. `scene.stats` reports draws, uploads, shadows, and post-processing; timings enabled by `scene.profilingEnabled` measure CPU wall time, not GPU time. Existing HTML5 baselines do not establish support across all platforms.
 
 # Layout Support
 | Layout | Name | Description |

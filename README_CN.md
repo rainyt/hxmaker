@@ -1,5 +1,5 @@
 # hxmaker
-一个追求快速开发、渲染性能的游戏引擎。它可以自由实现游戏引擎渲染后端，从而实现渲染到其他引擎上。
+一个使用 Haxe 编写、支持 2D 与基础 3D、追求快速开发与渲染性能的游戏引擎。它可以自由实现游戏引擎渲染后端，从而实现渲染到其他引擎上。
 
 # 状态
 目前游戏引擎仍处于开发阶段，无法完全投入使用。
@@ -48,35 +48,47 @@
 | hx.events.KeyboardEvent | 键盘事件 | ✅ | / |
 | hx.assets.Assets | 资源加载器，支持图片、音频、精灵图、XML、JSON等常见资源格式加载 | ✅ | / |
 
-**第一次使用 3D，请从[《hxmaker 3D 引擎新手指南》](docs/3D引擎新手指南.md)开始。** 包含两套完整入门工程、当前能力总览，以及模型、动画、挂点、光照、交互、碰撞、导航、性能和释放说明；代码使用迁移后的 `hx.display3d` API。
+# 3D 能力与新技术
 
-基础 3D 框架已加入首版代码，并通过 HTML5 基础示例验证；完整验收仍在进行，参阅[使用说明](docs/基础3D框架使用说明.md)、[示例](samples/3d/basic-3d/README.md)和[验证记录](docs/基础3D框架验证记录.md)。
+hxmaker 通过 `hx.display.Scene3D` 将三维视口嵌入二维显示树：三维场景绘制到独立颜色／深度目标，再与文字、按钮及其他 UI 按二维顺序合成。三维节点、相机和模型统一使用 `hx.display3d`，渲染后端通过 `IScene3DRenderer` 接入。目前主要面向配套 [hxmaker-openfl](https://github.com/rainyt/hxmaker-openfl) 的 OpenGL/WebGL 路径。
 
-三维节点、网格、相机与模型现位于 `hx.display3d`，二维嵌入视口仍为 `hx.display.Scene3D`。此次直接迁移，不保留旧包转发；调用方需更新 import，参阅[迁移说明](docs/3D显示API包迁移说明.md)。仓库示例的三维类型 import 和模型加载入口已同步迁移，本轮尚未重新编译或测试。
+**初次使用请阅读[《3D 引擎新手指南》](docs/3D引擎新手指南.md)**，包含完整入门工程、API、资源释放和当前边界。已有项目升级请参阅[3D 显示 API 包迁移说明](docs/3D显示API包迁移说明.md)：旧包没有转发兼容层。新增渲染能力需要同步更新核心库与后端源码。
 
-GLB 与首版静态 FBX 统一通过 `Assets.loadModel/getModel` 加载，业务使用 `ModelAsset`；格式专属的加载入口及资产类已删除。法线、网格边界、场景遍历顺序和刚性蒙皮分类在资产阶段准备，运行时消费中立数据，见[中立资产与优化格式设计](docs/3D模型中立资产与优化格式设计.md)。新增 [FBX / GLB 对照示例](samples/3d/fbx-model/README.md)，提供 ASCII FBX、二进制 FBX 7.4/7.5、内嵌贴图和 GLB；[FBX 设计与边界](docs/FBX模型加载器设计与使用说明.md)明确当前不支持 FBX 骨骼动画。本轮未编译或执行测试，发布文件导出仍未实现。
+| 技术方向 | 当前能力 |
+| --- | --- |
+| 场景与相机 | `Node3D` 层级变换、`MeshObject`、透视相机、环绕／跟随控制、多视口与二维 UI 混用 |
+| 模型与资产 | `Assets.loadModel/getModel` 统一加载 GLB 2.0 子集与静态 FBX，使用 `ModelAsset` 创建独立实例；支持 ASCII 与二进制 FBX |
+| 资产预处理 | 在中立资产构建阶段准备法线、局部包围盒、节点遍历顺序及刚性蒙皮分类，减少运行时重复准备 |
+| 动画与挂点 | 独立播放状态、速度、循环、平滑过渡、动画事件与骨骼挂点；通用 CPU 蒙皮及单关节刚性路径 |
+| 光照与阴影 | 环境光、方向光、点光和聚光，最多 4 灯参与 Lambert 漫反射；主方向光硬阴影、PCF4 柔化、MASK 轮廓投影与阴影缓存 |
+| 粒子与动态特效 | CPU 粒子、广告牌、生命周期曲线、序列帧、弹道拖尾、双端刀光、UV 滚动、遮罩／噪声溶解及组合时间轴 |
+| 深度与后处理 | 软粒子按场景深度淡化交界；基于普通 RGBA8 目标的视口 Bloom 泛光，默认关闭 |
+| 交互与角色运动 | 射线拾取、鼠标／触摸适配、箱体与坡道代理、球／竖直胶囊查询与扫掠、滑动、重力、起跳、台阶和坡度限制 |
+| 导航与流程 | 显式路点图、A*、路径跟随、动态通路重规划，以及 Procedure、加载取消、重试和退出释放示例 |
+| 渲染优化与诊断 | 多纹理合批、逐网格视锥剔除、静态视口复用、按需 GPU 状态保护、HTML5 VAO 隔离、阶段 CPU 耗时与资源统计 |
 
-另有通过 hxmaker 资源加载系统读取 GLB 的[恐龙模型示例](samples/3d/glb-model/README.md)，包含基础蒙皮与 Idle 动画代码。用户已确认模型能够显示，完整回归尚待执行。
+## 示例与技术文档
 
-新增[贴图动画角色示例](samples/3d/textured-character/README.md)：通过 Assets 加载带三张内嵌贴图的原创机器人，提供待机／行走、多个独立实例及多纹理合批对比。采用纯 hxmaker API 的 Main → Stage → Scene 结构，包含[动画过渡与骨骼挂点](docs/3D动画过渡与骨骼挂点使用说明.md)，用户已反馈该阶段测试通过。
+| 主题 | 入口 |
+| --- | --- |
+| 基础场景与 2D/3D 叠放 | [基础示例](samples/3d/basic-3d/README.md) · [多视口示例](samples/3d/multi-scene-3d/README.md) · [框架说明](docs/基础3D框架使用说明.md) |
+| 模型导入与资产构建 | [FBX / GLB 对照](samples/3d/fbx-model/README.md) · [GLB 动画模型](samples/3d/glb-model/README.md) · [中立资产设计](docs/3D模型中立资产与优化格式设计.md) · [FBX 支持范围](docs/FBX模型加载器设计与使用说明.md) |
+| 动画与完整角色流程 | [贴图角色](samples/3d/textured-character/README.md) · [动画与挂点](docs/3D动画过渡与骨骼挂点使用说明.md) · [完整角色项目](samples/3d/interactive-character/README.md) |
+| 多光源与阴影 | [多光源示例](samples/3d/multi-light-3d/README.md) · [新手指南光照章节](docs/3D引擎新手指南.md#10-光源与阴影) · [阴影配置与缓存](docs/基础3D光照与阴影使用说明.md) |
+| 粒子、拖尾与泛光 | [特效示例](samples/3d/effects-3d/README.md) · [粒子与广告牌](docs/3D特效第一阶段使用说明.md) · [拖尾与动态材质](docs/3D特效第二阶段使用说明.md) · [软粒子与 Bloom](docs/3D特效第三阶段使用说明.md) |
+| 相机与交互 | [相机示例](samples/3d/camera-interaction/README.md) · [交互说明](docs/3D相机控制与交互使用说明.md) |
+| 碰撞、地形与导航 | [碰撞示例](samples/3d/collision-character/README.md) · [台阶与坡面](samples/3d/terrain-character/README.md) · [导航示例](samples/3d/navigation-character/README.md) · [导航说明](docs/3D导航使用说明.md) |
+| 性能与生命周期 | [验收及基线示例](samples/3d/engine-acceptance/README.md) · [已有基线分析](samples/3d/engine-acceptance/Baselines/2026-10-16-最终分析.md) · [渲染优化记录](docs/基础3D渲染优化记录-20261016.md) |
 
-新增[相机与三维交互示例](samples/3d/camera-interaction/README.md)：纯 hxmaker API 实现环绕、跟随、角色与附件选择、点击地面移动、二维 UI 遮挡及双视口输入隔离。用户已反馈该阶段测试通过，接口见[使用说明](docs/3D相机控制与交互使用说明.md)。
+全部三维工程见[3D 示例目录](samples/3d/README.md)。应用入口统一继承 `hx.core.HxmakerApplication`，先调用 `super()`，再通过 `init(GameStage, width, height)` 初始化；业务舞台继承 `hx.display.Stage`，在 `onStageInit()` 中先调用父类方法。场景、资源与更新逻辑放在舞台或场景中。
 
-新增[完整角色流程示例](samples/3d/interactive-character/README.md)：通过独立 ProcedureManager 串起菜单、Assets 加载／取消、角色场景、错误重试和退出释放，支持手动启动五轮生命周期循环与输出诊断 JSON。用户已反馈测试通过，本轮补充 HTML5 构建验证，见[项目示例说明](docs/完整3D角色项目示例说明.md)。
+## 当前边界与验证状态
 
-新增[碰撞与角色控制示例](samples/3d/collision-character/README.md)：显式箱体代理、球／竖直胶囊重叠与连续扫掠、碰撞层、阻挡滑动、落地及重力，核心 API 见[使用说明](docs/基础3D碰撞与角色控制使用说明.md)。用户已反馈箱体阶段测试通过；本轮浏览器通过 37 项碰撞数值断言，未新增硬件性能基线。
-
-新增[台阶与坡面示例](samples/3d/terrain-character/README.md)：封闭楔形坡道、角色跨步、上下坡贴地及坡度限制，见[使用说明](docs/3D台阶与坡面使用说明.md)。用户已反馈画面测试通过；本轮浏览器通过 28 项地形数值断言，沿用既有输入和渲染体系。
-
-新增[角色导航示例](samples/3d/navigation-character/README.md)：显式路点图、A* 最短路、路径跟随、动态门重规划及楼梯／坡道通行，使用纯 hxmaker API 与 Assets 加载。实现范围与自动验收结果见[导航说明](docs/3D导航使用说明.md)及[验证记录](docs/3D导航验收记录.md)。
-
-新增[引擎验收与性能基线示例](samples/3d/engine-acceptance/README.md)：提供固定负载、阶段耗时、资源生命周期、二维混用及上下文诊断，并可导出 JSON。用户已提供实测基线并确认画面正常，结果见[最终报告分析](samples/3d/engine-acceptance/Baselines/2026-10-16-最终分析.md)；各项诊断的覆盖范围以报告记录为准。
-
-基础方向光、Lambert 光照与单方向光硬阴影已加入代码，提供恐龙／方块对照场景，参阅[光照与阴影使用说明](docs/基础3D光照与阴影使用说明.md)。用户已反馈光照和阴影运行正常，完整回归和跨平台验证尚待执行。
-
-已完成阶段的历史设计见[3D 引擎第二阶段设计方案](docs/archive/3d-20261017/3D引擎第二阶段设计方案.md)：依次补充动画过渡与骨骼挂点、相机与交互控制、可操作的角色场景，沿用现有多纹理合批和帧调度。三个里程碑均已收到用户通过反馈，后续已扩展基础碰撞、地形和显式路点导航。
-
-本轮历史方案与性能分析见[3D 引擎开发归档](docs/archive/3d-20261017/README.md)。
+- 3D 仍在持续开发。基础场景、动画与交互、角色流程以及前两个特效阶段已有运行记录或用户通过反馈；新增多光源、PCF4／MASK 阴影与缓存、软粒子、Bloom，以及中立资产／静态 FBX 路径仍需各自完成验收，不能沿用早期结果。
+- GLB 只支持明确子集；当前 FBX 不支持骨骼动画。尚未实现 `.hx3d` 发布文件编解码或导出工具，资产预处理不等于离线发布格式已交付。
+- 当前没有 PBR、HDR、GPU 蒙皮／实例化、自动 LOD、自动 NavMesh 或通用刚体物理。Bloom 提取整个视口亮部；加法特效与泛光不会自动照亮周围模型。点光和聚光暂不投射阴影。
+- 多个 `Scene3D` 各用独立深度目标，只按二维顺序合成，不共享深度。透明网格按对象排序，交叉透明面仍可能存在排序差异。
+- 性能需结合目标设备、分辨率和实际资源评估。`scene.stats` 提供绘制、上传、阴影与后处理统计；开启 `scene.profilingEnabled` 后的耗时是 CPU 墙钟时间，不是 GPU 时间。已有 HTML5 基线不代表全部平台已验证。
 
 # 布局支持
 

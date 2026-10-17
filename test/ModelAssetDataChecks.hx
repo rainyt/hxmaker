@@ -65,7 +65,7 @@ class ModelAssetDataChecks {
 			times: [1., 1.], values: [0.,0.,0., 1.,0.,0.]}]}]; }, "非递增动画时间");
 		// 以真实 GLB 的原解析结果为对照，确认中立化保持拓扑、统计和动画轨道。
 		#if sys
-		for (path in ["samples/glb-model/Assets/model.glb", "samples/textured-character/Assets/robot.glb"]) {
+		for (path in ["samples/3d/glb-model/Assets/model.glb", "samples/3d/textured-character/Assets/robot.glb"]) {
 			var bytes = sys.io.File.getBytes(path), gltf = GlbParser.parse(bytes), model = GlbImporter.importBytes(bytes);
 			check(model.nodes.length == gltf.nodes.length && model.meshes.length == gltf.meshes.length, "真实 GLB 节点和网格数量");
 			check(model.animations.length == gltf.animations.length && model.images.length == gltf.images.length, "真实 GLB 动画和图片数量");

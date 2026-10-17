@@ -88,7 +88,7 @@ assets.start();
 
 ## 示例与用户验证
 
-运行 [samples/fbx-model](../samples/fbx-model/README.md)，依次切换 ASCII、二进制 7.4、二进制 7.5 和 GLB。检查比例、方向、凹多边形、面罩 UV、枢轴位置、光照、阴影、双实例变色和反复加载释放。
+运行 [samples/3d/fbx-model](../samples/3d/fbx-model/README.md)，依次切换 ASCII、二进制 7.4、二进制 7.5 和 GLB。检查比例、方向、凹多边形、面罩 UV、枢轴位置、光照、阴影、双实例变色和反复加载释放。
 
 可选纯数据入口为 `haxe test/fbx-model-data.hxml`，从仓库根目录执行。它对比四种资源的世界空间边界和顶点矩，另检查错误版本、变形拒绝及损坏偏移。该入口已写入，但没有编译或执行。
 

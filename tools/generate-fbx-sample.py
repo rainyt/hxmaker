@@ -7,7 +7,7 @@ import struct
 import zlib
 
 
-OUTPUT = Path(__file__).resolve().parents[1] / "samples/fbx-model/Assets"
+OUTPUT = Path(__file__).resolve().parents[1] / "samples/3d/fbx-model/Assets"
 BASE_ID = 9007199254740993
 
 

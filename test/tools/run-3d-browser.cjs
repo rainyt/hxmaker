@@ -33,7 +33,7 @@ async function until(predicate, label, timeout = 20000) {
         if (message.type() === 'error' || /检查失败|断言失败|加载失败|创建失败/.test(text)) errors.push(text);
       });
       page.on('pageerror', error => errors.push(error.stack));
-      await page.goto(`${base}/samples/${sample}/Export/html5/bin/`);
+      await page.goto(`${base}/samples/3d/${sample}/Export/html5/bin/`);
       await until(() => errors.length || markers.every(marker => logs.some(log => log.includes(marker))), sample);
       assert.deepEqual(errors, [], sample + ' 不应出现运行异常');
       const entry = {sample, passed: logs.filter(log => markers.some(marker => log.includes(marker)))};

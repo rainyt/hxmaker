@@ -50,27 +50,27 @@
 
 **第一次使用 3D，请从[《hxmaker 3D 引擎新手指南》](docs/3D引擎新手指南.md)开始。** 包含两套完整入门工程、当前能力总览，以及模型、动画、挂点、光照、交互、碰撞、导航、性能和释放说明；代码使用迁移后的 `hx.display3d` API。
 
-基础 3D 框架已加入首版代码，并通过 HTML5 基础示例验证；完整验收仍在进行，参阅[使用说明](docs/基础3D框架使用说明.md)、[示例](samples/basic-3d/README.md)和[验证记录](docs/基础3D框架验证记录.md)。
+基础 3D 框架已加入首版代码，并通过 HTML5 基础示例验证；完整验收仍在进行，参阅[使用说明](docs/基础3D框架使用说明.md)、[示例](samples/3d/basic-3d/README.md)和[验证记录](docs/基础3D框架验证记录.md)。
 
 三维节点、网格、相机与模型现位于 `hx.display3d`，二维嵌入视口仍为 `hx.display.Scene3D`。此次直接迁移，不保留旧包转发；调用方需更新 import，参阅[迁移说明](docs/3D显示API包迁移说明.md)。仓库示例的三维类型 import 和模型加载入口已同步迁移，本轮尚未重新编译或测试。
 
-GLB 与首版静态 FBX 统一通过 `Assets.loadModel/getModel` 加载，业务使用 `ModelAsset`；格式专属的加载入口及资产类已删除。法线、网格边界、场景遍历顺序和刚性蒙皮分类在资产阶段准备，运行时消费中立数据，见[中立资产与优化格式设计](docs/3D模型中立资产与优化格式设计.md)。新增 [FBX / GLB 对照示例](samples/fbx-model/README.md)，提供 ASCII FBX、二进制 FBX 7.4/7.5、内嵌贴图和 GLB；[FBX 设计与边界](docs/FBX模型加载器设计与使用说明.md)明确当前不支持 FBX 骨骼动画。本轮未编译或执行测试，发布文件导出仍未实现。
+GLB 与首版静态 FBX 统一通过 `Assets.loadModel/getModel` 加载，业务使用 `ModelAsset`；格式专属的加载入口及资产类已删除。法线、网格边界、场景遍历顺序和刚性蒙皮分类在资产阶段准备，运行时消费中立数据，见[中立资产与优化格式设计](docs/3D模型中立资产与优化格式设计.md)。新增 [FBX / GLB 对照示例](samples/3d/fbx-model/README.md)，提供 ASCII FBX、二进制 FBX 7.4/7.5、内嵌贴图和 GLB；[FBX 设计与边界](docs/FBX模型加载器设计与使用说明.md)明确当前不支持 FBX 骨骼动画。本轮未编译或执行测试，发布文件导出仍未实现。
 
-另有通过 hxmaker 资源加载系统读取 GLB 的[恐龙模型示例](samples/glb-model/README.md)，包含基础蒙皮与 Idle 动画代码。用户已确认模型能够显示，完整回归尚待执行。
+另有通过 hxmaker 资源加载系统读取 GLB 的[恐龙模型示例](samples/3d/glb-model/README.md)，包含基础蒙皮与 Idle 动画代码。用户已确认模型能够显示，完整回归尚待执行。
 
-新增[贴图动画角色示例](samples/textured-character/README.md)：通过 Assets 加载带三张内嵌贴图的原创机器人，提供待机／行走、多个独立实例及多纹理合批对比。采用纯 hxmaker API 的 Main → Stage → Scene 结构，包含[动画过渡与骨骼挂点](docs/3D动画过渡与骨骼挂点使用说明.md)，用户已反馈该阶段测试通过。
+新增[贴图动画角色示例](samples/3d/textured-character/README.md)：通过 Assets 加载带三张内嵌贴图的原创机器人，提供待机／行走、多个独立实例及多纹理合批对比。采用纯 hxmaker API 的 Main → Stage → Scene 结构，包含[动画过渡与骨骼挂点](docs/3D动画过渡与骨骼挂点使用说明.md)，用户已反馈该阶段测试通过。
 
-新增[相机与三维交互示例](samples/camera-interaction/README.md)：纯 hxmaker API 实现环绕、跟随、角色与附件选择、点击地面移动、二维 UI 遮挡及双视口输入隔离。用户已反馈该阶段测试通过，接口见[使用说明](docs/3D相机控制与交互使用说明.md)。
+新增[相机与三维交互示例](samples/3d/camera-interaction/README.md)：纯 hxmaker API 实现环绕、跟随、角色与附件选择、点击地面移动、二维 UI 遮挡及双视口输入隔离。用户已反馈该阶段测试通过，接口见[使用说明](docs/3D相机控制与交互使用说明.md)。
 
-新增[完整角色流程示例](samples/interactive-character/README.md)：通过独立 ProcedureManager 串起菜单、Assets 加载／取消、角色场景、错误重试和退出释放，支持手动启动五轮生命周期循环与输出诊断 JSON。用户已反馈测试通过，本轮补充 HTML5 构建验证，见[项目示例说明](docs/完整3D角色项目示例说明.md)。
+新增[完整角色流程示例](samples/3d/interactive-character/README.md)：通过独立 ProcedureManager 串起菜单、Assets 加载／取消、角色场景、错误重试和退出释放，支持手动启动五轮生命周期循环与输出诊断 JSON。用户已反馈测试通过，本轮补充 HTML5 构建验证，见[项目示例说明](docs/完整3D角色项目示例说明.md)。
 
-新增[碰撞与角色控制示例](samples/collision-character/README.md)：显式箱体代理、球／竖直胶囊重叠与连续扫掠、碰撞层、阻挡滑动、落地及重力，核心 API 见[使用说明](docs/基础3D碰撞与角色控制使用说明.md)。用户已反馈箱体阶段测试通过；本轮浏览器通过 37 项碰撞数值断言，未新增硬件性能基线。
+新增[碰撞与角色控制示例](samples/3d/collision-character/README.md)：显式箱体代理、球／竖直胶囊重叠与连续扫掠、碰撞层、阻挡滑动、落地及重力，核心 API 见[使用说明](docs/基础3D碰撞与角色控制使用说明.md)。用户已反馈箱体阶段测试通过；本轮浏览器通过 37 项碰撞数值断言，未新增硬件性能基线。
 
-新增[台阶与坡面示例](samples/terrain-character/README.md)：封闭楔形坡道、角色跨步、上下坡贴地及坡度限制，见[使用说明](docs/3D台阶与坡面使用说明.md)。用户已反馈画面测试通过；本轮浏览器通过 28 项地形数值断言，沿用既有输入和渲染体系。
+新增[台阶与坡面示例](samples/3d/terrain-character/README.md)：封闭楔形坡道、角色跨步、上下坡贴地及坡度限制，见[使用说明](docs/3D台阶与坡面使用说明.md)。用户已反馈画面测试通过；本轮浏览器通过 28 项地形数值断言，沿用既有输入和渲染体系。
 
-新增[角色导航示例](samples/navigation-character/README.md)：显式路点图、A* 最短路、路径跟随、动态门重规划及楼梯／坡道通行，使用纯 hxmaker API 与 Assets 加载。实现范围与自动验收结果见[导航说明](docs/3D导航使用说明.md)及[验证记录](docs/3D导航验收记录.md)。
+新增[角色导航示例](samples/3d/navigation-character/README.md)：显式路点图、A* 最短路、路径跟随、动态门重规划及楼梯／坡道通行，使用纯 hxmaker API 与 Assets 加载。实现范围与自动验收结果见[导航说明](docs/3D导航使用说明.md)及[验证记录](docs/3D导航验收记录.md)。
 
-新增[引擎验收与性能基线示例](samples/engine-acceptance/README.md)：提供固定负载、阶段耗时、资源生命周期、二维混用及上下文诊断，并可导出 JSON。用户已提供实测基线并确认画面正常，结果见[最终报告分析](samples/engine-acceptance/Baselines/2026-10-16-最终分析.md)；各项诊断的覆盖范围以报告记录为准。
+新增[引擎验收与性能基线示例](samples/3d/engine-acceptance/README.md)：提供固定负载、阶段耗时、资源生命周期、二维混用及上下文诊断，并可导出 JSON。用户已提供实测基线并确认画面正常，结果见[最终报告分析](samples/3d/engine-acceptance/Baselines/2026-10-16-最终分析.md)；各项诊断的覆盖范围以报告记录为准。
 
 基础方向光、Lambert 光照与单方向光硬阴影已加入代码，提供恐龙／方块对照场景，参阅[光照与阴影使用说明](docs/基础3D光照与阴影使用说明.md)。用户已反馈光照和阴影运行正常，完整回归和跨平台验证尚待执行。
 

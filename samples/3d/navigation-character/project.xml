@@ -1,0 +1,15 @@
+<project>
+    <meta title="hxmaker 角色导航与寻路" package="samples.hxmaker.navigationcharacter" version="1.0.0" />
+    <app main="Main" file="NavigationCharacter" path="Export" />
+    <source path="Source" />
+    <source path="../../../test" if="hxmaker_navigation_checks" />
+    <assets path="Assets" rename="assets" />
+    <haxelib name="hxmaker" />
+    <haxelib name="hxmaker-openfl" />
+    <haxelib name="openfl" />
+    <haxelib name="openfl-glsl" />
+    <haxelib name="vector-math" />
+    <haxelib name="actuate" />
+    <haxelib name="spine-haxe" />
+    <window width="1120" height="820" background="#172033" hardware="true" allow-high-dpi="true" />
+</project>

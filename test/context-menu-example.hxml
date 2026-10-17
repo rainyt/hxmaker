@@ -1,6 +1,6 @@
 --main Main
 --class-path src
---class-path samples/context-menu/Source
+--class-path samples/2d/context-menu/Source
 --library spine-haxe
 --library actuate
 --library openfl

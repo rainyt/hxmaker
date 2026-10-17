@@ -13,7 +13,7 @@ class FbxModelDataChecks {
 		var files = ["robot-ascii.fbx", "robot-binary-7400.fbx", "robot-binary-7500.fbx", "robot.glb"];
 		var baseline:Array<Float> = null;
 		for (file in files) {
-			var data = ModelImporter.importBytes(sys.io.File.getBytes("samples/fbx-model/Assets/" + file));
+			var data = ModelImporter.importBytes(sys.io.File.getBytes("samples/3d/fbx-model/Assets/" + file));
 			check(data.sourceFormat == (StringTools.endsWith(file, ".glb") ? "glb" : "fbx"), "内容识别：" + file);
 			check(data.meshes.length == 8 && data.stats.primitiveCount == 14 && data.stats.triangleCount == 78, "已知几何统计：" + file);
 			check(data.images.length == 1 && data.textures.length == 1 && data.materials.length == 3, "图片与材质：" + file);
@@ -23,11 +23,11 @@ class FbxModelDataChecks {
 			if (baseline == null) baseline = metrics;
 			else for (i in 0...metrics.length) near(metrics[i], baseline[i], "世界空间边界和顶点矩与首个 FBX 一致：" + file);
 		}
-		var text = sys.io.File.getContent("samples/fbx-model/Assets/robot-ascii.fbx");
+		var text = sys.io.File.getContent("samples/3d/fbx-model/Assets/robot-ascii.fbx");
 		fails(Bytes.ofString(StringTools.replace(text, "FBXVersion: 7400", "FBXVersion: 6100")), "7.x");
 		fails(Bytes.ofString(~/Objects:\s*\{/.replace(text, 'Objects: {\nDeformer: 42, "Deformer::不支持的蒙皮", "Skin" {}\n')), "骨骼");
 		fails(Bytes.ofString("不是模型文件"), "无法识别");
-		var corrupted = sys.io.File.getBytes("samples/fbx-model/Assets/robot-binary-7500.fbx");
+		var corrupted = sys.io.File.getBytes("samples/3d/fbx-model/Assets/robot-binary-7500.fbx");
 		corrupted.setInt32(31, 1);
 		fails(corrupted, "64 位偏移");
 		var vertices = [0.,0.,0., 2.,0.,0., 2.,2.,0., 1.,1.,0., 0.,2.,0.];

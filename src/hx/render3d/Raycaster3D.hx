@@ -1,7 +1,7 @@
 package hx.render3d;
 
-import hx.display.MeshObject;
-import hx.display.Node3D;
+import hx.display3d.MeshObject;
+import hx.display3d.Node3D;
 import hx.events.PickResult3D;
 import hx.geom.Matrix3D;
 import hx.geom.Point;

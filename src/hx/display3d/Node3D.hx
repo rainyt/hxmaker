@@ -1,5 +1,7 @@
-package hx.display;
+package hx.display3d;
 
+import hx.display.EventDispatcher;
+import hx.display.Scene3D;
 import hx.geom.Matrix3D;
 import hx.geom.Vector3D;
 import hx.render3d.Math3D;
@@ -353,7 +355,7 @@ class Node3D extends EventDispatcher {
 	}
 
 	/** 动画混合可能跨越零缩放；保留精确姿态，退化网格由渲染与拾取跳过。 */
-	@:allow(hx.display.Model3D)
+	@:allow(hx.display3d.Model3D)
 	private function setAnimationTRS(translation:Array<Float>, rotation:Array<Float>, scale:Array<Float>):Void {
 		var matrix = Math3D.fromTRS(translation, rotation, scale);
 		for (value in matrix.rawData)

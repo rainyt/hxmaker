@@ -1,6 +1,6 @@
 package hx.animation3d;
 
-import hx.display.MeshObject;
+import hx.display3d.MeshObject;
 import hx.geom.Matrix3D;
 import hx.render3d.Math3D;
 import hx.formats.gltf.GltfData.GltfPrimitiveData;

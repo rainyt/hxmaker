@@ -44,7 +44,7 @@
 | `Assets.getGlb(name)` | 从现有 objects 容器读取并做类型检查 |
 | `hx.assets.GlbAsset` | 保存解析后的共享源数据，提供 createInstance()；不保存场景实例的播放进度 |
 | `hx.formats.gltf.GlbParser` | GLB 块、glTF 索引、bufferView / accessor 解析与校验，不依赖 OpenFL |
-| `hx.display.Model3D` | 继承 Node3D，包含模型节点、网格实例、包围盒与实例释放逻辑 |
+| `hx.display3d.Model3D` | 继承 Node3D，包含模型节点、网格实例、包围盒与实例释放逻辑 |
 | `hx.animation3d.AnimationPlayer3D` | 播放、暂停、循环、时间采样与骨骼更新 |
 | `hx.animation3d.Skin3D` | 保存关节与逆绑定矩阵，计算 CPU 蒙皮结果 |
 

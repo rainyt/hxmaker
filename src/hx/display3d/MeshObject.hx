@@ -1,4 +1,4 @@
-package hx.display;
+package hx.display3d;
 
 import hx.events.Event;
 import hx.geom.Bounds3D;

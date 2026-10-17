@@ -1,5 +1,8 @@
 package hx.display;
 
+import hx.display3d.Node3D;
+import hx.display3d.Camera3D;
+import hx.display3d.MeshObject;
 import hx.events.Event;
 import hx.events.PickResult3D;
 import hx.geom.Point;

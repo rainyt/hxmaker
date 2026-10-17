@@ -1,4 +1,4 @@
-package hx.display;
+package hx.display3d;
 
 import hx.assets.GlbAsset;
 import hx.animation3d.AnimationClip3D;

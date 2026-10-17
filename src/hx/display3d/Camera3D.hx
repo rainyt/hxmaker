@@ -1,4 +1,4 @@
-package hx.display;
+package hx.display3d;
 
 import hx.geom.Matrix3D;
 import hx.geom.Ray3D;

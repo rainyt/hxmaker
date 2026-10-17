@@ -4,7 +4,7 @@ import hx.navigation3d.NavAgentState3D;
 import hx.controls3d.CharacterController3D;
 import hx.collision3d.CollisionWorld3D;
 import hx.collision3d.BoxCollider3D;
-import hx.display.Node3D;
+import hx.display3d.Node3D;
 import hx.geom.Vector3D;
 
 /** 真实碰撞世界中的数值断言，不依赖角色资源或渲染。 */

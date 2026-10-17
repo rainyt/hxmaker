@@ -1,6 +1,6 @@
 package hx.light;
 
-import hx.display.Node3D;
+import hx.display3d.Node3D;
 import hx.geom.Vector3D;
 import hx.geom.Bounds3D;
 import hx.render3d.Math3D;

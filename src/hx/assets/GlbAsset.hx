@@ -1,7 +1,7 @@
 package hx.assets;
 
-import hx.display.Model3D;
-import hx.display.Model3DOptions;
+import hx.display3d.Model3D;
+import hx.display3d.Model3DOptions;
 import hx.formats.gltf.GltfData;
 import hx.formats.gltf.GlbParser;
 import haxe.io.Bytes;
@@ -9,7 +9,7 @@ import hx.display.BitmapData;
 
 /** 可共享的 GLB 源资产；不持有场景节点、GPU 句柄或实例播放状态。 */
 class GlbAsset {
-	@:allow(hx.display.Model3D)
+	@:allow(hx.display3d.Model3D)
 	@:allow(hx.assets.GlbFuture)
 	private var data:GltfData;
 	@:allow(hx.assets.GlbFuture)

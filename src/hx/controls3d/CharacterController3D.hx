@@ -4,7 +4,7 @@ import hx.collision3d.CharacterMoveResult3D;
 import hx.collision3d.CollisionHit3D;
 import hx.collision3d.CollisionMath3D;
 import hx.collision3d.CollisionWorld3D;
-import hx.display.Node3D;
+import hx.display3d.Node3D;
 import hx.geom.Matrix3D;
 import hx.geom.Vector3D;
 import hx.render3d.Math3D;

@@ -1,8 +1,8 @@
 package hx.events;
 
-import hx.display.MeshObject;
-import hx.display.Model3D;
-import hx.display.Node3D;
+import hx.display3d.MeshObject;
+import hx.display3d.Model3D;
+import hx.display3d.Node3D;
 import hx.geom.Vector3D;
 import hx.geom.Point;
 

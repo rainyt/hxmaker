@@ -2,7 +2,7 @@ package hx.controls3d;
 
 import haxe.Timer;
 import hx.display.EventDispatcher;
-import hx.display.MeshObject;
+import hx.display3d.MeshObject;
 import hx.display.Scene3D;
 import hx.display.Stage;
 import hx.events.Event;

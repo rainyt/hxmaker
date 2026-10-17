@@ -1,6 +1,7 @@
 <project>
     <haxelib name="actuate" />
     <haxeflag name='--macro keep("hx.display.*")' />
+    <haxeflag name='--macro keep("hx.display3d.*")' />
     <!-- 如果是属于hxmaker独立项目，则需要定义`hxmaker_project` -->
     <include path="platforms.xml" if="hxmaker_project" />
     <!-- 即使在发布模式下，也要在最终二进制文件中添加符号，允许通过ndk-stack读取崩溃的错误位置，性能影响：无 -->

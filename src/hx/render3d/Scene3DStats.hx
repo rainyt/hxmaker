@@ -2,6 +2,10 @@ package hx.render3d;
 
 /** 最近一次三维重绘的数据；最终合成次数在每次 GPU 回调更新。 */
 class Scene3DStats {
+	/** 最近绘制实际使用的灯光数及因数量限制跳过的灯光数。 */
+	public var activeLights:Int = 0;
+	public var skippedLights:Int = 0;
+
 	/** 成功完成的 GPU 回调编号；静态纹理复用时也递增，不是主场景重绘次数。 */
 	public var renderId:Int = 0;
 
@@ -123,6 +127,7 @@ class Scene3DStats {
 
 	/** 重置绘制计数和拆批原因；不清除回调编号、目标尺寸及计时字段。 */
 	public function reset():Void {
+		activeLights = skippedLights = 0;
 		postProcessCpuMs = 0; bloomDrawCalls = bloomTargetBytes = 0; bloomStatus = "关闭";
 		softDepthDrawCalls = softDepthTriangles = softDepthUploadedBytes = softDepthTargetBytes = 0;
 		softParticleStatus = "关闭";

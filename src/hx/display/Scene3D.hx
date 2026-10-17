@@ -14,6 +14,7 @@ import hx.render3d.Raycaster3D;
 import hx.render3d.IScene3DRenderer;
 import hx.core.Hxmaker;
 import hx.light.DirectionalLight3D;
+import hx.light.Light3D;
 
 /** 二维显示树中的三维视口；三维对象通过 root 加入。 */
 @:access(hx.display.DisplayObject)
@@ -27,8 +28,40 @@ class Scene3D extends DisplayObject {
 	/** 当前活动相机，必须已加入本场景；null 表示没有可绘制相机。 */
 	public var camera(get, set):Camera3D;
 
-	/** 当前单方向光，必须属于本场景；null 时只保留环境光。 */
+	/** 主方向光兼容入口，必须属于本场景；null 时仍可使用显式注册的其他灯光。 */
 	public var light(get, set):DirectionalLight3D;
+
+	/** 首版前向光照上限，包含兼容入口 light。 */
+	public static inline var MAX_LIGHTS:Int = 4;
+	private var __lights:Array<Light3D> = [];
+	/** 显式注册的灯光副本；不包含仅通过 light 设置的主方向光。 */
+	public var lights(get, never):Array<Light3D>;
+	private function get_lights():Array<Light3D> { return __lights.copy(); }
+
+	/** 灯光需先加入 root；重复注册不改变顺序。 */
+	public function addLight(value:Light3D):Void {
+		if (value == null || value.isDisposed || value.scene != this)
+			throw "灯光必须属于当前场景";
+		if (__lights.indexOf(value) < 0) { __lights.push(value); requestRender(); }
+	}
+
+	/** 取消显式注册；主方向光需另外设置 light=null。 */
+	public function removeLight(value:Light3D):Void {
+		if (__lights.remove(value)) requestRender();
+	}
+
+	/** 主方向光优先，其余按注册顺序；隐藏、移出场景或销毁的灯光不参与。 */
+	public function getActiveLights():Array<Light3D> {
+		var result:Array<Light3D> = [];
+		var candidates = __lights.copy();
+		if (light != null) { candidates.remove(light); candidates.unshift(light); }
+		for (value in candidates) {
+			if (value.isDisposed || value.scene != this || !value.isWorldVisible()) continue;
+			value.settingsKey();
+			if (value.intensity > 0) result.push(value);
+		}
+		return result;
+	}
 
 	/** 环境光 RGB 颜色，默认白色。 */
 	public var ambientColor:Int = 0xffffff;
@@ -56,7 +89,8 @@ class Scene3D extends DisplayObject {
 	public function lightingKey():String {
 		if (!Math3D.finite(ambientIntensity) || ambientIntensity < 0)
 			throw "环境光强度必须为非负有限值";
-		return ambientColor + ":" + ambientIntensity + ":" + (light == null ? "无方向光" : light.settingsKey());
+		var keys = [for (value in getActiveLights()) value.settingsKey()];
+		return ambientColor + ":" + ambientIntensity + ":" + keys.join("|");
 	}
 
 	/** 后端维护的最近绘制统计；业务只读，不代表 GPU 执行耗时。 */
@@ -226,6 +260,7 @@ class Scene3D extends DisplayObject {
 		root.dispose();
 		__camera = null;
 		__light = null;
+		__lights = [];
 		super.dispose();
 	}
 }

@@ -26,7 +26,7 @@ class Material3D extends EventDispatcher {
 
 	private var __lightingEnabled:Bool = false;
 
-	/** 是否参与环境光、方向光及接收阴影；默认 false。 */
+	/** 是否参与环境光、多光源及接收主方向光阴影；默认 false。 */
 	public var lightingEnabled(get, set):Bool;
 
 	private function get_lightingEnabled():Bool {
@@ -384,6 +384,7 @@ class Material3D extends EventDispatcher {
 		if (name == null
 			|| !~/^[A-Za-z_][A-Za-z0-9_]*$/.match(name)
 			|| StringTools.startsWith(name, "uSampler")
+			|| StringTools.startsWith(name, "uSceneLight")
 			|| [
 				"uViewProjection",
 				"uBaseUVRect",

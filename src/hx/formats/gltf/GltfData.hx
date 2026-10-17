@@ -98,13 +98,13 @@ typedef GltfMaterialData = {
 	/** 线性空间基础色 RGBA 因子。 */
 	var baseColorFactor:Array<Float>;
 
-	/** 源金属度，仅保存定义，当前基础渲染不执行 PBR。 */
+	/** 源金属度，启用 PBR 材质时参与渲染。 */
 	var metallicFactor:Float;
 
-	/** 源粗糙度，仅保存定义，当前基础渲染不执行 PBR。 */
+	/** 源粗糙度，启用 PBR 材质时参与渲染。 */
 	var roughnessFactor:Float;
 
-	/** 源自发光 RGB 因子，当前基础渲染尚不应用。 */
+	/** 源线性自发光 RGB 因子，启用 PBR 材质时参与渲染。 */
 	var emissiveFactor:Array<Float>;
 
 	/** 基础色转换为显示编码后的 RGB 整数。 */

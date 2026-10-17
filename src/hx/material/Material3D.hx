@@ -7,6 +7,10 @@ import hx.render3d.Math3D;
 
 /** 基础三维材质；共享修改通过 CHANGE 通知所有引用模型。 */
 class Material3D extends EventDispatcher {
+	/** 是否使用物理材质光照，由具体材质类型决定；仍受 lightingEnabled 控制。 */
+	public var pbrEnabled(get, never):Bool;
+	private function get_pbrEnabled():Bool { return false; }
+
 	private var __colorMultiplyLinear:Bool = false;
 
 	/** glTF 的基础颜色因子需在线性空间与贴图相乘；旧手工材质默认保持显示空间行为。 */
@@ -396,6 +400,7 @@ class Material3D extends EventDispatcher {
 				"uAlphaCutoff",
 				"uLinearBaseColor",
 				"uAmbientColor",
+				"uCameraPosition",
 				"uLightColor",
 				"uLightDirection",
 				"uLightViewProjection",

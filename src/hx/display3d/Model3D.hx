@@ -12,6 +12,7 @@ import hx.geometry.Geometry3D;
 import hx.material.Material3D;
 import hx.material.UnlitTextureMaterial;
 import hx.material.LambertTextureMaterial;
+import hx.material.PbrMaterial3D;
 import hx.render3d.Math3D;
 
 /** 模型资产的独立实例；拥有运行时几何和材质，不拥有共享源资产。 */
@@ -42,6 +43,7 @@ class Model3D extends Node3D {
 	private var geometries:Array<Geometry3D> = [];
 	private var materials:Map<Int, Material3D> = [];
 	private var useLighting:Bool;
+	private var usePbr:Bool;
 	private var sourceAsset:ModelAsset;
 
 	private function get_meshes():Array<MeshObject> {
@@ -58,6 +60,7 @@ class Model3D extends Node3D {
 		sourceAsset = asset;
 		data = asset.data;
 		useLighting = options != null && options.lightingEnabled == true;
+		usePbr = options != null && options.pbrEnabled == true;
 		if (sceneIndex < 0)
 			sceneIndex = data.scene;
 		if (sceneIndex < 0 || sceneIndex >= data.scenes.length)
@@ -110,11 +113,20 @@ class Model3D extends Node3D {
 			var primitive = primitives[i],
 				material = materials.get(primitive.material);
 			if (material == null) {
-				material = useLighting ? new LambertTextureMaterial() : new UnlitTextureMaterial();
+				material = usePbr ? new PbrMaterial3D(null, 0xffffff, data.sourceFormat == "glb" ? 1 : 0, 1) : useLighting ? new LambertTextureMaterial() : new UnlitTextureMaterial();
 				material.colorMultiplyLinear = true;
 				if (primitive.material >= 0) {
 					var source = data.materials[primitive.material];
 					material.color = source.color;
+					if (usePbr) {
+						var pbr:PbrMaterial3D = cast material;
+						// 保留源线性因子的精度，避免经过 RGB 整数量化再还原。
+						pbr.color = 0xffffff;
+						pbr.baseColorFactor = source.baseColorFactor.slice(0, 3);
+						pbr.metallic = source.metallicFactor;
+						pbr.roughness = source.roughnessFactor;
+						pbr.emissive = source.emissiveFactor;
+					}
 					material.opacity = source.opacity;
 					if (source.baseColorTexture >= 0) {
 						var texture = data.textures[source.baseColorTexture];

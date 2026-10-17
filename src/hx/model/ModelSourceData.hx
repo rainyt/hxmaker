@@ -47,7 +47,7 @@ typedef ModelPrimitiveSource = {
 	var material:Int;
 }
 
-/** 引擎材质参数；保留的 PBR 因子不表示渲染器已经实现 PBR。 */
+/** 引擎材质参数；PBR 因子通过 Model3DOptions.pbrEnabled 显式启用。 */
 typedef ModelMaterialData = {
 	var name:String;
 	var baseColorFactor:Array<Float>;

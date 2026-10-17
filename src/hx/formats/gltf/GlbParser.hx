@@ -31,7 +31,7 @@ class GlbParser {
 	private var cache:Map<Int, AccessorData> = [];
 	private var textures:Array<GltfTextureData>;
 	private var materials:Array<GltfMaterialData>;
-	private var warnings:Array<String> = ["GLB 外观以基础颜色为主，尚未实现 PBR 金属度和粗糙度。"];
+	private var warnings:Array<String> = ["GLB 默认使用无光照材质；创建 Model3D 时设置 pbrEnabled 可启用 PBR 因子光照。"];
 
 	private function new() {}
 
@@ -278,8 +278,6 @@ class GlbParser {
 				cutoff = number(material, "alphaCutoff", 0.5);
 			if (["OPAQUE", "MASK", "BLEND"].indexOf(alpha) < 0 || cutoff < 0 || cutoff > 1)
 				throw "材质透明模式或阈值无效";
-			if (field(material, "emissiveFactor") != null)
-				warn("自发光颜色尚未参与渲染。");
 			result.push({
 				name: text(material, "name", "材质 " + result.length),
 				baseColorFactor: color,

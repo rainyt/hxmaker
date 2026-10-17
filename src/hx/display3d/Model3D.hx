@@ -1,22 +1,20 @@
 package hx.display3d;
 
-import hx.assets.GlbAsset;
+import hx.assets.ModelAsset;
 import hx.animation3d.AnimationClip3D;
 import hx.animation3d.AnimationPlayer3D;
 import hx.animation3d.AnimationPose3D;
 import hx.animation3d.Skin3D;
-import hx.formats.gltf.GltfData;
+import hx.model.ModelAssetData;
 import hx.geom.Matrix3D;
 import hx.geom.Bounds3D;
 import hx.geometry.Geometry3D;
 import hx.material.Material3D;
 import hx.material.UnlitTextureMaterial;
 import hx.material.LambertTextureMaterial;
-import hx.material.AlphaMode3D;
-import hx.material.CullMode3D;
 import hx.render3d.Math3D;
 
-/** GLB 的独立实例；拥有运行时几何和材质，不拥有共享源资产。 */
+/** 模型资产的独立实例；拥有运行时几何和材质，不拥有共享源资产。 */
 class Model3D extends Node3D {
 	/** 模型实例独立的播放器，由业务每帧显式推进一次。 */
 	public var animation(default, null):AnimationPlayer3D;
@@ -27,7 +25,7 @@ class Model3D extends Node3D {
 	/** 当前实例活动场景的导入三角形总数。 */
 	public var triangleCount(default, null):Int = 0;
 
-	private var data:GltfData;
+	private var data:ModelAssetData;
 	private var nodes:Array<Node3D> = [];
 	private var active:Array<Bool>;
 	private var globals:Array<Matrix3D>;
@@ -38,40 +36,40 @@ class Model3D extends Node3D {
 	private var targetPose:AnimationPose3D;
 	private var snapshotPose:AnimationPose3D;
 	private var poseReady:Bool = false;
-	private var resolved:Array<Int>;
-	private var poseVersion:Int = 0;
+	private var activeNodes:Array<Int>;
 	private var skins:Map<Int, Skin3D> = [];
 	private var instances:Array<MeshObject> = [];
 	private var geometries:Array<Geometry3D> = [];
 	private var materials:Map<Int, Material3D> = [];
 	private var useLighting:Bool;
-	private var sourceAsset:GlbAsset;
+	private var sourceAsset:ModelAsset;
 
 	private function get_meshes():Array<MeshObject> {
 		return instances.copy();
 	}
 
-	/** 从已加载的 GLB 创建独立模型实例；-1 使用默认场景，源贴图仍由 Assets 持有。 */
-	public function new(asset:GlbAsset, sceneIndex:Int = -1, options:Model3DOptions = null) {
+	/** 从已加载的模型资产创建独立模型实例；-1 使用默认场景，源贴图仍由 Assets 持有。 */
+	public function new(asset:ModelAsset, sceneIndex:Int = -1, options:Model3DOptions = null) {
 		super();
 		if (asset == null)
 			throw "模型源资产不能为空";
 		if (!asset.texturesReady)
-			throw "GLB 图片尚未解码或已经释放，请通过 Assets.loadGlb 加载并保留资产";
+			throw "模型图片尚未解码或已经释放，请通过 Assets 加载并保留资产";
 		sourceAsset = asset;
 		data = asset.data;
 		useLighting = options != null && options.lightingEnabled == true;
 		if (sceneIndex < 0)
 			sceneIndex = data.scene;
-		if (sceneIndex >= data.scenes.length)
+		if (sceneIndex < 0 || sceneIndex >= data.scenes.length)
 			throw "模型场景索引越界";
 		active = [for (_ in data.nodes) false];
-		globals = [for (_ in data.nodes) new Matrix3D()];
-		restPose = new AnimationPose3D([for (node in data.nodes) node.translation], [for (node in data.nodes) node.rotation],
-			[for (node in data.nodes) node.scale]);
+		activeNodes = data.sceneNodes[sceneIndex];
+		for (index in activeNodes) active[index] = true;
+		// 第一次应用姿态时按父节点优先顺序填充，避免先分配马上被替换的单位矩阵。
+		globals = [for (_ in data.nodes) null];
+		restPose = asset.restPose;
 		pose = restPose.clone();
 		appliedPose = restPose.clone();
-		resolved = [for (_ in data.nodes) 0];
 		try {
 			for (source in data.nodes) {
 				var node = new Node3D();
@@ -81,19 +79,12 @@ class Model3D extends Node3D {
 			for (i in 0...nodes.length)
 				for (child in data.nodes[i].children)
 					nodes[i].addChild(nodes[child]);
-			function activate(index:Int):Void {
-				active[index] = true;
-				for (child in data.nodes[index].children)
-					activate(child);
-			}
-			for (index in data.scenes[sceneIndex]) {
+			for (index in data.scenes[sceneIndex])
 				addChild(nodes[index]);
-				activate(index);
-			}
 			for (i in 0...nodes.length)
 				if (active[i] && data.nodes[i].mesh >= 0)
 					createMeshes(i);
-			animation = new AnimationPlayer3D(data.animations, applyPose, {capture: capturePose, apply: applyBlend});
+			animation = new AnimationPlayer3D(asset.clips, applyPose, {capture: capturePose, apply: applyBlend});
 			applyPose(null, 0);
 		} catch (error:Dynamic) {
 			dispose();
@@ -132,26 +123,22 @@ class Model3D extends Node3D {
 						material.textureWrapU = texture.wrapU;
 						material.textureWrapV = texture.wrapV;
 					}
-					material.alphaMode = switch (source.alphaMode) {
-						case "MASK": AlphaMode3D.MASK;
-						case "BLEND": AlphaMode3D.BLEND;
-						default: AlphaMode3D.OPAQUE;
-					};
+					material.alphaMode = source.alphaMode;
 					material.alphaCutoff = source.alphaCutoff;
-					material.cullMode = source.doubleSided ? CullMode3D.NONE : CullMode3D.BACK;
+					material.cullMode = source.cullMode;
 				}
 				materials.set(primitive.material, material);
 			}
-			var geometry = new Geometry3D(primitive.positions, primitive.uvs, primitive.indices, primitive.normals);
+			var geometry = Geometry3D.fromModelPrimitive(primitive, skin != null);
 			geometries.push(geometry);
 			var mesh = new MeshObject(geometry, material);
 			mesh.name = node.name + (primitives.length > 1 ? " / " + i : "");
 			instances.push(mesh);
-			triangleCount += Std.int(primitive.indices.length / 3);
+			triangleCount += primitive.triangleCount;
 			if (skin == null)
 				nodes[index].addChild(mesh);
 			else {
-				// glTF 蒙皮忽略网格节点自身及其父级变换，关节全局矩阵已包含骨架层级。
+				// 资产已统一绑定空间；关节模型空间矩阵包含骨架层级，不重复应用网格节点变换。
 				addChild(mesh);
 				skin.bind(mesh, primitive);
 			}
@@ -171,7 +158,7 @@ class Model3D extends Node3D {
 		return nodes[index];
 	}
 
-	/** 重名节点全部返回，顺序按 GLB 节点索引；不包含运行时创建的挂点。 */
+	/** 重名节点全部返回，顺序按源节点索引；不包含运行时创建的挂点。 */
 	public function findNodes(name:String):Array<Node3D> {
 		var result:Array<Node3D> = [];
 		if (!isDisposed)
@@ -183,7 +170,7 @@ class Model3D extends Node3D {
 		return result;
 	}
 
-	/** 将借用节点映射回 GLB 索引；外部节点、挂点和非活动节点返回 -1。 */
+	/** 将借用节点映射回源节点索引；外部节点、挂点和非活动节点返回 -1。 */
 	public function getNodeIndex(node:Node3D):Int {
 		if (isDisposed || node == null)
 			return -1;
@@ -233,53 +220,34 @@ class Model3D extends Node3D {
 
 	private function commitPose():Void {
 		var changed = !poseReady;
-		for (i in 0...nodes.length)
-			if (active[i]) {
-				var nodeChanged = !poseReady;
-				if (!nodeChanged) {
-					for (j in 0...3)
-						if (pose.translations[i][j] != appliedPose.translations[i][j] || pose.scales[i][j] != appliedPose.scales[i][j])
-							nodeChanged = true;
-					for (j in 0...4)
-						if (pose.rotations[i][j] != appliedPose.rotations[i][j])
-							nodeChanged = true;
-				}
-				if (nodeChanged) {
-					var source = data.nodes[i];
-					if (source.matrix != null)
-						nodes[i].setLocalMatrix(new Matrix3D(source.matrix));
-					else
-						nodes[i].setAnimationTRS(pose.translations[i], pose.rotations[i], pose.scales[i]);
-					changed = true;
-				}
+		for (i in activeNodes) {
+			var nodeChanged = !poseReady;
+			if (!nodeChanged) {
+				for (j in 0...3)
+					if (pose.translations[i][j] != appliedPose.translations[i][j] || pose.scales[i][j] != appliedPose.scales[i][j])
+						nodeChanged = true;
+				for (j in 0...4)
+					if (pose.rotations[i][j] != appliedPose.rotations[i][j])
+						nodeChanged = true;
 			}
+			if (nodeChanged) {
+				var source = data.nodes[i];
+				if (source.matrix != null)
+					nodes[i].setLocalMatrix(new Matrix3D(source.matrix));
+				else
+					nodes[i].setAnimationTRS(pose.translations[i], pose.rotations[i], pose.scales[i]);
+				changed = true;
+			}
+		}
 		if (!changed)
 			return;
 		appliedPose.copyFrom(pose);
 		poseReady = true;
-		// 复用解析标记，不在每次姿态更新时创建布尔数组。
-		if (poseVersion == 0x7fffffff) {
-			for (i in 0...resolved.length)
-				resolved[i] = 0;
-			poseVersion = 0;
+		// 资产已预计算父节点优先顺序，姿态更新不再递归寻找祖先。
+		for (index in activeNodes) {
+			var parent = data.parents[index], local = nodes[index].getLocalMatrix();
+			globals[index] = parent >= 0 ? Math3D.multiply(globals[parent], local) : local;
 		}
-		poseVersion++;
-		function resolve(index:Int):Void {
-			if (resolved[index] == poseVersion)
-				return;
-			var parent = data.parents[index],
-				local = nodes[index].getLocalMatrix();
-			if (parent >= 0) {
-				resolve(parent);
-				globals[index] = Math3D.multiply(globals[parent], local);
-			} else
-				globals[index] = local;
-			resolved[index] = poseVersion;
-		}
-		// 在模型空间解析骨架祖先，不重复应用外层模型的世界变换。
-		for (i in 0...nodes.length)
-			if (active[i])
-				resolve(i);
 		for (skin in skins)
 			skin.update(globals);
 	}
@@ -330,7 +298,7 @@ class Model3D extends Node3D {
 		restPose = pose = appliedPose = sourcePose = targetPose = snapshotPose = null;
 		globals = [];
 		active = [];
-		resolved = [];
+		activeNodes = [];
 		data = null;
 		sourceAsset = null;
 	}

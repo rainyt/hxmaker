@@ -54,6 +54,8 @@
 
 三维节点、网格、相机与模型现位于 `hx.display3d`，二维嵌入视口仍为 `hx.display.Scene3D`。此次直接迁移，不保留旧包转发；调用方需更新 import，参阅[迁移说明](docs/3D显示API包迁移说明.md)。仓库示例由用户另行整理。
 
+GLB 导入现接入统一 `ModelAsset` 与资产预处理流程，新增 `Assets.loadModel/getModel`，保留原 GLB 入口。法线、网格边界、场景遍历顺序和刚性蒙皮分类在资产阶段准备，运行时消费中立数据；未来自定义二进制发布格式的边界见[中立资产与优化格式设计](docs/3D模型中立资产与优化格式设计.md)。本轮尚未编译或执行测试，暂未实现 FBX 和发布文件导出。
+
 另有通过 hxmaker 资源加载系统读取 GLB 的[恐龙模型示例](samples/glb-model/README.md)，包含基础蒙皮与 Idle 动画代码。用户已确认模型能够显示，完整回归尚待执行。
 
 新增[贴图动画角色示例](samples/textured-character/README.md)：通过 Assets 加载带三张内嵌贴图的原创机器人，提供待机／行走、多个独立实例及多纹理合批对比。采用纯 hxmaker API 的 Main → Stage → Scene 结构，包含[动画过渡与骨骼挂点](docs/3D动画过渡与骨骼挂点使用说明.md)，用户已反馈该阶段测试通过。

@@ -3,25 +3,25 @@ package hx.animation3d;
 import hx.display3d.MeshObject;
 import hx.geom.Matrix3D;
 import hx.render3d.Math3D;
-import hx.formats.gltf.GltfData.GltfPrimitiveData;
-import hx.formats.gltf.GltfData.GltfSkinData;
+import hx.model.ModelAssetData.ModelPrimitiveData;
+import hx.model.ModelSourceData.ModelSkinData;
 
 /** 在模型局部空间计算关节矩阵；外层 Model3D 变换只由显示树应用一次。 */
 class Skin3D {
-	private var data:GltfSkinData;
+	private var data:ModelSkinData;
 	private var inverses:Array<Matrix3D>;
 	private var palette:Array<Matrix3D>;
 	private var bindings:Array<SkinBinding3D> = [];
 
 	/** 借用导入蒙皮数据并创建实例独立的关节矩阵缓冲。 */
-	public function new(data:GltfSkinData) {
+	public function new(data:ModelSkinData) {
 		this.data = data;
 		inverses = [for (matrix in data.inverseBindMatrices) new Matrix3D(matrix)];
 		palette = [for (_ in data.joints) new Matrix3D()];
 	}
 
 	/** 刚性单关节网格直接复用网格矩阵；其他网格使用实例独立的 CPU 顶点。 */
-	public function bind(mesh:MeshObject, primitive:GltfPrimitiveData):Void {
+	public function bind(mesh:MeshObject, primitive:ModelPrimitiveData):Void {
 		bindings.push(new SkinBinding3D(mesh, primitive));
 	}
 
@@ -54,37 +54,20 @@ class Skin3D {
 
 private class SkinBinding3D {
 	private var mesh:MeshObject;
-	private var source:GltfPrimitiveData;
+	private var source:ModelPrimitiveData;
 	private var rigidJoint:Int = -1;
 	private var lastMatrix:Array<Float>;
 	private var restNormals:Array<Float>;
 	private var blended:Array<Float> = [for (_ in 0...16) 0.];
 
 	/** 借用网格及源图元，选择刚性关节或实例 CPU 蒙皮路径。 */
-	public function new(mesh:MeshObject, source:GltfPrimitiveData) {
+	public function new(mesh:MeshObject, source:ModelPrimitiveData) {
 		this.mesh = mesh;
 		this.source = source;
-		var candidate = -1, rigid = true;
-		for (vertex in 0...Std.int(source.positions.length / 3)) {
-			var influences = 0;
-			for (slot in 0...4) {
-				var i = vertex * 4 + slot, weight = source.weights[i];
-				if (weight == 0)
-					continue;
-				influences++;
-				if (weight != 1 || (candidate >= 0 && candidate != source.joints[i]))
-					rigid = false;
-				candidate = source.joints[i];
-			}
-			if (influences != 1)
-				rigid = false;
-		}
-		if (rigid)
-			rigidJoint = candidate;
-		else {
-			restNormals = mesh.geometry.getNormals().copy();
-			mesh.geometry.setNormals(restNormals);
-		}
+		rigidJoint = source.rigidJoint;
+		// 原始法线属于只读资产，输出法线由实例几何独立持有。
+		if (rigidJoint < 0)
+			restNormals = source.normals;
 	}
 
 	/** 使用当前关节矩阵调色板更新绑定网格的实例顶点或刚性变换。 */

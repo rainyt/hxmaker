@@ -3,7 +3,7 @@ package hx.formats.gltf;
 import hx.animation3d.AnimationClip3D;
 import haxe.io.Bytes;
 
-/** 解析后的源数据；实例只读使用，所有可变姿态与顶点另行分配。 */
+/** glTF 解析源数据；保留源格式语义，经过 GlbImporter 构建中立资产后再供实例使用。 */
 typedef GltfData = {
 	/** 源节点数据，按 GLB 节点索引排列。 */
 	var nodes:Array<GltfNodeData>;

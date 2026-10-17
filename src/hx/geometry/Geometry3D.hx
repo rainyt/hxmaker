@@ -4,6 +4,8 @@ import hx.display.EventDispatcher;
 import hx.events.Event;
 import hx.geom.Bounds3D;
 import hx.render3d.Math3D;
+import hx.model.ModelAssetData.ModelPrimitiveData;
+import hx.model.ModelGeometryTools;
 
 /** 共享 CPU 网格数据。直接修改数组后必须调用 invalidate()。 */
 class Geometry3D extends EventDispatcher {
@@ -44,6 +46,23 @@ class Geometry3D extends EventDispatcher {
 		invalidate();
 	}
 
+	/** 仅供模型实例使用：输入已经由资产构建器校验，复制实例缓冲并直接采用预计算边界。 */
+	@:allow(hx.display3d.Model3D)
+	private static function fromModelPrimitive(primitive:ModelPrimitiveData, skinned:Bool):Geometry3D {
+		var geometry = new Geometry3D([], [], []);
+		geometry.positions = primitive.positions.copy();
+		geometry.uvs = primitive.uvs.copy();
+		geometry.indices = primitive.indices.copy();
+		geometry.normals = primitive.normals.copy();
+		// 蒙皮每帧更新法线；静态自动法线仍需在业务修改顶点后失效。
+		geometry.generatedNormals = primitive.generatedNormals && (!skinned || primitive.rigidJoint >= 0);
+		if (primitive.bounds.length == 6) {
+			geometry.bounds.min.setTo(primitive.bounds[0], primitive.bounds[1], primitive.bounds[2]);
+			geometry.bounds.max.setTo(primitive.bounds[3], primitive.bounds[4], primitive.bounds[5]);
+		}
+		return geometry;
+	}
+
 	/** 校验数组、重算局部包围盒并递增版本；自动生成的法线同时失效。 */
 	public function invalidate():Void {
 		if (isDisposed)
@@ -81,43 +100,8 @@ class Geometry3D extends EventDispatcher {
 			throw "几何数据已经销毁";
 		if (normals != null)
 			return normals;
-		normals = [for (_ in positions) 0.];
+		normals = ModelGeometryTools.generateNormals(positions, indices);
 		generatedNormals = true;
-		for (triangle in 0...Std.int(indices.length / 3)) {
-			var a = indices[triangle * 3] * 3,
-				b = indices[triangle * 3 + 1] * 3,
-				c = indices[triangle * 3 + 2] * 3;
-			var ux = positions[b] - positions[a],
-				uy = positions[b + 1] - positions[a + 1],
-				uz = positions[b + 2] - positions[a + 2];
-			var vx = positions[c] - positions[a],
-				vy = positions[c + 1] - positions[a + 1],
-				vz = positions[c + 2] - positions[a + 2];
-			var x = uy * vz - uz * vy,
-				y = uz * vx - ux * vz,
-				z = ux * vy - uy * vx;
-			for (at in [a, b, c]) {
-				normals[at] += x;
-				normals[at + 1] += y;
-				normals[at + 2] += z;
-			}
-		}
-		for (vertex in 0...Std.int(normals.length / 3)) {
-			var i = vertex * 3,
-				x = normals[i],
-				y = normals[i + 1],
-				z = normals[i + 2],
-				length = Math.sqrt(x * x + y * y + z * z);
-			if (length > 1e-12) {
-				normals[i] /= length;
-				normals[i + 1] /= length;
-				normals[i + 2] /= length;
-			} else {
-				normals[i] = 0;
-				normals[i + 1] = 1;
-				normals[i + 2] = 0;
-			}
-		}
 		return normals;
 	}
 

@@ -12,6 +12,7 @@
 | [interactive-character](interactive-character/README.md) | 完整角色流程与资源生命周期 |
 | [long](long/README.md) | 恐龙模型交互展示 |
 | [multi-light-3d](multi-light-3d/README.md) | 多光源与镜头交互 |
+| [multi-scene-3d](multi-scene-3d/README.md) | 多个 Scene3D 按 3D → 2D → 透明背景 3D 叠放 |
 | [navigation-character](navigation-character/README.md) | 角色导航与寻路 |
 | [terrain-character](terrain-character/README.md) | 台阶与坡面角色运动 |
 | [textured-character](textured-character/README.md) | 贴图角色、动画过渡与骨骼挂点 |

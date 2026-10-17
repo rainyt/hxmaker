@@ -1,0 +1,13 @@
+<project>
+    <meta title="hxmaker 多场景叠放" package="samples.hxmaker.multiscene3d" version="1.0.0" />
+    <app main="Main" file="MultiScene3D" path="Export" />
+    <source path="Source" />
+    <haxelib name="hxmaker" />
+    <haxelib name="hxmaker-openfl" />
+    <haxelib name="openfl" />
+    <haxelib name="openfl-glsl" />
+    <haxelib name="vector-math" />
+    <haxelib name="actuate" />
+    <haxelib name="spine-haxe" />
+    <window width="1100" height="760" background="#172033" hardware="true" allow-high-dpi="true" />
+</project>

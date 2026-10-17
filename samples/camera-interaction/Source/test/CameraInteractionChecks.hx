@@ -1,13 +1,13 @@
 package test;
 
 #if hxmaker_camera_checks
-import hx.assets.GlbAsset;
+import hx.assets.ModelAsset;
 import hx.controls3d.FollowCameraController3D;
 import hx.controls3d.OrbitCameraController3D;
 import hx.controls3d.Scene3DInput;
-import hx.display.Camera3D;
-import hx.display.MeshObject;
-import hx.display.Node3D;
+import hx.display3d.Camera3D;
+import hx.display3d.MeshObject;
+import hx.display3d.Node3D;
 import hx.display.Quad;
 import hx.display.Scene3D;
 import hx.display.Stage;
@@ -25,7 +25,7 @@ import hx.render3d.Raycaster3D;
 /** 用户显式启用的数值与事件路由回归；不访问后端，不代替实际画面验收。 */
 class CameraInteractionChecks {
 	private static var checks:Int;
-	public static function run(source:GlbAsset):Void {
+	public static function run(source:ModelAsset):Void {
 		checks = 0; checkCamera(); checkQueries(source); checkInput();
 		trace("HXMAKER_CAMERA_INTERACTION_CHECKS PASS 检查数："+checks);
 	}
@@ -58,7 +58,7 @@ class CameraInteractionChecks {
 		} catch (error:Dynamic) { orbit.dispose(); other.dispose(); follow.dispose(); parent.dispose(); otherCamera.dispose(); target.dispose(); throw error; }
 		orbit.dispose(); other.dispose(); follow.dispose(); parent.dispose(); otherCamera.dispose(); target.dispose();
 	}
-	private static function checkQueries(source:GlbAsset):Void {
+	private static function checkQueries(source:ModelAsset):Void {
 		var stage = new Stage(), view = new Scene3D(200,100), camera = new Camera3D();
 		stage.addChild(view); view.root.addChild(camera); view.camera = camera; camera.near = 1; camera.far = 6;
 		camera.lookFrom(new Vector3D(0,0,5),new Vector3D());

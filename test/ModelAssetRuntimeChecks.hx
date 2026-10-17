@@ -1,5 +1,4 @@
 import hx.assets.ModelAsset;
-import hx.assets.GlbAsset;
 import hx.assets.Assets;
 import hx.events.Event;
 
@@ -59,18 +58,18 @@ class ModelAssetRuntimeChecks {
 			near(cpu.meshes[0].geometry.bounds.min.x, 3, "多权重蒙皮动态包围盒");
 		} catch (error:Dynamic) { cpu.dispose(); throw error; }
 		cpu.dispose();
-		// 原有模型入口和统一资产类型保持可赋值关系。
+		// 统一入口返回同一共享资产。
 		var compatibility = new Assets();
 		compatibility.objects.set("fixture", asset);
 		check(compatibility.getModel("fixture") == asset, "统一 Assets 取值入口");
 		trace("HXMAKER_MODEL_ASSET_RUNTIME_CHECKS PASS");
 	}
 
-	/** 可用于已加载且图片就绪的 GLB，检查兼容入口和独立实例。 */
-	public static function checkGlb(asset:GlbAsset):Void {
+	/** 可用于已加载且图片就绪的模型，检查统一取值和独立实例。 */
+	public static function checkLoadedModel(asset:ModelAsset):Void {
 		var assets = new Assets();
 		assets.objects.set("fixture", asset);
-		check(assets.getModel("fixture") == asset && assets.getGlb("fixture") == asset, "GLB 兼容取值");
+		check(assets.getModel("fixture") == asset, "统一模型取值");
 		var model = assets.getModel("fixture").createInstance();
 		model.dispose();
 	}

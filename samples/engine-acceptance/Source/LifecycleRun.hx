@@ -37,7 +37,7 @@ class LifecycleRun {
 		state = "加载"; loading = true; entered = MetricClock.now();
 		var owner = new Assets(); assets = owner; owner.tryLoadTimes = 0;
 		var dense = round%2 == 1, id = dense ? "robot-dense" : "robot";
-		assets.loadGlb("assets/"+id+".glb");
+		assets.loadModel("assets/"+id+".glb");
 		assets.onError(error -> {
 			if (!busy) { owner.stop(); owner.clean(); return; }
 			loading = false; errors.push(error.error); clean(); finish(false,"资源加载失败");
@@ -48,7 +48,7 @@ class LifecycleRun {
 			loading = false;
 			if (cancelled) { clean(); state = "等待延迟回收"; entered = MetricClock.now(); return; }
 			try {
-				var source = assets.getGlb(id);
+				var source = assets.getModel(id);
 				for (i in 0...source.textureCount) { var bitmap = source.getTexture(i); if (bitmaps.indexOf(bitmap)<0) bitmaps.push(bitmap); }
 				world = new AcceptanceWorld(assets,Cases.make("lifecycle","资源生命周期","actors",2,dense,true,true));
 				host.addChild(world.layer); entered = MetricClock.now(); state = "绘制";

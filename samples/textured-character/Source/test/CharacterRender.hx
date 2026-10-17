@@ -1,13 +1,13 @@
 package test;
 
 import hx.assets.Assets;
-import hx.assets.GlbAsset;
-import hx.display.Camera3D;
+import hx.assets.ModelAsset;
+import hx.display3d.Camera3D;
 import hx.display.Image;
 import hx.display.Label;
-import hx.display.MeshObject;
-import hx.display.Model3D;
-import hx.display.Node3D;
+import hx.display3d.MeshObject;
+import hx.display3d.Model3D;
+import hx.display3d.Node3D;
 import hx.display.Scene;
 import hx.display.Scene3D;
 import hx.events.AnimationEvent3D;
@@ -23,7 +23,7 @@ import hx.material.LambertTextureMaterial;
 /** 只使用 hxmaker API：Assets 加载、动画过渡、骨骼挂点和多纹理对照。 */
 class CharacterRender extends Scene {
 	private var assets:Assets;
-	private var source:GlbAsset;
+	private var source:ModelAsset;
 	private var view:Scene3D;
 	private var camera:Camera3D;
 	private var pivot:Node3D;
@@ -175,7 +175,7 @@ class CharacterRender extends Scene {
 		var request = new Assets(), version = ++loadVersion; assets = request; request.tryLoadTimes = 0;
 		status.color = 0xd7e3fc; status.data = "加载进度：0%";
 		detail.data = "通过 Assets 加载 robot.glb 及内嵌 PNG。";
-		request.loadGlb("assets/robot.glb");
+		request.loadModel("assets/robot.glb");
 		request.onProgress(value -> { if (!isDisposed && version == loadVersion) status.data = "加载进度：" + Math.round(value*100) + "%"; });
 		request.onError(error -> {
 			if (isDisposed || version != loadVersion) { request.clean(); return; }
@@ -185,7 +185,7 @@ class CharacterRender extends Scene {
 			// stop 不取消已发出的请求，迟到的结果仍需解除资源引用。
 			if (isDisposed || version != loadVersion) { request.clean(); return; }
 			try {
-				source = request.getGlb("robot");
+				source = request.getModel("robot");
 				#if hxmaker_character_checks
 				CharacterChecks.run(source);
 				AnimationSocketChecks.run(source);

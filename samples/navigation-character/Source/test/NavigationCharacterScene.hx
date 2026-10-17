@@ -11,10 +11,10 @@ import hx.collision3d.CollisionWorld3D;
 import hx.controls3d.CharacterController3D;
 import hx.controls3d.OrbitCameraController3D;
 import hx.controls3d.Scene3DInput;
-import hx.display.Camera3D;
+import hx.display3d.Camera3D;
 import hx.display.Label;
-import hx.display.MeshObject;
-import hx.display.Model3D;
+import hx.display3d.MeshObject;
+import hx.display3d.Model3D;
 import hx.display.Scene;
 import hx.display.Scene3D;
 import hx.display.Stage;
@@ -225,7 +225,7 @@ class NavigationCharacterScene extends Scene {
 		var request = new Assets();
 		assets = request;
 		request.tryLoadTimes = 0;
-		request.loadGlb("assets/robot.glb");
+		request.loadModel("assets/robot.glb");
 		request.onError(error -> {
 			request.stop();
 			request.clean();
@@ -240,7 +240,7 @@ class NavigationCharacterScene extends Scene {
 				return;
 			}
 			try {
-				var source = request.getGlb("robot");
+				var source = request.getModel("robot");
 				if (source == null || !source.texturesReady)
 					throw "GLB 或贴图未准备好";
 				model = source.createInstance(-1, {lightingEnabled: true});

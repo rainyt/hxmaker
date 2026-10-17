@@ -6,10 +6,10 @@ import haxe.io.Bytes;
 import hx.animation3d.AnimationClip3D;
 import hx.animation3d.AnimationPlayer3D;
 import hx.animation3d.AnimationPose3D;
-import hx.assets.GlbAsset;
-import hx.display.MeshObject;
-import hx.display.Model3D;
-import hx.display.Node3D;
+import hx.assets.ModelAsset;
+import hx.display3d.MeshObject;
+import hx.display3d.Model3D;
+import hx.display3d.Node3D;
 import hx.events.AnimationEvent3D;
 import hx.geom.Vector3D;
 import hx.geometry.BoxGeometry;
@@ -18,7 +18,7 @@ import hx.material.LambertTextureMaterial;
 /** 可选数值回归，由用户显式启用；不替代画面、合批和上下文恢复验收。 */
 class AnimationSocketChecks {
 	private static var checks:Int;
-	public static function run(source:GlbAsset):Void {
+	public static function run(source:ModelAsset):Void {
 		checks = 0; checkPlayer(); checkEvents(); checkModel(source); checkLookupAndZeroScale();
 		trace("HXMAKER_ANIMATION_SOCKET_CHECKS PASS 检查数：" + checks);
 	}
@@ -98,7 +98,7 @@ class AnimationSocketChecks {
 		} catch (error:Dynamic) { player.dispose(); throw error; }
 		player.dispose();
 	}
-	private static function checkModel(source:GlbAsset):Void {
+	private static function checkModel(source:ModelAsset):Void {
 		var a = source.createInstance(), b = source.createInstance(), group = new Node3D();
 		var geometry = BoxGeometry.create(0.1,0.5,0.1), material = new LambertTextureMaterial(source.getTexture(2));
 		var prop = new MeshObject(geometry,material), preserved = new Node3D();
@@ -132,7 +132,7 @@ class AnimationSocketChecks {
 		a.dispose(); b.dispose(); group.dispose(); prop.dispose(); preserved.dispose(); geometry.dispose(); material.dispose();
 	}
 	private static function checkLookupAndZeroScale():Void {
-		var model = GlbAsset.fromBytes(nodeFixture()).createInstance();
+		var model = ModelAsset.fromBytes(nodeFixture()).createInstance();
 		try {
 			expect(model.findNodes("same").length == 2,"同名节点不丢失");
 			expect(model.getNodeByIndex(-1) == null && model.getNodeByIndex(3) == null && model.getNodeByIndex(2) == null,"越界和非活动节点不可查询");

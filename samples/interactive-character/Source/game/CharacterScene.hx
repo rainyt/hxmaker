@@ -1,13 +1,13 @@
 package game;
 
 import app.GameContext;
-import hx.assets.GlbAsset;
+import hx.assets.ModelAsset;
 import hx.controls3d.FollowCameraController3D;
 import hx.controls3d.OrbitCameraController3D;
 import hx.controls3d.Scene3DInput;
-import hx.display.Camera3D;
+import hx.display3d.Camera3D;
 import hx.display.Label;
-import hx.display.MeshObject;
+import hx.display3d.MeshObject;
 import hx.display.Quad;
 import hx.display.Scene3D;
 import hx.display.Sprite;
@@ -29,7 +29,7 @@ class CharacterScene extends SampleScene {
 	public var elapsed(default, null):Float = 0;
 	public var hasRendered(get, never):Bool;
 	private var context:GameContext;
-	private var source:GlbAsset;
+	private var source:ModelAsset;
 	private var view:Scene3D;
 	private var actors:Array<CharacterActor> = [];
 	private var geometries:Array<Geometry3D> = [];
@@ -55,7 +55,7 @@ class CharacterScene extends SampleScene {
 	private var lastAction:String = "左键点击选择／移动，左键拖动转镜头，滚轮缩放。";
 	private var buttons:Array<{label:Label,caption:Void->String}> = [];
 	private function get_hasRendered():Bool { return view != null && view.stats.renderId > 0; }
-	public function new(context:GameContext, source:GlbAsset) {
+	public function new(context:GameContext, source:ModelAsset) {
 		super(); this.context = context; this.source = source; context.audit.worldsCreated++; context.audit.log("创建角色场景");
 	}
 	override public function onStageInit():Void {

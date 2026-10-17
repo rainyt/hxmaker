@@ -1,9 +1,9 @@
 package game;
 
-import hx.assets.GlbAsset;
-import hx.display.MeshObject;
-import hx.display.Model3D;
-import hx.display.Node3D;
+import hx.assets.ModelAsset;
+import hx.display3d.MeshObject;
+import hx.display3d.Model3D;
+import hx.display3d.Node3D;
 import hx.geom.Vector3D;
 import hx.geometry.Geometry3D;
 import hx.material.Material3D;
@@ -16,7 +16,7 @@ class CharacterActor {
 	private var attachment:MeshObject;
 	private var socket:Node3D;
 	private var fadeSeconds:Float;
-	public function new(source:GlbAsset, geometry:Geometry3D, material:Material3D, fadeSeconds:Float, index:Int) {
+	public function new(source:ModelAsset, geometry:Geometry3D, material:Material3D, fadeSeconds:Float, index:Int) {
 		this.fadeSeconds = fadeSeconds; model = source.createInstance(-1,{lightingEnabled:true}); model.name = "角色 "+(index+1);
 		try {
 			for (mesh in model.meshes) mesh.castShadow = true;

@@ -1,5 +1,7 @@
 # 基础碰撞与角色控制示例
 
+2026-10-17 接口更新：模型统一使用 `loadModel/getModel` 与 `ModelAsset`，三维节点 import 使用 `hx.display3d`；本次迁移尚未重新编译或测试。
+
 纯 hxmaker API，使用 Main : HxmakerApplication → Game : Stage → CollisionCharacterScene : Scene 的标准结构，通过 Assets 加载内嵌贴图 GLB。机器人复用 textured-character 的原创资源，已随示例提供。
 
 2026-10-17，用户反馈本阶段“测试通过”；未提供可选断言日志或独立性能报告。助手未自行编译或运行。后续公共代理、台阶与坡面扩展见 [terrain-character](../terrain-character/README.md)，该新增扩展及对本示例的回归仍等待用户验收。已有输入映射保持原样。

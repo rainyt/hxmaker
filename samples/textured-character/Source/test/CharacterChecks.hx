@@ -3,12 +3,12 @@ package test;
 #if hxmaker_character_checks
 import haxe.Json;
 import haxe.io.Bytes;
-import hx.assets.GlbAsset;
+import hx.assets.ModelAsset;
 
 /** 可选数值断言：检查图片解码、共享资源、独立实例和解析边界，不替代 GPU 验证。 */
 class CharacterChecks {
 	private static var checks:Int;
-	public static function run(source:GlbAsset):Void {
+	public static function run(source:ModelAsset):Void {
 		checks = 0;
 		expect(source.imageCount == 3 && source.textureCount == 3 && source.texturesReady,"三张内嵌图片已解码");
 		expect(source.meshCount == 16 && source.triangleCount == 192,"原创角色资源统计");
@@ -30,11 +30,11 @@ class CharacterChecks {
 			a.dispose(); expect(b.meshes[0].material.texture.data != null,"销毁一个实例保留共享贴图");
 		} catch (error:Dynamic) { a.dispose(); b.dispose(); throw error; }
 		a.dispose(); b.dispose();
-		var plain = GlbAsset.fromBytes(fixture());
+		var plain = ModelAsset.fromBytes(fixture());
 		expect(plain.imageCount == 1 && !plain.texturesReady,"同步解析不冒充已完成图片解码");
 		expectFailure(() -> plain.createInstance(),"尚未解码的 GLB 实例化应明确失败");
 		for (mode in ["imageBounds","imageUri","mime","signature","textureSource","sampler","wrap","filter","texCoord","transform","missingUV","normalTexture"])
-			expectFailure(() -> GlbAsset.fromBytes(fixture(mode)),"拒绝无效或未支持的纹理输入："+mode);
+			expectFailure(() -> ModelAsset.fromBytes(fixture(mode)),"拒绝无效或未支持的纹理输入："+mode);
 		trace("HXMAKER_CHARACTER_CHECKS PASS 检查数："+checks);
 	}
 	private static function expect(value:Bool,label:String):Void { if (!value) throw "角色检查失败："+label; checks++; }

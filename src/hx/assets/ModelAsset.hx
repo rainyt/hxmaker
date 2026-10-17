@@ -6,7 +6,7 @@ import hx.animation3d.AnimationPose3D;
 import hx.display.BitmapData;
 import hx.display3d.Model3D;
 import hx.display3d.Model3DOptions;
-import hx.formats.gltf.GlbImporter;
+import hx.formats.ModelImporter;
 import hx.model.ModelAssetData;
 import hx.model.ModelAssetData.ModelBuildStats;
 import hx.model.ModelAssetBuilder;
@@ -15,16 +15,16 @@ import hx.model.ModelSourceData;
 /** 共享的模型资产；持有已构建数据和借用位图，不持有场景实例及 GPU 句柄。 */
 class ModelAsset {
 	@:allow(hx.display3d.Model3D)
-	@:allow(hx.assets.ModelAssetFuture)
+	@:allow(hx.assets.ModelFuture)
 	private var data:ModelAssetData;
-	@:allow(hx.assets.ModelAssetFuture)
+	@:allow(hx.assets.ModelFuture)
 	private var images:Array<BitmapData> = [];
 	@:allow(hx.display3d.Model3D)
 	private var clips:Array<AnimationClip3D>;
 	@:allow(hx.display3d.Model3D)
 	private var restPose:AnimationPose3D;
 
-	/** 原导入格式标识，首版 GLB 入口返回 glb。 */
+	/** 原导入格式标识：glb 或 fbx。 */
 	public var sourceFormat(get, never):String;
 	/** 中立数据语义版本，与未来的文件容器版本分离。 */
 	public var dataVersion(get, never):Int;
@@ -49,7 +49,6 @@ class ModelAsset {
 	/** 全部动画片段名称的列表副本。 */
 	public var animationNames(get, never):Array<String>;
 
-	@:allow(hx.assets.GlbAsset)
 	private function new(data:ModelAssetData) {
 		this.data = data;
 		clips = [for (animation in data.animations) new AnimationClip3D(animation.name, animation.tracks)];
@@ -57,9 +56,9 @@ class ModelAsset {
 			[for (node in data.nodes) node.scale]);
 	}
 
-	/** 同步导入 GLB；图片尚未解码时不可实例化，业务加载优先使用 Assets.loadModel。 */
-	public static function fromGlb(bytes:Bytes):ModelAsset {
-		return new ModelAsset(GlbImporter.importBytes(bytes));
+	/** 按文件内容同步导入模型；图片尚未解码时不可实例化，业务加载优先使用 Assets.loadModel。 */
+	public static function fromBytes(bytes:Bytes):ModelAsset {
+		return new ModelAsset(ModelImporter.importBytes(bytes));
 	}
 
 	/** 新导入器接入点；复制输入并校验、构建派生数据，不是发布文件的快速读取器。 */

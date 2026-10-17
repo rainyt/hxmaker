@@ -1,6 +1,8 @@
 # GLB 模型加载示例
 
-通过 hxmaker 的 `Assets → GlbFuture → BytesFuture → RequestQueue` 加载模型，再使用 Scene3D 与 MeshObject 绘制。当前示例默认开启环境光、方向光与硬阴影，并提供不依赖模型加载的方块场景。示例没有自行请求网络，也不直接使用 OpenFL 模型加载器。
+2026-10-17 接口更新：模型统一使用 `loadModel/getModel` 与 `ModelAsset`，三维节点 import 使用 `hx.display3d`；本次迁移尚未重新编译或测试。
+
+通过 hxmaker 的 `Assets → ModelFuture → BytesFuture → RequestQueue` 加载模型，再使用 Scene3D 与 MeshObject 绘制。当前示例默认开启环境光、方向光与硬阴影，并提供不依赖模型加载的方块场景。示例没有自行请求网络，也不直接使用 OpenFL 模型加载器。
 
 ## 运行
 
@@ -42,10 +44,10 @@ arch -x86_64 lime test html5
 
 ```haxe
 var assets = new hx.assets.Assets();
-var model:hx.display.Model3D = null;
-assets.loadGlb("assets/model.glb");
+var model:hx.display3d.Model3D = null;
+assets.loadModel("assets/model.glb");
 assets.onComplete(_ -> {
-    var source = assets.getGlb("model");
+    var source = assets.getModel("model");
     model = source.createInstance();
     scene.root.addChild(model);
     if (model.animation.names.indexOf("Idle") >= 0) {
@@ -64,7 +66,7 @@ scene.addEventListener(hx.events.Event.UPDATE, _ -> {
 
 上面的接入片段保留默认无光照调用；若要像当前示例一样加入光照与阴影，应使用下述实例化选项，并按 [光照与阴影使用说明](../../docs/基础3D光照与阴影使用说明.md) 添加方向光、投射物和接收地面。
 
-`GlbAsset.createInstance(sceneIndex = -1, options = null)` 默认实例化文件指定的场景，返回继承 Node3D 的 Model3D。原调用默认仍为无光照；传入 `createInstance(-1, {lightingEnabled:true})` 则创建 Lambert 材质。可使用普通位置、旋转、缩放将其放入 Scene3D。多个实例的节点、材质、运行时几何和播放时间独立。
+`ModelAsset.createInstance(sceneIndex = -1, options = null)` 默认实例化文件指定的场景，返回继承 Node3D 的 Model3D。原调用默认仍为无光照；传入 `createInstance(-1, {lightingEnabled:true})` 则创建 Lambert 材质。可使用普通位置、旋转、缩放将其放入 Scene3D。多个实例的节点、材质、运行时几何和播放时间独立。
 
 `animation.play(name, loop)` 从片段起点播放；`pause()` 暂停，`resume()` 继续已有片段，`seek(seconds)` 按片段起点相对时间定位，`stop()` 清除当前片段并恢复文件默认姿态。动画只由 `model.update(dt)` 驱动，绘制不会额外推进逻辑；没有自动动画混合或多层播放。
 

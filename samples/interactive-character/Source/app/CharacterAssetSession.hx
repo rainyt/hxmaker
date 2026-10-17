@@ -1,11 +1,11 @@
 package app;
 
 import hx.assets.Assets;
-import hx.assets.GlbAsset;
+import hx.assets.ModelAsset;
 
 /** 一次 Assets 加载会话；释放后仍接收终态，以清理无法中止的在途结果。 */
 class CharacterAssetSession {
-	public var source(default, null):GlbAsset;
+	public var source(default, null):ModelAsset;
 	public var ready(default, null):Bool = false;
 	public var disposed(default, null):Bool = false;
 	public var progress(default, null):Float = 0;
@@ -22,13 +22,13 @@ class CharacterAssetSession {
 		var name = config.assetName, assets = new Assets(); request = assets; assets.tryLoadTimes = 0;
 		audit.loadsInFlight++; audit.log("Assets 开始加载："+config.assetPath);
 		try {
-			assets.loadGlb(config.assetPath);
+			assets.loadModel(config.assetPath);
 			assets.onProgress(value -> { if (!disposed) progress = value; });
 			assets.onComplete(_ -> {
 				settle();
 				if (disposed) { audit.lateResults++; assets.clean(); audit.log("清理已取消会话的迟到结果"); return; }
 				try {
-					source = assets.getGlb(name);
+					source = assets.getModel(name);
 					if (source == null || !source.texturesReady) throw "GLB 或内嵌贴图尚未准备完成";
 				} catch (error:Dynamic) { handleError(Std.string(error)); return; }
 				ready = true; progress = 1; audit.log("Assets 加载完成");

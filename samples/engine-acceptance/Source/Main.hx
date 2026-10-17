@@ -105,7 +105,7 @@ class Main extends openfl.display.Sprite {
 		var started=MetricClock.now(), before=RuntimeInfo.resources();
 		poolReferenceBaseline=before.references;
 		var owner = new Assets(); pool = owner; owner.tryLoadTimes = 0;
-		owner.loadGlb("assets/robot.glb"); owner.loadGlb("assets/robot-dense.glb");
+		owner.loadModel("assets/robot.glb"); owner.loadModel("assets/robot-dense.glb");
 		for (i in 0...20) owner.loadBitmapData("assets/"+AcceptanceWorld.tile(i)+".png");
 		owner.loadJson("assets/manifest.json");
 		owner.onProgress(value -> { state.data = "固定资源加载："+Math.round(value*100)+"%"; });

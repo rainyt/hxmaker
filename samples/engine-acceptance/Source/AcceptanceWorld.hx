@@ -1,13 +1,13 @@
 package;
 
 import hx.assets.Assets;
-import hx.assets.GlbAsset;
-import hx.display.Camera3D;
+import hx.assets.ModelAsset;
+import hx.display3d.Camera3D;
 import hx.display.DisplayObjectContainer;
 import hx.display.Image;
 import hx.display.Label;
-import hx.display.MeshObject;
-import hx.display.Model3D;
+import hx.display3d.MeshObject;
+import hx.display3d.Model3D;
 import hx.display.Quad;
 import hx.display.Scene3D;
 import hx.display.Scroll;
@@ -38,7 +38,7 @@ class AcceptanceWorld {
 	public function new(assets:Assets,spec:CaseSpec,diagnostic:Bool = false) {
 		this.assets = assets; configuration = spec; layer = new Sprite();
 		try {
-			var source = assets.getGlb(spec.dense ? "robot-dense" : "robot");
+			var source = assets.getModel(spec.dense ? "robot-dense" : "robot");
 			var before = new Image(source.getTexture(0)); before.width = before.height = 64; before.y = 435;
 			if (diagnostic) { probe = new SamplerProbe(source.getTexture(0)); layer.addChild(probe.prefix); }
 			layer.addChild(before); previews.push(before);
@@ -86,7 +86,7 @@ class AcceptanceWorld {
 		light.direction = new Vector3D(-1,-2,-1); light.shadowEnabled = spec.shadow; light.shadowMapSize = spec.shadowSize;
 		return scene;
 	}
-	private function addModels(scene:Scene3D,source:GlbAsset,count:Int):Void {
+	private function addModels(scene:Scene3D,source:ModelAsset,count:Int):Void {
 		var columns = Std.int(Math.ceil(Math.sqrt(count))), rows = Std.int(Math.ceil(count/columns));
 		for (i in 0...count) {
 			var model = source.createInstance(-1,{lightingEnabled:true}); models.push(model); scene.root.addChild(model);
@@ -137,7 +137,7 @@ class AcceptanceWorld {
 			lighting:[for (scene in scenes) {ambientColor:scene.ambientColor,ambientIntensity:scene.ambientIntensity,
 				color:scene.light.color,intensity:scene.light.intensity,shadowBias:scene.light.shadowBias,shadowSlopeBias:scene.light.shadowSlopeBias,
 				shadowPadding:scene.light.shadowPadding}],
-			sourceTriangles:assets.getGlb(configuration.dense ? "robot-dense" : "robot").triangleCount,
+			sourceTriangles:assets.getModel(configuration.dense ? "robot-dense" : "robot").triangleCount,
 			geometryNote:configuration.dense ? "所有网格双权重 CPU 蒙皮" : "躯干双权重，其余网格刚性优化"};
 	}
 	public function dispose():Void {

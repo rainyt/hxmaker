@@ -1,5 +1,7 @@
 # 角色导航与寻路
 
+2026-10-17 接口更新：模型统一使用 `loadModel/getModel` 与 `ModelAsset`，三维节点 import 使用 `hx.display3d`；本次迁移尚未重新编译或测试。
+
 标准 `Main → Game(Stage) → NavigationCharacterScene(Scene)` 示例。全部交互、3D 显示、加载与动画使用 hxmaker API；机器人沿用仓库生成的 GLB，通过 Assets 加载。
 
 ```bash

@@ -3,11 +3,11 @@ package;
 import hx.assets.Assets;
 import hx.core.Engine;
 import hx.core.Hxmaker;
-import hx.display.Camera3D;
+import hx.display3d.Camera3D;
 import hx.display.Label;
-import hx.display.MeshObject;
-import hx.display.Model3D;
-import hx.display.Node3D;
+import hx.display3d.MeshObject;
+import hx.display3d.Model3D;
+import hx.display3d.Node3D;
 import hx.display.Quad;
 import hx.display.Scene3D;
 import hx.events.Event;
@@ -120,8 +120,8 @@ class Main extends openfl.display.Sprite {
 		statusTime = 0; updateButtons();
 		assets = new Assets(); assets.tryLoadTimes = 0;
 		status.color = 0xd7e3fc; status.data = "加载进度：0%";
-		detail.data = "通过 Assets / GlbFuture / BytesFuture 加载 assets/model.glb";
-		assets.loadGlb("assets/model.glb");
+		detail.data = "通过 Assets / ModelFuture / BytesFuture 加载 assets/model.glb";
+		assets.loadModel("assets/model.glb");
 		assets.onProgress(value -> { status.data = "加载进度：" + Math.round(value*100) + "%"; });
 		assets.onError(error -> {
 			loading = false; status.color = 0xff9b91; status.data = "GLB 加载失败"; detail.data = error.error;
@@ -129,7 +129,7 @@ class Main extends openfl.display.Sprite {
 		});
 		assets.onComplete(_ -> {
 			try {
-				var asset = assets.getGlb("model");
+				var asset = assets.getModel("model");
 				#if hxmaker_glb_checks
 				GlbRegression.run(asset);
 				#end

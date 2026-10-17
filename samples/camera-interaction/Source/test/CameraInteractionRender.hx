@@ -4,10 +4,10 @@ import hx.assets.Assets;
 import hx.controls3d.FollowCameraController3D;
 import hx.controls3d.OrbitCameraController3D;
 import hx.controls3d.Scene3DInput;
-import hx.display.Camera3D;
+import hx.display3d.Camera3D;
 import hx.display.Label;
-import hx.display.MeshObject;
-import hx.display.Model3D;
+import hx.display3d.MeshObject;
+import hx.display3d.Model3D;
 import hx.display.Scene;
 import hx.display.Scene3D;
 import hx.display.Sprite;
@@ -213,7 +213,7 @@ class CameraInteractionRender extends Scene {
 		input.cancel("reload"); sideInput.cancel("reload"); clearModels();
 		if (assets != null) { assets.stop(); assets.clean(); }
 		var request = new Assets(); assets = request; request.tryLoadTimes = 0; status.color = 0xd7e3fc; status.data = "通过 Assets 加载角色……";
-		request.loadGlb("assets/robot.glb");
+		request.loadModel("assets/robot.glb");
 		request.onError(error -> {
 			request.stop(); request.clean(); if (isDisposed || version != loadVersion) return;
 			loading = false; status.color = 0xff9b91; status.data = "加载失败："+error.error;
@@ -221,7 +221,7 @@ class CameraInteractionRender extends Scene {
 		request.onComplete(_ -> {
 			if (isDisposed || version != loadVersion) { request.clean(); return; }
 			try {
-				var source = request.getGlb("robot");
+				var source = request.getModel("robot");
 				#if hxmaker_camera_checks
 				CameraInteractionChecks.run(source);
 				#end

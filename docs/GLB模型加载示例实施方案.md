@@ -1,5 +1,7 @@
 # GLB 模型加载示例实施方案
 
+2026-10-17：文中公开接口名称已更新为统一模型 API，历史评估及验证结论仍对应当时版本。
+
 后续进展：首版加载器、模型实例、蒙皮动画与独立示例已加入，用户已反馈能看到恐龙模型。接口、限制和未完成的验证见 [示例使用说明](../samples/glb-model/README.md)。下文保留实现前的评估记录。
 
 ## 评估结论
@@ -39,10 +41,10 @@
 
 | 类型或入口 | 职责 |
 | --- | --- |
-| `hx.assets.GlbFuture` | 组合 BytesFuture，解析失败通过 FutureErrorEvent 返回，完成值为 GlbAsset |
-| `Assets.loadGlb(path)` | 路径处理后加入现有 Assets 队列 |
-| `Assets.getGlb(name)` | 从现有 objects 容器读取并做类型检查 |
-| `hx.assets.GlbAsset` | 保存解析后的共享源数据，提供 createInstance()；不保存场景实例的播放进度 |
+| `hx.assets.ModelFuture` | 组合 BytesFuture，解析失败通过 FutureErrorEvent 返回，完成值为 ModelAsset |
+| `Assets.loadModel(path)` | 路径处理后加入现有 Assets 队列 |
+| `Assets.getModel(name)` | 从现有 objects 容器读取并做类型检查 |
+| `hx.assets.ModelAsset` | 保存解析后的共享源数据，提供 createInstance()；不保存场景实例的播放进度 |
 | `hx.formats.gltf.GlbParser` | GLB 块、glTF 索引、bufferView / accessor 解析与校验，不依赖 OpenFL |
 | `hx.display3d.Model3D` | 继承 Node3D，包含模型节点、网格实例、包围盒与实例释放逻辑 |
 | `hx.animation3d.AnimationPlayer3D` | 播放、暂停、循环、时间采样与骨骼更新 |
@@ -51,23 +53,23 @@
 数据流：
 
 ```text
-Assets.loadGlb
-  → GlbFuture
+Assets.loadModel
+  → ModelFuture
   → BytesFuture → 现有 RequestQueue
-  → GlbParser → GlbAsset
+  → GlbParser → ModelAsset
   → createInstance() → Model3D / Node3D / MeshObject
   → Scene3D → 现有批处理与多纹理渲染器
 ```
 
-复用现有队列、请求去重、路径规则和错误回调；不在示例里另写 fetch、URLLoader 或同步文件加载。GlbFuture 将 BytesFuture 的 AssetObject 作为依赖追踪；解析模型不冒充同 URL 的二进制缓存。下载完成和解析完成分别处理，只在模型可实例化时完成外层 Future。
+复用现有队列、请求去重、路径规则和错误回调；不在示例里另写 fetch、URLLoader 或同步文件加载。ModelFuture 将 BytesFuture 的 AssetObject 作为依赖追踪；解析模型不冒充同 URL 的二进制缓存。下载完成和解析完成分别处理，只在模型可实例化时完成外层 Future。
 
 拟定用法：
 
 ```haxe
 var assets = new Assets();
-assets.loadGlb("assets/model.glb");
+assets.loadModel("assets/model.glb");
 assets.onComplete(_ -> {
-    var model = assets.getGlb("model").createInstance();
+    var model = assets.getModel("model").createInstance();
     scene.root.addChild(model);
     model.animation.play("Idle", true);
     scene.addEventListener(Event.UPDATE, _ -> model.update(Hxmaker.engine.dt));

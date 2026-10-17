@@ -4,9 +4,9 @@ package;
 import haxe.Json;
 import haxe.io.Bytes;
 import haxe.io.BytesBuffer;
-import hx.assets.GlbAsset;
+import hx.assets.ModelAsset;
 import hx.geometry.Geometry3D;
-import hx.display.MeshObject;
+import hx.display3d.MeshObject;
 import hx.material.UnlitTextureMaterial;
 import hx.render3d.Math3D;
 import hx.geom.Vector3D;
@@ -14,7 +14,7 @@ import hx.geom.Vector3D;
 /** 可选回归入口；使用解析式期望值验证蒙皮空间，不依赖画面是否相似。 */
 class GlbRegression {
 	private static var checks:Int;
-	public static function run(asset:GlbAsset):Void {
+	public static function run(asset:ModelAsset):Void {
 		checks = 0;
 		checkLightingMath();
 		expect(asset.nodeCount == 105 && asset.meshCount == 85 && asset.triangleCount == 1330, "输入资产统计");
@@ -37,7 +37,7 @@ class GlbRegression {
 		var lit = asset.createInstance(-1, {lightingEnabled:true});
 		expect(lit.meshes[0].material.lightingEnabled && lit.meshes[0].geometry.normals != null, "GLB 光照实例使用材质与文件法线"); lit.dispose();
 
-		var synthetic = GlbAsset.fromBytes(fixture()).createInstance();
+		var synthetic = ModelAsset.fromBytes(fixture()).createInstance();
 		try {
 			var mesh = synthetic.meshes[0];
 			near(mesh.geometry.positions[0], 1, "两关节各半权重的初始蒙皮");
@@ -54,22 +54,22 @@ class GlbRegression {
 		} catch (error:Dynamic) { synthetic.dispose(); throw error; }
 		synthetic.dispose();
 
-		var rigid = GlbAsset.fromBytes(fixture("rigid")).createInstance();
+		var rigid = ModelAsset.fromBytes(fixture("rigid")).createInstance();
 		try {
 			near(rigid.meshes[0].geometry.positions[0], 0, "刚性路径保留源顶点");
 			near(rigid.meshes[0].getWorldVertices()[0], 2, "刚性路径使用关节矩阵");
 		} catch (error:Dynamic) { rigid.dispose(); throw error; }
 		rigid.dispose();
-		var strided = GlbAsset.fromBytes(fixture("stride")).createInstance();
+		var strided = ModelAsset.fromBytes(fixture("stride")).createInstance();
 		near(strided.meshes[0].geometry.positions[3], 2, "交错数据按 byteStride 解码"); strided.dispose();
-		var step = GlbAsset.fromBytes(fixture("step")).createInstance();
+		var step = ModelAsset.fromBytes(fixture("step")).createInstance();
 		step.animation.play("测试", false); step.animation.seek(0.5);
 		near(step.meshes[0].geometry.positions[0], 1, "STEP 在下一关键帧之前保持前值");
 		step.animation.seek(1); near(step.meshes[0].geometry.positions[0], 2, "STEP 到达关键帧时切换值"); step.dispose();
-		var inverse = GlbAsset.fromBytes(fixture("inverse")).createInstance();
+		var inverse = ModelAsset.fromBytes(fixture("inverse")).createInstance();
 		near(inverse.meshes[0].geometry.positions[0], 0, "先应用逆绑定矩阵再应用关节变换"); inverse.dispose();
 		for (mode in ["bounds", "cycle", "sparse", "extension", "interpolation", "weights", "version"])
-			expectFailure(function() { GlbAsset.fromBytes(fixture(mode)); }, "拒绝无效或未支持数据：" + mode);
+			expectFailure(function() { ModelAsset.fromBytes(fixture(mode)); }, "拒绝无效或未支持数据：" + mode);
 		trace("HXMAKER_GLB_CHECKS PASS 检查数：" + checks);
 	}
 	/** 解析式期望值覆盖逆转置、镜像、几何法线失效与正交深度方向。 */

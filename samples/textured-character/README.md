@@ -1,6 +1,8 @@
 # 贴图动画角色示例
 
-通过 hxmaker 的 `Assets.loadGlb` 加载完整角色 GLB，文件内包含图片、UV、材质、骨架、权重与动画。默认显示三个共用源贴图、分别播放动画的机器人，并开启环境光、方向光与硬阴影。本轮新增动画平滑过渡、播放事件和左右手骨骼挂件。
+2026-10-17 接口更新：模型统一使用 `loadModel/getModel` 与 `ModelAsset`，三维节点 import 使用 `hx.display3d`；本次迁移尚未重新编译或测试。
+
+通过 hxmaker 的 `Assets.loadModel` 加载完整角色 GLB，文件内包含图片、UV、材质、骨架、权重与动画。默认显示三个共用源贴图、分别播放动画的机器人，并开启环境光、方向光与硬阴影。本轮新增动画平滑过渡、播放事件和左右手骨骼挂件。
 
 当前状态：贴图动画、动画过渡、骨骼挂点及纯 hxmaker API 示例结构已收到用户“测试通过”的反馈；未提供可选断言日志，不据此认定所有数值回归与平台通过。已有性能数据见[引擎验收与性能基线示例](../engine-acceptance/README.md)，本轮相机扩展单独验收。
 
@@ -84,9 +86,9 @@ python3 SourceAssets/generate_assets.py
 
 ```haxe
 var assets = new hx.assets.Assets();
-assets.loadGlb("assets/robot.glb");
+assets.loadModel("assets/robot.glb");
 assets.onComplete(_ -> {
-    var source = assets.getGlb("robot");
+    var source = assets.getModel("robot");
     var model = source.createInstance(-1, {lightingEnabled:true});
     scene.root.addChild(model);
     model.animation.play("Walk", true);
@@ -96,13 +98,13 @@ assets.onError(error -> trace(error.toString()));
 assets.start();
 ```
 
-实际链路：`Assets → GlbFuture → BytesFuture / RequestQueue → GLB 结构解析 → BitmapDataBytesFuture / RequestQueue → 图片解码 → 加载完成`。图片字节直接交给后端解码，不创建临时 URL，不发起第二次网络请求。
+实际链路：`Assets → ModelFuture → BytesFuture / RequestQueue → GLB 结构解析 → BitmapDataBytesFuture / RequestQueue → 图片解码 → 加载完成`。图片字节直接交给后端解码，不创建临时 URL，不发起第二次网络请求。
 
 图片按 SHA-256 内容摘要建立缓存键，重复图片复用解码结果，Future 子资产保留与释放相应引用。图片出错时释放本次已取得的二进制和图片引用，错误经原有 Assets.onError 返回。关闭 RequestQueue 缓存时，图片由共享的本地子资产管理，最后一个引用释放时销毁。
 
-`GlbAsset.imageCount / textureCount / texturesReady` 描述图片状态，`getTexture(index)` 取得借用的共享位图，可用于预览，不应自行 dispose。多个 Model3D 实例共享源贴图，销毁实例不销毁源图。使用完必须先销毁所有模型和预览，再 `assets.clean()`；不要在模型仍绘制时释放 Assets。启用缓存时，底层图片按 RequestQueue 的既有延迟释放机制清理。
+`ModelAsset.imageCount / textureCount / texturesReady` 描述图片状态，`getTexture(index)` 取得借用的共享位图，可用于预览，不应自行 dispose。多个 Model3D 实例共享源贴图，销毁实例不销毁源图。使用完必须先销毁所有模型和预览，再 `assets.clean()`；不要在模型仍绘制时释放 Assets。启用缓存时，底层图片按 RequestQueue 的既有延迟释放机制清理。
 
-`GlbAsset.fromBytes` 仍是同步的纯解析入口；含图片的文件不能在图片解码前 createInstance。业务应通过 `Assets.loadGlb` 加载。Assets 的总进度按资源项完成计算，单个 GLB 完成意味着其所有内嵌图片也已完成，不是下载字节百分比。
+`ModelAsset.fromBytes` 仍是同步的纯解析入口；含图片的文件不能在图片解码前 createInstance。业务应通过 `Assets.loadModel` 加载。Assets 的总进度按资源项完成计算，单个 GLB 完成意味着其所有内嵌图片也已完成，不是下载字节百分比。
 
 ## 当前贴图边界
 

@@ -1,5 +1,7 @@
 # 台阶与坡面验收示例
 
+2026-10-17 接口更新：模型统一使用 `loadModel/getModel` 与 `ModelAsset`，三维节点 import 使用 `hx.display3d`；本次迁移尚未重新编译或测试。
+
 使用纯 hxmaker API，结构为 Main : HxmakerApplication → Game : Stage → TerrainCharacterScene : Scene。通过 Assets 加载随示例提供的原创带贴图机器人。
 
 2026-10-17：上一阶段箱体碰撞已收到用户测试通过反馈。本示例和新增核心扩展尚未编译或运行，等待用户测试。

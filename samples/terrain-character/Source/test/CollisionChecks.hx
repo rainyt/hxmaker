@@ -4,7 +4,7 @@ package test;
 import hx.collision3d.BoxCollider3D;
 import hx.collision3d.CollisionWorld3D;
 import hx.controls3d.CharacterController3D;
-import hx.display.Node3D;
+import hx.display3d.Node3D;
 import hx.geom.Ray3D;
 import hx.geom.Vector3D;
 

@@ -24,7 +24,7 @@ arch -x86_64 lime test html5 -D hxmaker_baseline_label=before-optimization
 
 标签会写入报告；应自行记录对应提交、未提交修改和设备型号。依赖版本号取自实际构建定义，开发版库的版本号不能代替提交标记。
 
-不要叠加 `hxmaker_3d_profile`、`hxmaker_3d_regression` 或浏览器性能录制来建立此处的普通基线，额外探针与日志会改变测量成本。
+不要叠加 `hxmaker_3d_regression` 或浏览器性能录制来建立此处的普通基线，额外探针与录制会改变测量成本。
 
 ## 建议操作顺序
 
@@ -91,7 +91,7 @@ arch -x86_64 lime test html5 -D hxmaker_baseline_label=before-optimization
 
 状态细分之和为 `stateCpuMs`。按需纹理快照会发生于主通道内部，细分与 `mainCpuMs` 存在重叠，不能把它们再次相加作为整帧耗时。旧报告的状态总计时口径不同，跨版本优先比较完整 `renderCpuMs`。查询数量仅覆盖保护器显式查询，不包含初始化能力查询、OpenFL 内部调用或诊断探针。
 
-## GL 状态优化对照
+## GL 状态保护与回退诊断
 
 默认路径按实际修改范围保存状态。静态纹理复用时不遍历三维网格，只保护合成所需状态；首次使用某个纹理槽时保存其绑定。HTML5 优先使用 WebGL 2 VAO 或 WebGL 1 的 `OES_vertex_array_object`，主通道、阴影、合成各自独立。无 VAO 时恢复逐属性保护，原生平台本轮仍使用该兼容路径。目标创建、首次上传、异常退出与共享采样恢复继续受到保护。
 
@@ -101,13 +101,7 @@ arch -x86_64 lime test html5 -D hxmaker_baseline_label=before-optimization
 arch -x86_64 lime test html5 -D hxmaker_baseline_label=gl-state-optimized
 ```
 
-同一份源码可关闭本轮状态保护优化，进行同环境对照：
-
-```bash
-arch -x86_64 lime test html5 -D hxmaker_3d_legacy_state_guard -D hxmaker_baseline_label=gl-state-legacy
-```
-
-此兼容开关关闭轻量保护、VAO 与按需纹理槽保存；缓存时跳过网格遍历的改进仍保留，因此不是逐字还原旧版本。独立使用 `-D hxmaker_3d_no_vao` 可验证无 VAO 的回退路径。已有 `hxmaker_3d_full_state_queries` 仅控制共享纹理采样参数的完整查询，不等同于上述兼容开关。所用开关写入报告 `environment.stateGuard`，实际 VAO 使用情况以采样结果为准。
+早期旧状态保护对照开关已移除。独立使用 `-D hxmaker_3d_no_vao` 可验证无 VAO 的逐属性回退路径；`-D hxmaker_3d_full_state_queries` 用于外部原始 GL 代码直接修改共享纹理采样参数时的完整查询兼容路径。报告 `environment.stateGuard` 保留 `disableVao` 和 `fullSamplerQueries`，不再生成 `legacy` 字段；历史基线原文继续保留。实际 VAO 使用情况以采样结果为准。
 
 优先比较 empty、static-cached、two-views 的查询次数与 CPU 均值/P95，并确认 multi/single 主 DrawCall 与原负载相符。随后独立运行“采样状态诊断”，覆盖最近点和线性过滤，检查嵌套遮罩、二维贴图、阴影和双视口画面。再执行资源循环及上下文恢复诊断，确认新增 VAO 的销毁与重建。比较过程中保持窗口、DPR、负载和浏览器条件一致，重复运行并交叉顺序；性能探针不与浏览器录制叠加。
 

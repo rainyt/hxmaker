@@ -13,4 +13,6 @@
 
 验收数据继续保存在[三维验收基线](../../../samples/3d/engine-acceptance/Baselines/README.md)和[二维上下文恢复基线](../../../samples/2d/context-recovery/Baselines/README.md)，数值检查、浏览器验证脚本、资源生成器与示例资源继续保留。
 
-本次清理只移除了可重新生成的 `samples/2d/*/Export/`、`samples/3d/*/Export/`、根目录 `bin/` 与 `api_docs/`，并移除空的二维预留目录；没有修改引擎及诊断代码，也没有新增验证结论。模型 API 迁移、多光源与部分特效组合原有的待验证状态继续保留。
+第一批清理只移除了可重新生成的 `samples/2d/*/Export/`、`samples/3d/*/Export/`、根目录 `bin/` 与 `api_docs/`，并移除空的二维预留目录；该批没有修改引擎及诊断代码，也没有新增验证结论。模型 API 迁移、多光源与部分特效组合原有的待验证状态继续保留。
+
+后续后端精简：移除 `hxmaker_3d_profile` 的早期日志采样与 `hxmaker_3d_legacy_state_guard` 的旧路径对照分支，同步移除新报告的 `environment.stateGuard.legacy` 字段。现有场景性能统计、VAO 能力探测及逐属性回退、完整采样查询兼容路径继续保留；历史记录中的旧构建参数仅用于追溯。本轮同样未执行编译或测试。

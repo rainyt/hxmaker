@@ -26,12 +26,11 @@ arch -x86_64 lime test html5
 
 ## 渲染诊断
 
+性能统计通过 `scene.profilingEnabled` 与 `scene.stats` 获取；固定负载采样及报告导出见[引擎验收示例](../engine-acceptance/README.md)。早期编译宏日志采样已移除。
+
 仅在需要验证时启用以下参数（可用 build 复用已有服务器，或用 test 启动）：
 
 ```bash
-# 完整三维回调计时，预热 120 次后每 240 次输出一组
-arch -x86_64 lime test html5 -D hxmaker_3d_profile
-
 # 共享纹理采样状态断言、自定义 uniform 红绿黑对照及上下文恢复按钮
 arch -x86_64 lime test html5 -D hxmaker_3d_regression
 

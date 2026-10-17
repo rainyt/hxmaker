@@ -13,7 +13,7 @@ class DirectionalLight3D extends Node3D {
 	/** 非负有限光照强度，默认 1。 */
 	public var intensity:Float = 1;
 
-	/** 是否请求硬阴影，默认关闭，实际支持结果见场景统计。 */
+	/** 是否请求阴影，默认关闭，实际支持结果见场景统计。 */
 	public var shadowEnabled:Bool = false;
 
 	/** 阴影贴图边长，默认 1024，允许 16 至 8192 的二次幂。 */
@@ -30,6 +30,21 @@ class DirectionalLight3D extends Node3D {
 
 	/** 可选世界空间范围；为空时自动适配投射物与接收深度。 */
 	public var shadowBounds:Bounds3D;
+
+	/** 默认硬阴影；可切换为四次比较的 PCF4。 */
+	public var shadowFilter:ShadowFilter3D = ShadowFilter3D.HARD;
+
+	/** 默认自动检测投影内容变化；关闭后调用 requestShadowUpdate 更新。 */
+	public var shadowAutoUpdate:Bool = true;
+
+	/** 手动更新请求版本，供后端检测；请求同时使场景失效。 */
+	public var shadowUpdateVersion(default, null):Int = 0;
+
+	/** 首次启用及目标重建始终生成阴影；其余手动更新通过此方法请求。 */
+	public function requestShadowUpdate():Void {
+		shadowUpdateVersion++;
+		invalidate();
+	}
 
 	private var __direction:Vector3D = new Vector3D(-1, -2, -1);
 
@@ -88,6 +103,8 @@ class DirectionalLight3D extends Node3D {
 				if (!Math3D.finite(value))
 					throw "阴影范围必须是有限值";
 		}
+		if (shadowFilter != ShadowFilter3D.HARD && shadowFilter != ShadowFilter3D.PCF4)
+			throw "阴影过滤模式无效";
 		var d = getWorldDirection();
 		var values:Array<Dynamic> = [
 			color,
@@ -97,6 +114,9 @@ class DirectionalLight3D extends Node3D {
 			d.y,
 			d.z,
 			shadowEnabled,
+			shadowFilter,
+			shadowAutoUpdate,
+			shadowUpdateVersion,
 			shadowMapSize,
 			shadowBias,
 			shadowSlopeBias,

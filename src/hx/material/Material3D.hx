@@ -399,6 +399,7 @@ class Material3D extends EventDispatcher {
 				"uLightDirection",
 				"uLightViewProjection",
 				"uShadowMap",
+				"uShadowTexelSize",
 				"uReceiveShadow",
 				"uShadowBias",
 				"uShadowSlopeBias"

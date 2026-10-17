@@ -94,6 +94,9 @@ class Scene3DStats {
 	/** 三维离屏目标估算显存字节数。 */
 	public var targetBytes:Int = 0;
 
+	/** 最近一次场景重绘是否复用已有阴影贴图。 */
+	public var shadowCacheHit:Bool = false;
+
 	/** 最近一次阴影通道实际绘制批次数。 */
 	public var shadowDrawCalls:Int = 0;
 
@@ -125,7 +128,7 @@ class Scene3DStats {
 		softParticleStatus = "关闭";
 		drawCalls = triangles = visibleMeshes = culledMeshes = uploadedBytes = textureSlots = compositeDrawCalls = 0;
 		shadowDrawCalls = shadowTriangles = shadowUploadedBytes = shadowMapBytes = shadowMapSize = 0;
-		shadowStatus = "关闭";
+		shadowStatus = "关闭"; shadowCacheHit = false;
 		splitReasons.clear();
 	}
 

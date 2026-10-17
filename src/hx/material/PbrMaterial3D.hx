@@ -3,8 +3,80 @@ package hx.material;
 import hx.display.BitmapData;
 import hx.render3d.Math3D;
 
-/** 金属度／粗糙度工作流材质；提供 GGX 直接光照和可选场景 IBL，不包含法线贴图。 */
+/** 金属度／粗糙度工作流材质，支持 PBR 贴图、GGX 直接光照和可选场景 IBL。 */
 class PbrMaterial3D extends Material3D {
+	private var __metallicRoughnessTexture:BitmapData;
+	private var __normalTexture:BitmapData;
+	private var __occlusionTexture:BitmapData;
+	private var __emissiveTexture:BitmapData;
+	private var __normalScale:Float = 1;
+	private var __occlusionStrength:Float = 1;
+
+	/** 线性数据贴图，G 为粗糙度，B 为金属度，与对应因子相乘。 */
+	public var metallicRoughnessTexture(get, set):BitmapData;
+	private function get_metallicRoughnessTexture():BitmapData { return __metallicRoughnessTexture; }
+	private function set_metallicRoughnessTexture(value:BitmapData):BitmapData {
+		ensureMutable(); __metallicRoughnessTexture = value; bindMap("metallicRoughness", value); return value;
+	}
+	/** 切线空间法线，按线性 RGB 解码为 XYZ，采用 glTF 的 +Y 约定。 */
+	public var normalTexture(get, set):BitmapData;
+	private function get_normalTexture():BitmapData { return __normalTexture; }
+	private function set_normalTexture(value:BitmapData):BitmapData {
+		ensureMutable(); __normalTexture = value; bindMap("normal", value); return value;
+	}
+	/** 线性 R 通道环境遮蔽，只衰减间接光。 */
+	public var occlusionTexture(get, set):BitmapData;
+	private function get_occlusionTexture():BitmapData { return __occlusionTexture; }
+	private function set_occlusionTexture(value:BitmapData):BitmapData {
+		ensureMutable(); __occlusionTexture = value; bindMap("occlusion", value); return value;
+	}
+	/** sRGB 自发光 RGB，与 emissive 线性因子相乘，不影响不透明度。 */
+	public var emissiveTexture(get, set):BitmapData;
+	private function get_emissiveTexture():BitmapData { return __emissiveTexture; }
+	private function set_emissiveTexture(value:BitmapData):BitmapData {
+		ensureMutable(); __emissiveTexture = value; bindMap("emissive", value); return value;
+	}
+	/** 法线贴图 XY 系数，默认 1，允许有限负值以配合特殊资产。 */
+	public var normalScale(get, set):Float;
+	private function get_normalScale():Float { return __normalScale; }
+	private function set_normalScale(value:Float):Float {
+		if (!Math3D.finite(value)) throw "法线贴图系数必须为有限值";
+		ensureMutable(); __normalScale = value; setUniform("uPbrNormalScale", [value]); return value;
+	}
+	/** AO 强度，范围 0～1，0 表示不遮蔽间接光。 */
+	public var occlusionStrength(get, set):Float;
+	private function get_occlusionStrength():Float { return __occlusionStrength; }
+	private function set_occlusionStrength(value:Float):Float {
+		unit(value, "AO 强度");
+		ensureMutable(); __occlusionStrength = value; setUniform("uPbrOcclusionStrength", [value]); return value;
+	}
+
+	/** 每张贴图独立配置采样；名称为 metallicRoughness、normal、occlusion 或 emissive。 */
+	public function setMapSampler(map:String, smoothing:Bool = true, minSmoothing:Bool = true,
+		wrapU:TextureWrap3D = TextureWrap3D.CLAMP, wrapV:TextureWrap3D = TextureWrap3D.CLAMP):Void {
+		ensureMutable();
+		if ([33071, 10497, 33648].indexOf(wrapU) < 0 || [33071, 10497, 33648].indexOf(wrapV) < 0)
+			throw "PBR 贴图包裹模式无效";
+		setUniform(mapName(map) + "Sampler", [smoothing ? 1. : 0., minSmoothing ? 1. : 0., wrapU, wrapV]);
+	}
+	private function bindMap(map:String, bitmap:BitmapData):Void {
+		var name = mapName(map);
+		if (bitmap == null) removeTextureUniform(name); else setTextureUniform(name, bitmap);
+	}
+	private static function mapName(map:String):String {
+		return switch (map) {
+			case "metallicRoughness": "uPbrMetallicRoughnessMap";
+			case "normal": "uPbrNormalMap";
+			case "occlusion": "uPbrOcclusionMap";
+			case "emissive": "uPbrEmissiveMap";
+			default: throw "PBR 贴图类型无效：" + map;
+		};
+	}
+	override private function get_pbrMapMask():Int {
+		return (__metallicRoughnessTexture == null ? 0 : 1) | (__normalTexture == null ? 0 : 2)
+			| (__occlusionTexture == null ? 0 : 4) | (__emissiveTexture == null ? 0 : 8);
+	}
+
 	private var __metallic:Float = 0;
 	private var __roughness:Float = 0.5;
 	private var __emissive:Array<Float> = [0., 0., 0.];
@@ -92,6 +164,14 @@ class PbrMaterial3D extends Material3D {
 		emissive = __emissive;
 		exposure = __exposure;
 		toneMapping = __toneMapping;
+		normalScale = __normalScale;
+		occlusionStrength = __occlusionStrength;
+		for (map in ["metallicRoughness", "normal", "occlusion", "emissive"]) setMapSampler(map);
+	}
+
+	override public function dispose():Void {
+		super.dispose();
+		__metallicRoughnessTexture = __normalTexture = __occlusionTexture = __emissiveTexture = null;
 	}
 
 	private function ensureMutable():Void {

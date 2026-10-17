@@ -1,6 +1,8 @@
 package;
 
 import hx.display.FPS;
+import hx.display.BitmapData;
+import hx.display3d.Model3D;
 import hx.assets.Assets;
 import hx.light.Environment3D;
 import hx.layout.AnchorLayoutData;
@@ -36,6 +38,15 @@ class GameStage extends hx.display.Stage {
 	private var environment:Environment3D;
 	private var environmentAssets:Assets;
 	private var environmentControl:Label;
+	private var texturedModel:Model3D;
+	private var modelAssets:Assets;
+	private var modelControl:Label;
+	private var texturedMode:Bool = false;
+	private var unifiedPbr:Bool = false;
+	private var pbrMeshes:Array<MeshObject> = [];
+	private var mapControls:Array<Label> = [];
+	private var mapsEnabled:Array<Bool> = [true, true, true, true];
+	private var mappedMaterials:Array<{material:PbrMaterial3D, mr:BitmapData, normal:BitmapData, ao:BitmapData, emission:BitmapData, emissiveFactor:Array<Float>}> = [];
 	private var autoOrbit:Bool = true;
 	private var geometries:Array<Geometry3D> = [];
 	private var materials:Array<Material3D> = [];
@@ -49,9 +60,9 @@ class GameStage extends hx.display.Stage {
 		fps.layoutData = new AnchorLayoutData(null, 0);
 		topView.layout = new AnchorLayout();
 
-		scene = new Scene3D(912, 410);
+		scene = new Scene3D(912, 370);
 		scene.x = 24;
-		scene.y = 165;
+		scene.y = 205;
 		scene.backgroundColor = 0x172033;
 		scene.backgroundAlpha = 1;
 		scene.ambientIntensity = 0.3;
@@ -99,6 +110,7 @@ class GameStage extends hx.display.Stage {
 				var mesh = new MeshObject(sphere, material);
 				mesh.setPosition((column - 2) * 1.65, 0.7, (row - 1) * 2.1);
 				mesh.castShadow = true;
+				if (row > 0) pbrMeshes.push(mesh);
 				scene.root.addChild(mesh);
 			}
 		var floorGeometry = PlaneGeometry.create(11, 9);
@@ -152,6 +164,15 @@ class GameStage extends hx.display.Stage {
 			environment.enabled = true; environment.intensity = 1; environment.rotation = 0;
 			updateEnvironmentControl();
 		}, 128);
+		modelControl = cameraAction("贴图示例：加载中", 24, function() { showTexturedModel(!texturedMode); }, 168);
+		var mapTitles = ["金属粗糙", "法线", "AO", "自发光"];
+		for (i in 0...4) {
+			var index = i;
+			mapControls.push(cameraAction(mapTitles[i] + "：开启", 220 + i * 190, function() {
+				mapsEnabled[index] = !mapsEnabled[index];
+				applyMapSettings();
+			}, 168));
+		}
 		status = new Label("等待首帧绘制");
 		status.fontSize = 14;
 		status.color = 0xd7e3fc;
@@ -169,6 +190,71 @@ class GameStage extends hx.display.Stage {
 				+ (environment == null ? "" : "　" + Math.round(environment.intensity * 100) / 100 + " 倍 / " + environment.rotation + "°");
 		});
 		loadEnvironment();
+		loadTexturedModel();
+	}
+
+	/** 加载内嵌五种贴图与显式切线的 GLB，保持原有球阵列作为独立对照。 */
+	private function loadTexturedModel():Void {
+		var assets = new Assets(); modelAssets = assets; assets.tryLoadTimes = 0;
+		assets.loadModel("assets/pbr/material-sphere.glb");
+		assets.onComplete(_ -> {
+			if (isDisposed) { assets.clean(); return; }
+			try {
+				texturedModel = assets.getModel("material-sphere").createInstance(-1, {pbrEnabled:true});
+				texturedModel.visible = false;
+				scene.root.addChild(texturedModel);
+				var seen:Array<PbrMaterial3D> = [];
+				for (mesh in texturedModel.meshes) {
+					mesh.castShadow = true;
+					var material:PbrMaterial3D = cast mesh.material;
+					if (seen.indexOf(material) >= 0) continue;
+					seen.push(material);
+					mappedMaterials.push({material:material, mr:material.metallicRoughnessTexture, normal:material.normalTexture,
+						ao:material.occlusionTexture, emission:material.emissiveTexture, emissiveFactor:material.emissive});
+				}
+				modelControl.data = "贴图示例：关闭";
+				applyMapSettings();
+			} catch (error:Dynamic) {
+				modelControl.data = "贴图示例：数据无效";
+				trace("PBR 贴图模型加载失败：" + Std.string(error));
+			}
+		});
+		assets.onError(error -> {
+			if (isDisposed) { assets.clean(); return; }
+			modelControl.data = "贴图示例：加载失败";
+			trace("PBR 贴图模型加载失败：" + error.error);
+		});
+		assets.start();
+	}
+
+	private function applyMapSettings():Void {
+		for (original in mappedMaterials) {
+			original.material.metallicRoughnessTexture = mapsEnabled[0] ? original.mr : null;
+			original.material.normalTexture = mapsEnabled[1] ? original.normal : null;
+			original.material.occlusionTexture = mapsEnabled[2] ? original.ao : null;
+			original.material.emissiveTexture = mapsEnabled[3] ? original.emission : null;
+			// 示例关闭自发光时同时清零因子，避免无贴图回退为整球恒定发光。
+			original.material.emissive = mapsEnabled[3] ? original.emissiveFactor : [0., 0., 0.];
+		}
+		var titles = ["金属粗糙", "法线", "AO", "自发光"];
+		for (i in 0...mapControls.length) mapControls[i].data = titles[i] + "：" + (mapsEnabled[i] ? "开启" : "关闭");
+		scene.requestRender();
+	}
+
+	private function showTexturedModel(value:Bool):Void {
+		if (texturedModel == null) return;
+		setAutoOrbit(false); texturedMode = value;
+		texturedModel.visible = value;
+		for (mesh in pbrMeshes) mesh.visible = !value;
+		modelControl.data = "贴图示例：" + (value ? "开启" : "关闭");
+		updateDescription();
+		scene.requestRender();
+	}
+
+	private function updateDescription():Void {
+		description.data = texturedMode ? "GLB 贴图球：棋盘基础色、金属粗糙度渐变、波纹法线、AO 网格与发光条纹"
+			: unifiedPbr ? "统一 PBR：10 个球均为非金属，粗糙度 0.5；Lambert 球与地面保持原样"
+			: "初始视角由远到近：Lambert／PBR 非金属／PBR 金属；从左到右粗糙度 0.12 → 0.9";
 	}
 
 	/** 仅加载离线生成的自有摄影棚图集，不在首帧或每帧运行卷积。 */
@@ -203,12 +289,13 @@ class GameStage extends hx.display.Stage {
 	/** 保留各球独立材质，只切换参数，便于观察参数兼容时的自动合批。 */
 	private function setUniformPbrParameters(unified:Bool):Void {
 		setAutoOrbit(false);
+		unifiedPbr = unified;
+		showTexturedModel(false);
 		for (original in originalPbrParameters) {
 			original.material.metallic = unified ? 0 : original.metallic;
 			original.material.roughness = unified ? 0.5 : original.roughness;
 		}
-		description.data = unified ? "统一 PBR：10 个球均为非金属，粗糙度 0.5；Lambert 球与地面保持原样"
-			: "初始视角由远到近：Lambert／PBR 非金属／PBR 金属；从左到右粗糙度 0.12 → 0.9";
+		updateDescription();
 		scene.requestRender();
 	}
 
@@ -286,6 +373,7 @@ class GameStage extends hx.display.Stage {
 		super.dispose();
 		if (environment != null) environment.dispose();
 		if (environmentAssets != null) environmentAssets.clean();
+		if (modelAssets != null) modelAssets.clean();
 		for (geometry in geometries)
 			geometry.dispose();
 		for (material in materials)
@@ -293,5 +381,6 @@ class GameStage extends hx.display.Stage {
 		geometries = [];
 		materials = [];
 		originalPbrParameters = [];
+		mappedMaterials = []; pbrMeshes = []; mapControls = [];
 	}
 }

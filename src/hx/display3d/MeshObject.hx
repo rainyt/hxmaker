@@ -78,6 +78,9 @@ class MeshObject extends Node3D {
 	private var __normals:Array<Float> = [];
 	private var __normalGeometryVersion:Int = -1;
 	private var __normalWorldVersion:Int = -1;
+	private var __tangents:Array<Float> = [];
+	private var __tangentGeometryVersion:Int = -1;
+	private var __tangentWorldVersion:Int = -1;
 
 	/** 创建并引用几何与材质；节点销毁时释放引用但不销毁共享资源。 */
 	public function new(geometry:Geometry3D, material:Material3D) {
@@ -104,6 +107,7 @@ class MeshObject extends Node3D {
 		__geometry = value;
 		__geometryVersion = -1;
 		__normalGeometryVersion = -1;
+		__tangentGeometryVersion = -1;
 		if (value != null)
 			value.addEventListener(Event.CHANGE, onResourceChange);
 		invalidate();
@@ -173,6 +177,23 @@ class MeshObject extends Node3D {
 		return __normals;
 	}
 
+	/** 世界切线用线性矩阵变换，并修正非均匀缩放和镜像手性。 */
+	public function getWorldTangents():Array<Float> {
+		if (__geometry == null) return [];
+		var matrix = getWorldMatrix();
+		if (__tangentGeometryVersion != __geometry.version || __tangentWorldVersion != worldVersion) {
+			var source = __geometry.getTangents(), normals = getWorldNormals();
+			for (vertex in 0...Std.int(source.length / 4)) {
+				var i = vertex * 4, n = vertex * 3;
+				Math3D.transformTangent(matrix.rawData, source[i], source[i + 1], source[i + 2], source[i + 3],
+					normals[n], normals[n + 1], normals[n + 2], __tangents, i);
+			}
+			__tangents.resize(source.length);
+			__tangentGeometryVersion = __geometry.version; __tangentWorldVersion = worldVersion;
+		}
+		return __tangents;
+	}
+
 	/** 幂等解除几何材质的引用与监听，再销毁节点及子树。 */
 	override public function dispose():Void {
 		if (isDisposed)
@@ -181,6 +202,7 @@ class MeshObject extends Node3D {
 		material = null;
 		__vertices = [];
 		__normals = [];
+		__tangents = [];
 		super.dispose();
 	}
 }

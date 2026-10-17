@@ -10,6 +10,9 @@ class Material3D extends EventDispatcher {
 	/** 是否使用物理材质光照，由具体材质类型决定；仍受 lightingEnabled 控制。 */
 	public var pbrEnabled(get, never):Bool;
 	private function get_pbrEnabled():Bool { return false; }
+	/** PBR 贴图位标志：金属粗糙度 1、法线 2、AO 4、自发光 8。 */
+	public var pbrMapMask(get, never):Int;
+	private function get_pbrMapMask():Int { return 0; }
 
 	private var __colorMultiplyLinear:Bool = false;
 

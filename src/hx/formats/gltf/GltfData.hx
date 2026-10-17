@@ -73,6 +73,7 @@ typedef GltfPrimitiveData = {
 
 	/** 局部顶点法线，每顶点连续 3 项；缺失时由实例生成。 */
 	var normals:Array<Float>;
+	@:optional var tangents:Array<Float>;
 
 	/** 第一套 UV，每顶点连续 2 项。 */
 	var uvs:Array<Float>;
@@ -124,6 +125,12 @@ typedef GltfMaterialData = {
 
 	/** 基础色纹理索引，无贴图时为 -1。 */
 	var baseColorTexture:Int;
+	var metallicRoughnessTexture:Int;
+	var normalTexture:Int;
+	var occlusionTexture:Int;
+	var emissiveTexture:Int;
+	var normalScale:Float;
+	var occlusionStrength:Float;
 }
 
 /** 仅保存 GLB 内嵌图片字节，图片解码通过资产 Future 完成。 */

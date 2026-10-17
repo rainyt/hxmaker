@@ -126,6 +126,12 @@ class Model3D extends Node3D {
 						pbr.metallic = source.metallicFactor;
 						pbr.roughness = source.roughnessFactor;
 						pbr.emissive = source.emissiveFactor;
+						pbr.normalScale = source.normalScale == null ? 1 : source.normalScale;
+						pbr.occlusionStrength = source.occlusionStrength == null ? 1 : source.occlusionStrength;
+						bindPbrMap(pbr, "metallicRoughness", source.metallicRoughnessTexture);
+						bindPbrMap(pbr, "normal", source.normalTexture);
+						bindPbrMap(pbr, "occlusion", source.occlusionTexture);
+						bindPbrMap(pbr, "emissive", source.emissiveTexture);
 					}
 					material.opacity = source.opacity;
 					if (source.baseColorTexture >= 0) {
@@ -156,6 +162,19 @@ class Model3D extends Node3D {
 				skin.bind(mesh, primitive);
 			}
 		}
+	}
+
+	/** 各贴图借用资产图片，并保留各自独立的采样设置。 */
+	private function bindPbrMap(material:PbrMaterial3D, map:String, index:Null<Int>):Void {
+		if (index == null || index < 0) return;
+		var bitmap = sourceAsset.getTexture(index), sampler = data.textures[index];
+		switch (map) {
+			case "metallicRoughness": material.metallicRoughnessTexture = bitmap;
+			case "normal": material.normalTexture = bitmap;
+			case "occlusion": material.occlusionTexture = bitmap;
+			case "emissive": material.emissiveTexture = bitmap;
+		}
+		material.setMapSampler(map, sampler.smoothing, sampler.minSmoothing, sampler.wrapU, sampler.wrapV);
 	}
 
 	/** 显式驱动动画；暂停时不重复计算蒙皮，静态模型只在创建时计算初始姿态。 */

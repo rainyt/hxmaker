@@ -20,11 +20,14 @@ class Geometry3D extends EventDispatcher {
 
 	/** 顶点局部法线数组；未提供时由 getNormals 按需生成。 */
 	public var normals(default, null):Array<Float>;
+	/** 可选切线，XYZ 方向和 W 手性；法线贴图使用时按需生成。 */
+	public var tangents(default, null):Array<Float>;
 
 	/** 可选逐顶点 RGBA，范围 0 至 1；与材质颜色相乘，空数组表示白色。 */
 	public var colors(default, null):Array<Float> = [];
 
 	private var generatedNormals:Bool = false;
+	private var generatedTangents:Bool = false;
 
 	/** 最近一次 invalidate 计算的局部 AABB，应视为只读。 */
 	public var bounds(default, null):Bounds3D;
@@ -39,13 +42,14 @@ class Geometry3D extends EventDispatcher {
 	public var isDisposed(default, null):Bool = false;
 
 	/** 复制顶点、UV、三角形索引及可选法线，校验数据并计算初始包围盒。 */
-	public function new(positions:Array<Float>, uvs:Array<Float>, indices:Array<Int>, normals:Array<Float> = null) {
+	public function new(positions:Array<Float>, uvs:Array<Float>, indices:Array<Int>, normals:Array<Float> = null, tangents:Array<Float> = null) {
 		if (positions == null || uvs == null || indices == null)
 			throw "三维几何数据不能为空";
 		this.positions = positions.copy();
 		this.uvs = uvs.copy();
 		this.indices = indices.copy();
 		this.normals = normals == null || normals.length == 0 ? null : normals.copy();
+		this.tangents = tangents == null || tangents.length == 0 ? null : tangents.copy();
 		invalidate();
 	}
 
@@ -57,6 +61,7 @@ class Geometry3D extends EventDispatcher {
 		geometry.uvs = primitive.uvs.copy();
 		geometry.indices = primitive.indices.copy();
 		geometry.normals = primitive.normals.copy();
+		geometry.tangents = primitive.tangents == null || primitive.tangents.length == 0 ? null : primitive.tangents.copy();
 		// 蒙皮每帧更新法线；静态自动法线仍需在业务修改顶点后失效。
 		geometry.generatedNormals = primitive.generatedNormals && (!skinned || primitive.rigidJoint >= 0);
 		if (primitive.bounds.length == 6) {
@@ -88,6 +93,16 @@ class Geometry3D extends EventDispatcher {
 				throw "三维索引超出顶点范围";
 		if (generatedNormals)
 			normals = null;
+		if (generatedTangents) tangents = null;
+		if (tangents != null) {
+			if (tangents.length != Std.int(positions.length / 3) * 4) throw "三维切线数量与位置不一致";
+			for (value in tangents) if (!Math3D.finite(value)) throw "三维切线包含无效数值";
+			for (vertex in 0...Std.int(tangents.length / 4)) {
+				var i = vertex * 4;
+				if (Math.abs(tangents[i + 3]) != 1 || tangents[i] * tangents[i] + tangents[i + 1] * tangents[i + 1] + tangents[i + 2] * tangents[i + 2] < 1e-12)
+					throw "三维切线方向或手性无效";
+			}
+		}
 		if (normals != null) {
 			if (normals.length != positions.length)
 				throw "三维法线数量与位置不一致";
@@ -111,6 +126,33 @@ class Geometry3D extends EventDispatcher {
 		normals = ModelGeometryTools.generateNormals(positions, indices);
 		generatedNormals = true;
 		return normals;
+	}
+
+	/** 返回按需生成的切线；显式切线由调用方随位置、法线和 UV 同步维护。 */
+	public function getTangents():Array<Float> {
+		if (isDisposed) throw "几何数据已经销毁";
+		if (tangents == null) {
+			tangents = ModelGeometryTools.generateTangents(positions, getNormals(), uvs, indices);
+			generatedTangents = true;
+		}
+		return tangents;
+	}
+
+	/** 复制显式切线；传 null 恢复按需生成。 */
+	public function setTangents(values:Array<Float>):Void {
+		if (isDisposed) throw "几何数据已经销毁";
+		if (values != null) {
+			if (values.length != Std.int(positions.length / 3) * 4) throw "三维切线数量与位置不一致";
+			for (value in values) if (!Math3D.finite(value)) throw "三维切线包含无效数值";
+			for (vertex in 0...Std.int(values.length / 4)) {
+				var i = vertex * 4;
+				if (Math.abs(values[i + 3]) != 1 || values[i] * values[i] + values[i + 1] * values[i + 1] + values[i + 2] * values[i + 2] < 1e-12)
+					throw "三维切线方向或手性无效";
+			}
+		}
+		tangents = values == null ? null : values.copy();
+		generatedTangents = false;
+		invalidate();
 	}
 
 	/** 将法线转为显式数据；之后修改位置时由调用方同步维护法线。 */
@@ -150,6 +192,7 @@ class Geometry3D extends EventDispatcher {
 		uvs = [];
 		indices = [];
 		normals = [];
+		tangents = [];
 		removeEventListeners();
 	}
 }

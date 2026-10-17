@@ -33,7 +33,13 @@ class GlbImporter {
 				},
 				alphaCutoff: material.alphaCutoff,
 				cullMode: material.doubleSided ? CullMode3D.NONE : CullMode3D.BACK,
-				baseColorTexture: material.baseColorTexture
+				baseColorTexture: material.baseColorTexture,
+				metallicRoughnessTexture: material.metallicRoughnessTexture,
+				normalTexture: material.normalTexture,
+				occlusionTexture: material.occlusionTexture,
+				emissiveTexture: material.emissiveTexture,
+				normalScale: material.normalScale,
+				occlusionStrength: material.occlusionStrength
 			}],
 			images: gltf.images,
 			textures: [for (texture in gltf.textures) {

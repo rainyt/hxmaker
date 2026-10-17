@@ -5,6 +5,7 @@ import hx.geom.Matrix3D;
 import hx.render3d.Math3D;
 import hx.model.ModelAssetData.ModelPrimitiveData;
 import hx.model.ModelSourceData.ModelSkinData;
+import hx.model.ModelGeometryTools;
 
 /** 在模型局部空间计算关节矩阵；外层 Model3D 变换只由显示树应用一次。 */
 class Skin3D {
@@ -58,6 +59,7 @@ private class SkinBinding3D {
 	private var rigidJoint:Int = -1;
 	private var lastMatrix:Array<Float>;
 	private var restNormals:Array<Float>;
+	private var restTangents:Array<Float>;
 	private var blended:Array<Float> = [for (_ in 0...16) 0.];
 
 	/** 借用网格及源图元，选择刚性关节或实例 CPU 蒙皮路径。 */
@@ -88,6 +90,14 @@ private class SkinBinding3D {
 			}
 			return;
 		}
+		var updateTangents = (mesh.material != null && mesh.material.lightingEnabled && (mesh.material.pbrMapMask & 2) != 0)
+			|| mesh.geometry.tangents != null;
+		if (updateTangents && restTangents == null) {
+			restTangents = source.tangents != null && source.tangents.length > 0 ? source.tangents
+				: ModelGeometryTools.generateTangents(source.positions, restNormals, source.uvs, source.indices);
+			mesh.geometry.setTangents(restTangents);
+		}
+		if (updateTangents && mesh.geometry.tangents == null) mesh.geometry.setTangents(restTangents);
 		var output = mesh.geometry.positions, input = source.positions;
 		for (vertex in 0...Std.int(input.length / 3)) {
 			var offset = vertex * 3,
@@ -113,6 +123,11 @@ private class SkinBinding3D {
 			output[offset + 1] = oy;
 			output[offset + 2] = oz;
 			Math3D.transformNormal(blended, restNormals[offset], restNormals[offset + 1], restNormals[offset + 2], mesh.geometry.normals, offset);
+			if (updateTangents) {
+				var t = vertex * 4, normals = mesh.geometry.normals;
+				Math3D.transformTangent(blended, restTangents[t], restTangents[t + 1], restTangents[t + 2], restTangents[t + 3],
+					normals[offset], normals[offset + 1], normals[offset + 2], mesh.geometry.tangents, t);
+			}
 		}
 		mesh.geometry.invalidate();
 	}

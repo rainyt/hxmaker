@@ -31,7 +31,7 @@ class GlbParser {
 	private var cache:Map<Int, AccessorData> = [];
 	private var textures:Array<GltfTextureData>;
 	private var materials:Array<GltfMaterialData>;
-	private var warnings:Array<String> = ["GLB 默认使用无光照材质；创建 Model3D 时设置 pbrEnabled 可启用 PBR 因子光照。"];
+	private var warnings:Array<String> = ["GLB 默认使用无光照材质；创建 Model3D 时设置 pbrEnabled 可启用 PBR 贴图与光照。"];
 
 	private function new() {}
 
@@ -247,21 +247,14 @@ class GlbParser {
 		var result:Array<GltfMaterialData> = [];
 		for (material in list(document, "materials")) {
 			var pbr = field(material, "pbrMetallicRoughness");
-			if (field(pbr, "metallicRoughnessTexture") != null
-				|| field(material, "normalTexture") != null
-				|| field(material, "occlusionTexture") != null
-				|| field(material, "emissiveTexture") != null)
-				throw "GLB 当前只支持基础颜色贴图，不支持金属粗糙度、法线、遮蔽或自发光贴图";
-			var textureInfo = field(pbr, "baseColorTexture"),
-				textureIndex = -1;
-			if (textureInfo != null) {
-				textureIndex = integer(textureInfo, "index", -1);
-				checkIndex(textureIndex, textures.length, "基础颜色纹理");
-				if (integer(textureInfo, "texCoord", 0) != 0)
-					throw "基础颜色贴图当前只支持 TEXCOORD_0";
-				if (field(textureInfo, "extensions") != null && Reflect.fields(field(textureInfo, "extensions")).length > 0)
-					throw "基础颜色贴图暂不支持纹理坐标扩展";
-			}
+			var textureIndex = readMaterialTexture(pbr, "baseColorTexture");
+			var metallicRoughnessTexture = readMaterialTexture(pbr, "metallicRoughnessTexture");
+			var normalTexture = readMaterialTexture(material, "normalTexture");
+			var occlusionTexture = readMaterialTexture(material, "occlusionTexture");
+			var emissiveTexture = readMaterialTexture(material, "emissiveTexture");
+			var normalScale = number(field(material, "normalTexture"), "scale", 1);
+			var occlusionStrength = number(field(material, "occlusionTexture"), "strength", 1);
+			if (occlusionStrength < 0 || occlusionStrength > 1) throw "AO 强度必须介于 0 和 1";
 			var color = vector(pbr, "baseColorFactor", [1., 1., 1., 1.]);
 			for (value in color)
 				if (value < 0 || value > 1)
@@ -289,10 +282,25 @@ class GlbParser {
 				alphaMode: alpha,
 				alphaCutoff: cutoff,
 				doubleSided: boolean(material, "doubleSided", false),
-				baseColorTexture: textureIndex
+				baseColorTexture: textureIndex,
+				metallicRoughnessTexture: metallicRoughnessTexture, normalTexture: normalTexture,
+				occlusionTexture: occlusionTexture, emissiveTexture: emissiveTexture,
+				normalScale: normalScale, occlusionStrength: occlusionStrength
 			});
 		}
 		return result;
+	}
+
+	/** 每种材质贴图独立校验索引和 UV；第二套 UV 与坐标变换扩展仍明确拒绝。 */
+	private function readMaterialTexture(owner:Dynamic, name:String):Int {
+		var info = field(owner, name);
+		if (info == null) return -1;
+		var index = integer(info, "index", -1);
+		checkIndex(index, textures.length, name);
+		if (integer(info, "texCoord", 0) != 0) throw name + " 当前只支持 TEXCOORD_0";
+		if (field(info, "extensions") != null && Reflect.fields(field(info, "extensions")).length > 0)
+			throw name + " 暂不支持纹理坐标扩展";
+		return index;
 	}
 
 	/** 基础颜色因子为线性值，现有无光照顶点颜色按显示色值输出。 */
@@ -315,14 +323,17 @@ class GlbParser {
 				if (attributes == null)
 					throw "网格缺少 attributes";
 				for (name in Reflect.fields(attributes))
-					if (["POSITION", "NORMAL", "TEXCOORD_0", "JOINTS_0", "WEIGHTS_0"].indexOf(name) < 0)
+					if (["POSITION", "NORMAL", "TANGENT", "TEXCOORD_0", "JOINTS_0", "WEIGHTS_0"].indexOf(name) < 0)
 						throw "首版暂不支持顶点属性：" + name;
 				var position = attribute(attributes, "POSITION", "VEC3", -1);
 				if (position == null || position.component != 5126 || position.normalized)
 					throw "POSITION 必须为浮点 VEC3";
 				var count = position.count,
 					normal = attribute(attributes, "NORMAL", "VEC3", count),
+					tangent = attribute(attributes, "TANGENT", "VEC4", count),
 					uv = attribute(attributes, "TEXCOORD_0", "VEC2", count);
+				if (tangent != null && (tangent.component != 5126 || tangent.normalized)) throw "TANGENT 必须为浮点 VEC4";
+				if (tangent != null && normal == null) throw "TANGENT 必须与 NORMAL 同时提供";
 				if (normal != null && (normal.component != 5126 || normal.normalized))
 					throw "NORMAL 必须为浮点 VEC3";
 				if (uv != null && uv.component != 5126 && !((uv.component == 5121 || uv.component == 5123) && uv.normalized))
@@ -376,11 +387,15 @@ class GlbParser {
 					throw "材质索引无效";
 				if (material >= 0)
 					checkIndex(material, materialCount, "材质");
-				if (material >= 0 && materials[material].baseColorTexture >= 0 && uv == null)
-					throw "带基础颜色贴图的网格必须提供 TEXCOORD_0";
+				if (material >= 0 && uv == null) {
+					var m = materials[material];
+					if (m.baseColorTexture >= 0 || m.metallicRoughnessTexture >= 0 || m.normalTexture >= 0 || m.occlusionTexture >= 0 || m.emissiveTexture >= 0)
+						throw "带材质贴图的网格必须提供 TEXCOORD_0";
+				}
 				primitives.push({
 					positions: position.values,
 					normals: normal == null ? [] : normal.values,
+					tangents: tangent == null ? [] : tangent.values,
 					uvs: uv == null ? [for (_ in 0...(count * 2)) 0.] : uv.values,
 					indices: indices,
 					joints: joints,

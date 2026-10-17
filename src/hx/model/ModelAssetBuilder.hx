@@ -106,6 +106,12 @@ class ModelAssetBuilder {
 		var normals = generated ? ModelGeometryTools.generateNormals(positions, indices) : floats(source.normals, positions.length, "顶点法线");
 		// 法线计算中的溢出也必须在资产进入运行时前拒绝。
 		for (value in normals) checkFinite(value, "顶点法线");
+		var tangents = source.tangents == null ? [] : floats(source.tangents, source.tangents.length == 0 ? 0 : count * 4, "顶点切线");
+		for (vertex in 0...Std.int(tangents.length / 4)) {
+			var offset = vertex * 4;
+			if (tangents[offset] * tangents[offset] + tangents[offset + 1] * tangents[offset + 1] + tangents[offset + 2] * tangents[offset + 2] < 1e-12
+				|| Math.abs(tangents[offset + 3]) != 1) throw "切线方向必须非零，手性必须为正负 1";
+		}
 		var bounds:Array<Float> = [];
 		if (count > 0) {
 			bounds = [positions[0], positions[1], positions[2], positions[0], positions[1], positions[2]];
@@ -149,7 +155,7 @@ class ModelAssetBuilder {
 		stats.primitiveCount++;
 		if (generated) stats.generatedNormalCount++;
 		if (rigid >= 0) stats.rigidPrimitiveCount++;
-		return {positions: positions, normals: normals, uvs: uvs, indices: indices, joints: joints, weights: weights,
+		return {positions: positions, normals: normals, tangents: tangents, uvs: uvs, indices: indices, joints: joints, weights: weights,
 			material: source.material, bounds: bounds, triangleCount: triangles, generatedNormals: generated, rigidJoint: rigid};
 	}
 
@@ -168,6 +174,13 @@ class ModelAssetBuilder {
 	private static function copyMaterial(material:ModelMaterialData, textureCount:Int):ModelMaterialData {
 		if (material == null || material.name == null) throw "模型材质定义无效";
 		checkOptionalIndex(material.baseColorTexture, textureCount, "材质纹理");
+		var mr = optionalTexture(material.metallicRoughnessTexture, textureCount);
+		var normal = optionalTexture(material.normalTexture, textureCount);
+		var ao = optionalTexture(material.occlusionTexture, textureCount);
+		var emission = optionalTexture(material.emissiveTexture, textureCount);
+		var normalScale:Float = material.normalScale == null ? 1 : material.normalScale;
+		var aoStrength:Float = material.occlusionStrength == null ? 1 : material.occlusionStrength;
+		checkFinite(normalScale, "法线贴图系数"); unit(aoStrength, "AO 强度");
 		var color = floats(material.baseColorFactor, 4, "材质基础颜色"), emissive = floats(material.emissiveFactor, 3, "材质自发光");
 		for (value in color) unit(value, "材质基础颜色");
 		for (value in emissive) unit(value, "材质自发光");
@@ -183,7 +196,15 @@ class ModelAssetBuilder {
 		return {name: material.name, baseColorFactor: color, metallicFactor: material.metallicFactor,
 			roughnessFactor: material.roughnessFactor, emissiveFactor: emissive, color: material.color,
 			opacity: material.opacity, alphaMode: material.alphaMode, alphaCutoff: material.alphaCutoff,
-			cullMode: material.cullMode, baseColorTexture: material.baseColorTexture};
+			cullMode: material.cullMode, baseColorTexture: material.baseColorTexture,
+			metallicRoughnessTexture: mr, normalTexture: normal, occlusionTexture: ao, emissiveTexture: emission,
+			normalScale: normalScale, occlusionStrength: aoStrength};
+	}
+
+	private static function optionalTexture(index:Null<Int>, count:Int):Int {
+		var result:Int = index == null ? -1 : index;
+		checkOptionalIndex(result, count, "PBR 纹理");
+		return result;
 	}
 
 	private static function copySkin(skin:ModelSkinData, nodeCount:Int):ModelSkinData {

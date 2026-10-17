@@ -40,6 +40,8 @@ typedef ModelPrimitiveSource = {
 	var positions:Array<Float>;
 	/** 空数组表示需要生成法线。 */
 	var normals:Array<Float>;
+	/** 可选切线，每顶点 XYZ 与正负手性 W；缺省按需生成。 */
+	@:optional var tangents:Array<Float>;
 	var uvs:Array<Float>;
 	var indices:Array<Int>;
 	var joints:Array<Int>;
@@ -60,6 +62,12 @@ typedef ModelMaterialData = {
 	var alphaCutoff:Float;
 	var cullMode:CullMode3D;
 	var baseColorTexture:Int;
+	@:optional var metallicRoughnessTexture:Int;
+	@:optional var normalTexture:Int;
+	@:optional var occlusionTexture:Int;
+	@:optional var emissiveTexture:Int;
+	@:optional var normalScale:Float;
+	@:optional var occlusionStrength:Float;
 }
 
 /** 原始图片字节必须保留，供后端解码及未来发布文件写入使用。 */

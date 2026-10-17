@@ -5,6 +5,28 @@ import hx.geom.Vector3D;
 
 /** 三维子系统统一使用列向量和列主序矩阵，避免依赖 append 的命名语义。 */
 class Math3D {
+	/** 切线用线性矩阵变换，再相对已变换法线正交化；负行列式同步翻转手性。 */
+	public static function transformTangent(m:Array<Float>, x:Float, y:Float, z:Float, handedness:Float,
+		nx:Float, ny:Float, nz:Float, out:Array<Float>, offset:Int):Void {
+		var tx = m[0] * x + m[4] * y + m[8] * z;
+		var ty = m[1] * x + m[5] * y + m[9] * z;
+		var tz = m[2] * x + m[6] * y + m[10] * z;
+		var projection = (tx * nx + ty * ny + tz * nz) / Math.max(nx * nx + ny * ny + nz * nz, 1e-12);
+		tx -= nx * projection; ty -= ny * projection; tz -= nz * projection;
+		var length = Math.sqrt(tx * tx + ty * ty + tz * tz);
+		if (length < 1e-12) {
+			if (Math.abs(ny) < 0.9) { tx = nz; ty = 0; tz = -nx; }
+			else { tx = 0; ty = -nz; tz = ny; }
+			length = Math.sqrt(tx * tx + ty * ty + tz * tz);
+			if (length < 1e-12) { tx = 1; ty = tz = 0; length = 1; }
+		}
+		if (!Math.isFinite(length)) throw "切线变换超出可计算数值范围";
+		var determinant = m[0] * (m[5] * m[10] - m[9] * m[6]) - m[4] * (m[1] * m[10] - m[9] * m[2])
+			+ m[8] * (m[1] * m[6] - m[5] * m[2]);
+		out[offset] = tx / length; out[offset + 1] = ty / length; out[offset + 2] = tz / length;
+		out[offset + 3] = handedness * (determinant < 0 ? -1 : 1);
+	}
+
 	/** 逆转置法线变换；复用输出数组，归一化时保留负行列式的方向。 */
 	public static function transformNormal(m:Array<Float>, x:Float, y:Float, z:Float, out:Array<Float>, offset:Int):Void {
 		var c00 = m[5] * m[10] - m[9] * m[6],

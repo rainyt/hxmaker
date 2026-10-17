@@ -8,6 +8,7 @@ import hx.events.PickResult3D;
 import hx.geom.Point;
 import hx.geom.Ray3D;
 import hx.render3d.Scene3DStats;
+import hx.render3d.BloomSettings3D;
 import hx.render3d.Math3D;
 import hx.render3d.Raycaster3D;
 import hx.render3d.IScene3DRenderer;
@@ -63,6 +64,9 @@ class Scene3D extends DisplayObject {
 
 	/** 按需记录三维回调的 CPU 墙钟时间，普通场景默认不读取计时器。 */
 	public var profilingEnabled:Bool = false;
+
+	/** 场景级泛光参数；修改后由设置键检测重绘，默认关闭。 */
+	public var bloom(default, null):BloomSettings3D = new BloomSettings3D();
 
 	/** 是否在可见状态每次 UPDATE 请求重绘，默认 true；关闭后可显式 requestRender。 */
 	public var autoRender:Bool = true;
@@ -164,7 +168,7 @@ class Scene3D extends DisplayObject {
 		super.onUpdate(dt);
 		var values:Array<Dynamic> = [
 			                            renderScale,                  backgroundColor,                 backgroundAlpha, multiTextureEnabled ? 1 : 0,
-			camera == null ? 0 : camera.fieldOfView, camera == null ? 0 : camera.near, camera == null ? 0 : camera.far,               lightingKey()
+			camera == null ? 0 : camera.fieldOfView, camera == null ? 0 : camera.near, camera == null ? 0 : camera.far,               lightingKey(), bloom.settingsKey()
 		];
 		var settings = values.join(":");
 		if (settings != __settings) {

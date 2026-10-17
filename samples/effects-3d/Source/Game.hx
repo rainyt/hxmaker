@@ -32,7 +32,7 @@ import hx.material.Material3D;
 import hx.material.EffectMaterial3D;
 import hx.material.UnlitTextureMaterial;
 
-/** 无外部素材的粒子、刀光、弹道拖尾和流光溶解示例，点击标题暂停。 */
+/** 无外部素材的三维特效示例，支持软粒子、泛光对比和镜头旋转。 */
 class Game extends Stage {
 	private var source:openfl.display.BitmapData;
 	private var atlas:openfl.display.BitmapData;
@@ -51,6 +51,9 @@ class Game extends Stage {
 	private var bladeEnd:Node3D;
 	private var blade:MeshObject;
 	private var surfaceMaterial:AnimatedEffectMaterial3D;
+	private var groundSmoke:ParticleSystem3D;
+	private var softEnabled:Bool = true;
+	private var softMaterials:Array<Material3D> = [];
 	private var ownedSources:Array<openfl.display.BitmapData> = [];
 	private var ownedGeometries:Array<Geometry3D> = [];
 	private var ownedMaterials:Array<Material3D> = [];
@@ -59,6 +62,8 @@ class Game extends Stage {
 		super.onStageInit();
 		var scene = new Scene3D(960, 540); scene.y = 60;
 		scene.backgroundAlpha = 1; scene.backgroundColor = 0x17243b;
+		scene.bloom.enabled = true; scene.bloom.threshold = 0.45;
+		scene.bloom.intensity = 1.4; scene.bloom.radius = 2.5;
 		addChild(scene);
 		var camera = new Camera3D(); scene.root.addChild(camera); scene.camera = camera;
 		camera.lookFrom(new Vector3D(0, 4, 9), new Vector3D(0, 0, 0));
@@ -130,18 +135,47 @@ class Game extends Stage {
 		surfaceMaterial.distortion = 0.08; surfaceMaterial.edgeColor = 0x8eeeff;
 		var portal = new MeshObject(PlaneGeometry.create(2.8, 2.8), surfaceMaterial);
 		portal.rotationX = 90; portal.setPosition(0, 1.0, -2.0); scene.root.addChild(portal);
+		// 第三阶段：烟雾同时穿过地面和不透明方块，便于对比软粒子交界。
+		var obstacle = new MeshObject(BoxGeometry.create(1, 1.1, 1.2), new UnlitTextureMaterial(null, 0x41536e));
+		obstacle.setPosition(1, -0.45, 1.4); scene.root.addChild(obstacle);
+		var groundConfig = new ParticleSettings3D();
+		groundConfig.duration = 0; groundConfig.maxParticles = 128; groundConfig.emissionRate = 24;
+		groundConfig.lifetimeMin = 1.3; groundConfig.lifetimeMax = 2;
+		groundConfig.speedMin = 0.1; groundConfig.speedMax = 0.35;
+		groundConfig.gravity.setTo(0, 0.15, 0); groundConfig.radius = 0.25; groundConfig.coneAngle = 60;
+		groundConfig.sizeMin = 0.5; groundConfig.sizeMax = 0.8;
+		groundConfig.size = new FloatCurve3D([0., 1.], [0.6, 1.5]);
+		groundConfig.alpha = new FloatCurve3D([0., 0.2, 1.], [0., 0.6, 0.]);
+		groundSmoke = new ParticleSystem3D(new EffectMaterial3D(texture, BlendMode3D.NORMAL, 0xb8c8dc), groundConfig);
+		groundSmoke.setPosition(1.55, -0.82, 1.4); scene.root.addChild(groundSmoke); groundSmoke.play();
+		softMaterials = [smoke.material, groundSmoke.material, impact.material];
+		for (material in softMaterials) material.softParticleDistance = 0.5;
 		ownedSources = [source, atlas, ringSource, flowSource, noiseSource];
 		collectResources(scene.root);
 
-		var title = new Label("三维特效：拖尾 / 刀光 / 流光溶解；点击暂停");
+		var title = new Label("三维特效：软粒子 / 泛光；点击暂停");
 		title.x = 20; title.y = 18; title.fontSize = 20; title.color = 0xffffff; addChild(title);
 		title.addEventListener(MouseEvent.CLICK, function(_) { paused = !paused; });
+		var bloomButton = new Label("泛光：开"); bloomButton.x = 690; bloomButton.y = 22;
+		bloomButton.fontSize = 16; bloomButton.color = 0x8ed6ff; addChild(bloomButton);
+		bloomButton.addEventListener(MouseEvent.CLICK, function(_) {
+			scene.bloom.enabled = !scene.bloom.enabled;
+			bloomButton.data = "泛光：" + (scene.bloom.enabled ? "开" : "关"); scene.requestRender();
+		});
+		var softButton = new Label("软粒子：开"); softButton.x = 820; softButton.y = 22;
+		softButton.fontSize = 16; softButton.color = 0x8ed6ff; addChild(softButton);
+		softButton.addEventListener(MouseEvent.CLICK, function(_) {
+			softEnabled = !softEnabled;
+			for (material in softMaterials) material.softParticleDistance = softEnabled ? 0.5 : 0;
+			softButton.data = "软粒子：" + (softEnabled ? "开" : "关"); scene.requestRender();
+		});
 		input.addEventListener(Scene3DInputEvent.SELECT, function(_) {
 			scene.backgroundAlpha = scene.backgroundAlpha == 0 ? 1 : 0;
 			scene.requestRender();
 		});
-		var status = new Label(""); status.x = 20; status.y = 608; status.fontSize = 16; status.color = 0xffffff;
+		var status = new Label(""); status.x = 20; status.y = 600; status.fontSize = 14; status.color = 0xffffff;
 		addChild(status);
+		var detail = new Label(""); detail.x = 20; detail.y = 621; detail.fontSize = 13; detail.color = 0xa9bdd8; addChild(detail);
 		effect.play();
 		scene.addEventListener(Event.UPDATE, function(_) {
 			// 相机独立于特效暂停更新，先转镜头，再重建粒子和广告牌朝向。
@@ -161,10 +195,13 @@ class Game extends Stage {
 			surfaceMaterial.dissolve = Math.max(0, Math.min(1, (time - 0.7) / 1.8));
 			surfaceMaterial.update(dt);
 			effect.paused = paused; effect.update(dt, camera); fireball.update(camera);
+			groundSmoke.paused = paused; groundSmoke.update(dt, camera);
 			ring.rotationY += dt * 35;
 			ring.material.opacity = 0.5 + Math.sin(time * 4) * 0.2;
-			status.data = "粒子：" + (smoke.particleCount + impact.particleCount) + "　轨迹截面：" + (trail.sectionCount + ribbon.sectionCount) + "　批次：" + scene.stats.drawCalls
+			status.data = "粒子：" + (smoke.particleCount + impact.particleCount + groundSmoke.particleCount) + "　轨迹截面：" + (trail.sectionCount + ribbon.sectionCount) + "　批次：" + scene.stats.drawCalls
 				+ "　拖动旋转 / 滚轮缩放 / 轻点切换背景";
+			detail.data = "软粒子：" + scene.stats.softParticleStatus + "　深度批次：" + scene.stats.softDepthDrawCalls
+				+ "　泛光：" + scene.stats.bloomStatus + "　泛光批次：" + scene.stats.bloomDrawCalls;
 		});
 	}
 

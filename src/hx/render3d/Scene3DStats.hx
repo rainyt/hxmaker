@@ -20,11 +20,22 @@ class Scene3DStats {
 	/** 阴影通道 CPU 墙钟耗时，单位毫秒。 */
 	public var shadowCpuMs:Float = 0;
 
-	/** 主三维通道 CPU 墙钟耗时，单位毫秒。 */
+	/** 主三维及可选软粒子深度预绘制 CPU 墙钟耗时，单位毫秒。 */
 	public var mainCpuMs:Float = 0;
 
 	/** 合成到二维目标的 CPU 墙钟耗时，单位毫秒。 */
 	public var compositeCpuMs:Float = 0;
+
+	/** 泛光提取与模糊 CPU 提交耗时；不是 GPU 时间。 */
+	public var postProcessCpuMs:Float = 0;
+	public var bloomDrawCalls:Int = 0;
+	public var bloomTargetBytes:Int = 0;
+	public var bloomStatus:String = "关闭";
+	public var softDepthDrawCalls:Int = 0;
+	public var softDepthTriangles:Int = 0;
+	public var softDepthUploadedBytes:Int = 0;
+	public var softDepthTargetBytes:Int = 0;
+	public var softParticleStatus:String = "关闭";
 
 	/** GL 状态保护总 CPU 耗时，单位毫秒；不代表 GPU 时间。 */
 	public var stateCpuMs:Float = 0;
@@ -109,6 +120,9 @@ class Scene3DStats {
 
 	/** 重置绘制计数和拆批原因；不清除回调编号、目标尺寸及计时字段。 */
 	public function reset():Void {
+		postProcessCpuMs = 0; bloomDrawCalls = bloomTargetBytes = 0; bloomStatus = "关闭";
+		softDepthDrawCalls = softDepthTriangles = softDepthUploadedBytes = softDepthTargetBytes = 0;
+		softParticleStatus = "关闭";
 		drawCalls = triangles = visibleMeshes = culledMeshes = uploadedBytes = textureSlots = compositeDrawCalls = 0;
 		shadowDrawCalls = shadowTriangles = shadowUploadedBytes = shadowMapBytes = shadowMapSize = 0;
 		shadowStatus = "关闭";

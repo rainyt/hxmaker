@@ -104,6 +104,17 @@ class Material3D extends EventDispatcher {
 		return value;
 	}
 
+	private var __softParticleDistance:Float = 0;
+
+	/** 与不透明场景相交时的世界距离淡出范围；零关闭，仅透明通道生效。 */
+	public var softParticleDistance(get, set):Float;
+	private function get_softParticleDistance():Float { return __softParticleDistance; }
+	private function set_softParticleDistance(value:Float):Float {
+		if (!Math3D.finite(value) || value < 0) throw "软粒子淡出距离必须为非负有限值";
+		if (__softParticleDistance != value) { __softParticleDistance = value; invalidate(); }
+		return value;
+	}
+
 	private var __blendMode:BlendMode3D = BlendMode3D.NORMAL;
 
 	/** 仅在 BLEND 通道生效；默认普通透明混合。 */
@@ -376,6 +387,9 @@ class Material3D extends EventDispatcher {
 			|| [
 				"uViewProjection",
 				"uBaseUVRect",
+				"uSceneDepth",
+				"uSoftParams",
+				"uSoftDistance",
 				"uBaseUVClamp",
 				"uAlphaMode",
 				"uAlphaCutoff",

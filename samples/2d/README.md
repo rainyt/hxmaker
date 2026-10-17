@@ -6,6 +6,4 @@
 | [context-menu](context-menu/project.xml) | 通用右键菜单 |
 | [context-recovery](context-recovery/README.md) | 纯二维静态上下文恢复 |
 
-`openfl-shader-state/Source` 为空的预留目录，没有可检查的入口或项目配置。
-
 启动与包引用约定见[示例目录说明](../README.md)。本次分类迁移尚未编译或测试。

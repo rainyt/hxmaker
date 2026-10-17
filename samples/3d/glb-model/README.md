@@ -112,7 +112,7 @@ arch -x86_64 lime test html5 -D hxmaker_glb_checks
 
 成功时控制台输出 `HXMAKER_GLB_CHECKS PASS`；失败时示例显示实例化错误。此入口只在显式启用时编译，目前尚未运行，不能把“入口已加入”视为测试通过。
 
-实现前评估见 [GLB 模型加载示例实施方案](../../../docs/GLB模型加载示例实施方案.md)。
+实现前评估见 [GLB 模型加载示例实施方案](../../../docs/archive/3d-20261017/GLB模型加载示例实施方案.md)。
 
 ## 本次阴影交互接入状态
 

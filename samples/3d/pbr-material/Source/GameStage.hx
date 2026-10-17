@@ -1,6 +1,8 @@
 package;
 
 import hx.display.FPS;
+import hx.assets.Assets;
+import hx.light.Environment3D;
 import hx.layout.AnchorLayoutData;
 import hx.layout.AnchorLayout;
 import hx.core.Hxmaker;
@@ -22,7 +24,7 @@ import hx.material.Material3D;
 import hx.material.LambertTextureMaterial;
 import hx.material.PbrMaterial3D;
 
-/** 无外部资源的材质对比，支持手动镜头与自动环绕。 */
+/** 材质与预积分环境光对比，支持手动镜头与自动环绕。 */
 class GameStage extends hx.display.Stage {
 	private var scene:Scene3D;
 	private var camera:Camera3D;
@@ -31,6 +33,9 @@ class GameStage extends hx.display.Stage {
 	private var autoControl:Label;
 	private var description:Label;
 	private var status:Label;
+	private var environment:Environment3D;
+	private var environmentAssets:Assets;
+	private var environmentControl:Label;
 	private var autoOrbit:Bool = true;
 	private var geometries:Array<Geometry3D> = [];
 	private var materials:Array<Material3D> = [];
@@ -44,9 +49,9 @@ class GameStage extends hx.display.Stage {
 		fps.layoutData = new AnchorLayoutData(null, 0);
 		topView.layout = new AnchorLayout();
 
-		scene = new Scene3D(912, 450);
+		scene = new Scene3D(912, 410);
 		scene.x = 24;
-		scene.y = 125;
+		scene.y = 165;
 		scene.backgroundColor = 0x172033;
 		scene.backgroundAlpha = 1;
 		scene.ambientIntensity = 0.3;
@@ -128,8 +133,27 @@ class GameStage extends hx.display.Stage {
 		});
 		cameraAction("统一 PBR 参数", 610, function() { setUniformPbrParameters(true); });
 		cameraAction("恢复原始参数", 790, function() { setUniformPbrParameters(false); });
+		environmentControl = cameraAction("环境光：加载中", 24, function() {
+			if (environment == null) return;
+			environment.enabled = !environment.enabled;
+			updateEnvironmentControl();
+		}, 128);
+		cameraAction("降低环境亮度", 220, function() {
+			if (environment != null) environment.intensity = Math.max(0.05, environment.intensity / 1.25);
+		}, 128);
+		cameraAction("提高环境亮度", 410, function() {
+			if (environment != null) environment.intensity = Math.min(4, environment.intensity * 1.25);
+		}, 128);
+		cameraAction("旋转环境 30°", 600, function() {
+			if (environment != null) environment.rotation = (environment.rotation + 30) % 360;
+		}, 128);
+		cameraAction("环境复位", 790, function() {
+			if (environment == null) return;
+			environment.enabled = true; environment.intensity = 1; environment.rotation = 0;
+			updateEnvironmentControl();
+		}, 128);
 		status = new Label("等待首帧绘制");
-		status.fontSize = 16;
+		status.fontSize = 14;
 		status.color = 0xd7e3fc;
 		status.x = 24;
 		status.y = 594;
@@ -141,8 +165,39 @@ class GameStage extends hx.display.Stage {
 				cameraControl.rotate(dt * 8, 0);
 			cameraControl.update(dt);
 			status.data = "主场景批次：" + scene.stats.drawCalls + "　阴影批次：" + scene.stats.shadowDrawCalls
-				+ "　合成批次：" + scene.stats.compositeDrawCalls + "　灯光：" + scene.stats.activeLights;
+				+ "　合成批次：" + scene.stats.compositeDrawCalls + "　环境：" + scene.stats.environmentStatus
+				+ (environment == null ? "" : "　" + Math.round(environment.intensity * 100) / 100 + " 倍 / " + environment.rotation + "°");
 		});
+		loadEnvironment();
+	}
+
+	/** 仅加载离线生成的自有摄影棚图集，不在首帧或每帧运行卷积。 */
+	private function loadEnvironment():Void {
+		var assets = new Assets(); environmentAssets = assets; assets.tryLoadTimes = 0;
+		assets.loadBitmapData("assets/ibl/environment.png");
+		assets.loadJson("assets/ibl/environment.json");
+		assets.onComplete(_ -> {
+			if (isDisposed) { assets.clean(); return; }
+			try {
+				environment = Environment3D.fromData(assets.getBitmapData("environment"), assets.getObject("environment"));
+				scene.environment = environment;
+				updateEnvironmentControl();
+			} catch (error:Dynamic) {
+				environmentControl.data = "环境光：数据无效";
+				trace("IBL 数据加载失败：" + Std.string(error));
+			}
+		});
+		assets.onError(error -> {
+			if (isDisposed) { assets.clean(); return; }
+			environmentControl.data = "环境光：加载失败";
+			trace("IBL 图片或元数据加载失败：" + error.error);
+		});
+		assets.start();
+	}
+
+	private function updateEnvironmentControl():Void {
+		environmentControl.data = "环境光：" + (environment.enabled ? "开启" : "关闭");
+		scene.requestRender();
 	}
 
 	/** 保留各球独立材质，只切换参数，便于观察参数兼容时的自动合批。 */
@@ -173,12 +228,12 @@ class GameStage extends hx.display.Stage {
 		cameraControl.snap();
 	}
 
-	private function cameraAction(text:String, x:Float, callback:Void->Void):Label {
+	private function cameraAction(text:String, x:Float, callback:Void->Void, y:Float = 88):Label {
 		var result = new Label(text);
 		result.fontSize = 18;
 		result.color = 0x8ed6ff;
 		result.x = x;
-		result.y = 88;
+		result.y = y;
 		result.mouseEnabled = true;
 		result.addEventListener(MouseEvent.CLICK, _ -> {
 			callback();
@@ -229,6 +284,8 @@ class GameStage extends hx.display.Stage {
 		if (cameraControl != null)
 			cameraControl.dispose();
 		super.dispose();
+		if (environment != null) environment.dispose();
+		if (environmentAssets != null) environmentAssets.clean();
 		for (geometry in geometries)
 			geometry.dispose();
 		for (material in materials)

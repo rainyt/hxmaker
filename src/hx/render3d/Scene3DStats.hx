@@ -2,6 +2,9 @@ package hx.render3d;
 
 /** 最近一次三维重绘的数据；最终合成次数在每次 GPU 回调更新。 */
 class Scene3DStats {
+	/** IBL 使用状态及借用图集上传尺寸估算；不计入离屏目标显存。 */
+	public var environmentStatus:String = "关闭";
+	public var environmentTextureBytes:Int = 0;
 	/** 最近绘制实际使用的灯光数及因数量限制跳过的灯光数。 */
 	public var activeLights:Int = 0;
 	public var skippedLights:Int = 0;
@@ -127,6 +130,7 @@ class Scene3DStats {
 
 	/** 重置绘制计数和拆批原因；不清除回调编号、目标尺寸及计时字段。 */
 	public function reset():Void {
+		environmentStatus = "关闭"; environmentTextureBytes = 0;
 		activeLights = skippedLights = 0;
 		postProcessCpuMs = 0; bloomDrawCalls = bloomTargetBytes = 0; bloomStatus = "关闭";
 		softDepthDrawCalls = softDepthTriangles = softDepthUploadedBytes = softDepthTargetBytes = 0;

@@ -3,7 +3,7 @@ package hx.material;
 import hx.display.BitmapData;
 import hx.render3d.Math3D;
 
-/** 金属度／粗糙度工作流材质；首版提供 GGX 直接光照，不包含环境反射和法线贴图。 */
+/** 金属度／粗糙度工作流材质；提供 GGX 直接光照和可选场景 IBL，不包含法线贴图。 */
 class PbrMaterial3D extends Material3D {
 	private var __metallic:Float = 0;
 	private var __roughness:Float = 0.5;

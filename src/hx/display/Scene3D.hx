@@ -15,6 +15,7 @@ import hx.render3d.IScene3DRenderer;
 import hx.core.Hxmaker;
 import hx.light.DirectionalLight3D;
 import hx.light.Light3D;
+import hx.light.Environment3D;
 
 /** 二维显示树中的三维视口；三维对象通过 root 加入。 */
 @:access(hx.display.DisplayObject)
@@ -69,6 +70,9 @@ class Scene3D extends DisplayObject {
 	/** 环境光非负有限强度，默认 0.25。 */
 	public var ambientIntensity:Float = 0.25;
 
+	/** 可选的借用 IBL 环境，仅作用于启用光照的 PBR 材质；场景不接管其销毁。 */
+	public var environment:Environment3D;
+
 	private var __light:DirectionalLight3D;
 
 	private function get_light():DirectionalLight3D {
@@ -90,7 +94,8 @@ class Scene3D extends DisplayObject {
 		if (!Math3D.finite(ambientIntensity) || ambientIntensity < 0)
 			throw "环境光强度必须为非负有限值";
 		var keys = [for (value in getActiveLights()) value.settingsKey()];
-		return ambientColor + ":" + ambientIntensity + ":" + keys.join("|");
+		return ambientColor + ":" + ambientIntensity + ":" + keys.join("|") + ":"
+			+ (environment == null ? "" : environment.settingsKey());
 	}
 
 	/** 后端维护的最近绘制统计；业务只读，不代表 GPU 执行耗时。 */
@@ -261,6 +266,7 @@ class Scene3D extends DisplayObject {
 		__camera = null;
 		__light = null;
 		__lights = [];
+		environment = null;
 		super.dispose();
 	}
 }

@@ -2,6 +2,7 @@
     <meta title="hxmaker PBR 材质" package="samples.hxmaker.pbr" version="1.0.0" />
     <app main="Main" file="PbrMaterial" path="Export" />
     <source path="Source" />
+    <assets path="Assets" rename="assets" />
     <haxelib name="hxmaker" />
     <haxelib name="hxmaker-openfl" />
     <haxelib name="openfl" />

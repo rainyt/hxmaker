@@ -389,6 +389,7 @@ class Material3D extends EventDispatcher {
 			|| !~/^[A-Za-z_][A-Za-z0-9_]*$/.match(name)
 			|| StringTools.startsWith(name, "uSampler")
 			|| StringTools.startsWith(name, "uSceneLight")
+			|| StringTools.startsWith(name, "uIbl")
 			|| [
 				"uViewProjection",
 				"uBaseUVRect",

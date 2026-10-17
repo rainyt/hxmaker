@@ -42,7 +42,7 @@ class Assets extends Future<Assets, Dynamic> {
 	public var name:String;
 
 	/**
-	 * 尝试重新加载次数
+	 * 尝试重新加载次数，设置为`-1`则允许无限重新加载
 	 */
 	public var tryLoadTimes:Int = MAX_TRY_LOAD_TIMES;
 
@@ -374,8 +374,10 @@ class Assets extends Future<Assets, Dynamic> {
 	/** 获取统一模型资产，不区分原始模型文件格式。 */
 	public function getModel(name:String):ModelAsset {
 		var value = getObject(name);
-		if (value == null) return null;
-		if (!Std.isOfType(value, ModelAsset)) throw "资源不是模型资产：" + name;
+		if (value == null)
+			return null;
+		if (!Std.isOfType(value, ModelAsset))
+			throw "资源不是模型资产：" + name;
 		return cast value;
 	}
 
@@ -556,7 +558,6 @@ class Assets extends Future<Assets, Dynamic> {
 			newObj.retain();
 			this.assetObjects.push(newObj);
 		}
-
 	}
 
 	public function clean(dispose:Bool = true):Void {
@@ -820,7 +821,7 @@ class Assets extends Future<Assets, Dynamic> {
 		if (isError)
 			return;
 		this.isError = true;
-		if (__tryLoadTimes++ >= tryLoadTimes) {
+		if (tryLoadTimes != -1 && __tryLoadTimes++ >= tryLoadTimes) {
 			super.errorValue(data);
 		} else {
 			// 1秒后重试

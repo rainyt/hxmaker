@@ -48,6 +48,8 @@
 | hx.events.KeyboardEvent | 键盘事件 | ✅ | / |
 | hx.assets.Assets | 资源加载器，支持图片、音频、精灵图、XML、JSON等常见资源格式加载 | ✅ | / |
 
+**第一次使用 3D，请从[《hxmaker 3D 引擎新手指南》](docs/3D引擎新手指南.md)开始。** 包含两套完整入门工程、当前能力总览，以及模型、动画、挂点、光照、交互、碰撞、导航、性能和释放说明；代码使用迁移后的 `hx.display3d` API。
+
 基础 3D 框架已加入首版代码，并通过 HTML5 基础示例验证；完整验收仍在进行，参阅[使用说明](docs/基础3D框架使用说明.md)、[示例](samples/basic-3d/README.md)和[验证记录](docs/基础3D框架验证记录.md)。
 
 三维节点、网格、相机与模型现位于 `hx.display3d`，二维嵌入视口仍为 `hx.display.Scene3D`。此次直接迁移，不保留旧包转发；调用方需更新 import，参阅[迁移说明](docs/3D显示API包迁移说明.md)。仓库示例由用户另行整理。

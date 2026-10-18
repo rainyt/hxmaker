@@ -21,6 +21,7 @@ try{
   }}finally{await page.keyboard.up('w');await page.keyboard.up('Shift');}
  }
  await page.goto(url);await ready();await command('reset');await page.waitForFunction(()=>window.__hxmakerExplorer.state().grounded);
+ await page.waitForTimeout(300);const cachedId=(await state()).stats.redrawId;await page.waitForTimeout(350);assert.equal((await state()).stats.redrawId,cachedId,'角色静止时应复用三维画面');pass('静止时复用三维缓存');
  assert.equal((await state()).stats.fogStatus,'启用');assert.equal((await state()).stats.skyboxDrawCalls,1);
  await page.screenshot({path:'/tmp/hxmaker-explorer-initial.png'});pass('Blender GLB、天空、IBL、距离雾与碰撞世界加载');
  const yaw=(await state()).yaw;await page.mouse.move(520,400);await page.mouse.down();await page.mouse.move(650,430,{steps:5});await page.mouse.up();assert(Math.abs((await state()).yaw-yaw)>.2);pass('真实鼠标拖动环顾');

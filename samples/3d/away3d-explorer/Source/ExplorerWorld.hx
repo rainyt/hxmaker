@@ -46,9 +46,12 @@ class ExplorerWorld {
 	private var storage:StorageTools;
 	private var autoSave:Float=0;
 	private var initialFog:Dynamic;
+	private var cameraPosition:Vector3D;
+	private var cameraYaw:Float;
+	private var cameraPitch:Float;
 
 	public function new() {
-		view=new Scene3D(1120,640);view.y=70;view.backgroundColor=0x9eacba;view.backgroundAlpha=1;
+		view=new Scene3D(1120,640);view.y=70;view.backgroundColor=0x9eacba;view.backgroundAlpha=1;view.autoRender=false;
 		view.renderScale=0.8;view.ambientIntensity=0.38;view.bloom.enabled=true;view.bloom.threshold=0.85;view.bloom.intensity=0.25;
 		var camera=new Camera3D();camera.near=0.08;camera.far=240;camera.fieldOfView=68;view.root.addChild(camera);view.camera=camera;
 		var light=new DirectionalLight3D(0xffe7ca,2.2);light.direction=new Vector3D(-0.5,-1,-0.4);
@@ -108,7 +111,10 @@ class ExplorerWorld {
 	private function updateCamera():Void {
 		if(controller==null)return;
 		var position=controller.position;position.y+=1.58;
+		// 相机姿态未变时保留场景缓存，静止期间只合成已有的三维画面。
+		if(cameraPosition!=null&&position.x==cameraPosition.x&&position.y==cameraPosition.y&&position.z==cameraPosition.z&&yaw==cameraYaw&&pitch==cameraPitch)return;
 		view.camera.lookFrom(position,position.add(new Vector3D(Math.sin(yaw)*Math.cos(pitch),Math.sin(pitch),-Math.cos(yaw)*Math.cos(pitch))));
+		cameraPosition=position;cameraYaw=yaw;cameraPitch=pitch;
 	}
 	public function jump():Void {if(ready)controller.jump(6);}
 	public function nearest():Dynamic {

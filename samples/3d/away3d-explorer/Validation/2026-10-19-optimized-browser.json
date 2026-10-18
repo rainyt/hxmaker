@@ -1,0 +1,126 @@
+{
+  "browser": "155.0.8059.80",
+  "backend": "软件 WebGL，仅验证功能",
+  "cases": [
+    "静止时复用三维缓存",
+    "Blender GLB、天空、IBL、距离雾与碰撞世界加载",
+    "真实鼠标拖动环顾",
+    "跳跃并回落到碰撞地面",
+    "闸门真实阻挡，任务未完成不能打开",
+    "行走接近并与导览机器人交互",
+    "探索并激活南侧信标",
+    "绕过建筑并激活东侧信标",
+    "穿过庭院并激活西侧信标",
+    "开启闸门、实际穿过门洞并完成档案任务",
+    "页面刷新恢复任务、闸门和玩家位置",
+    "键盘切换距离雾",
+    "两次销毁重进，释放控制器、场景和碰撞代理",
+    "屏幕方向按钮支持持续移动并在抬起时停止"
+  ],
+  "final": {
+    "ready": true,
+    "failure": "",
+    "position": [
+      0,
+      0.0019999999999998977,
+      25.43850030899049
+    ],
+    "yaw": 0,
+    "pitch": -0.02,
+    "collected": [],
+    "gateOpen": false,
+    "complete": false,
+    "grounded": true,
+    "hint": "WASD 移动 · 拖动环顾 · Shift 奔跑 · 空格跳跃",
+    "fog": true,
+    "stats": {
+      "splitReasons": {
+        "h": {
+          "material": 5
+        }
+      },
+      "shadowStatus": "开启",
+      "shadowDegradation": "",
+      "shadowSlopeBiases": [
+        0.003,
+        0.003
+      ],
+      "shadowDepthBiases": [
+        0.0005,
+        0.0005
+      ],
+      "shadowCascadeUpdated": [
+        true,
+        true
+      ],
+      "shadowEffectiveFilterRadius": 1.25,
+      "shadowEffectiveFilter": 1,
+      "shadowEffectiveDistance": 70,
+      "shadowFitMode": "自动相机范围",
+      "shadowWorldTexels": [
+        0.05470430107526883,
+        0.20483870967741938
+      ],
+      "shadowDepthBits": 24,
+      "shadowCascades": 2,
+      "shadowMapSize": 1024,
+      "shadowMapBytes": 16777216,
+      "shadowUploadedBytes": 793284,
+      "shadowTriangles": 53054,
+      "shadowDrawCalls": 2,
+      "shadowCacheHit": false,
+      "targetBytes": 2752512,
+      "compositeDrawCalls": 1,
+      "textureSlots": 5,
+      "uploadedBytes": 1355014,
+      "culledMeshes": 22,
+      "visibleMeshes": 61,
+      "triangles": 32777,
+      "drawCalls": 6,
+      "targetHeight": 512,
+      "targetWidth": 896,
+      "stateVao": true,
+      "stateCompositeOnly": false,
+      "stateTextureSlots": 6,
+      "stateQueryCount": 0,
+      "samplerRestoreCpuMs": 0,
+      "stateRestoreCpuMs": 0,
+      "stateSnapshotCpuMs": 0,
+      "stateFlushCpuMs": 0,
+      "stateCpuMs": 0,
+      "softParticleStatus": "关闭",
+      "softDepthTargetBytes": 0,
+      "softDepthUploadedBytes": 0,
+      "softDepthTriangles": 0,
+      "softDepthDrawCalls": 0,
+      "bloomStatus": "启用",
+      "bloomTargetBytes": 917504,
+      "bloomDrawCalls": 3,
+      "postProcessCpuMs": 0,
+      "compositeCpuMs": 0,
+      "mainCpuMs": 0,
+      "shadowCpuMs": 0,
+      "renderCpuMs": 0,
+      "profileReady": false,
+      "redrawThisFrame": true,
+      "redrawId": 9,
+      "renderId": 13,
+      "skippedLights": 0,
+      "activeLights": 1,
+      "environmentTextureBytes": 16864,
+      "environmentStatus": "启用",
+      "skyboxTextureBytes": 2109456,
+      "skyboxDrawCalls": 1,
+      "skyboxStatus": "启用",
+      "fogStatus": "启用"
+    },
+    "releases": 2,
+    "lastRelease": {
+      "sceneDisposed": true,
+      "controllerDisposed": true,
+      "collisionDisposed": true,
+      "colliders": 0,
+      "nodes": 0
+    }
+  }
+}

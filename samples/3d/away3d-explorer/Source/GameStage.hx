@@ -1,5 +1,6 @@
 package;
 
+import hx.display.FPS;
 import hx.display.Label;
 import hx.display.Quad;
 import hx.events.Event;
@@ -32,6 +33,7 @@ class GameStage extends hx.display.Stage {
 	#end
 	override public function onStageInit():Void {
 		super.onStageInit();startWorld();buildHud();
+		var fps=new FPS();fps.x=946;fps.y=292;fps.scale=0.5;addChild(fps);
 		addEventListener(Event.UPDATE,handleFrame);
 		addEventListener(KeyboardEvent.KEY_DOWN,onKeyDown);addEventListener(KeyboardEvent.KEY_UP,onKeyUp);
 		addEventListener(MouseEvent.MOUSE_MOVE,onMove);addEventListener(MouseEvent.MOUSE_UP,onRelease);

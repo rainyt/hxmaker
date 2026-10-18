@@ -119,6 +119,11 @@ class Scene3DStats {
 	/** 实际使用的阴影贴图边长，单位为像素。 */
 	public var shadowMapSize:Int = 0;
 
+	/** 实际阴影级联数、深度位数及每级世界纹素尺寸，供画质诊断。 */
+	public var shadowCascades:Int = 0;
+	public var shadowDepthBits:Int = 0;
+	public var shadowWorldTexels:Array<Float> = [];
+
 	/** 阴影启用、关闭或后端回退原因的中文说明。 */
 	public var shadowStatus:String = "关闭";
 
@@ -138,6 +143,7 @@ class Scene3DStats {
 		drawCalls = triangles = visibleMeshes = culledMeshes = uploadedBytes = textureSlots = compositeDrawCalls = 0;
 		shadowDrawCalls = shadowTriangles = shadowUploadedBytes = shadowMapBytes = shadowMapSize = 0;
 		shadowStatus = "关闭"; shadowCacheHit = false;
+		shadowCascades = shadowDepthBits = 0; shadowWorldTexels = [];
 		splitReasons.clear();
 	}
 

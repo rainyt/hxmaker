@@ -36,8 +36,10 @@ class ModelAssetBuilder {
 			checkIndex(texture.source, images.length, "纹理图片");
 			checkWrap(texture.wrapU);
 			checkWrap(texture.wrapV);
+			var minFilter = hx.material.TextureMinFilter3D.resolve(texture.minFilter, texture.minSmoothing);
+			hx.material.TextureMinFilter3D.validate(minFilter);
 			{source: texture.source, wrapU: texture.wrapU, wrapV: texture.wrapV,
-				smoothing: texture.smoothing, minSmoothing: texture.minSmoothing};
+				smoothing: texture.smoothing, minSmoothing: hx.material.TextureMinFilter3D.base(minFilter) == 9729, minFilter: minFilter};
 		}];
 		var materials = [for (material in source.materials) copyMaterial(material, textures.length)];
 		var meshes:Array<Array<ModelPrimitiveData>> = [];

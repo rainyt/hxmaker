@@ -53,10 +53,13 @@ class PbrMaterial3D extends Material3D {
 
 	/** 每张贴图独立配置采样；名称为 metallicRoughness、normal、occlusion 或 emissive。 */
 	public function setMapSampler(map:String, smoothing:Bool = true, minSmoothing:Bool = true,
-		wrapU:TextureWrap3D = TextureWrap3D.CLAMP, wrapV:TextureWrap3D = TextureWrap3D.CLAMP):Void {
+		wrapU:TextureWrap3D = TextureWrap3D.CLAMP, wrapV:TextureWrap3D = TextureWrap3D.CLAMP, minFilter:Null<Int> = null):Void {
 		ensureMutable();
 		if ([33071, 10497, 33648].indexOf(wrapU) < 0 || [33071, 10497, 33648].indexOf(wrapV) < 0)
 			throw "PBR 贴图包裹模式无效";
+		var filter = TextureMinFilter3D.resolve(minFilter, minSmoothing);
+		TextureMinFilter3D.validate(filter);
+		setUniform(mapName(map) + "MinFilter", [filter * 1.]);
 		setUniform(mapName(map) + "Sampler", [smoothing ? 1. : 0., minSmoothing ? 1. : 0., wrapU, wrapV]);
 	}
 	private function bindMap(map:String, bitmap:BitmapData):Void {

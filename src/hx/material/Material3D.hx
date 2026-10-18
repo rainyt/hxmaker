@@ -225,6 +225,19 @@ class Material3D extends EventDispatcher {
 
 	private var __smoothing:Bool = true;
 	private var __textureMinSmoothing:Null<Bool> = null;
+	private var __textureMinFilter:Null<Int> = null;
+
+	/** 完整缩小过滤，优先于 textureMinSmoothing；null 保留原有基础层过滤行为。 */
+	public var textureMinFilter(get, set):Null<Int>;
+	private function get_textureMinFilter():Null<Int> { return __textureMinFilter; }
+	private function set_textureMinFilter(value:Null<Int>):Null<Int> {
+		if (value != null) TextureMinFilter3D.validate(value);
+		if (__textureMinFilter != value) {
+			__textureMinFilter = value;
+			invalidate();
+		}
+		return value;
+	}
 
 	/** null 表示缩小时沿用 smoothing；GLB 可分别指定缩小与放大过滤。 */
 	public var textureMinSmoothing(get, set):Null<Bool>;
@@ -412,7 +425,13 @@ class Material3D extends EventDispatcher {
 				"uShadowTexelSize",
 				"uReceiveShadow",
 				"uShadowBias",
-				"uShadowSlopeBias"
+				"uShadowSlopeBias",
+				"uLightViewProjectionFar",
+				"uShadowNormalBias",
+				"uShadowCascadeCount",
+				"uShadowCascadeParams",
+				"uShadowCameraDepth",
+				"uShadowWorldTexels"
 			].indexOf(name) >= 0)
 			throw "自定义 uniform 名称无效或与内置变量冲突";
 	}

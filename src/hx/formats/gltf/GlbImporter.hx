@@ -47,7 +47,8 @@ class GlbImporter {
 				wrapU: texture.wrapU,
 				wrapV: texture.wrapV,
 				smoothing: texture.smoothing,
-				minSmoothing: texture.minSmoothing
+				minSmoothing: texture.minSmoothing,
+				minFilter: texture.minFilter
 			}],
 			skins: gltf.skins,
 			animations: [for (clip in gltf.animations) {name: clip.name, tracks: clip.tracks}],

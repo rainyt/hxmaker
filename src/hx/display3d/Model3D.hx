@@ -139,6 +139,7 @@ class Model3D extends Node3D {
 						material.texture = sourceAsset.getTexture(source.baseColorTexture);
 						material.smoothing = texture.smoothing;
 						material.textureMinSmoothing = texture.minSmoothing;
+						material.textureMinFilter = texture.minFilter;
 						material.textureWrapU = texture.wrapU;
 						material.textureWrapV = texture.wrapV;
 					}
@@ -174,7 +175,7 @@ class Model3D extends Node3D {
 			case "occlusion": material.occlusionTexture = bitmap;
 			case "emissive": material.emissiveTexture = bitmap;
 		}
-		material.setMapSampler(map, sampler.smoothing, sampler.minSmoothing, sampler.wrapU, sampler.wrapV);
+		material.setMapSampler(map, sampler.smoothing, sampler.minSmoothing, sampler.wrapU, sampler.wrapV, sampler.minFilter);
 	}
 
 	/** 显式驱动动画；暂停时不重复计算蒙皮，静态模型只在创建时计算初始姿态。 */

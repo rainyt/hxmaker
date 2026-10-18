@@ -159,8 +159,10 @@ typedef GltfTextureData = {
 	/** 放大时是否线性过滤。 */
 	var smoothing:Bool;
 
-	/** 缩小时是否使用基础层线性过滤，不表示已生成 mipmap。 */
+	/** 缩小时是否使用层内线性过滤，保留旧接口兼容。 */
 	var minSmoothing:Bool;
+	/** 可选完整缩小过滤；缺省兼容旧数据的 minSmoothing。 */
+	@:optional var minFilter:Null<Int>;
 }
 
 /** 源蒙皮关节与逆绑定矩阵，供模型实例只读使用。 */

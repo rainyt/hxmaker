@@ -150,11 +150,11 @@ material.setMapSampler("normal", true, true, hx.material.TextureWrap3D.REPEAT, h
 
 ### 采样、合批与资源
 
-`setMapSampler(map, smoothing, minSmoothing, wrapU, wrapV)` 分别设置放大过滤、缩小过滤和 U/V 包裹。`map` 接受 `metallicRoughness`、`normal`、`occlusion`、`emissive`。GLB 中每种贴图的采样设置独立导入。
+`setMapSampler(map, smoothing, minSmoothing, wrapU, wrapV, minFilter)` 分别设置放大过滤、缩小过滤和 U/V 包裹。`map` 接受 `metallicRoughness`、`normal`、`occlusion`、`emissive`。最后一个可选参数使用 `TextureMinFilter3D` 完整缩小过滤模式，非 null 时优先于 `minSmoothing`。旧调用方式保持无 mipmap。GLB 中每种贴图的采样设置独立导入。
 
-数据贴图采用区域内 CLAMP、REPEAT 或 MIRROR，坐标夹在区域有效像素内以避免图集串色；重复接缝不会跨区域进行原生硬件双线性混合。仍沿用现有无 mipmap 路径，源 mipmap 过滤按已有放大／缩小过滤近似处理。
+无图集、无填充且保留 CPU 图片的二次幂整图使用硬件 CLAMP、REPEAT 或 MIRROR，并按需生成 mipmap，保留连续 UV 导数。图集与其他图片继续使用区域内包裹，mipmap 降级为对应基础层过滤，避免跨区域渗色；此路径的重复接缝不进行跨区域硬件混合。详见 [mipmap使用说明](mipmap使用说明.md)。
 
-同一底层图片在多个槽位共用 GL 采样状态，各槽位需使用相同过滤配置，否则明确报错。共享 ORM 图片作为 MR 与 AO 可以使用不同通道，但仍占两个槽位。带辅助贴图的材质继续按材质实例隔离批次；同一材质实例可被多个网格共享。
+同一底层图片在多个槽位共用 GL 采样状态，各槽位需使用相同的实际过滤与硬件包裹配置，否则明确报错。共享 ORM 图片作为 MR 与 AO 可以使用不同通道，但仍占两个槽位。带辅助贴图的材质继续按材质实例隔离批次；同一材质实例可被多个网格共享。
 
 四张额外贴图最多增加四个采样器，与基础色、IBL、主光阴影一起通常需要七个纹理单元。纹理或着色器资源不足时可能无法绘制完整材质；IBL 保留槽位不足降级，必要贴图不静默丢弃。法线贴图需要切线和原始 UV 属性，使用到第七个属性位置。无数据贴图的光照路径仍为每顶点 13 个浮点数；仅数据贴图为 15 个，包含法线贴图为 19 个。
 

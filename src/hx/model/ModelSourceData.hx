@@ -84,6 +84,8 @@ typedef ModelTextureData = {
 	var wrapV:TextureWrap3D;
 	var smoothing:Bool;
 	var minSmoothing:Bool;
+	/** 可选完整缩小过滤；缺省兼容旧数据的 minSmoothing。 */
+	@:optional var minFilter:Null<Int>;
 }
 
 /** 关节矩阵统一为模型空间关节全局矩阵乘逆绑定矩阵。 */

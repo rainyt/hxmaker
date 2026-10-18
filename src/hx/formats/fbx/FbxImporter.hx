@@ -217,7 +217,7 @@ class FbxImporter {
 		if ((wrapU != 0 && wrapU != 1) || (wrapV != 0 && wrapV != 1)) throw "FBX 纹理包裹模式不支持";
 		var index = textures.length;
 		textures.push({source: imageIndex, wrapU: wrapU == 1 ? TextureWrap3D.CLAMP : TextureWrap3D.REPEAT,
-			wrapV: wrapV == 1 ? TextureWrap3D.CLAMP : TextureWrap3D.REPEAT, smoothing: true, minSmoothing: true});
+			wrapV: wrapV == 1 ? TextureWrap3D.CLAMP : TextureWrap3D.REPEAT, smoothing: true, minSmoothing: true, minFilter: 9729});
 		var set = property(texture, "UVSet");
 		textureSets.set(index, set == null ? "" : string(set[0])); textureIds.set(key, index);
 		return index;

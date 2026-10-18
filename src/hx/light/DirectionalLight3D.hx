@@ -11,20 +11,32 @@ class DirectionalLight3D extends Light3D {
 	/** 阴影贴图边长，默认 1024，允许 16 至 8192 的二次幂。 */
 	public var shadowMapSize:Int = 1024;
 
-	/** 阴影深度常量偏移，默认 0.001，必须非负有限。 */
-	public var shadowBias:Float = 0.001;
+	/** 阴影深度常量偏移，默认 0.0001，必须非负有限。 */
+	public var shadowBias:Float = 0.0001;
 
-	/** 随表面倾角增加的深度偏移，默认 0.002，必须非负有限。 */
-	public var shadowSlopeBias:Float = 0.002;
+	/** 随表面倾角增加的深度偏移，默认 0.0005，必须非负有限。 */
+	public var shadowSlopeBias:Float = 0.0005;
 
 	/** 自动阴影范围的非负留边比例，默认 0.1。 */
 	public var shadowPadding:Float = 0.1;
 
-	/** 可选世界空间范围；为空时自动适配投射物与接收深度。 */
+	/** 自动阴影覆盖的相机前向距离，默认 100；0 表示沿用 camera.far，手动范围优先。 */
+	public var shadowDistance:Float = 100;
+
+	/** 自动取景级联数量，允许 1 或 2，默认 2；手动世界范围固定使用单级。 */
+	public var shadowCascadeCount:Int = 2;
+
+	/** 距离末端的淡出比例，范围 0～0.5，默认 0.1；0 关闭距离淡出。 */
+	public var shadowFadeRatio:Float = 0.1;
+
+	/** 几何法线偏移，以每级阴影纹素的世界尺寸为单位，默认 0.5。 */
+	public var shadowNormalBias:Float = 0.5;
+
+	/** 可选世界空间范围；为空时覆盖相机附近区域，避免远处物体持续降低阴影精度。 */
 	public var shadowBounds:Bounds3D;
 
-	/** 默认硬阴影；可切换为四次比较的 PCF4。 */
-	public var shadowFilter:ShadowFilter3D = ShadowFilter3D.HARD;
+	/** 默认按亚纹素位置加权的 PCF4；低成本模式可切换 HARD。 */
+	public var shadowFilter:ShadowFilter3D = ShadowFilter3D.PCF4;
 
 	/** 默认自动检测投影内容变化；关闭后调用 requestShadowUpdate 更新。 */
 	public var shadowAutoUpdate:Bool = true;
@@ -46,11 +58,14 @@ class DirectionalLight3D extends Light3D {
 	/** 同时用于参数校验和静态场景失效检测，不读取 GPU 状态。 */
 	override public function settingsKey():String {
 		var base = super.settingsKey();
-		for (value in [intensity, shadowBias, shadowSlopeBias, shadowPadding])
+		for (value in [intensity, shadowBias, shadowSlopeBias, shadowPadding, shadowNormalBias])
 			if (!Math3D.finite(value) || value < 0)
 				throw "方向光强度或阴影参数无效";
 		if (shadowMapSize < 16 || shadowMapSize > 8192 || (shadowMapSize & (shadowMapSize - 1)) != 0)
 			throw "阴影尺寸必须是 16～8192 的二次幂";
+		if (!Math3D.finite(shadowDistance) || shadowDistance < 0) throw "阴影覆盖距离必须为非负有限值";
+		if (shadowCascadeCount != 1 && shadowCascadeCount != 2) throw "阴影级联数量必须为 1 或 2";
+		if (!Math3D.finite(shadowFadeRatio) || shadowFadeRatio < 0 || shadowFadeRatio > 0.5) throw "阴影淡出比例必须为 0～0.5";
 		if (shadowBounds != null) {
 			if (shadowBounds.isEmpty())
 				throw "阴影范围不能为空";
@@ -83,6 +98,10 @@ class DirectionalLight3D extends Light3D {
 			shadowBias,
 			shadowSlopeBias,
 			shadowPadding,
+			shadowDistance,
+			shadowCascadeCount,
+			shadowFadeRatio,
+			shadowNormalBias,
 			shadowBounds == null ? "自动" : [
 				shadowBounds.min.x,
 				shadowBounds.min.y,

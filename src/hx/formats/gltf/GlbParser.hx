@@ -206,14 +206,13 @@ class GlbParser {
 				min = integer(sampler, "minFilter", 9729);
 			if ([9728, 9729].indexOf(mag) < 0 || [9728, 9729, 9984, 9985, 9986, 9987].indexOf(min) < 0)
 				throw "GLB 纹理过滤模式无效";
-			if (min >= 9984)
-				warn("GLB mipmap 过滤暂降级为对应的基础层过滤，尚未生成 mipmap。");
 			settings.push({
 				source: -1,
 				wrapU: wrapU,
 				wrapV: wrapV,
 				smoothing: mag == 9729,
-				minSmoothing: [9729, 9985, 9987].indexOf(min) >= 0
+				minSmoothing: [9729, 9985, 9987].indexOf(min) >= 0,
+				minFilter: min
 			});
 		}
 		var result:Array<GltfTextureData> = [];
@@ -225,19 +224,21 @@ class GlbParser {
 				throw "纹理 sampler 索引无效";
 			if (sampler >= 0)
 				checkIndex(sampler, settings.length, "纹理 sampler");
-			var setting = sampler < 0 ? {
+			var setting:GltfTextureData = sampler < 0 ? {
 				source: -1,
 				wrapU: 10497,
 				wrapV: 10497,
 				smoothing: true,
-				minSmoothing: true
+				minSmoothing: true,
+				minFilter: 9729
 			} : settings[sampler];
 			result.push({
 				source: source,
 				wrapU: setting.wrapU,
 				wrapV: setting.wrapV,
 				smoothing: setting.smoothing,
-				minSmoothing: setting.minSmoothing
+				minSmoothing: setting.minSmoothing,
+				minFilter: setting.minFilter
 			});
 		}
 		return result;

@@ -1,0 +1,10 @@
+{
+  "format": "hxmaker-ibl-1",
+  "layerWidth": 32,
+  "layerHeight": 16,
+  "levels": 4,
+  "radianceRange": 1.0,
+  "samples": 32,
+  "encoding": "linear-rgb-range",
+  "source": "hxmaker-away-sky"
+}

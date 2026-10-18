@@ -1,0 +1,11 @@
+{
+  "format": "hxmaker-fog-1",
+  "enabled": true,
+  "mode": "exp2",
+  "color": 10399162,
+  "start": 12.0,
+  "end": 100.0,
+  "density": 0.014000000432133675,
+  "maxOpacity": 1.0,
+  "affectSkybox": false
+}

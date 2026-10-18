@@ -1,0 +1,7 @@
+{
+  "format": "hxmaker-sky-1",
+  "encoding": "linear-rgb-range",
+  "width": 1024,
+  "height": 512,
+  "radianceRange": 1.0
+}

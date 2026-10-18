@@ -406,6 +406,7 @@ class Material3D extends EventDispatcher {
 			|| StringTools.startsWith(name, "uSampler")
 			|| StringTools.startsWith(name, "uSceneLight")
 			|| StringTools.startsWith(name, "uIbl")
+			|| StringTools.startsWith(name, "uFog")
 			|| [
 				"uViewProjection",
 				"uBaseUVRect",

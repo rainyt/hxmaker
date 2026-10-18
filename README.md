@@ -77,6 +77,7 @@ hxmaker embeds 3D viewports in the 2D display tree through `hx.display.Scene3D`.
 | Animation and complete character flow | [Textured characters](samples/3d/textured-character/README.md) · [Transitions and attachments](docs/3D动画过渡与骨骼挂点使用说明.md) · [Complete character project](samples/3d/interactive-character/README.md) |
 | Multiple lights and shadows | [Multiple-light example](samples/3d/multi-light-3d/README.md) · [Lighting chapter](docs/3D引擎新手指南.md#10-光源与阴影) · [Shadow settings and caching](docs/基础3D光照与阴影使用说明.md) |
 | Particles, trails, and Bloom | [Effects example](samples/3d/effects-3d/README.md) · [Particles and billboards](docs/3D特效第一阶段使用说明.md) · [Trails and dynamic materials](docs/3D特效第二阶段使用说明.md) · [Soft particles and Bloom](docs/3D特效第三阶段使用说明.md) |
+| 可探索世界与距离雾 | [雪岭观测站](samples/3d/away3d-explorer/README.md) · [距离雾与 Blender 配置](docs/距离雾使用说明.md) |
 | 天空背景与环境反射 | [天空环境示例](samples/3d/skybox/README.md) · [天空环境使用说明](docs/天空环境使用说明.md) |
 | Cameras and interaction | [Camera example](samples/3d/camera-interaction/README.md) · [Interaction guide](docs/3D相机控制与交互使用说明.md) |
 | Collision, terrain, and navigation | [Collision example](samples/3d/collision-character/README.md) · [Steps and slopes](samples/3d/terrain-character/README.md) · [Navigation example](samples/3d/navigation-character/README.md) · [Navigation guide](docs/3D导航使用说明.md) |

@@ -2,6 +2,8 @@ package hx.render3d;
 
 /** 最近一次三维重绘的数据；最终合成次数在每次 GPU 回调更新。 */
 class Scene3DStats {
+	/** 距离雾内嵌在原绘制通道，不增加独立批次或纹理。 */
+	public var fogStatus:String = "关闭";
 	/** 天空通道独立计数，不计入网格批次；纹理为借用资源估算。 */
 	public var skyboxStatus:String = "关闭";
 	public var skyboxDrawCalls:Int = 0;
@@ -150,6 +152,7 @@ class Scene3DStats {
 
 	/** 重置绘制计数和拆批原因；不清除回调编号、目标尺寸及计时字段。 */
 	public function reset():Void {
+		fogStatus = "关闭";
 		environmentStatus = "关闭"; environmentTextureBytes = 0;
 		skyboxStatus = "关闭"; skyboxDrawCalls = 0; skyboxTextureBytes = 0;
 		activeLights = skippedLights = 0;

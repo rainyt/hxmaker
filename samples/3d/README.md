@@ -5,6 +5,8 @@
 | [basic-3d](basic-3d/README.md) | 基础几何、贴图、透明与拾取 |
 | [camera-interaction](camera-interaction/README.md) | 相机控制与三维交互 |
 | [collision-character](collision-character/README.md) | 碰撞与角色控制 |
+| [away3d-explorer](away3d-explorer/README.md) | Blender 场景、Away3D 素材迁移、第一人称探索与任务存档 |
+| [distance-fog](distance-fog/README.md) | 距离雾与 Blender 场景雾配置 |
 | [effects-3d](effects-3d/README.md) | 粒子、拖尾与三维特效 |
 | [engine-acceptance](engine-acceptance/README.md) | 三维及二维混合验收与性能基线 |
 | [fbx-model](fbx-model/README.md) | FBX 与 GLB 模型对照 |

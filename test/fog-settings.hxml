@@ -1,0 +1,4 @@
+--class-path src
+--class-path test
+--main FogSettingsChecks
+--interp

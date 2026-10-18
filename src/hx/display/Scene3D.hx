@@ -114,6 +114,9 @@ class Scene3D extends DisplayObject {
 	/** 场景级泛光参数；修改后由设置键检测重绘，默认关闭。 */
 	public var bloom(default, null):BloomSettings3D = new BloomSettings3D();
 
+	/** 场景级距离雾；默认关闭，配置可由 Blender 导出的场景数据加载。 */
+	public var fog(default, null):hx.render3d.FogSettings3D = new hx.render3d.FogSettings3D();
+
 	/** 是否在可见状态每次 UPDATE 请求重绘，默认 true；关闭后可显式 requestRender。 */
 	public var autoRender:Bool = true;
 
@@ -216,7 +219,7 @@ class Scene3D extends DisplayObject {
 			                            renderScale,                  backgroundColor,                 backgroundAlpha, multiTextureEnabled ? 1 : 0,
 			camera == null ? 0 : camera.fieldOfView, camera == null ? 0 : camera.near, camera == null ? 0 : camera.far,               lightingKey(), bloom.settingsKey()
 		];
-		var settings = values.join(":") + ":sky:" + skyboxKey();
+		var settings = values.join(":") + ":sky:" + skyboxKey() + ":fog:" + fog.settingsKey();
 		if (settings != __settings) {
 			__settings = settings;
 			requestRender();

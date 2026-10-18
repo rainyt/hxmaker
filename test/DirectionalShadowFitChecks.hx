@@ -6,7 +6,7 @@ import hx.light.DirectionalLight3D;
 import hx.render3d.DirectionalShadowFit3D;
 import hx.render3d.Math3D;
 
-/** 自动阴影取景的纯数值检查；本轮仅准备入口，不运行。 */
+/** 自动阴影取景与可选质量参数的纯数值检查。 */
 class DirectionalShadowFitChecks {
 	static function main():Void {
 		var camera = new Camera3D();
@@ -52,12 +52,19 @@ class DirectionalShadowFitChecks {
 		camera.x = 2;
 		var moved = new DirectionalShadowFit3D(camera, 1, 10, direction).projection([local], 0.1, 2048);
 		check(Math.abs(moved.rawData[12] - projection.rawData[12]) > 1e-6, "自动取景跟随相机平移");
+		near(DirectionalShadowFit3D.splitDistance(1, 101, 0.4), 41, "显式比例按整个近远深度区间切分");
+		near(DirectionalShadowFit3D.splitDistance(1, 100, null), split, "null 保留旧的自动切分");
+		for (invalid in [0., 1., -0.1, Math.NaN]) {
+			var failed = false;
+			try { DirectionalShadowFit3D.splitDistance(1, 100, invalid); } catch (_:Dynamic) { failed = true; }
+			check(failed, "拒绝非法切分比例");
+		}
 		var light = new DirectionalLight3D(), key = light.settingsKey();
 		light.shadowDistance = 20;
 		check(light.settingsKey() != key, "距离变化使灯光设置缓存失效");
 		light.shadowDistance = 0;
 		light.settingsKey();
-		check(light.shadowCascadeCount == 2, "默认使用近远两级阴影");
+		check(light.shadowCascadeCount == 2, "级联请求的旧默认值保持可读取");
 		light.shadowDistance = -1;
 		var rejected = false;
 		try { light.settingsKey(); } catch (_:Dynamic) { rejected = true; }
@@ -67,6 +74,24 @@ class DirectionalShadowFitChecks {
 		try { light.settingsKey(); } catch (_:Dynamic) { rejected = true; }
 		check(rejected, "拒绝不支持的级联数量");
 		light.shadowCascadeCount = 1; light.shadowFadeRatio = 0; light.settingsKey();
+		check(light.shadowFilter == hx.light.ShadowFilter3D.PCF4 && light.shadowCascadeSplit == null,
+			"默认过滤和切分保持兼容");
+		var previous = light.settingsKey();
+		light.shadowFilter = hx.light.ShadowFilter3D.PCF9;
+		check(previous != light.settingsKey(), "切换 PCF9 触发设置变化");
+		previous = light.settingsKey(); light.shadowFilterRadius = 1.25;
+		check(previous != light.settingsKey(), "半径变化触发设置变化");
+		light.shadowFilterRadius = 0; light.shadowCascadeBlend = 0; light.shadowCascadeSplit = 0.4; light.settingsKey();
+		light.shadowFilterRadius = 1.5; light.shadowCascadeBlend = 0.5; light.settingsKey();
+		for (field in ["shadowFilterRadius", "shadowCascadeBlend", "shadowCascadeSplit"]) {
+			for (invalid in [-1., Math.NaN, Math.POSITIVE_INFINITY, 2.]) {
+				var original:Dynamic = Reflect.getProperty(light, field); Reflect.setProperty(light, field, invalid);
+				var failed = false;
+				try { light.settingsKey(); } catch (_:Dynamic) { failed = true; }
+				Reflect.setProperty(light, field, original);
+				check(failed, "拒绝非法可选阴影参数：" + field);
+			}
+		}
 		camera.dispose(); light.dispose();
 		trace("HXMAKER_DIRECTIONAL_SHADOW_FIT_CHECKS PASS");
 	}

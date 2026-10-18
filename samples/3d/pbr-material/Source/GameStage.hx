@@ -21,7 +21,7 @@ import hx.geom.Vector3D;
 import hx.geometry.Geometry3D;
 import hx.geometry.PlaneGeometry;
 import hx.light.DirectionalLight3D;
-import hx.light.ShadowFilter3D;
+import hx.light.ShadowQuality3D;
 import hx.material.Material3D;
 import hx.material.LambertTextureMaterial;
 import hx.material.PbrMaterial3D;
@@ -68,6 +68,7 @@ class GameStage extends hx.display.Stage {
 		scene.ambientIntensity = 0.3;
 		addChild(scene);
 		camera = new Camera3D();
+		camera.near = 0.5;
 		camera.setPosition(0, 4.5, 11);
 		scene.root.addChild(camera);
 		scene.camera = camera;
@@ -88,7 +89,8 @@ class GameStage extends hx.display.Stage {
 		var keyLight = new DirectionalLight3D(0xffebd6, 3);
 		keyLight.direction = new Vector3D(-0.5, -1, -0.8);
 		keyLight.shadowEnabled = true;
-		keyLight.shadowFilter = ShadowFilter3D.PCF4;
+		// 可选高质量档；范围、级联、过滤和偏差由引擎解析，无需手写世界包围盒。
+		keyLight.shadowQuality = ShadowQuality3D.HIGH;
 		scene.root.addChild(keyLight);
 		scene.light = keyLight;
 		var fillLight = new DirectionalLight3D(0xa9cfff, 1.2);
@@ -187,7 +189,9 @@ class GameStage extends hx.display.Stage {
 			cameraControl.update(dt);
 			status.data = "主场景批次：" + scene.stats.drawCalls + "　阴影批次：" + scene.stats.shadowDrawCalls
 				+ "　合成批次：" + scene.stats.compositeDrawCalls + "　环境：" + scene.stats.environmentStatus
-				+ (environment == null ? "" : "　" + Math.round(environment.intensity * 100) / 100 + " 倍 / " + environment.rotation + "°");
+				+ (environment == null ? "" : "　" + Math.round(environment.intensity * 100) / 100 + " 倍 / " + environment.rotation + "°")
+				+ "\n阴影：" + scene.stats.shadowFitMode + "　每级：" + scene.stats.shadowMapSize + "　级联：" + scene.stats.shadowCascades
+				+ "　世界纹素：" + scene.stats.shadowWorldTexels.map(value -> Math.round(value * 10000) / 10000).join(" / ");
 		});
 		loadEnvironment();
 		loadTexturedModel();

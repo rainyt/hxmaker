@@ -10,9 +10,12 @@ class DirectionalShadowFit3D {
 	public var view(default, null):Matrix3D;
 	public var bounds(default, null):Bounds3D;
 	public var depthRange(default, null):Float = 1;
+	private var minimumExtent:Float;
 
-	public function new(camera:Camera3D, aspect:Float, distance:Float, direction:Vector3D, nearDistance:Float = 0) {
-		if (camera == null || !Math3D.finite(distance) || distance <= 0 || !Math3D.finite(nearDistance) || nearDistance < 0)
+	public function new(camera:Camera3D, aspect:Float, distance:Float, direction:Vector3D, nearDistance:Float = 0, minimumExtent:Float = 0.1) {
+		this.minimumExtent = minimumExtent;
+		if (camera == null || !Math3D.finite(distance) || distance <= 0 || !Math3D.finite(nearDistance) || nearDistance < 0
+			|| !Math3D.finite(minimumExtent) || minimumExtent <= 0)
 			throw "自动阴影相机或距离无效";
 		camera.getProjectionMatrix(aspect);
 		view = lightView(direction);
@@ -44,8 +47,13 @@ class DirectionalShadowFit3D {
 		bounds.min.y = lightCenter.y - radius; bounds.max.y = lightCenter.y + radius;
 	}
 
-	/** 混合均匀和对数切分，使单张近级联优先分配给近景。 */
-	public static function splitDistance(near:Float, far:Float):Float {
+	/** 可选显式深度占比；省略时混合均匀与对数切分，优先分配近景采样。 */
+	public static function splitDistance(near:Float, far:Float, ratio:Null<Float> = null):Float {
+		if (!Math3D.finite(near) || !Math3D.finite(far) || near <= 0 || far <= near) throw "级联切分距离无效";
+		if (ratio != null) {
+			if (!Math3D.finite(ratio) || ratio <= 0 || ratio >= 1) throw "近级联深度占比必须大于 0 且小于 1";
+			return near + (far - near) * ratio;
+		}
 		return (Math.sqrt(near * far) + (near + far) * 0.5) * 0.5;
 	}
 
@@ -53,8 +61,8 @@ class DirectionalShadowFit3D {
 	public function affects(worldBounds:Bounds3D, padding:Float = 0):Bool {
 		if (worldBounds.isEmpty()) return false;
 		var box = worldBounds.transformed(view);
-		var px = Math.max(0.1, bounds.max.x - bounds.min.x) * padding;
-		var py = Math.max(0.1, bounds.max.y - bounds.min.y) * padding;
+		var px = Math.max(minimumExtent, bounds.max.x - bounds.min.x) * padding;
+		var py = Math.max(minimumExtent, bounds.max.y - bounds.min.y) * padding;
 		return box.max.x >= bounds.min.x - px && box.min.x <= bounds.max.x + px
 			&& box.max.y >= bounds.min.y - py && box.min.y <= bounds.max.y + py && box.max.z >= bounds.min.z;
 	}
@@ -64,9 +72,9 @@ class DirectionalShadowFit3D {
 		if (!Math3D.finite(padding) || padding < 0 || size <= 0) throw "阴影留边或分辨率无效";
 		var maximumZ = bounds.max.z;
 		for (box in casters) if (affects(box, padding)) maximumZ = Math.max(maximumZ, box.transformed(view).max.z);
-		var margin = Math.max(0.1, (maximumZ - bounds.min.z) * padding);
+		var margin = Math.max(minimumExtent, (maximumZ - bounds.min.z) * padding);
 		depthRange = maximumZ - bounds.min.z + margin * 2;
-		return projectionFor(view, bounds.min.x, bounds.max.x, bounds.min.y, bounds.max.y, bounds.min.z, maximumZ, padding, size);
+		return projectionFor(view, bounds.min.x, bounds.max.x, bounds.min.y, bounds.max.y, bounds.min.z, maximumZ, padding, size, minimumExtent);
 	}
 
 	/** 统一的光空间基，避免自动取景与手动范围采用不同的光向约定。 */
@@ -82,16 +90,16 @@ class DirectionalShadowFit3D {
 
 	/** 对齐阴影纹素，并预留半个纹素，避免中心取整后裁掉原覆盖边缘。 */
 	public static function projectionFor(view:Matrix3D, minX:Float, maxX:Float, minY:Float, maxY:Float,
-		minZ:Float, maxZ:Float, padding:Float, size:Int):Matrix3D {
-		var width = Math.max(0.1, maxX - minX) * (1 + padding * 2);
-		var height = Math.max(0.1, maxY - minY) * (1 + padding * 2);
+		minZ:Float, maxZ:Float, padding:Float, size:Int, minimumExtent:Float = 0.1):Matrix3D {
+		var width = Math.max(minimumExtent, maxX - minX) * (1 + padding * 2);
+		var height = Math.max(minimumExtent, maxY - minY) * (1 + padding * 2);
 		// 尺寸至少为 2；调用方的阴影贴图校验会进一步限制到 16～8192。
 		var resolution = Math.max(2, size);
 		width *= resolution / (resolution - 1); height *= resolution / (resolution - 1);
 		var cx = (minX + maxX) / 2, cy = (minY + maxY) / 2;
 		cx = Math.floor(cx / (width / resolution) + 0.5) * (width / resolution);
 		cy = Math.floor(cy / (height / resolution) + 0.5) * (height / resolution);
-		var margin = Math.max(0.1, (maxZ - minZ) * padding);
+		var margin = Math.max(minimumExtent, (maxZ - minZ) * padding);
 		return Math3D.multiply(Math3D.orthographic(cx-width/2, cx+width/2, cy-height/2, cy+height/2, -maxZ-margin, -minZ+margin), view);
 	}
 }

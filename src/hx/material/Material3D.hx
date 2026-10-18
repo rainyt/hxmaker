@@ -431,7 +431,10 @@ class Material3D extends EventDispatcher {
 				"uShadowCascadeCount",
 				"uShadowCascadeParams",
 				"uShadowCameraDepth",
-				"uShadowWorldTexels"
+				"uShadowWorldTexels",
+				"uShadowFilterRadius",
+				"uShadowDepthBiases",
+				"uShadowSlopeBiases"
 			].indexOf(name) >= 0)
 			throw "自定义 uniform 名称无效或与内置变量冲突";
 	}

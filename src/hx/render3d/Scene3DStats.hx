@@ -124,6 +124,17 @@ class Scene3DStats {
 	public var shadowDepthBits:Int = 0;
 	public var shadowWorldTexels:Array<Float> = [];
 
+	/** 实际取景模式；紧凑和手动范围没有相机距离截止，距离值为 0。 */
+	public var shadowFitMode:String = "关闭";
+	public var shadowEffectiveDistance:Float = 0;
+	public var shadowEffectiveFilter:Int = 0;
+	public var shadowEffectiveFilterRadius:Float = 0;
+	/** 本次重绘各级是否重新提交，以及实际使用的归一化偏差。 */
+	public var shadowCascadeUpdated:Array<Bool> = [];
+	public var shadowDepthBiases:Array<Float> = [];
+	public var shadowSlopeBiases:Array<Float> = [];
+	public var shadowDegradation:String = "";
+
 	/** 阴影启用、关闭或后端回退原因的中文说明。 */
 	public var shadowStatus:String = "关闭";
 
@@ -144,6 +155,8 @@ class Scene3DStats {
 		shadowDrawCalls = shadowTriangles = shadowUploadedBytes = shadowMapBytes = shadowMapSize = 0;
 		shadowStatus = "关闭"; shadowCacheHit = false;
 		shadowCascades = shadowDepthBits = 0; shadowWorldTexels = [];
+		shadowFitMode = "关闭"; shadowEffectiveDistance = 0; shadowEffectiveFilter = 0; shadowEffectiveFilterRadius = 0;
+		shadowCascadeUpdated = []; shadowDepthBiases = []; shadowSlopeBiases = []; shadowDegradation = "";
 		splitReasons.clear();
 	}
 

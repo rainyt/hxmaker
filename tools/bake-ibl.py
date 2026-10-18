@@ -165,6 +165,93 @@ def load_source(path, exposure):
     return sample
 
 
+def load_cube(directory, exposure):
+    """六面约定：px/nx/py/ny/pz/nz；每张图从左上角读取，采用 OpenGL 面方向。"""
+    from array import array
+    faces = {}
+    size = None
+    for name in ('px', 'nx', 'py', 'ny', 'pz', 'nz'):
+        files = [directory / (name + suffix) for suffix in ('.png', '.jpg', '.jpeg', '.hdr')]
+        files = [file for file in files if file.is_file()]
+        if len(files) != 1:
+            raise ValueError('每个立方体面必须且只能有一张图片：' + name)
+        file = files[0]
+        if file.suffix == '.hdr':
+            width, height, pixels = read_hdr(file)
+        else:
+            try:
+                from PIL import Image
+            except ImportError as error:
+                raise ValueError('读取 PNG/JPEG 六面图片需要 Pillow') from error
+            with Image.open(file) as image:
+                width, height = image.size
+                if width <= 0 or width != height or width > 4096:
+                    raise ValueError('六面图片必须为不超过 4096 的同尺寸正方形')
+                pixels = [tuple(c / 255 / 12.92 if c / 255 <= 0.04045 else ((c / 255 + 0.055) / 1.055) ** 2.4
+                                for c in pixel) for pixel in image.convert('RGB').getdata()]
+        if width != height or width > 4096 or (size is not None and width != size):
+            raise ValueError('六面图片必须为不超过 4096 的同尺寸正方形')
+        size = width
+        faces[name] = array('f', (channel for pixel in pixels for channel in pixel))
+        del pixels
+
+    def locate(n):
+        x, y, z = n
+        ax, ay, az = abs(x), abs(y), abs(z)
+        if ax >= ay and ax >= az:
+            return ('px', -z / ax, -y / ax) if x >= 0 else ('nx', z / ax, -y / ax)
+        if ay >= az:
+            return ('py', x / ay, z / ay) if y >= 0 else ('ny', x / ay, -z / ay)
+        return ('pz', x / az, -y / az) if z >= 0 else ('nz', -x / az, -y / az)
+
+    def texel(face, x, y):
+        if not (0 <= x < size and 0 <= y < size):
+            # 滤波越过面边界时转到邻面，避免转换后的全景出现夹边细线。
+            u, v = (x + 0.5) / size * 2 - 1, (y + 0.5) / size * 2 - 1
+            directions = {'px': (1, -v, -u), 'nx': (-1, -v, u), 'py': (u, 1, v),
+                          'ny': (u, -1, -v), 'pz': (u, -v, 1), 'nz': (-u, -v, -1)}
+            face, u, v = locate(directions[face])
+            x, y = math.floor((u + 1) * 0.5 * size), math.floor((v + 1) * 0.5 * size)
+        offset = (max(0, min(size - 1, y)) * size + max(0, min(size - 1, x))) * 3
+        return faces[face][offset:offset + 3]
+
+    def sample(n):
+        face, u, v = locate(n)
+        x, y = (u + 1) * 0.5 * size - 0.5, (v + 1) * 0.5 * size - 0.5
+        x0, y0 = math.floor(x), math.floor(y)
+        tx, ty = x - x0, y - y0
+        a, b, c, d = texel(face, x0, y0), texel(face, x0 + 1, y0), texel(face, x0, y0 + 1), texel(face, x0 + 1, y0 + 1)
+        return tuple(((a[i] * (1 - tx) + b[i] * tx) * (1 - ty) + (c[i] * (1 - tx) + d[i] * tx) * ty) * exposure for i in range(3))
+    return sample
+
+
+def write_sky(output, width, source):
+    """独立高清线性天空，复用 IBL 的辐射范围编码和周期边框协议。"""
+    height = width // 2
+    # 两遍采样，避免高清天空同时常驻数百万个 Python 浮点元组。
+    radiance_range = 1.
+    for y in range(height):
+        for x in range(width):
+            pixel = source(direction((x + 0.5) / width, (y + 0.5) / height))
+            if any(not math.isfinite(c) or c < 0 for c in pixel):
+                raise ValueError('天空辐射值必须为非负有限数值')
+            radiance_range = max(radiance_range, *pixel)
+    if not math.isfinite(radiance_range) or radiance_range > 1e30:
+        raise ValueError('天空辐射值超出支持范围')
+    encoded = bytearray()
+    for y in range(height + 2):
+        row = [source(direction((x + 0.5) / width, (max(0, min(height - 1, y - 1)) + 0.5) / height))
+               for x in range(width)]
+        for x in range(width + 2):
+            pixel = row[(x - 1) % width]
+            encoded.extend(round(max(0, min(1, c / radiance_range)) * 255) for c in pixel)
+    write_png(output / 'sky.png', width + 2, height + 2, encoded)
+    metadata = {'format': 'hxmaker-sky-1', 'encoding': 'linear-rgb-range',
+                'width': width, 'height': height, 'radianceRange': radiance_range}
+    (output / 'sky.json').write_text(json.dumps(metadata, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+    print(f'已生成天空：{width} × {height}，辐射范围 {radiance_range:.3f}', flush=True)
+
+
 def convolve(n, samples, source, diffuse=False):
     tangent, bitangent = basis(n)
     total, weight = [0., 0., 0.], 0.
@@ -213,6 +300,9 @@ def write_png(path, width, height, pixels):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--input', type=Path, help='2:1 HDR 或 PNG/JPEG 全景图；省略则生成示例摄影棚')
+    parser.add_argument('--cube-dir', type=Path, help='六面图片目录，与 --input 互斥')
+    parser.add_argument('--sky-width', type=int, default=0, help='高清天空有效宽度，16～4096 的偶数；默认 0 不输出天空')
+    parser.add_argument('--sky-only', action='store_true', help='只生成天空，不计算 IBL')
     parser.add_argument('--output', type=Path, required=True, help='输出目录')
     parser.add_argument('--width', type=int, default=128, help='环境层宽度，默认 128')
     parser.add_argument('--levels', type=int, default=6, help='粗糙度层数，默认 6')
@@ -223,7 +313,18 @@ def main():
         parser.error('宽度需为 16～512 的偶数，层数 2～10，样本数 16～2048')
     if not math.isfinite(args.exposure) or args.exposure <= 0:
         parser.error('曝光倍率必须是正有限数值')
-    source = load_source(args.input, args.exposure)
+    if args.input and args.cube_dir:
+        parser.error('--input 与 --cube-dir 不能同时指定')
+    if args.sky_width != 0 and (args.sky_width < 16 or args.sky_width > 4096 or args.sky_width % 2):
+        parser.error('天空宽度需为 16～4096 的偶数')
+    if args.sky_only and args.sky_width == 0:
+        parser.error('--sky-only 需要设置 --sky-width')
+    source = load_cube(args.cube_dir, args.exposure) if args.cube_dir else load_source(args.input, args.exposure)
+    args.output.mkdir(parents=True, exist_ok=True)
+    if args.sky_width:
+        write_sky(args.output, args.sky_width, source)
+    if args.sky_only:
+        return
     width, height = args.width, args.width // 2
     points = sequence(args.samples)
     layers = []
@@ -268,7 +369,7 @@ def main():
     write_png(args.output / 'environment.png', atlas_width, atlas_height, pixels)
     metadata = {'format': 'hxmaker-ibl-1', 'layerWidth': width, 'layerHeight': height, 'levels': args.levels,
                 'radianceRange': radiance_range, 'samples': args.samples, 'encoding': 'linear-rgb-range',
-                'source': args.input.name if args.input else '程序生成摄影棚'}
+                'source': args.input.name if args.input else args.cube_dir.name if args.cube_dir else '程序生成摄影棚'}
     (args.output / 'environment.json').write_text(json.dumps(metadata, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
     print(f'已生成 IBL 图集：{atlas_width} × {atlas_height}，辐射范围 {radiance_range:.3f}', flush=True)
 

@@ -77,6 +77,7 @@ hxmaker embeds 3D viewports in the 2D display tree through `hx.display.Scene3D`.
 | Animation and complete character flow | [Textured characters](samples/3d/textured-character/README.md) · [Transitions and attachments](docs/3D动画过渡与骨骼挂点使用说明.md) · [Complete character project](samples/3d/interactive-character/README.md) |
 | Multiple lights and shadows | [Multiple-light example](samples/3d/multi-light-3d/README.md) · [Lighting chapter](docs/3D引擎新手指南.md#10-光源与阴影) · [Shadow settings and caching](docs/基础3D光照与阴影使用说明.md) |
 | Particles, trails, and Bloom | [Effects example](samples/3d/effects-3d/README.md) · [Particles and billboards](docs/3D特效第一阶段使用说明.md) · [Trails and dynamic materials](docs/3D特效第二阶段使用说明.md) · [Soft particles and Bloom](docs/3D特效第三阶段使用说明.md) |
+| 天空背景与环境反射 | [天空环境示例](samples/3d/skybox/README.md) · [天空环境使用说明](docs/天空环境使用说明.md) |
 | Cameras and interaction | [Camera example](samples/3d/camera-interaction/README.md) · [Interaction guide](docs/3D相机控制与交互使用说明.md) |
 | Collision, terrain, and navigation | [Collision example](samples/3d/collision-character/README.md) · [Steps and slopes](samples/3d/terrain-character/README.md) · [Navigation example](samples/3d/navigation-character/README.md) · [Navigation guide](docs/3D导航使用说明.md) |
 | Performance and lifecycle | [Acceptance and baseline example](samples/3d/engine-acceptance/README.md) · [Existing baseline analysis](samples/3d/engine-acceptance/Baselines/2026-10-16-最终分析.md) · [Rendering optimization notes](docs/基础3D渲染优化记录-20261016.md) |
@@ -87,7 +88,7 @@ Browse all projects in the [3D examples directory](samples/3d/README.md). Applic
 
 - 3D remains under active development. Basic scenes, animation and interaction, character flow, and the first two effects stages have execution records or user acceptance feedback. New multiple-light rendering, PCF4/MASK shadows and caching, soft particles, Bloom, and format-neutral/static-FBX assets still require their own acceptance checks; earlier results do not validate them.
 - GLB support is a defined subset; FBX skeletal animation is currently unsupported. No `.hx3d` file codec or export tool has been implemented. In-memory asset preprocessing does not imply an offline publishing format is available.
-- PBR, HDR, GPU skinning/instancing, automatic LOD, automatic NavMesh generation, and general rigid-body physics are not implemented. Bloom extracts bright areas across the viewport. Additive effects and Bloom do not illuminate nearby models. Point and spot lights do not cast shadows.
+- 已支持 PBR 材质、IBL 与静态天空背景，当前场景输出仍为 LDR。完整 HDR 渲染、GPU 蒙皮与实例化、自动 LOD、自动 NavMesh 生成及通用刚体物理尚未实现。Bloom 提取整个视口的亮部，叠加特效与 Bloom 不照亮周边模型，点光源与聚光灯不投射阴影。
 - Each `Scene3D` has independent depth and composites in 2D order without sharing depth. Transparent meshes use object-level sorting, so intersecting transparent surfaces can still show ordering artifacts.
 - Evaluate performance on target devices with actual resolutions and assets. `scene.stats` reports draws, uploads, shadows, and post-processing; timings enabled by `scene.profilingEnabled` measure CPU wall time, not GPU time. Existing HTML5 baselines do not establish support across all platforms.
 

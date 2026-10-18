@@ -18,3 +18,7 @@
 | [textured-character](textured-character/README.md) | 贴图角色、动画过渡与骨骼挂点 |
 
 启动与包引用约定见[示例目录说明](../README.md)。本次分类迁移尚未编译或测试。
+
+## 天空环境
+
+[天空环境示例](skybox/README.md)展示全景天空、同源 IBL、透明合成与多视口共享；接口见[天空环境使用说明](../../docs/天空环境使用说明.md)。

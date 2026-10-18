@@ -2,6 +2,10 @@ package hx.render3d;
 
 /** 最近一次三维重绘的数据；最终合成次数在每次 GPU 回调更新。 */
 class Scene3DStats {
+	/** 天空通道独立计数，不计入网格批次；纹理为借用资源估算。 */
+	public var skyboxStatus:String = "关闭";
+	public var skyboxDrawCalls:Int = 0;
+	public var skyboxTextureBytes:Int = 0;
 	/** IBL 使用状态及借用图集上传尺寸估算；不计入离屏目标显存。 */
 	public var environmentStatus:String = "关闭";
 	public var environmentTextureBytes:Int = 0;
@@ -147,6 +151,7 @@ class Scene3DStats {
 	/** 重置绘制计数和拆批原因；不清除回调编号、目标尺寸及计时字段。 */
 	public function reset():Void {
 		environmentStatus = "关闭"; environmentTextureBytes = 0;
+		skyboxStatus = "关闭"; skyboxDrawCalls = 0; skyboxTextureBytes = 0;
 		activeLights = skippedLights = 0;
 		postProcessCpuMs = 0; bloomDrawCalls = bloomTargetBytes = 0; bloomStatus = "关闭";
 		softDepthDrawCalls = softDepthTriangles = softDepthUploadedBytes = softDepthTargetBytes = 0;

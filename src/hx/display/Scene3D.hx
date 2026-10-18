@@ -73,6 +73,13 @@ class Scene3D extends DisplayObject {
 	/** 可选的借用 IBL 环境，仅作用于启用光照的 PBR 材质；场景不接管其销毁。 */
 	public var environment:Environment3D;
 
+	/** 可选的天空背景；借用配置和纹理，不参与节点树、拾取或阴影。 */
+	public var skybox:hx.render3d.Skybox3D;
+
+	public function skyboxKey():String {
+		return skybox == null ? "" : skybox.settingsKey();
+	}
+
 	private var __light:DirectionalLight3D;
 
 	private function get_light():DirectionalLight3D {
@@ -209,7 +216,7 @@ class Scene3D extends DisplayObject {
 			                            renderScale,                  backgroundColor,                 backgroundAlpha, multiTextureEnabled ? 1 : 0,
 			camera == null ? 0 : camera.fieldOfView, camera == null ? 0 : camera.near, camera == null ? 0 : camera.far,               lightingKey(), bloom.settingsKey()
 		];
-		var settings = values.join(":");
+		var settings = values.join(":") + ":sky:" + skyboxKey();
 		if (settings != __settings) {
 			__settings = settings;
 			requestRender();
@@ -267,6 +274,7 @@ class Scene3D extends DisplayObject {
 		__light = null;
 		__lights = [];
 		environment = null;
+		skybox = null;
 		super.dispose();
 	}
 }

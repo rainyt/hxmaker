@@ -1,0 +1,458 @@
+{
+  "backend": "SwiftShader 软件 WebGL；CPU 为提交耗时，帧率不代表硬件性能",
+  "cases": [
+    "10 个独立模型加载，共 27360 个三角形",
+    "随机游走和独立 Run 动画推进",
+    "G 定格同时停止位移和动画",
+    "G 隐藏模型并停止更新",
+    "关闭动画后保留刚体移动",
+    "Y 独立切换龙阴影",
+    "销毁重进后重新创建 10 只龙"
+  ],
+  "performance": [
+    {
+      "name": "hidden",
+      "frames": 151,
+      "meanRenderCpuMs": 0.08874171932801506,
+      "meanShadowCpuMs": 0,
+      "meanMainCpuMs": 0,
+      "meanShadowUploadedBytes": 0,
+      "meanShadowGeometryRebuilds": 0,
+      "meanShadowDrawCalls": 0,
+      "p50FrameMs": 16.69999999999891,
+      "p95FrameMs": 16.799999999999272,
+      "cpu": [
+        {
+          "name": "(idle)",
+          "line": 0,
+          "ms": 2369.469
+        },
+        {
+          "name": "(program)",
+          "line": 0,
+          "ms": 215.511
+        },
+        {
+          "name": "handleApplicationEvent",
+          "line": 325,
+          "ms": 8.9
+        },
+        {
+          "name": "draw",
+          "line": 38218,
+          "ms": 8.879
+        },
+        {
+          "name": "draw",
+          "line": 38218,
+          "ms": 6.197
+        },
+        {
+          "name": "handleFrame",
+          "line": 5960,
+          "ms": 5.149
+        },
+        {
+          "name": "drawGraphic",
+          "line": 38084,
+          "ms": 5.074
+        },
+        {
+          "name": "drawTriangles",
+          "line": 73563,
+          "ms": 2.557
+        },
+        {
+          "name": "clear",
+          "line": 3465,
+          "ms": 2.554
+        },
+        {
+          "name": "requestAnimationFrame",
+          "line": 0,
+          "ms": 2.552
+        },
+        {
+          "name": "updateSize",
+          "line": 50127,
+          "ms": 2.552
+        },
+        {
+          "name": "onUpdate",
+          "line": 4739,
+          "ms": 2.531
+        }
+      ]
+    },
+    {
+      "name": "frozen",
+      "frames": 151,
+      "meanRenderCpuMs": 0.0860927120739261,
+      "meanShadowCpuMs": 0,
+      "meanMainCpuMs": 0,
+      "meanShadowUploadedBytes": 0,
+      "meanShadowGeometryRebuilds": 0,
+      "meanShadowDrawCalls": 0,
+      "p50FrameMs": 16.69999999999891,
+      "p95FrameMs": 16.700000000000728,
+      "cpu": [
+        {
+          "name": "(idle)",
+          "line": 0,
+          "ms": 2370.588
+        },
+        {
+          "name": "(program)",
+          "line": 0,
+          "ms": 68.954
+        },
+        {
+          "name": "draw",
+          "line": 38218,
+          "ms": 6.352
+        },
+        {
+          "name": "handleApplicationEvent",
+          "line": 325,
+          "ms": 3.85
+        },
+        {
+          "name": "update",
+          "line": 100472,
+          "ms": 3.834
+        },
+        {
+          "name": "clear",
+          "line": 0,
+          "ms": 3.807
+        },
+        {
+          "name": "renderDisplayObject",
+          "line": 18886,
+          "ms": 3.807
+        },
+        {
+          "name": "draw",
+          "line": 38218,
+          "ms": 3.783
+        },
+        {
+          "name": "renderImageBuffData",
+          "line": 18693,
+          "ms": 2.533
+        },
+        {
+          "name": "render",
+          "line": 42328,
+          "ms": 2.529
+        },
+        {
+          "name": "getGamepads",
+          "line": 0,
+          "ms": 2.511
+        },
+        {
+          "name": "onUpdate",
+          "line": 5134,
+          "ms": 2.338
+        }
+      ]
+    },
+    {
+      "name": "rigid_no_shadow",
+      "frames": 38,
+      "meanRenderCpuMs": 11.265789468037454,
+      "meanShadowCpuMs": 0.23157893670232674,
+      "meanMainCpuMs": 10.850000001882252,
+      "meanShadowUploadedBytes": 0,
+      "meanShadowGeometryRebuilds": 0,
+      "meanShadowDrawCalls": 0,
+      "p50FrameMs": 66.69999999999891,
+      "p95FrameMs": 83.39999999999964,
+      "cpu": [
+        {
+          "name": "(idle)",
+          "line": 0,
+          "ms": 2092.095
+        },
+        {
+          "name": "vertex",
+          "line": 41330,
+          "ms": 119.351
+        },
+        {
+          "name": "drawScene",
+          "line": 42835,
+          "ms": 85.742
+        },
+        {
+          "name": "(program)",
+          "line": 0,
+          "ms": 57.745
+        },
+        {
+          "name": "hx_render3d_openfl_Renderer3D.floatData",
+          "line": 42259,
+          "ms": 48.757
+        },
+        {
+          "name": "hx_render3d_Math3D.transformNormal",
+          "line": 40499,
+          "ms": 39.845
+        },
+        {
+          "name": "(garbage collector)",
+          "line": 0,
+          "ms": 27.55
+        },
+        {
+          "name": "render",
+          "line": 42328,
+          "ms": 15.323
+        },
+        {
+          "name": "transformVectors",
+          "line": 33062,
+          "ms": 13.205
+        },
+        {
+          "name": "getWorldNormals",
+          "line": 28315,
+          "ms": 10.219
+        },
+        {
+          "name": "uniformKey",
+          "line": 35544,
+          "ms": 7.656
+        },
+        {
+          "name": "hx_render3d_openfl_Renderer3D.indexData",
+          "line": 42293,
+          "ms": 6.521
+        }
+      ]
+    },
+    {
+      "name": "rigid_shadow",
+      "frames": 30,
+      "meanRenderCpuMs": 87.61000000635782,
+      "meanShadowCpuMs": 75.79999998807907,
+      "meanMainCpuMs": 11.620000004768372,
+      "meanShadowUploadedBytes": 2646204,
+      "meanShadowGeometryRebuilds": 2,
+      "meanShadowDrawCalls": 4,
+      "p50FrameMs": 83.39999999999782,
+      "p95FrameMs": 100,
+      "cpu": [
+        {
+          "name": "bufferSubData",
+          "line": 0,
+          "ms": 2076.125
+        },
+        {
+          "name": "drawCascade",
+          "line": 44185,
+          "ms": 170.882
+        },
+        {
+          "name": "vertex",
+          "line": 41330,
+          "ms": 120.427
+        },
+        {
+          "name": "(program)",
+          "line": 0,
+          "ms": 66.553
+        },
+        {
+          "name": "drawScene",
+          "line": 42835,
+          "ms": 55.492
+        },
+        {
+          "name": "hx_render3d_openfl_Renderer3D.floatData",
+          "line": 42259,
+          "ms": 47.49
+        },
+        {
+          "name": "(garbage collector)",
+          "line": 0,
+          "ms": 41.095
+        },
+        {
+          "name": "state.gl.bindBuffer",
+          "line": 41163,
+          "ms": 27.803
+        },
+        {
+          "name": "render",
+          "line": 43870,
+          "ms": 23.809
+        },
+        {
+          "name": "hx_render3d_Math3D.transformNormal",
+          "line": 40499,
+          "ms": 19.917
+        },
+        {
+          "name": "getWorldNormals",
+          "line": 28315,
+          "ms": 19.05
+        },
+        {
+          "name": "getWorldVertices",
+          "line": 28295,
+          "ms": 17.308
+        }
+      ]
+    },
+    {
+      "name": "animated_no_shadow",
+      "frames": 33,
+      "meanRenderCpuMs": 12.460606054826217,
+      "meanShadowCpuMs": 0.2151515158739957,
+      "meanMainCpuMs": 12.033333319606204,
+      "meanShadowUploadedBytes": 0,
+      "meanShadowGeometryRebuilds": 0,
+      "meanShadowDrawCalls": 0,
+      "p50FrameMs": 83.29999999999927,
+      "p95FrameMs": 83.40000000000146,
+      "cpu": [
+        {
+          "name": "(idle)",
+          "line": 0,
+          "ms": 2008.155
+        },
+        {
+          "name": "vertex",
+          "line": 41330,
+          "ms": 146.269
+        },
+        {
+          "name": "drawScene",
+          "line": 42835,
+          "ms": 136.314
+        },
+        {
+          "name": "(program)",
+          "line": 0,
+          "ms": 64.487
+        },
+        {
+          "name": "hx_render3d_openfl_Renderer3D.floatData",
+          "line": 42259,
+          "ms": 37.368
+        },
+        {
+          "name": "(garbage collector)",
+          "line": 0,
+          "ms": 33.825
+        },
+        {
+          "name": "update",
+          "line": 14541,
+          "ms": 28.786
+        },
+        {
+          "name": "invalidate",
+          "line": 33569,
+          "ms": 13.64
+        },
+        {
+          "name": "getWorldNormals",
+          "line": 28315,
+          "ms": 12.297
+        },
+        {
+          "name": "render",
+          "line": 42328,
+          "ms": 11.408
+        },
+        {
+          "name": "hx_render3d_Math3D.transformNormal",
+          "line": 40499,
+          "ms": 10.938
+        },
+        {
+          "name": "hx_render3d_Math3D.transformNormal",
+          "line": 40499,
+          "ms": 9.035
+        }
+      ]
+    },
+    {
+      "name": "animated_shadow",
+      "frames": 27,
+      "meanRenderCpuMs": 93.8925925846453,
+      "meanShadowCpuMs": 81.98148148589664,
+      "meanMainCpuMs": 11.711111104046857,
+      "meanShadowUploadedBytes": 2646204,
+      "meanShadowGeometryRebuilds": 2,
+      "meanShadowDrawCalls": 4,
+      "p50FrameMs": 100,
+      "p95FrameMs": 116.59999999999854,
+      "cpu": [
+        {
+          "name": "bufferSubData",
+          "line": 0,
+          "ms": 1984.711
+        },
+        {
+          "name": "drawCascade",
+          "line": 44185,
+          "ms": 177.638
+        },
+        {
+          "name": "vertex",
+          "line": 41330,
+          "ms": 107.092
+        },
+        {
+          "name": "(program)",
+          "line": 0,
+          "ms": 76.05
+        },
+        {
+          "name": "drawScene",
+          "line": 42835,
+          "ms": 63.922
+        },
+        {
+          "name": "(garbage collector)",
+          "line": 0,
+          "ms": 43.329
+        },
+        {
+          "name": "hx_render3d_openfl_Renderer3D.floatData",
+          "line": 42259,
+          "ms": 33.339
+        },
+        {
+          "name": "update",
+          "line": 14541,
+          "ms": 28.997
+        },
+        {
+          "name": "invalidate",
+          "line": 33569,
+          "ms": 19.279
+        },
+        {
+          "name": "render",
+          "line": 42328,
+          "ms": 18.749
+        },
+        {
+          "name": "render",
+          "line": 43870,
+          "ms": 18.316
+        },
+        {
+          "name": "hx_render3d_Math3D.transformNormal",
+          "line": 40499,
+          "ms": 16.89
+        }
+      ]
+    }
+  ]
+}

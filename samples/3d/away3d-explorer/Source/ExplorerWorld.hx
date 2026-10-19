@@ -33,6 +33,7 @@ class ExplorerWorld {
 	public var onMessage:String->Void;
 	public var interactions(default, null):Array<Dynamic> = [];
 	public var isDisposed(default, null):Bool = false;
+	public var herd(default, null):DinosaurHerd;
 
 	private var assets:Assets;
 	private var model:Model3D;
@@ -57,6 +58,7 @@ class ExplorerWorld {
 		view.backgroundColor = 0x9eacba;
 		view.backgroundAlpha = 1;
 		view.autoRender = false;
+		view.profilingEnabled = true;
 		view.renderScale = 0.8;
 		view.ambientIntensity = 0.38;
 		view.bloom.enabled = true;
@@ -87,6 +89,7 @@ class ExplorerWorld {
 		assets = new Assets();
 		assets.tryLoadTimes = 0;
 		assets.loadModel("assets/world/world.glb");
+		assets.loadModel("assets/dinosaurs/dinosaur.glb");
 		assets.loadJson("assets/world/scene.json");
 		assets.loadJson("assets/world/fog.json");
 		assets.loadBitmapData("assets/world/sky.png");
@@ -144,6 +147,8 @@ class ExplorerWorld {
 			throw "世界缺少闸门节点或碰撞代理";
 		controller = new CharacterController3D(collision, player, 0.32, 1.75);
 		controller.stepOffset = 0.3;
+		herd = new DinosaurHerd(assets.getModel("dinosaur"), definitions);
+		view.root.addChild(herd.root);
 		sky = SkyboxTexture3D.fromData(assets.getBitmapData("sky"), assets.getObject("sky"));
 		environment = Environment3D.fromData(assets.getBitmapData("environment"), assets.getObject("environment"));
 		settings = new SkyEnvironment3D(sky, environment);
@@ -177,6 +182,7 @@ class ExplorerWorld {
 		if (!ready || isDisposed)
 			return;
 		dt = Math.max(0, Math.min(0.1, dt));
+		herd.update(dt);
 		var velocity = new Vector3D(Math.sin(yaw) * forward + Math.cos(yaw) * strafe, 0, -Math.cos(yaw) * forward + Math.sin(yaw) * strafe);
 		if (velocity.length > 1)
 			velocity.normalize();
@@ -381,6 +387,8 @@ class ExplorerWorld {
 		save(false);
 		isDisposed = true;
 		ready = false;
+		if (herd != null)
+			herd.dispose();
 		if (settings != null)
 			settings.dispose();
 		if (controller != null)

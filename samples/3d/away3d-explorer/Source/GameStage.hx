@@ -24,6 +24,13 @@ class GameStage extends hx.display.Stage {
 	private var story:Label;
 	private var position:Label;
 	private var help:Label;
+	private var multiTextureButton:Label;
+	private var multiTextureEnabled:Bool = true;
+	private var herdButton:Label;
+	private var herdShadowButton:Label;
+	private var herdAnimationButton:Label;
+	private var herdStats:Label;
+	private var diagnosticElapsed:Float = 0;
 	private var mapPlayer:Quad;
 	private var mapMarkers:Array<{item:Dynamic, marker:Quad}> = [];
 	private var releaseCount:Int = 0;
@@ -75,6 +82,7 @@ class GameStage extends hx.display.Stage {
 			#end
 		}
 		world = new ExplorerWorld();
+		world.view.multiTextureEnabled = multiTextureEnabled;
 		addChildAt(world.view, 0);
 		world.view.addEventListener(MouseEvent.MOUSE_DOWN, onPress);
 		world.view.addEventListener(TouchEvent.TOUCH_BEGIN, onPress);
@@ -110,17 +118,44 @@ class GameStage extends hx.display.Stage {
 		return value;
 	}
 
-	private function action(text:String, x:Float, y:Float, w:Float, callback:Void->Void):Void {
+	private function action(text:String, x:Float, y:Float, w:Float, callback:Void->Void):Label {
 		var background = panel(x, y, w, 32, 1);
 		background.mouseEnabled = true;
 		background.addEventListener(MouseEvent.CLICK, _ -> callback());
-		label(text, x + 10, y + 6, 14, 0xc8e4e8);
+		return label(text, x + 10, y + 6, 14, 0xc8e4e8);
+	}
+
+	private function toggleMultiTexture():Void {
+		multiTextureEnabled = !multiTextureEnabled;
+		world.view.multiTextureEnabled = multiTextureEnabled;
+		multiTextureButton.data = "多纹理：" + (multiTextureEnabled ? "开" : "关") + " T";
+	}
+
+	private function herdAction(kind:Int):Void {
+		if (!world.ready) return;
+		switch (kind) {
+			case 0: world.herd.cycleMode();
+			case 1: world.herd.toggleShadows();
+			case 2: world.herd.toggleAnimation();
+		}
+		updateHerdLabels();
+	}
+
+	private function updateHerdLabels():Void {
+		if (!world.ready) return;
+		herdButton.data = "霸王龙：" + world.herd.modeName() + " G";
+		herdShadowButton.data = "龙阴影：" + (world.herd.shadowsEnabled ? "开" : "关") + " Y";
+		herdAnimationButton.data = "骨骼动画：" + (world.herd.animationEnabled ? "开" : "关") + " U";
+		var stats = world.view.stats;
+		herdStats.data = "霸王龙：" + world.herd.count + " 只\n阴影上传：" + Math.round(stats.shadowUploadedBytes / 1024)
+			+ " KB\n阴影 CPU：" + Math.round(stats.shadowCpuMs * 100) / 100 + " ms\n阴影几何重建：" + stats.shadowGeometryRebuilds;
 	}
 
 	private function buildHud():Void {
 		panel(0, 0, 1120, 70, 1);
 		title = label("雪岭观测站", 24, 17, 25, 0xf5ead3);
 		label("一段关于山脉与旧世界的探索", 210, 26, 14, 0x9cbbc4);
+		multiTextureButton = action("多纹理：开 T", 430, 18, 150, toggleMultiTexture);
 		action("距离雾 F", 590, 18, 110, () -> world.view.fog.enabled = !world.view.fog.enabled);
 		action("保存 K", 710, 18, 100, () -> world.save());
 		action("帮助 H", 820, 18, 100, () -> help.visible = !help.visible);
@@ -131,6 +166,10 @@ class GameStage extends hx.display.Stage {
 		});
 		panel(18, 86, 700, 52, 0.76);
 		objective = label("正在接入观测站……", 32, 99, 18, 0xf4dc9d, 670);
+		herdButton = action("霸王龙：加载中 G", 730, 86, 204, () -> herdAction(0));
+		herdShadowButton = action("龙阴影：开 Y", 730, 124, 204, () -> herdAction(1));
+		herdAnimationButton = action("骨骼动画：开 U", 730, 162, 204, () -> herdAction(2));
+		herdStats = label("", 740, 204, 13, 0xf4dc9d, 190);
 		panel(946, 86, 156, 194, 0.9);
 		label("观测站地图", 960, 96, 14, 0xe9d5a4);
 		panel(958, 123, 132, 140, 1);
@@ -141,7 +180,7 @@ class GameStage extends hx.display.Stage {
 		prompt = label("正在加载世界资源……", 24, 686, 17, 0xf4dc9d, 920);
 		story = label("", 24, 717, 14, 0xc4d5df, 930);
 		position = label("", 950, 690, 12, 0x9ab8c5, 160);
-		help = label("WASD / 方向键：移动\n拖动场景：环顾\nShift：奔跑　空格：跳跃\nE：附近交互　K：保存\nF：距离雾　R：回到入口\nEsc：停止输入\n触屏可使用下方方向键", 30, 160, 15, 0xe1edf4, 310);
+		help = label("WASD / 方向键：移动\n拖动场景：环顾\nShift：奔跑　空格：跳跃\nE：附近交互　K：保存\nF：距离雾　R：回到入口\nT：切换多纹理\nG：霸王龙行走 / 定格 / 隐藏\nY：龙阴影　U：骨骼动画\nEsc：停止输入\n触屏可使用下方方向键", 30, 160, 15, 0xe1edf4, 310);
 		help.visible = false;
 		label("+", 552, 378, 20, 0xf6eedb);
 		hold("前", 82, 553, 1, 0);
@@ -186,6 +225,8 @@ class GameStage extends hx.display.Stage {
 		var forward = (pressed(87) || pressed(38) ? 1 : 0) - (pressed(83) || pressed(40) ? 1 : 0) + virtualForward;
 		var strafe = (pressed(68) || pressed(39) ? 1 : 0) - (pressed(65) || pressed(37) ? 1 : 0) + virtualStrafe;
 		world.update(hx.core.Hxmaker.engine.dt, forward, strafe, pressed(16));
+		diagnosticElapsed += hx.core.Hxmaker.engine.dt;
+		if (diagnosticElapsed >= 0.25) { diagnosticElapsed = 0; updateHerdLabels(); }
 		if (!world.ready) {
 			prompt.data = world.failure != "" ? world.failure + "（点击右上角重试）" : "正在加载观测站、山地和天空……";
 			return;
@@ -220,6 +261,14 @@ class GameStage extends hx.display.Stage {
 				world.save();
 			case 70:
 				world.view.fog.enabled = !world.view.fog.enabled;
+			case 84:
+				toggleMultiTexture();
+			case 71:
+				herdAction(0);
+			case 89:
+				herdAction(1);
+			case 85:
+				herdAction(2);
 			case 72:
 				help.visible = !help.visible;
 			case 82:
@@ -286,6 +335,7 @@ class GameStage extends hx.display.Stage {
 			hint: world.ready ? world.hint() : "",
 			fog: world.view.fog.enabled,
 			stats: world.view.stats,
+			dinosaurs: world.herd == null ? null : world.herd.snapshot(),
 			inputScale: hx.core.Hxmaker.engine.scaleFactor,
 			releases: releaseCount,
 			lastRelease: lastRelease
@@ -302,6 +352,12 @@ class GameStage extends hx.display.Stage {
 				startWorld();
 			case "reset":
 				world.newJourney();
+			case "herdMode":
+				herdAction(0);
+			case "herdShadows":
+				herdAction(1);
+			case "herdAnimation":
+				herdAction(2);
 			default:
 				throw "未知探索验收命令";
 		}

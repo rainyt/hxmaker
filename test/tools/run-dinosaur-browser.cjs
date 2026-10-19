@@ -1,0 +1,35 @@
+// 十只霸王龙功能与分组性能采样；软件 WebGL 只用于对照，不能代表用户显卡帧率。
+const assert=require('node:assert/strict'),fs=require('node:fs');
+const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'playwright');
+(async()=>{
+ const browser=await chromium.launch({headless:true,...(process.env.CHROME_PATH?{executablePath:process.env.CHROME_PATH}:{}),args:['--enable-webgl','--use-angle=swiftshader','--enable-unsafe-swiftshader']});
+ try{
+  const page=await browser.newPage({viewport:{width:1120,height:760}}),errors=[],report={backend:'SwiftShader 软件 WebGL；CPU 为提交耗时，帧率不代表硬件性能',cases:[],performance:[]};
+  page.on('pageerror',e=>errors.push(String(e)));page.on('console',m=>{if(m.type()==='error'&&!m.text().includes('favicon'))errors.push(m.text());});
+  await page.goto(`${process.env.HXMAKER_TEST_BASE||'http://127.0.0.1:8733'}/samples/3d/away3d-explorer/Export/html5/bin/`);
+  const state=()=>page.evaluate(()=>window.__hxmakerExplorer.state());
+  const command=name=>page.evaluate(name=>window.__hxmakerExplorer.command(name),name);
+  await page.waitForFunction(()=>window.__hxmakerExplorer?.state().failure||window.__hxmakerExplorer?.state().ready,null,{timeout:60000});
+  let first=await state();assert.equal(first.failure,'');assert.equal(first.dinosaurs.count,10);assert.equal(first.dinosaurs.triangles.reduce((a,b)=>a+b),27360);
+  assert(first.dinosaurs.valid.every(Boolean));report.cases.push('10 个独立模型加载，共 27360 个三角形');
+  await page.waitForTimeout(2000);let next=await state();assert(next.dinosaurs.positions.some((p,i)=>Math.hypot(p[0]-first.dinosaurs.positions[i][0],p[2]-first.dinosaurs.positions[i][2])>.1));assert(next.dinosaurs.times.some((t,i)=>t!==first.dinosaurs.times[i]));report.cases.push('随机游走和独立 Run 动画推进');
+  await page.keyboard.press('g');first=await state();await page.waitForTimeout(500);next=await state();assert.equal(next.dinosaurs.mode,1);assert.deepEqual(next.dinosaurs.positions,first.dinosaurs.positions);assert.deepEqual(next.dinosaurs.times,first.dinosaurs.times);report.cases.push('G 定格同时停止位移和动画');
+  await page.keyboard.press('g');assert.equal((await state()).dinosaurs.mode,2);report.cases.push('G 隐藏模型并停止更新');
+  async function setMode(mode){while((await state()).dinosaurs.mode!==mode)await command('herdMode');}
+  async function configure(mode,animation,shadows){await setMode(mode);let s=await state();if(s.dinosaurs.animation!==animation)await command('herdAnimation');s=await state();if(s.dinosaurs.shadows!==shadows)await command('herdShadows');await page.waitForTimeout(500);}
+  const cdp=await page.context().newCDPSession(page);await cdp.send('Profiler.enable');await cdp.send('Profiler.setSamplingInterval',{interval:1000});
+  for(const config of [ ['hidden',2,false,false],['frozen',1,true,true],['rigid_no_shadow',0,false,false],['rigid_shadow',0,false,true],['animated_no_shadow',0,true,false],['animated_shadow',0,true,true]]){
+   const [name,mode,animation,shadows]=config;await configure(mode,animation,shadows);await cdp.send('Profiler.start');
+   const metrics=await page.evaluate(()=>new Promise(resolve=>{const rows=[],start=performance.now();let last=start;function sample(now){const s=window.__hxmakerExplorer.state().stats;rows.push({gap:now-last,render:s.renderCpuMs,shadow:s.shadowCpuMs,main:s.mainCpuMs,uploads:s.redrawThisFrame?s.shadowUploadedBytes:0,rebuilds:s.redrawThisFrame?s.shadowGeometryRebuilds:0,draws:s.redrawThisFrame?s.shadowDrawCalls:0});last=now;if(now-start>=2500)resolve(rows);else requestAnimationFrame(sample);}requestAnimationFrame(sample);}));
+   const {profile}=await cdp.send('Profiler.stop');const weights={};profile.samples.forEach((id,i)=>weights[id]=(weights[id]||0)+profile.timeDeltas[i]);
+   const avg=key=>metrics.reduce((a,b)=>a+b[key],0)/metrics.length;const gaps=metrics.map(x=>x.gap).sort((a,b)=>a-b);
+   report.performance.push({name,frames:metrics.length,meanRenderCpuMs:avg('render'),meanShadowCpuMs:avg('shadow'),meanMainCpuMs:avg('main'),meanShadowUploadedBytes:avg('uploads'),meanShadowGeometryRebuilds:avg('rebuilds'),meanShadowDrawCalls:avg('draws'),p50FrameMs:gaps[Math.floor(gaps.length*.5)],p95FrameMs:gaps[Math.floor(gaps.length*.95)],cpu:profile.nodes.map(n=>({name:n.callFrame.functionName,line:n.callFrame.lineNumber+1,ms:(weights[n.id]||0)/1000})).sort((a,b)=>b.ms-a.ms).slice(0,12)});
+   assert((await state()).dinosaurs.valid.every(Boolean),name+' 不应走出范围或进入静态障碍');console.log('PERF '+JSON.stringify(report.performance.at(-1)));
+  }
+  await cdp.detach();await configure(0,false,true);first=await state();await page.waitForTimeout(500);next=await state();assert.deepEqual(next.dinosaurs.times,first.dinosaurs.times);report.cases.push('关闭动画后保留刚体移动');
+  await configure(0,true,true);await page.keyboard.press('y');assert.equal((await state()).dinosaurs.shadows,false);await page.keyboard.press('y');assert.equal((await state()).dinosaurs.shadows,true);report.cases.push('Y 独立切换龙阴影');
+  const previous=(await state()).dinosaurs;await command('restart');await page.waitForFunction(()=>window.__hxmakerExplorer.state().ready,null,{timeout:60000});next=await state();assert.equal(next.dinosaurs.count,10);assert(next.lastRelease.sceneDisposed);assert.equal(next.lastRelease.nodes,0);report.cases.push('销毁重进后重新创建 10 只龙');
+  assert.deepEqual(errors,[]);if(process.env.HXMAKER_TEST_REPORT)fs.writeFileSync(process.env.HXMAKER_TEST_REPORT,JSON.stringify(report,null,2)+'\n');
+  await page.screenshot({path:'/tmp/hxmaker-dinosaur-test.png'});console.log('HXMAKER_DINOSAUR PASS '+report.cases.length);
+ }finally{await browser.close();}
+})().catch(e=>{console.error(e);process.exitCode=1;});

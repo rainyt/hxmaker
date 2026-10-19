@@ -114,3 +114,27 @@ WebGL2 默认 VAO 与 WebGL1 无 VAO 路径分别通过 20 项主场景检查和
 代价是该布局由每顶点 13 个 float 增至 17 个 float，同样动画顶点数量的上传字节增加约 31%。该版本优先降低绘制提交数量，尚未将静态材质属性从每帧动画顶点流中分离。软件 WebGL 帧间隔中位数仍约 83.3 ms，不能据此宣称硬件帧率提升。
 
 本轮主场景检查新增跨材质 PBR 像素对照、基础色／粗糙度失效与金属度／自发光隔离，共 23 项；报告位于 `test/shadow-cache/Validation/2026-10-19-pbr-batching-*.json`。霸王龙功能与上传检查 11 项，报告位于示例 `Validation/2026-10-19-pbr-batching-dinosaurs.json`。
+
+## CPU 蒙皮提交与阴影持久数组优化
+
+针对 `Trace-20261019T211752.json.gz` 暴露的动画及几何准备热点，本轮实现以下两项。用户当前将霸王龙数量改为 20，本轮沿用该设置，未将数量退回 10。
+
+- CPU 蒙皮在写入顶点时同步累积局部 AABB，复用实例边界对象，通过内部提交方法递增几何版本并派发 CHANGE。不再每帧重扫固定 UV、索引，也不再次扫描位置计算边界。输出位置、法线与切线仍保留数值有效性检查；公开 `geometry.invalidate()` 的完整校验保持不变。
+- 常见尺寸的阴影图元先规划材质／绕序与容量批次，再将位置变换结果直接写入持久 Float32Array。去掉完整顶点临时数组及二次复制。索引与持久 UInt16Array 比较，内容或数量不变时不上传；兼容原地修改索引后调用 invalidate。超过单网格容量的对象继续使用原三角形拆分路径，回退路径也跳过不变索引的 GPU 上传。
+
+新增 `scene.stats.shadowIndexUploadedBytes`，它是 `shadowUploadedBytes` 的子集，不能再次相加。正常骨骼动画的拓扑不变，预热后该值应为零。
+
+20 个独立实例的 CPU 动画对照通过测试响应临时注入入口，同步推进模型，不执行绘制。每次预热 40 步、测量 120 步，优化前后交替各两次：平均耗时由 10.80 ms 降至 9.92 ms，约改善 8.1%。各轮中位数分别为优化前 10.8／10.1 ms、优化后 9.4／10.5 ms，存在运行波动，不能据此承诺硬件帧率。测量同时逐顶点核对所有模型的边界，并检查位置和法线为有限数。
+
+同为 20 只龙、动画加阴影时，预热后的阴影上传由每帧 1,847,520 字节降到 1,519,200 字节，减少约 17.8%，阴影绘制保持 44 次，阴影索引上传为零。软件 WebGL 的全场景样本仍大量停留在主场景 bufferSubData 等待，因此不以其整体 FPS 判断本轮硬件收益。主场景静态材质属性流拆分、蒙皮结果跨通道共享、GPU 蒙皮尚未包含在本轮实现中。
+
+新增回归检查覆盖双关节 CPU 蒙皮的预期顶点、法线、五个采样姿态的融合 AABB、版本与变更事件，以及公开 UV 校验；阴影检查补充顶点更新零索引上传与索引原地修改后的重传。报告文件：
+
+- `samples/3d/away3d-explorer/Validation/2026-10-19-skin-cpu-benchmark.json`
+- `samples/3d/away3d-explorer/Validation/2026-10-19-skin-shadow-before.json`
+- `samples/3d/away3d-explorer/Validation/2026-10-19-skin-shadow-after.json`
+- `test/shadow-cache/Validation/2026-10-19-skin-shadow-*.json`
+
+`test/tools/benchmark-skin-browser.cjs` 默认读取先前保存的 `Export/before-skin` 与当前 `Export/checks` 验收构建，测试注入仅对浏览器拦截到的响应生效，不写入发布代码。霸王龙检查可用 `HXMAKER_DINOSAUR_COUNT=20` 设置数量，`HXMAKER_SHADOW_INDEX_CHECK=1` 检查动画索引零上传。
+
+本轮 WebGL2 默认 VAO 与 WebGL1 无 VAO 均通过 24 项主场景和 20 项阴影检查；20 只霸王龙通过 11 项功能与上传检查，普通预览构建已更新。

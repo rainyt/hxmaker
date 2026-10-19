@@ -39,6 +39,7 @@ class GameStage extends hx.display.Stage {
 	var disposedMainBytes:Int=-1;
 	var disposedMainHandles:Int=-1;
 	var ready:Bool=false;
+	var skinChecks:Bool=false;
 	var disposedBytes:Int=-1;
 	var disposedHandles:Int=-1;
 	var oldBoxGeometry:Geometry3D;
@@ -71,7 +72,7 @@ class GameStage extends hx.display.Stage {
 	}
 	function state():Dynamic {
 		var render=renderer();var gl=render==null?null:render.gl;
-		return {ready:ready,pbrGroupBatches:pbrGroupBatches(),stats:scene.stats,error:gl==null||gl.isContextLost()?-1:gl.getError(),disposedBytes:disposedBytes,disposedHandles:disposedHandles,
+		return {ready:ready,skinChecks:skinChecks,pbrGroupBatches:pbrGroupBatches(),stats:scene.stats,error:gl==null||gl.isContextLost()?-1:gl.getError(),disposedBytes:disposedBytes,disposedHandles:disposedHandles,
 			reused:reused(),mainReused:mainReused(),autoStatic:box.effectiveGeometryMobility==hx.render3d.GeometryMobility3D.STATIC,autoShadowStatic:box.effectiveShadowMobility==hx.render3d.ShadowMobility3D.STATIC,groupAutoStatic:group==null||group.isDisposed||group.meshes.length==0?false:group.meshes[0].effectiveGeometryMobility==hx.render3d.GeometryMobility3D.STATIC,disposedMainBytes:disposedMainBytes,disposedMainHandles:disposedMainHandles,webgl:gl==null?'':gl.getParameter(gl.VERSION)};
 	}
 	function pixels():Array<Int> {
@@ -110,6 +111,7 @@ class GameStage extends hx.display.Stage {
 
 	function command(name:String):Void {
 		switch(name) {
+			case 'skinCheck':checkSkin();skinChecks=true;scene.requestRender();
 			case 'captureMain':heldMain=[for(buffer in mainBuffers()){buffer:buffer,vertex:buffer.vertexBuffer,index:buffer.indexBuffer,array:buffer.vertices}];scene.requestRender();
 			case 'referenceMain':for(entry in renderer().mainGeometry.entries)entry.snapshot=null;scene.requestRender();
 			case 'geometryCacheOff':scene.geometryCacheEnabled=false;scene.requestRender();
@@ -187,6 +189,34 @@ class GameStage extends hx.display.Stage {
 			default:throw '未知阴影缓存检查：'+name;
 		}
 	}
+	/** 对真实双关节 CPU 蒙皮核对顶点、法线、融合边界与完整校验结果。 */
+	function checkSkin():Void {
+		function node(name:String,children:Array<Int>,mesh:Int=-1,skin:Int=-1):hx.model.ModelSourceData.ModelNodeData {
+			return {name:name,children:children,mesh:mesh,skin:skin,matrix:null,translation:[0.,0.,0.],rotation:[0.,0.,0.,1.],scale:[1.,1.,1.]};
+		}
+		var unit=new hx.geom.Matrix3D().rawData;
+		var asset=hx.assets.ModelAsset.fromSource({sourceFormat:"glb",nodes:[node("根",[1,2,3]),node("网格",[],0,0),node("关节一",[]),node("关节二",[])],scenes:[[0]],scene:0,
+			meshes:[[{positions:[-1.,0.,0.,1.,0.,0.,0.,1.,0.],normals:[0.,0.,1.,0.,0.,1.,0.,0.,1.],uvs:[0.,0.,1.,0.,0.,1.],indices:[0,1,2],joints:[0,1,0,0,0,1,0,0,0,1,0,0],weights:[.5,.5,0.,0.,.5,.5,0.,0.,.5,.5,0.,0.],material:-1}]],materials:[],images:[],textures:[],skins:[{joints:[2,3],inverseBindMatrices:[unit,unit]}],
+			animations:[{name:"变形",tracks:[{node:2,path:"translation",times:[0.,1.],values:[0.,0.,0.,2.,1.,-1.],interpolation:"LINEAR"},{node:3,path:"scale",times:[0.,1.],values:[1.,1.,1.,.5,2.,1.],interpolation:"LINEAR"}]}],warnings:[]});
+		var model=asset.createInstance(-1,{lightingEnabled:true}),g=model.meshes[0].geometry;
+		model.animation.play("变形",false);
+		for(time in [.25,.5,.75,1.,0.]){
+			var version=g.version,events=0;
+			var onChange:Dynamic->Void=_->{events++;};g.addEventListener(hx.events.Event.CHANGE,onChange);
+			model.animation.seek(time);g.removeEventListener(hx.events.Event.CHANGE,onChange);
+			if(g.version<=version||events==0)throw "蒙皮必须递增几何版本并通知订阅者";
+			var expected=[-1.+.25*time+time, .5*time,-.5*time, 1.-.25*time+time,.5*time,-.5*time,time,1.+time,-.5*time];
+			for(i in 0...expected.length)if(Math.abs(g.positions[i]-expected[i])>1e-6)throw "双关节蒙皮顶点错误";
+			for(i in 0...g.normals.length)if(Math.abs(g.normals[i]-(i%3==2?1:0))>1e-6)throw "双关节蒙皮法线错误";
+			var before=[g.bounds.min.x,g.bounds.min.y,g.bounds.min.z,g.bounds.max.x,g.bounds.max.y,g.bounds.max.z];
+			g.invalidate();var after=[g.bounds.min.x,g.bounds.min.y,g.bounds.min.z,g.bounds.max.x,g.bounds.max.y,g.bounds.max.z];
+			for(i in 0...6)if(before[i]!=after[i])throw "融合边界与完整扫描不一致";
+		}
+		g.uvs[0]=Math.NaN;var rejected=false;try{g.invalidate();}catch(_:Dynamic){rejected=true;}
+		if(!rejected)throw "公开 invalidate 必须保留 UV 校验";
+		model.dispose();
+	}
+
 	function addGroup():Void {
 		var geometry=BoxGeometry.create(1,2,1);
 		var asset=hx.assets.ModelAsset.fromSource({sourceFormat:"glb",nodes:[

@@ -15,6 +15,7 @@ const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'playwright');
   const pixels=()=>page.evaluate(()=>window.__shadowCache.pixels());
   const pass=text=>{report.cases.push(text);console.log('PASS '+text);};
   async function reference(label){await command('refresh');const image=await pixels();await command('referenceMain');assert.deepEqual(await pixels(),image,label+' 强制重建应与缓存一致');await command('geometryCacheOff');const legacy=await pixels();let different=0,max=0;for(let i=0;i<image.length;i++){let delta=Math.abs(image[i]-legacy[i]);max=Math.max(max,delta);if(delta>4)different++;}report.pixelComparisons.push({label,different,max,total:image.length});assert(different<image.length*.002,label+' 与原路径像素差异过多：'+different);await command('geometryCacheOn');}
+  await command('skinCheck');assert.equal((await state()).skinChecks,true);pass('双关节蒙皮顶点、法线、融合边界和变更事件正确，公开校验保留');
   await command('geometryStatic');let s=await command('refresh');assert.equal(s.stats.uploadedBytes,0);assert(s.stats.geometryCacheHits>0);await reference('静态环境');pass('静态环境复用顶点与索引，像素与原绘制路径一致');
   await command('captureMain');for(const name of ['camera','light']){await command('captureMain');s=await command(name);assert.equal(s.stats.uploadedBytes,0);assert(s.mainReused>0);await reference(name);}pass('相机和灯光变化零几何上传');
   await command('captureMain');s=await command('move');assert(s.stats.geometryStaticUploadedBytes>0);assert.equal(s.stats.geometryIndexUploadedBytes,0);assert(s.mainReused>0);await reference('静态物体修改');pass('静态物体修改只更新相关顶点，复用缓冲容量与索引');

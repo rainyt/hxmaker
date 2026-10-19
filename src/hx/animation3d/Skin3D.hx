@@ -98,7 +98,9 @@ private class SkinBinding3D {
 			mesh.geometry.setTangents(restTangents);
 		}
 		if (updateTangents && mesh.geometry.tangents == null) mesh.geometry.setTangents(restTangents);
-		var output = mesh.geometry.positions, input = source.positions;
+		var geometry=mesh.geometry,output=geometry.positions,input=source.positions;
+		var normals=geometry.normals,tangents=geometry.tangents;
+		var minX=Math.POSITIVE_INFINITY,minY=minX,minZ=minX,maxX=Math.NEGATIVE_INFINITY,maxY=maxX,maxZ=maxX;
 		for (vertex in 0...Std.int(input.length / 3)) {
 			var offset = vertex * 3,
 				x = input[offset],
@@ -119,16 +121,23 @@ private class SkinBinding3D {
 				oy += (m[1] * x + m[5] * y + m[9] * z + m[13]) * weight;
 				oz += (m[2] * x + m[6] * y + m[10] * z + m[14]) * weight;
 			}
+			// 与旧校验保持有限位置约束，在写入时顺便计算包围盒。
+			if(!(ox>Math.NEGATIVE_INFINITY&&ox<Math.POSITIVE_INFINITY&&oy>Math.NEGATIVE_INFINITY&&oy<Math.POSITIVE_INFINITY&&oz>Math.NEGATIVE_INFINITY&&oz<Math.POSITIVE_INFINITY))throw "蒙皮顶点包含无效数值";
+			if(ox<minX)minX=ox;if(oy<minY)minY=oy;if(oz<minZ)minZ=oz;
+			if(ox>maxX)maxX=ox;if(oy>maxY)maxY=oy;if(oz>maxZ)maxZ=oz;
 			output[offset] = ox;
 			output[offset + 1] = oy;
 			output[offset + 2] = oz;
-			Math3D.transformNormal(blended, restNormals[offset], restNormals[offset + 1], restNormals[offset + 2], mesh.geometry.normals, offset);
+			Math3D.transformNormal(blended, restNormals[offset], restNormals[offset + 1], restNormals[offset + 2], normals, offset);
+			if(!Math3D.finite(normals[offset])||!Math3D.finite(normals[offset+1])||!Math3D.finite(normals[offset+2]))throw "蒙皮法线包含无效数值";
 			if (updateTangents) {
-				var t = vertex * 4, normals = mesh.geometry.normals;
+				var t = vertex * 4;
 				Math3D.transformTangent(blended, restTangents[t], restTangents[t + 1], restTangents[t + 2], restTangents[t + 3],
-					normals[offset], normals[offset + 1], normals[offset + 2], mesh.geometry.tangents, t);
+					normals[offset], normals[offset + 1], normals[offset + 2], tangents, t);
+				for(i in 0...4)if(!Math3D.finite(tangents[t+i]))throw "蒙皮切线包含无效数值";
+				if(Math.abs(tangents[t+3])!=1||tangents[t]*tangents[t]+tangents[t+1]*tangents[t+1]+tangents[t+2]*tangents[t+2]<1e-12)throw "蒙皮切线方向或手性无效";
 			}
 		}
-		mesh.geometry.invalidate();
+		geometry.commitSkinUpdate(minX,minY,minZ,maxX,maxY,maxZ);
 	}
 }

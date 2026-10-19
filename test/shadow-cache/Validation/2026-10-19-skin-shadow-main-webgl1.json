@@ -1,0 +1,194 @@
+{
+  "cases": [
+    "双关节蒙皮顶点、法线、融合边界和变更事件正确，公开校验保留",
+    "静态环境复用顶点与索引，像素与原绘制路径一致",
+    "相机和灯光变化零几何上传",
+    "静态物体修改只更新相关顶点，复用缓冲容量与索引",
+    "动态及父级平移、旋转和负缩放仅更新矩阵",
+    "颜色、顶点、UV、图集和顶点透明度更新正确，索引不重传",
+    "几何替换与原地修改索引均正确更新 GPU 索引",
+    "AUTO 在无自动重绘的静止场景中也会转静态",
+    "相机、灯光和材质颜色不影响 AUTO 静止判定",
+    "AUTO 当帧转动态，持续静止后转静态且不搬迁环境缓存",
+    "父级移动与程序顶点修改均能激活 AUTO",
+    "零等待时间仍保持移动当帧动态，后续更新才允许静态",
+    "多网格模型局部缓存与法线变换正确",
+    "动画推进保持动态，停止驱动后即使 playing 为真也可静态",
+    "动画速度为零时能自动静态",
+    "同一模型不同线性基础色与粗糙度合为一个缓存批次，颜色空间与旧路径一致",
+    "PBR 顶点参数修改只更新顶点，仍保持合批且索引不上传",
+    "金属度、自发光等共享 uniform 差异仍正确拆批",
+    "投射物和可见性变化正确更新缓存成员",
+    "PBR 法线贴图在非均匀及负缩放下与原路径一致",
+    "透明材质沿用原有排序，缓冲复用不改变画面",
+    "可见模型预备全部材质组，刚体运动中不同部件入镜不重传",
+    "设备恢复重建主场景缓冲，像素一致",
+    "销毁释放主场景 GPU 缓冲与 CPU 容量"
+  ],
+  "pixelComparisons": [
+    {
+      "label": "静态环境",
+      "different": 8,
+      "max": 85,
+      "total": 147456
+    },
+    {
+      "label": "camera",
+      "different": 12,
+      "max": 109,
+      "total": 147456
+    },
+    {
+      "label": "light",
+      "different": 11,
+      "max": 118,
+      "total": 147456
+    },
+    {
+      "label": "静态物体修改",
+      "different": 9,
+      "max": 76,
+      "total": 147456
+    },
+    {
+      "label": "动态 move",
+      "different": 0,
+      "max": 0,
+      "total": 147456
+    },
+    {
+      "label": "动态 parent",
+      "different": 0,
+      "max": 0,
+      "total": 147456
+    },
+    {
+      "label": "动态 mirror",
+      "different": 4,
+      "max": 119,
+      "total": 147456
+    },
+    {
+      "label": "color",
+      "different": 6,
+      "max": 132,
+      "total": 147456
+    },
+    {
+      "label": "geometry",
+      "different": 6,
+      "max": 132,
+      "total": 147456
+    },
+    {
+      "label": "uv",
+      "different": 6,
+      "max": 132,
+      "total": 147456
+    },
+    {
+      "label": "atlas",
+      "different": 6,
+      "max": 132,
+      "total": 147456
+    },
+    {
+      "label": "atlasMutate",
+      "different": 6,
+      "max": 132,
+      "total": 147456
+    },
+    {
+      "label": "alpha",
+      "different": 6,
+      "max": 132,
+      "total": 147456
+    },
+    {
+      "label": "替换几何",
+      "different": 9,
+      "max": 132,
+      "total": 147456
+    },
+    {
+      "label": "原地修改索引",
+      "different": 0,
+      "max": 0,
+      "total": 147456
+    },
+    {
+      "label": "模型非均匀及负缩放",
+      "different": 9,
+      "max": 127,
+      "total": 147456
+    },
+    {
+      "label": "多网格模型移动",
+      "different": 6,
+      "max": 131,
+      "total": 147456
+    },
+    {
+      "label": "PBR 基础色和粗糙度跨材质合批",
+      "different": 6,
+      "max": 58,
+      "total": 147456
+    },
+    {
+      "label": "pbrFactor",
+      "different": 6,
+      "max": 37,
+      "total": 147456
+    },
+    {
+      "label": "pbrRoughness",
+      "different": 6,
+      "max": 39,
+      "total": 147456
+    },
+    {
+      "label": "PBR 金属度分组",
+      "different": 6,
+      "max": 75,
+      "total": 147456
+    },
+    {
+      "label": "PBR 自发光分组",
+      "different": 6,
+      "max": 61,
+      "total": 147456
+    },
+    {
+      "label": "hide",
+      "different": 6,
+      "max": 61,
+      "total": 147456
+    },
+    {
+      "label": "show",
+      "different": 6,
+      "max": 61,
+      "total": 147456
+    },
+    {
+      "label": "PBR 法线贴图",
+      "different": 6,
+      "max": 66,
+      "total": 147456
+    },
+    {
+      "label": "透明排序",
+      "different": 6,
+      "max": 66,
+      "total": 147456
+    },
+    {
+      "label": "模型不同材质部分陆续入镜",
+      "different": 9,
+      "max": 48,
+      "total": 147456
+    }
+  ],
+  "webgl": "WebGL 1.0 (OpenGL ES 2.0 Chromium)",
+  "vao": false
+}

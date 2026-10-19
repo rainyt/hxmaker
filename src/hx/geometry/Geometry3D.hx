@@ -29,7 +29,7 @@ class Geometry3D extends EventDispatcher {
 	private var generatedNormals:Bool = false;
 	private var generatedTangents:Bool = false;
 
-	/** 最近一次 invalidate 计算的局部 AABB，应视为只读。 */
+	/** 最近一次几何更新计算的局部 AABB，应视为只读。 */
 	public var bounds(default, null):Bounds3D;
 
 	/** 数据变更版本，用于使渲染缓存失效。 */
@@ -113,6 +113,17 @@ class Geometry3D extends EventDispatcher {
 		bounds = new Bounds3D();
 		for (i in 0...Std.int(positions.length / 3))
 			bounds.include(positions[i * 3], positions[i * 3 + 1], positions[i * 3 + 2]);
+		version++;
+		dispatchEvent(new Event(Event.CHANGE));
+	}
+
+	/** 蒙皮内部已写入并校验位置和法线，只提交融合计算的边界；不扫描固定 UV 和索引。 */
+	@:allow(hx.animation3d)
+	private function commitSkinUpdate(minX:Float,minY:Float,minZ:Float,maxX:Float,maxY:Float,maxZ:Float):Void {
+		if(isDisposed)throw "几何数据已经销毁";
+		if(generatedNormals)normals=null;
+		if(generatedTangents)tangents=null;
+		bounds.min.setTo(minX,minY,minZ);bounds.max.setTo(maxX,maxY,maxZ);
 		version++;
 		dispatchEvent(new Event(Event.CHANGE));
 	}

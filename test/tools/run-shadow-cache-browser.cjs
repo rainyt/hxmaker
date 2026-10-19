@@ -19,7 +19,7 @@ const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'playwright');
   await command('refresh');assert.equal((await state()).stats.shadowUploadedBytes,0);assert((await state()).stats.shadowGeometryCacheHits>0);await reference('初始场景');pass('阴影几何复用不上传，像素与重建一致，保持合批');
   await command('capture');let s=await command('camera');assert.equal(s.stats.shadowUploadedBytes,0);assert(s.reused>0);await reference('相机移动');pass('相机移动复用 GPU 缓冲和 CPU TypedArray');
   s=await command('light');assert.equal(s.stats.shadowUploadedBytes,0);await reference('光方向变化');pass('仅光照矩阵变化仍复用几何');
-  await command('capture');s=await command('move');assert(s.stats.shadowGeometryRebuilds>0&&s.stats.shadowUploadedBytes>0);assert(s.reused>0);await reference('模型移动');pass('动态变换重建且复用已有容量');
+  await command('capture');s=await command('move');assert(s.stats.shadowGeometryRebuilds>0&&s.stats.shadowUploadedBytes>0);assert(s.reused>0);assert.equal(s.stats.shadowIndexUploadedBytes,0);await reference('模型移动');pass('动态变换重建且复用已有容量');
   for(const name of ['parent','mirror','geometry','replace']){s=await command(name);assert(s.stats.shadowGeometryRebuilds>0,name);await reference(name);}pass('父级变换、负缩放、顶点修改及几何替换使缓存失效');
   s=await command('color');assert.equal(s.stats.shadowUploadedBytes,0);await reference('颜色变化');pass('不影响投影的颜色变化不重传几何');
   for(const name of ['opacity','cutoff']){s=await command(name);assert(s.stats.shadowDrawCalls>0);assert.equal(s.stats.shadowUploadedBytes,0);await reference(name);}pass('MASK 透明度和阈值更新阴影但复用几何');
@@ -30,6 +30,7 @@ const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'playwright');
   s=await command('dynamic');assert(s.stats.shadowDynamicGeometryRebuilds>0);await reference('切换动态');
   for(const name of ['move','parent','mirror']){s=await command(name);assert.equal(s.stats.shadowUploadedBytes,0,name+' 动态变换不应上传几何');await reference('动态 '+name);}pass('动态物体与父级移动、镜像仅更新矩阵，静态几何不重传');
   for(const name of ['geometry','replace']){s=await command(name);assert(s.stats.shadowDynamicUploadedBytes>0);assert.equal(s.stats.shadowStaticUploadedBytes,0);assert.equal(s.stats.shadowDynamicGeometryRebuilds,1);await reference('动态 '+name);}pass('动态顶点修改仅重建一个对象，两个级联共享上传');
+  s=await command('indicesSwap');assert(s.stats.shadowIndexUploadedBytes>0);await reference('动态索引原地修改');s=await command('geometry');assert.equal(s.stats.shadowIndexUploadedBytes,0);pass('阴影顶点更新不上传索引，原地修改索引时正确重传');
   s=await command('dynamicMask');await reference('动态 MASK');
   for(const name of ['opacity','cutoff']){s=await command(name);assert.equal(s.stats.shadowUploadedBytes,0);await reference('动态 MASK '+name);}
   for(const name of ['atlas','atlasMutate','uv']){s=await command(name);assert(s.stats.shadowDynamicUploadedBytes>0);assert.equal(s.stats.shadowStaticUploadedBytes,0);await reference('动态 MASK '+name);}pass('动态 MASK 材质参数、图集和 UV 正确失效');

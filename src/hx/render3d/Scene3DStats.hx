@@ -118,6 +118,8 @@ class Scene3DStats {
 
 	/** 最近一次阴影通道上传字节数。 */
 	public var shadowUploadedBytes:Int = 0;
+	/** 阴影上传字节数中的索引部分，拓扑不变时应为零。 */
+	public var shadowIndexUploadedBytes:Int = 0;
 
 	/** 本次阴影重绘复用及重建几何的级联数量，与阴影贴图缓存分别统计。 */
 	public var shadowGeometryCacheHits:Int = 0;
@@ -185,7 +187,7 @@ class Scene3DStats {
 		softDepthDrawCalls = softDepthTriangles = softDepthUploadedBytes = softDepthTargetBytes = 0;
 		softParticleStatus = "关闭";
 		drawCalls = triangles = visibleMeshes = culledMeshes = uploadedBytes = textureSlots = compositeDrawCalls = 0;
-		shadowDrawCalls = shadowTriangles = shadowUploadedBytes = shadowMapBytes = shadowMapSize = 0;
+		shadowIndexUploadedBytes = shadowDrawCalls = shadowTriangles = shadowUploadedBytes = shadowMapBytes = shadowMapSize = 0;
 		shadowGeometryCacheHits = shadowGeometryRebuilds = shadowGeometryBytes = 0;
 		shadowStaticUploadedBytes = shadowDynamicUploadedBytes = 0;
 		shadowStaticGeometryRebuilds = shadowDynamicGeometryRebuilds = 0;

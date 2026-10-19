@@ -46,6 +46,7 @@ class Model3D extends Node3D {
 	private var materials:Map<Int, Material3D> = [];
 	private var useLighting:Bool;
 	private var usePbr:Bool;
+	private var useGpuSkinning:Bool;
 	private var sourceAsset:ModelAsset;
 
 	private function get_meshes():Array<MeshObject> {
@@ -63,6 +64,7 @@ class Model3D extends Node3D {
 		data = asset.data;
 		useLighting = options != null && options.lightingEnabled == true;
 		usePbr = options != null && options.pbrEnabled == true;
+		useGpuSkinning = options != null && options.gpuSkinning == true;
 		if (sceneIndex < 0)
 			sceneIndex = data.scene;
 		if (sceneIndex < 0 || sceneIndex >= data.scenes.length)
@@ -107,7 +109,7 @@ class Model3D extends Node3D {
 				for (joint in data.skins[node.skin].joints)
 					if (!active[joint])
 						throw "蒙皮关节不属于所选场景";
-				skin = new Skin3D(data.skins[node.skin]);
+				skin = new Skin3D(data.skins[node.skin], useGpuSkinning);
 				skins.set(node.skin, skin);
 			}
 		}

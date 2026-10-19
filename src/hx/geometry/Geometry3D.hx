@@ -19,7 +19,15 @@ class Geometry3D extends EventDispatcher {
 	public var indices(default, null):Array<Int>;
 
 	/** 顶点局部法线数组；未提供时由 getNormals 按需生成。 */
-	public var normals(default, null):Array<Float>;
+	public var normals(get, never):Array<Float>;
+	private var normalData:Array<Float>;
+	/** GPU 蒙皮延迟生成 CPU 法线；直接读取 normals 仍取得当前姿态的数据。 */
+	@:allow(hx.animation3d)
+	private var normalReader:Void->Void;
+	private function get_normals():Array<Float> {
+		if(normalReader!=null)normalReader();
+		return normalData;
+	}
 	/** 可选切线，XYZ 方向和 W 手性；法线贴图使用时按需生成。 */
 	public var tangents(default, null):Array<Float>;
 
@@ -35,6 +43,9 @@ class Geometry3D extends EventDispatcher {
 	/** 数据变更版本，用于使渲染缓存失效。 */
 	public var version(default, null):Int = 0;
 
+	/** 通用数据变更版本；蒙皮提交不改变 UV、颜色和索引，因而不递增此版本。 */
+	public var dataVersion(default, null):Int = 0;
+
 	/** 当前网格持有的引用数量；释放到零后仍需显式销毁资源。 */
 	public var referenceCount(default, null):Int = 0;
 
@@ -48,7 +59,7 @@ class Geometry3D extends EventDispatcher {
 		this.positions = positions.copy();
 		this.uvs = uvs.copy();
 		this.indices = indices.copy();
-		this.normals = normals == null || normals.length == 0 ? null : normals.copy();
+		this.normalData = normals == null || normals.length == 0 ? null : normals.copy();
 		this.tangents = tangents == null || tangents.length == 0 ? null : tangents.copy();
 		invalidate();
 	}
@@ -60,7 +71,7 @@ class Geometry3D extends EventDispatcher {
 		geometry.positions = primitive.positions.copy();
 		geometry.uvs = primitive.uvs.copy();
 		geometry.indices = primitive.indices.copy();
-		geometry.normals = primitive.normals.copy();
+		geometry.normalData = primitive.normals.copy();
 		geometry.tangents = primitive.tangents == null || primitive.tangents.length == 0 ? null : primitive.tangents.copy();
 		// 蒙皮每帧更新法线；静态自动法线仍需在业务修改顶点后失效。
 		geometry.generatedNormals = primitive.generatedNormals && (!skinned || primitive.rigidJoint >= 0);
@@ -92,7 +103,7 @@ class Geometry3D extends EventDispatcher {
 			if (index < 0 || index >= Std.int(positions.length / 3))
 				throw "三维索引超出顶点范围";
 		if (generatedNormals)
-			normals = null;
+			normalData = null;
 		if (generatedTangents) tangents = null;
 		if (tangents != null) {
 			if (tangents.length != Std.int(positions.length / 3) * 4) throw "三维切线数量与位置不一致";
@@ -114,6 +125,7 @@ class Geometry3D extends EventDispatcher {
 		for (i in 0...Std.int(positions.length / 3))
 			bounds.include(positions[i * 3], positions[i * 3 + 1], positions[i * 3 + 2]);
 		version++;
+		dataVersion++;
 		dispatchEvent(new Event(Event.CHANGE));
 	}
 
@@ -121,7 +133,7 @@ class Geometry3D extends EventDispatcher {
 	@:allow(hx.animation3d)
 	private function commitSkinUpdate(minX:Float,minY:Float,minZ:Float,maxX:Float,maxY:Float,maxZ:Float):Void {
 		if(isDisposed)throw "几何数据已经销毁";
-		if(generatedNormals)normals=null;
+		if(generatedNormals)normalData =null;
 		if(generatedTangents)tangents=null;
 		bounds.min.setTo(minX,minY,minZ);bounds.max.setTo(maxX,maxY,maxZ);
 		version++;
@@ -134,7 +146,7 @@ class Geometry3D extends EventDispatcher {
 			throw "几何数据已经销毁";
 		if (normals != null)
 			return normals;
-		normals = ModelGeometryTools.generateNormals(positions, indices);
+		normalData = ModelGeometryTools.generateNormals(positions, indices);
 		generatedNormals = true;
 		return normals;
 	}
@@ -151,6 +163,7 @@ class Geometry3D extends EventDispatcher {
 
 	/** 复制显式切线；传 null 恢复按需生成。 */
 	public function setTangents(values:Array<Float>):Void {
+		if(normalReader!=null)normalReader();
 		if (isDisposed) throw "几何数据已经销毁";
 		if (values != null) {
 			if (values.length != Std.int(positions.length / 3) * 4) throw "三维切线数量与位置不一致";
@@ -168,12 +181,13 @@ class Geometry3D extends EventDispatcher {
 
 	/** 将法线转为显式数据；之后修改位置时由调用方同步维护法线。 */
 	public function setNormals(values:Array<Float>):Void {
+		if(normalReader!=null)normalReader();
 		if (values == null || values.length != positions.length)
 			throw "三维法线数量与位置不一致";
 		for (value in values)
 			if (!Math3D.finite(value))
 				throw "三维法线包含无效数值";
-		normals = values.copy();
+		normalData = values.copy();
 		generatedNormals = false;
 		invalidate();
 	}
@@ -198,11 +212,12 @@ class Geometry3D extends EventDispatcher {
 		if (isDisposed)
 			return;
 		isDisposed = true;
+		normalReader = null;
 		positions = [];
 		colors = [];
 		uvs = [];
 		indices = [];
-		normals = [];
+		normalData = [];
 		tangents = [];
 		removeEventListeners();
 	}

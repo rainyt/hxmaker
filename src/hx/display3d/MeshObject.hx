@@ -10,6 +10,8 @@ import hx.render3d.GeometryMobility3D;
 
 /** 三维网格节点；几何和材质可共享，销毁节点仅释放引用。 */
 class MeshObject extends Node3D {
+	/** 导入蒙皮的只读绑定数据；后端仅协商 gpuEnabled，其他字段不得修改。 */
+	public var skinBinding:hx.animation3d.Skin3D.SkinBinding3D;
 	/** 引用的共享几何；更换时自动维护引用计数，不自动销毁旧几何。 */
 	public var geometry(get, set):Geometry3D;
 
@@ -237,5 +239,6 @@ class MeshObject extends Node3D {
 		__normals = [];
 		__tangents = [];
 		super.dispose();
+		skinBinding = null;
 	}
 }

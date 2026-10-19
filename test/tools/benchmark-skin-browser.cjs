@@ -13,7 +13,7 @@ const inject=`
    var g=mesh.get_geometry(),lo=[Infinity,Infinity,Infinity],hi=[-Infinity,-Infinity,-Infinity];
    for(var i=0;i<g.positions.length;i++){var value=g.positions[i];if(!Number.isFinite(value))throw Error('蒙皮顶点非有限值');lo[i%3]=Math.min(lo[i%3],value);hi[i%3]=Math.max(hi[i%3],value);}
    var b=g.bounds;if(lo.some((v,i)=>v!==[b.min.x,b.min.y,b.min.z][i])||hi.some((v,i)=>v!==[b.max.x,b.max.y,b.max.z][i]))throw Error('蒙皮融合边界错误');
-   if(g.normals.some(v=>!Number.isFinite(v)))throw Error('蒙皮法线非有限值');
+   if(g.getNormals().some(v=>!Number.isFinite(v)))throw Error('蒙皮法线非有限值');
   }
   window.__skinBenchmark={count:agents.length,samples};return;
  }

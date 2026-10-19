@@ -152,6 +152,8 @@ class GameStage extends hx.display.Stage {
 			+ "\n主静／动：" + Math.round(stats.geometryStaticUploadedBytes / 1024) + "／" + Math.round(stats.geometryDynamicUploadedBytes / 1024) + " KB"
 			+ "\n影静／动：" + Math.round(stats.shadowStaticUploadedBytes / 1024) + "／" + Math.round(stats.shadowDynamicUploadedBytes / 1024) + " KB"
 			+ "\nAUTO 静／动：" + stats.autoStaticMeshes + "／" + stats.autoDynamicMeshes
+			+ "\nGPU 蒙皮：" + stats.gpuSkinMeshes + " 网格"
+			+ "\n骨骼矩阵：" + Math.round((stats.redrawThisFrame ? stats.skinPaletteUploadedBytes : 0) / 1024) + " KB"
 			+ "\n主／影 CPU：" + Math.round(stats.mainCpuMs * 10) / 10 + "／" + Math.round(stats.shadowCpuMs * 10) / 10 + " ms";
 	}
 

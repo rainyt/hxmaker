@@ -162,6 +162,9 @@ class Scene3DStats {
 	public var splitReasons:Map<String, Int> = [];
 
 	/** 主场景几何缓存统计，字节数为实际上传或预留 GPU 容量。 */
+	/** 本次重绘中使用 GPU 蒙皮的网格数量，以及各通道上传的骨骼矩阵字节数。 */
+	public var gpuSkinMeshes:Int = 0;
+	public var skinPaletteUploadedBytes:Int = 0;
 	public var geometryStaticUploadedBytes:Int = 0;
 	public var geometryDynamicUploadedBytes:Int = 0;
 	public var geometryIndexUploadedBytes:Int = 0;
@@ -178,6 +181,7 @@ class Scene3DStats {
 
 	/** 重置绘制计数和拆批原因；不清除回调编号、目标尺寸及计时字段。 */
 	public function reset():Void {
+		gpuSkinMeshes = skinPaletteUploadedBytes = 0;
 		geometryStaticUploadedBytes = geometryDynamicUploadedBytes = geometryIndexUploadedBytes = geometryCacheBytes = geometryRebuilds = geometryCacheHits = 0;
 		fogStatus = "关闭";
 		environmentStatus = "关闭"; environmentTextureBytes = 0;

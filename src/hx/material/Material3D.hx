@@ -409,6 +409,7 @@ class Material3D extends EventDispatcher {
 			|| StringTools.startsWith(name, "uFog")
 			|| [
 				"uViewProjection",
+				"uSkin",
 				"uBaseUVRect",
 				"uSceneDepth",
 				"uSoftParams",

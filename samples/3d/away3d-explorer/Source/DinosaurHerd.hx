@@ -29,8 +29,8 @@ class DinosaurHerd {
 		obstacles=[for(box in colliders) if(box.position[1]+box.size[1]/2>0.1 && box.position[1]-box.size[1]/2<2.5)box];
 		root.name="霸王龙群";
 		try {
-			for(i in 0...10) {
-				var model=asset.createInstance(-1,{pbrEnabled:true});root.addChild(model);
+			for(i in 0...20) {
+				var model=asset.createInstance(-1,{pbrEnabled:true,gpuSkinning:true});root.addChild(model);
 				model.name="霸王龙 "+(i+1);model.setScale(.65,.65,.65);model.y=.04;
 				for(mesh in model.meshes){mesh.shadowMobility=hx.render3d.ShadowMobility3D.AUTO;mesh.geometryMobility=hx.render3d.GeometryMobility3D.AUTO;mesh.castShadow=true;mesh.receiveShadow=true;}
 				var x=0.,z=0.;

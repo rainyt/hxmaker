@@ -42,7 +42,7 @@ try{
  for(let index=0;index<2;index++){await command('restart');await ready();restored=await state();assert(restored.complete);assert.deepEqual(restored.lastRelease,{sceneDisposed:true,controllerDisposed:true,collisionDisposed:true,colliders:0,nodes:0});}
  pass('两次销毁重进，释放控制器、场景和碰撞代理');
  await command('reset');await page.waitForFunction(()=>window.__hxmakerExplorer.state().grounded);const before=(await state()).position;
- await page.mouse.move(106,574);await page.mouse.down();await page.waitForTimeout(700);await page.mouse.up();assert((await state()).position[2]<before[2]-.5);pass('屏幕方向按钮支持持续移动并在抬起时停止');
+ const canvas=await page.locator('canvas').boundingBox(),inputScale=(await state()).inputScale;await page.mouse.move(canvas.x+106*inputScale,canvas.y+574*inputScale);await page.mouse.down();await page.waitForTimeout(700);await page.mouse.up();assert((await state()).position[2]<before[2]-.5);pass('屏幕方向按钮支持持续移动并在抬起时停止');
  assert.deepEqual(errors,[]);report.final=await state();
  if(process.env.HXMAKER_TEST_REPORT)fs.writeFileSync(process.env.HXMAKER_TEST_REPORT,JSON.stringify(report,null,2)+'\n');
  console.log('HXMAKER_EXPLORER_BROWSER PASS '+report.cases.length);

@@ -286,6 +286,7 @@ class GameStage extends hx.display.Stage {
 			hint: world.ready ? world.hint() : "",
 			fog: world.view.fog.enabled,
 			stats: world.view.stats,
+			inputScale: hx.core.Hxmaker.engine.scaleFactor,
 			releases: releaseCount,
 			lastRelease: lastRelease
 		};

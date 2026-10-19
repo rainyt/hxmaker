@@ -133,6 +133,7 @@ class GameStage extends hx.display.Stage {
 
 	private function herdAction(kind:Int):Void {
 		if (!world.ready) return;
+		
 		switch (kind) {
 			case 0: world.herd.cycleMode();
 			case 1: world.herd.toggleShadows();

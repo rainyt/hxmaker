@@ -6,6 +6,7 @@ import hx.geometry.Geometry3D;
 import hx.material.Material3D;
 import hx.render3d.Math3D;
 import hx.render3d.ShadowMobility3D;
+import hx.render3d.GeometryMobility3D;
 
 /** 三维网格节点；几何和材质可共享，销毁节点仅释放引用。 */
 class MeshObject extends Node3D {
@@ -46,9 +47,30 @@ class MeshObject extends Node3D {
 	public var shadowMobility(get, set):ShadowMobility3D;
 	private function get_shadowMobility():ShadowMobility3D { return __shadowMobility; }
 	private function set_shadowMobility(value:ShadowMobility3D):ShadowMobility3D {
-		if (value != ShadowMobility3D.STATIC && value != ShadowMobility3D.DYNAMIC) throw "无效的阴影更新策略";
+		if (value != ShadowMobility3D.STATIC && value != ShadowMobility3D.DYNAMIC && value != ShadowMobility3D.AUTO) throw "无效的阴影更新策略";
 		if (__shadowMobility != value) { __shadowMobility = value; invalidate(); }
 		return value;
+	}
+
+	private var __geometryMobility:GeometryMobility3D = GeometryMobility3D.DYNAMIC;
+	/** 主场景缓存策略，独立于阴影策略。 */
+	public var geometryMobility(get, set):GeometryMobility3D;
+	private function get_geometryMobility():GeometryMobility3D { return __geometryMobility; }
+	private function set_geometryMobility(value:GeometryMobility3D):GeometryMobility3D {
+		if (value != GeometryMobility3D.STATIC && value != GeometryMobility3D.DYNAMIC && value != GeometryMobility3D.AUTO) throw "无效的主场景几何策略";
+		if (__geometryMobility != value) { __geometryMobility = value; invalidate(); }
+		return value;
+	}
+	@:allow(hx.render3d.MobilityTracker3D)
+	private var __autoStatic:Bool = false;
+	/** AUTO 最近一次场景同步后的有效策略；脱离场景后按动态处理。 */
+	public var effectiveGeometryMobility(get, never):GeometryMobility3D;
+	private function get_effectiveGeometryMobility():GeometryMobility3D {
+		return __geometryMobility == GeometryMobility3D.AUTO ? (scene != null && __autoStatic ? GeometryMobility3D.STATIC : GeometryMobility3D.DYNAMIC) : __geometryMobility;
+	}
+	public var effectiveShadowMobility(get, never):ShadowMobility3D;
+	private function get_effectiveShadowMobility():ShadowMobility3D {
+		return __shadowMobility == ShadowMobility3D.AUTO ? (scene != null && __autoStatic ? ShadowMobility3D.STATIC : ShadowMobility3D.DYNAMIC) : __shadowMobility;
 	}
 
 	/** 是否允许投射阴影，仍受材质透明模式与光照阴影设置约束。 */

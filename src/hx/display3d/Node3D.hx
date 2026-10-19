@@ -10,6 +10,9 @@ import hx.render3d.Math3D;
 class Node3D extends EventDispatcher {
 	/** 业务名称，不要求唯一。 */
 	public var name:String;
+	private static var nextInstanceId:Int = 0;
+	/** 节点生命周期内稳定的标识，设备恢复不会改变缓存分组顺序。 */
+	public var instanceId(default, null):Int;
 
 	/** 父三维节点；根节点或已移除节点为 null。 */
 	public var parent(default, null):Node3D;
@@ -231,7 +234,7 @@ class Node3D extends EventDispatcher {
 	}
 
 	/** 创建无父节点的三维节点，不加入二维显示树。 */
-	public function new() {}
+	public function new() { instanceId = nextInstanceId++; }
 
 	private function get_children():Array<Node3D> {
 		return __children.copy();

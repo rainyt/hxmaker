@@ -80,4 +80,6 @@ node test/tools/run-explorer-browser.cjs
 
 ## 阴影几何策略
 
-环境网格使用 `ShadowMobility3D.STATIC`，闸门和十只霸王龙使用 `DYNAMIC`。右侧分别显示静态／动态上传 KB；`U` 关闭骨骼动画后，刚体游走不上传阴影几何。Blender 网格自定义属性 `hx_shadow_mobility` 可写 `static` 或 `dynamic`，由导出器写入 `scene.json`。详见[缓存说明](../../../docs/静态与动态阴影缓存使用说明.md)。
+环境网格的主场景与阴影策略均为 `STATIC`，闸门和十只霸王龙使用 `AUTO`。右侧分别显示主场景、阴影的静态／动态上传 KB 和 AUTO 网格数量。`U` 关闭动画保留刚体游走，两条通道的几何均零上传；`G` 定格超过一秒后，霸王龙自动转静态。
+
+Blender 网格自定义属性 `hx_geometry_mobility`、`hx_shadow_mobility` 可写 `static`、`dynamic` 或 `auto`，由导出器写入 `scene.json`。当前接口及上传统计见[主场景缓存说明](../../../docs/主场景几何缓存与AUTO策略.md)。

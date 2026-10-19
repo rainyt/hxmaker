@@ -6,6 +6,6 @@ import hx.core.HxmakerApplication;
 class Main extends HxmakerApplication {
 	public function new() {
 		super();
-		init(GameStage, 1920, 1080);
+		init(GameStage, 1120, 760);
 	}
 }

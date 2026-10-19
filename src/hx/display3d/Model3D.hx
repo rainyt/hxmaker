@@ -19,6 +19,8 @@ import hx.render3d.Math3D;
 class Model3D extends Node3D {
 	/** 模型实例独立的播放器，由业务每帧显式推进一次。 */
 	public var animation(default, null):AnimationPlayer3D;
+	/** 播放时间或过渡实际推进的次数，供 AUTO 判定使用。 */
+	public var animationActivityVersion(default, null):Int = 0;
 
 	/** 活动导入场景的网格列表副本，网格引用由模型拥有。 */
 	public var meshes(get, never):Array<MeshObject>;
@@ -180,8 +182,11 @@ class Model3D extends Node3D {
 
 	/** 显式驱动动画；暂停时不重复计算蒙皮，静态模型只在创建时计算初始姿态。 */
 	public function update(dt:Float):Void {
-		if (!isDisposed)
+		if (!isDisposed) {
+			var advancing = dt > 0 && animation.playing && animation.speed > 0;
 			animation.update(dt);
+			if (advancing) animationActivityVersion++;
+		}
 	}
 
 	/** 返回当前场景的导入节点；越界、未激活或已销毁时返回 null。引用由模型所有。 */

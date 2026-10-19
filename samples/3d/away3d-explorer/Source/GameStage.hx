@@ -147,8 +147,11 @@ class GameStage extends hx.display.Stage {
 		herdShadowButton.data = "龙阴影：" + (world.herd.shadowsEnabled ? "开" : "关") + " Y";
 		herdAnimationButton.data = "骨骼动画：" + (world.herd.animationEnabled ? "开" : "关") + " U";
 		var stats = world.view.stats;
-		herdStats.data = "霸王龙：" + world.herd.count + " 只\n静态上传：" + Math.round(stats.shadowStaticUploadedBytes / 1024)
-			+ " KB\n动态上传：" + Math.round(stats.shadowDynamicUploadedBytes / 1024) + " KB\n阴影 CPU：" + Math.round(stats.shadowCpuMs * 100) / 100 + " ms";
+		herdStats.data = "霸王龙：" + world.herd.count + " 只"
+			+ "\n主静／动：" + Math.round(stats.geometryStaticUploadedBytes / 1024) + "／" + Math.round(stats.geometryDynamicUploadedBytes / 1024) + " KB"
+			+ "\n影静／动：" + Math.round(stats.shadowStaticUploadedBytes / 1024) + "／" + Math.round(stats.shadowDynamicUploadedBytes / 1024) + " KB"
+			+ "\nAUTO 静／动：" + stats.autoStaticMeshes + "／" + stats.autoDynamicMeshes
+			+ "\n主／影 CPU：" + Math.round(stats.mainCpuMs * 10) / 10 + "／" + Math.round(stats.shadowCpuMs * 10) / 10 + " ms";
 	}
 
 	private function buildHud():Void {
@@ -356,6 +359,8 @@ class GameStage extends hx.display.Stage {
 				herdAction(0);
 			case "herdShadows":
 				herdAction(1);
+			case "geometryCache":
+				world.view.geometryCacheEnabled = !world.view.geometryCacheEnabled;world.view.requestRender();
 			case "herdAnimation":
 				herdAction(2);
 			default:

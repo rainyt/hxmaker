@@ -666,6 +666,9 @@
     }
   ],
   "shadowMobility": {
-    "gate": "dynamic"
+    "gate": "auto"
+  },
+  "geometryMobility": {
+    "gate": "auto"
   }
 }

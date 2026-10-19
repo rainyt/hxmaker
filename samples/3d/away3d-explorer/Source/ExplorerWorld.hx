@@ -129,18 +129,30 @@ class ExplorerWorld {
 		model = assets.getModel("world").createInstance(-1, {pbrEnabled: true});
 		view.root.addChild(model);
 		for (mesh in model.meshes) {
+			mesh.geometryMobility = hx.render3d.GeometryMobility3D.STATIC;
 			mesh.shadowMobility = hx.render3d.ShadowMobility3D.STATIC;
 			var overrides:Dynamic = data.shadowMobility;
 			var node:Node3D = mesh;
 			while (node != null && node != model) {
 				var mobility:Dynamic = overrides == null ? null : Reflect.field(overrides, node.name);
 				if (mobility != null) {
-					if (mobility != "static" && mobility != "dynamic") throw "无效的阴影更新策略：" + node.name;
-					mesh.shadowMobility = mobility == "static" ? hx.render3d.ShadowMobility3D.STATIC : hx.render3d.ShadowMobility3D.DYNAMIC;
+					if (mobility != "static" && mobility != "dynamic" && mobility != "auto") throw "无效的阴影更新策略：" + node.name;
+					mesh.shadowMobility = mobility == "static" ? hx.render3d.ShadowMobility3D.STATIC : mobility == "auto" ? hx.render3d.ShadowMobility3D.AUTO : hx.render3d.ShadowMobility3D.DYNAMIC;
 					break;
 				}
 				node = node.parent;
 			}
+			node = mesh;
+			while (node != null && node != model) {
+				var policy:Dynamic = data.geometryMobility == null ? null : Reflect.field(data.geometryMobility, node.name);
+				if (policy != null) {
+					if (policy != "static" && policy != "dynamic" && policy != "auto") throw "无效的主场景策略：" + node.name;
+					mesh.geometryMobility = policy == "static" ? hx.render3d.GeometryMobility3D.STATIC : policy == "auto" ? hx.render3d.GeometryMobility3D.AUTO : hx.render3d.GeometryMobility3D.DYNAMIC;
+					break;
+				}
+				node = node.parent;
+			}
+
 			mesh.castShadow = mesh.name.indexOf("terrain") < 0 && mesh.name.indexOf("courtyard") < 0;
 			mesh.receiveShadow = mesh.name.indexOf("pine") < 0 && mesh.name.indexOf("terrain") < 0;
 		}

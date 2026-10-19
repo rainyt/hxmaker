@@ -1,0 +1,9 @@
+{
+  "backend": "Blender 5.2.2 LTS 后台导出",
+  "meshCount": 83,
+  "gateGeometry": "auto",
+  "gateShadow": "auto",
+  "invalidGeometryRejected": true,
+  "invalidShadowRejected": true,
+  "glbExported": true
+}

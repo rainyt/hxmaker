@@ -159,11 +159,24 @@ class Scene3DStats {
 	/** 主通道按原因累计的拆批次数，由后端维护。 */
 	public var splitReasons:Map<String, Int> = [];
 
+	/** 主场景几何缓存统计，字节数为实际上传或预留 GPU 容量。 */
+	public var geometryStaticUploadedBytes:Int = 0;
+	public var geometryDynamicUploadedBytes:Int = 0;
+	public var geometryIndexUploadedBytes:Int = 0;
+	public var geometryCacheBytes:Int = 0;
+	public var geometryRebuilds:Int = 0;
+	public var geometryCacheHits:Int = 0;
+	/** 当前 AUTO 网格数和场景累计切换次数，不随重绘清零。 */
+	public var autoStaticMeshes:Int = 0;
+	public var autoDynamicMeshes:Int = 0;
+	public var autoMobilityTransitions:Int = 0;
+
 	/** 创建归零的绘制统计。 */
 	public function new() {}
 
 	/** 重置绘制计数和拆批原因；不清除回调编号、目标尺寸及计时字段。 */
 	public function reset():Void {
+		geometryStaticUploadedBytes = geometryDynamicUploadedBytes = geometryIndexUploadedBytes = geometryCacheBytes = geometryRebuilds = geometryCacheHits = 0;
 		fogStatus = "关闭";
 		environmentStatus = "关闭"; environmentTextureBytes = 0;
 		skyboxStatus = "关闭"; skyboxDrawCalls = 0; skyboxTextureBytes = 0;

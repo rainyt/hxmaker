@@ -6,4 +6,6 @@ enum abstract ShadowMobility3D(Int) {
 	var STATIC = 0;
 	/** 移动物体：缓存局部几何，变换通过矩阵更新，蒙皮数据跨级联复用。 */
 	var DYNAMIC = 1;
+	/** 与主场景共用活动判定，持续静止后自动转静态。 */
+	var AUTO = 2;
 }

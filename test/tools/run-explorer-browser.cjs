@@ -7,10 +7,10 @@ const browser=await chromium.launch({headless:true,...(process.env.CHROME_PATH?{
 try{
  const page=await browser.newPage({viewport:{width:1120,height:760}}),errors=[];
  page.on('pageerror',error=>errors.push(error.stack));page.on('console',message=>{if(message.type()==='error'&&!message.text().includes('favicon'))errors.push(message.text());});
- const url=`${base}/samples/3d/away3d-explorer/Export/html5/bin/`;
+ const url=process.env.HXMAKER_EXPLORER_URL||`${base}/samples/3d/away3d-explorer/Export/html5/bin/`;
  const state=()=>page.evaluate(()=>window.__hxmakerExplorer.state());
  const command=(name,x=0,z=0)=>page.evaluate(([name,x,z])=>window.__hxmakerExplorer.command(name,x,z),[name,x,z]);
- async function ready(){await page.waitForFunction(()=>window.__hxmakerExplorer?.state().failure||window.__hxmakerExplorer?.state().ready&&window.__hxmakerExplorer.state().stats.drawCalls>0,null,{timeout:45000});assert.equal((await state()).failure,'');if((await state()).dinosaurs)while((await state()).dinosaurs.mode!==2)await command('herdMode');}
+ async function ready(){await page.waitForFunction(()=>window.__hxmakerExplorer?.state().failure||window.__hxmakerExplorer?.state().ready&&window.__hxmakerExplorer.state().stats.drawCalls>0,null,{timeout:45000}).catch(async error=>{console.error('READY_DIAGNOSTIC',JSON.stringify({errors,state:await page.evaluate(()=>window.__hxmakerExplorer?.state())}));throw error;});assert.equal((await state()).failure,'');if((await state()).dinosaurs)while((await state()).dinosaurs.mode!==2)await command('herdMode');await page.waitForTimeout(1200);}
  const report={browser:browser.version(),backend:'软件 WebGL，仅验证功能；隐藏恐龙以隔离原探索流程，群体另做专项验证',cases:[]};
  const pass=message=>{report.cases.push(message);console.log('PASS '+message);};
  async function walk(x,z){

@@ -119,6 +119,20 @@ class Scene3D extends DisplayObject {
 
 	/** 是否在可见状态每次 UPDATE 请求重绘，默认 true；关闭后可显式 requestRender。 */
 	public var autoRender:Bool = true;
+	/** 主场景几何缓存开关，可关闭以便比较原绘制路径。 */
+	public var geometryCacheEnabled:Bool = true;
+	private var __autoStaticDelay:Float = 1;
+	private var mobilityTracker:hx.render3d.MobilityTracker3D = new hx.render3d.MobilityTracker3D();
+	/** AUTO 转静态前需要持续静止的秒数。 */
+	public var autoStaticDelay(get, set):Float;
+	private function get_autoStaticDelay():Float { return __autoStaticDelay; }
+	private function set_autoStaticDelay(value:Float):Float {
+		if (!Math3D.finite(value) || value < 0) throw "自动静态等待时间无效";
+		if (__autoStaticDelay != value) { __autoStaticDelay = value; requestRender(); }
+		return value;
+	}
+	/** 更新周期与绘制前都可同步，材质和相机变化不会被误判成物体运动。 */
+	public function updateMobility():Void { if (!isDisposed) mobilityTracker.update(this); }
 
 	/** 离屏目标相对于逻辑视口的渲染比例，默认 1。 */
 	public var renderScale:Float = 1;
@@ -215,8 +229,10 @@ class Scene3D extends DisplayObject {
 	/** 检查场景设置和自动重绘开关；不推进三维对象的业务动画。 */
 	override public function onUpdate(dt:Float):Void {
 		super.onUpdate(dt);
+		mobilityTracker.advance();
+		updateMobility();
 		var values:Array<Dynamic> = [
-			                            renderScale,                  backgroundColor,                 backgroundAlpha, multiTextureEnabled ? 1 : 0,
+			                            geometryCacheEnabled ? 1 : 0, renderScale,                  backgroundColor,                 backgroundAlpha, multiTextureEnabled ? 1 : 0,
 			camera == null ? 0 : camera.fieldOfView, camera == null ? 0 : camera.near, camera == null ? 0 : camera.far,               lightingKey(), bloom.settingsKey()
 		];
 		var settings = values.join(":") + ":sky:" + skyboxKey() + ":fog:" + fog.settingsKey();
@@ -272,6 +288,7 @@ class Scene3D extends DisplayObject {
 		if (isDisposed)
 			return;
 		dispatchEvent(new Event(DISPOSE));
+		mobilityTracker.clear();
 		root.dispose();
 		__camera = null;
 		__light = null;

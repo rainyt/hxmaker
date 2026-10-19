@@ -24,6 +24,7 @@ import lime.utils.UInt8Array;
 @:access(hx.render3d.openfl.Renderer3D)
 @:access(hx.render3d.openfl.ShadowPass3D)
 @:access(hx.render3d.openfl.ShadowGeometryBuffer3D)
+@:access(hx.render3d.openfl.MainGeometryCache3D)
 class GameStage extends hx.display.Stage {
 	var scene:Scene3D;
 	var light:DirectionalLight3D;
@@ -33,6 +34,10 @@ class GameStage extends hx.display.Stage {
 	var assets:Assets;
 	var large:MeshObject;
 	var group:hx.display3d.Model3D;
+	var animateGroup:Bool=false;
+	var heldMain:Array<Dynamic>=[];
+	var disposedMainBytes:Int=-1;
+	var disposedMainHandles:Int=-1;
 	var ready:Bool=false;
 	var disposedBytes:Int=-1;
 	var disposedHandles:Int=-1;
@@ -61,7 +66,7 @@ class GameStage extends hx.display.Stage {
 	function state():Dynamic {
 		var render=renderer();var gl=render==null?null:render.gl;
 		return {ready:ready,stats:scene.stats,error:gl==null||gl.isContextLost()?-1:gl.getError(),disposedBytes:disposedBytes,disposedHandles:disposedHandles,
-			reused:reused(),webgl:gl==null?'':gl.getParameter(gl.VERSION)};
+			reused:reused(),mainReused:mainReused(),autoStatic:box.effectiveGeometryMobility==hx.render3d.GeometryMobility3D.STATIC,autoShadowStatic:box.effectiveShadowMobility==hx.render3d.ShadowMobility3D.STATIC,groupAutoStatic:group==null||group.isDisposed||group.meshes.length==0?false:group.meshes[0].effectiveGeometryMobility==hx.render3d.GeometryMobility3D.STATIC,disposedMainBytes:disposedMainBytes,disposedMainHandles:disposedMainHandles,webgl:gl==null?'':gl.getParameter(gl.VERSION)};
 	}
 	function pixels():Array<Int> {
 		var render=renderer();if(render==null||render.target==null||render.gl==null||render.gl.isContextLost())return [];
@@ -82,8 +87,39 @@ class GameStage extends hx.display.Stage {
 		return count;
 	}
 
+	override public function onUpdate(dt:Float):Void {
+		super.onUpdate(dt);
+		if(animateGroup && group!=null && !group.isDisposed)group.update(dt);
+	}
+	function mainBuffers():Array<hx.render3d.openfl.MainGeometryBuffer3D> {
+		var render=renderer(),result=[];
+		if(render!=null&&render.mainGeometry!=null)for(entry in render.mainGeometry.entries)result.push(entry.buffer);
+		return result;
+	}
+	function mainReused():Int {
+		var count=0;for(buffer in mainBuffers())for(old in heldMain)
+			if(buffer==old.buffer&&buffer.vertexBuffer==old.vertex&&buffer.indexBuffer==old.index&&buffer.vertices==old.array)count++;
+		return count;
+	}
+
 	function command(name:String):Void {
 		switch(name) {
+			case 'captureMain':heldMain=[for(buffer in mainBuffers()){buffer:buffer,vertex:buffer.vertexBuffer,index:buffer.indexBuffer,array:buffer.vertices}];scene.requestRender();
+			case 'referenceMain':for(entry in renderer().mainGeometry.entries)entry.snapshot=null;scene.requestRender();
+			case 'geometryCacheOff':scene.geometryCacheEnabled=false;scene.requestRender();
+			case 'geometryCacheOn':scene.geometryCacheEnabled=true;scene.requestRender();
+			case 'geometryStatic':box.geometryMobility=hx.render3d.GeometryMobility3D.STATIC;mask.geometryMobility=hx.render3d.GeometryMobility3D.STATIC;
+			case 'geometryDynamic':box.geometryMobility=hx.render3d.GeometryMobility3D.DYNAMIC;mask.geometryMobility=hx.render3d.GeometryMobility3D.DYNAMIC;
+			case 'autoPolicy':scene.autoStaticDelay=.2;box.geometryMobility=hx.render3d.GeometryMobility3D.AUTO;box.shadowMobility=hx.render3d.ShadowMobility3D.AUTO;
+			case 'autoGroup':for(mesh in group.meshes){mesh.geometryMobility=hx.render3d.GeometryMobility3D.AUTO;mesh.shadowMobility=hx.render3d.ShadowMobility3D.AUTO;}
+			case 'groupPlay':animateGroup=true;group.animation.speed=1;group.animation.play("移动");
+			case 'groupFreeze':animateGroup=false;scene.requestRender();
+			case 'groupSpeedZero':group.animation.speed=0;scene.requestRender();
+			case 'transparent':mask.material.alphaMode=AlphaMode3D.BLEND;mask.material.opacity=.5;
+			case 'pbrMapped':for(mesh in group.meshes){var pbr=new hx.material.PbrMaterial3D(null,0xd9b765,0,.7);pbr.normalTexture=assets.getBitmapData('shadow-mask');mesh.material=pbr;}
+			case 'groupFarPart':group.rotationY=0;group.setScale(1,1,1);group.meshes[1].x=50;group.meshes[1].material=new hx.material.PbrMaterial3D(null,0x4488cc,0,.8);
+			case 'groupShift':group.x-=50;
+			case 'groupScale':group.scaleY=1.7;group.scaleX=-.8;
 			case 'capture':held=[];for(batch in batches())held.push({batch:batch,vertex:batch.vertices,index:batch.indices,array:batch.vertexData});light.requestShadowUpdate();
 			case 'group':addGroup();
 			case 'groupMove':group.x+=.5;group.rotationY+=17;
@@ -99,11 +135,15 @@ class GameStage extends hx.display.Stage {
 			case 'reference':renderer().shadowPass.geometrySnapshots=[];for(cache in renderer().shadowPass.dynamicGeometry)cache.snapshot=null;light.requestShadowUpdate();
 			case 'camera':scene.camera.x+=.2;light.requestShadowUpdate();
 			case 'light':light.direction=new Vector3D(-.4,-1,-.3);
+			case 'moveAndSync':box.x+=.2;scene.updateMobility();
 			case 'move':box.x+=.2;
 			case 'parent':parentNode.rotationY+=12;
 			case 'mirror':parentNode.scaleX=-parentNode.scaleX;
+			case 'colorToggle':box.material.color=box.material.color==0xcc8855?0x229955:0xcc8855;
+			case 'autoZero':scene.autoStaticDelay=0;scene.requestRender();
 			case 'color':box.material.color=0xcc8855;
 			case 'geometry':box.geometry.positions[0]+=.1;box.geometry.invalidate();
+			case 'indicesSwap':var first=box.geometry.indices[0];box.geometry.indices[0]=box.geometry.indices[1];box.geometry.indices[1]=first;box.geometry.invalidate();
 			case 'replace':oldBoxGeometry=box.geometry;box.geometry=BoxGeometry.create(3,2,2);
 			case 'opacity':mask.material.opacity=mask.material.opacity==1 ? 0.5 : 1;
 			case 'cutoff':mask.material.alphaCutoff=mask.material.alphaCutoff == 0.7 ? 0.4 : 0.7;
@@ -125,7 +165,10 @@ class GameStage extends hx.display.Stage {
 				var pass=renderer().shadowPass,gl=renderer().gl,resources:Array<Dynamic>=[];
 				var allBatches=pass.geometryBatches.copy();for(cache in pass.dynamicGeometry)allBatches.push(cache.batches);
 				for(batches in allBatches)for(batch in batches)resources.push({batch:batch,vertex:batch.vertices,index:batch.indices});
-				scene.dispose();disposedBytes=0;disposedHandles=0;
+				var mainResources=[for(buffer in mainBuffers()){buffer:buffer,vertex:buffer.vertexBuffer,index:buffer.indexBuffer}];
+				var stream=renderer().streamGeometry;if(stream!=null)mainResources.push({buffer:stream,vertex:stream.vertexBuffer,index:stream.indexBuffer});
+				scene.dispose();disposedBytes=0;disposedHandles=0;disposedMainBytes=0;disposedMainHandles=0;
+				for(resource in mainResources){disposedMainBytes+=resource.buffer.bytes;if(gl.isBuffer(resource.vertex))disposedMainHandles++;if(gl.isBuffer(resource.index))disposedMainHandles++;}
 				for(resource in resources){var batch:hx.render3d.openfl.ShadowGeometryBuffer3D=resource.batch;disposedBytes+=batch.bytes;if(gl.isBuffer(resource.vertex))disposedHandles++;if(gl.isBuffer(resource.index))disposedHandles++;}
 				for(batches in pass.geometryBatches)for(batch in batches)disposedBytes+=batch.bytes;
 			case 'lose':var extension:Dynamic=renderer().gl.getExtension('WEBGL_lose_context');extension.loseContext();haxe.Timer.delay(()->extension.restoreContext(),300);
@@ -138,7 +181,7 @@ class GameStage extends hx.display.Stage {
 			{name:"根",children:[1,2],mesh:-1,skin:-1,matrix:null,translation:[0.,0.,0.],rotation:[0.,0.,0.,1.],scale:[1.,1.,1.]},
 			{name:"左",children:[],mesh:0,skin:-1,matrix:null,translation:[-1.,1.,0.],rotation:[0.,0.,0.,1.],scale:[1.,1.,1.]},
 			{name:"右",children:[],mesh:0,skin:-1,matrix:null,translation:[1.,1.,0.],rotation:[0.,0.,0.,1.],scale:[1.,1.5,1.]}
-		],scenes:[[0]],scene:0,meshes:[[{positions:geometry.positions,normals:[],uvs:geometry.uvs,indices:geometry.indices,joints:[],weights:[],material:-1}]],materials:[],images:[],textures:[],skins:[],animations:[],warnings:[]});
+		],scenes:[[0]],scene:0,meshes:[[{positions:geometry.positions,normals:[],uvs:geometry.uvs,indices:geometry.indices,joints:[],weights:[],material:-1}]],materials:[],images:[],textures:[],skins:[],animations:[{name:"移动",tracks:[{node:0,path:"translation",times:[0.,1.],values:[0.,0.,0.,.3,0.,0.],interpolation:"LINEAR"}]}],warnings:[]});
 		group=asset.createInstance(-1,{lightingEnabled:true});group.x=3;group.z=-3;group.rotationY=31;group.scaleY=.8;
 		for(mesh in group.meshes)mesh.castShadow=true;
 		scene.root.addChild(group);

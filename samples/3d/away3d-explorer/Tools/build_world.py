@@ -121,7 +121,7 @@ for x in (-9.2, 9.2): box('hall_side_' + str(x), (x, 3, -18), (0.6, 6, 18))
 for x in (-5.8, 5.8): box('hall_front_' + str(x), (x, 3, -9), (6.8, 6, 0.6))
 box('hall_lintel', (0, 5.4, -9), (5, 1.2, 0.6))
 box('hall_roof', (0, 6.1, -18), (19.8, 0.4, 19))
-box('gate', (0, 2.1, -9), (4.6, 4.2, 0.4), blue)
+box('gate', (0, 2.1, -9), (4.6, 4.2, 0.4), blue)['hx_shadow_mobility'] = 'dynamic'
 logic('闸门交互', 'gate', (0, 0, -6.4), id='gate', label='档案馆闸门', node='gate', radius=3)
 # 回廊和观景柱使近景具有深度，柱脚均有真实碰撞。
 for x in (-12.5, 12.5):

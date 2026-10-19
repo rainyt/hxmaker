@@ -32,7 +32,7 @@ class DinosaurHerd {
 			for(i in 0...10) {
 				var model=asset.createInstance(-1,{pbrEnabled:true});root.addChild(model);
 				model.name="霸王龙 "+(i+1);model.setScale(.65,.65,.65);model.y=.04;
-				for(mesh in model.meshes){mesh.castShadow=true;mesh.receiveShadow=true;}
+				for(mesh in model.meshes){mesh.shadowMobility=hx.render3d.ShadowMobility3D.DYNAMIC;mesh.castShadow=true;mesh.receiveShadow=true;}
 				var x=0.,z=0.;
 				for(attempt in 0...500){x=-21+random()*42;z=6+random()*15;if(clear(x,z)&&spaced(x,z))break;if(attempt==499)throw "无法放置霸王龙";}
 				model.x=x;model.z=z;

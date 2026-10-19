@@ -147,8 +147,8 @@ class GameStage extends hx.display.Stage {
 		herdShadowButton.data = "龙阴影：" + (world.herd.shadowsEnabled ? "开" : "关") + " Y";
 		herdAnimationButton.data = "骨骼动画：" + (world.herd.animationEnabled ? "开" : "关") + " U";
 		var stats = world.view.stats;
-		herdStats.data = "霸王龙：" + world.herd.count + " 只\n阴影上传：" + Math.round(stats.shadowUploadedBytes / 1024)
-			+ " KB\n阴影 CPU：" + Math.round(stats.shadowCpuMs * 100) / 100 + " ms\n阴影几何重建：" + stats.shadowGeometryRebuilds;
+		herdStats.data = "霸王龙：" + world.herd.count + " 只\n静态上传：" + Math.round(stats.shadowStaticUploadedBytes / 1024)
+			+ " KB\n动态上传：" + Math.round(stats.shadowDynamicUploadedBytes / 1024) + " KB\n阴影 CPU：" + Math.round(stats.shadowCpuMs * 100) / 100 + " ms";
 	}
 
 	private function buildHud():Void {

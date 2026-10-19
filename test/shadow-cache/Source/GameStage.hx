@@ -32,6 +32,7 @@ class GameStage extends hx.display.Stage {
 	var parentNode:Node3D;
 	var assets:Assets;
 	var large:MeshObject;
+	var group:hx.display3d.Model3D;
 	var ready:Bool=false;
 	var disposedBytes:Int=-1;
 	var disposedHandles:Int=-1;
@@ -47,10 +48,10 @@ class GameStage extends hx.display.Stage {
 		light=new DirectionalLight3D(0xffffff,1);light.direction=new Vector3D(-.5,-1,-.4);light.shadowEnabled=true;light.shadowQuality=ShadowQuality3D.PERFORMANCE;
 		var bounds=new Bounds3D();bounds.include(-10,-2,-10);bounds.include(10,8,10);light.shadowBounds=bounds;scene.root.addChild(light);scene.light=light;
 		parentNode=new Node3D();scene.root.addChild(parentNode);
-		box=new MeshObject(BoxGeometry.create(2,2,2),new LambertTextureMaterial(null,0xd9b765));box.y=1;box.castShadow=true;parentNode.addChild(box);
+		box=new MeshObject(BoxGeometry.create(2,2,2),new LambertTextureMaterial(null,0xd9b765));box.y=1;box.castShadow=true;box.shadowMobility=hx.render3d.ShadowMobility3D.STATIC;parentNode.addChild(box);
 		var floor=new MeshObject(PlaneGeometry.create(18,18),new LambertTextureMaterial(null,0xa4b0b9));floor.castShadow=false;scene.root.addChild(floor);
 		var material=new LambertTextureMaterial(null,0xa0dba2);material.alphaMode=AlphaMode3D.MASK;material.cullMode=CullMode3D.NONE;
-		mask=new MeshObject(PlaneGeometry.create(3,3),material);mask.castShadow=true;mask.y=2;mask.x=-4;scene.root.addChild(mask);
+		mask=new MeshObject(PlaneGeometry.create(3,3),material);mask.castShadow=true;mask.shadowMobility=hx.render3d.ShadowMobility3D.STATIC;mask.y=2;mask.x=-4;scene.root.addChild(mask);
 		assets=new Assets();assets.loadBitmapData('assets/shadow-mask.png');assets.onComplete(_->{mask.material.texture=assets.getBitmapData('shadow-mask');ready=true;});assets.start();
 		Reflect.setField(js.Browser.window,'__shadowCache',{state:state,command:command,pixels:pixels});
 	}
@@ -68,18 +69,34 @@ class GameStage extends hx.display.Stage {
 		gl.bindFramebuffer(gl.FRAMEBUFFER,render.target.framebuffer);gl.readPixels(0,0,192,192,gl.RGBA,gl.UNSIGNED_BYTE,data);gl.bindFramebuffer(gl.FRAMEBUFFER,previous);
 		return [for(i in 0...data.length)data[i]];
 	}
+	function batches():Array<hx.render3d.openfl.ShadowGeometryBuffer3D> {
+		var render=renderer();if(render==null||render.shadowPass==null)return [];
+		var result=[];
+		for(list in render.shadowPass.geometryBatches)for(batch in list)result.push(batch);
+		for(cache in render.shadowPass.dynamicGeometry)for(batch in cache.batches)result.push(batch);
+		return result;
+	}
 	function reused():Int {
-		var render=renderer();if(render==null||render.shadowPass==null)return 0;
-		var count=0;for(batches in render.shadowPass.geometryBatches)for(batch in batches)
+		var count=0;for(batch in batches())
 			for(old in held)if(old.batch==batch&&old.vertex==batch.vertices&&old.index==batch.indices&&old.array==batch.vertexData)count++;
 		return count;
 	}
 
 	function command(name:String):Void {
 		switch(name) {
-			case 'capture':held=[];for(batches in renderer().shadowPass.geometryBatches)for(batch in batches)held.push({batch:batch,vertex:batch.vertices,index:batch.indices,array:batch.vertexData});light.requestShadowUpdate();
+			case 'capture':held=[];for(batch in batches())held.push({batch:batch,vertex:batch.vertices,index:batch.indices,array:batch.vertexData});light.requestShadowUpdate();
+			case 'group':addGroup();
+			case 'groupMove':group.x+=.5;group.rotationY+=17;
+			case 'groupMirror':group.scaleX=-group.scaleX;
+			case 'groupChild':group.meshes[0].rotationZ+=23;
+			case 'groupVertex':group.meshes[0].geometry.positions[0]+=.1;group.meshes[0].geometry.invalidate();
+			case 'groupStatic':for(mesh in group.meshes)mesh.shadowMobility=hx.render3d.ShadowMobility3D.STATIC;
+			case 'groupDynamic':for(mesh in group.meshes)mesh.shadowMobility=hx.render3d.ShadowMobility3D.DYNAMIC;
+			case 'dynamic':box.shadowMobility=hx.render3d.ShadowMobility3D.DYNAMIC;
+			case 'static':box.shadowMobility=hx.render3d.ShadowMobility3D.STATIC;
+			case 'dynamicMask':mask.shadowMobility=hx.render3d.ShadowMobility3D.DYNAMIC;
 			case 'refresh':light.requestShadowUpdate();
-			case 'reference':renderer().shadowPass.geometrySnapshots=[];light.requestShadowUpdate();
+			case 'reference':renderer().shadowPass.geometrySnapshots=[];for(cache in renderer().shadowPass.dynamicGeometry)cache.snapshot=null;light.requestShadowUpdate();
 			case 'camera':scene.camera.x+=.2;light.requestShadowUpdate();
 			case 'light':light.direction=new Vector3D(-.4,-1,-.3);
 			case 'move':box.x+=.2;
@@ -89,7 +106,7 @@ class GameStage extends hx.display.Stage {
 			case 'geometry':box.geometry.positions[0]+=.1;box.geometry.invalidate();
 			case 'replace':oldBoxGeometry=box.geometry;box.geometry=BoxGeometry.create(3,2,2);
 			case 'opacity':mask.material.opacity=mask.material.opacity==1 ? 0.5 : 1;
-			case 'cutoff':mask.material.alphaCutoff=.7;
+			case 'cutoff':mask.material.alphaCutoff=mask.material.alphaCutoff == 0.7 ? 0.4 : 0.7;
 			case 'atlas':mask.material.texture=assets.getBitmapData('shadow-mask').sub(0,0,32,64);
 			case 'atlasMutate':mask.material.texture.rect.x+=4;scene.requestRender();
 			case 'uv':mask.geometry.uvs[0]+=.1;mask.geometry.invalidate();
@@ -106,7 +123,8 @@ class GameStage extends hx.display.Stage {
 			case 'removeLarge':if(large!=null){var geometry=large.geometry,material=large.material;large.dispose();geometry.dispose();material.dispose();large=null;}
 			case 'dispose':
 				var pass=renderer().shadowPass,gl=renderer().gl,resources:Array<Dynamic>=[];
-				for(batches in pass.geometryBatches)for(batch in batches)resources.push({batch:batch,vertex:batch.vertices,index:batch.indices});
+				var allBatches=pass.geometryBatches.copy();for(cache in pass.dynamicGeometry)allBatches.push(cache.batches);
+				for(batches in allBatches)for(batch in batches)resources.push({batch:batch,vertex:batch.vertices,index:batch.indices});
 				scene.dispose();disposedBytes=0;disposedHandles=0;
 				for(resource in resources){var batch:hx.render3d.openfl.ShadowGeometryBuffer3D=resource.batch;disposedBytes+=batch.bytes;if(gl.isBuffer(resource.vertex))disposedHandles++;if(gl.isBuffer(resource.index))disposedHandles++;}
 				for(batches in pass.geometryBatches)for(batch in batches)disposedBytes+=batch.bytes;
@@ -114,11 +132,23 @@ class GameStage extends hx.display.Stage {
 			default:throw '未知阴影缓存检查：'+name;
 		}
 	}
+	function addGroup():Void {
+		var geometry=BoxGeometry.create(1,2,1);
+		var asset=hx.assets.ModelAsset.fromSource({sourceFormat:"glb",nodes:[
+			{name:"根",children:[1,2],mesh:-1,skin:-1,matrix:null,translation:[0.,0.,0.],rotation:[0.,0.,0.,1.],scale:[1.,1.,1.]},
+			{name:"左",children:[],mesh:0,skin:-1,matrix:null,translation:[-1.,1.,0.],rotation:[0.,0.,0.,1.],scale:[1.,1.,1.]},
+			{name:"右",children:[],mesh:0,skin:-1,matrix:null,translation:[1.,1.,0.],rotation:[0.,0.,0.,1.],scale:[1.,1.5,1.]}
+		],scenes:[[0]],scene:0,meshes:[[{positions:geometry.positions,normals:[],uvs:geometry.uvs,indices:geometry.indices,joints:[],weights:[],material:-1}]],materials:[],images:[],textures:[],skins:[],animations:[],warnings:[]});
+		group=asset.createInstance(-1,{lightingEnabled:true});group.x=3;group.z=-3;group.rotationY=31;group.scaleY=.8;
+		for(mesh in group.meshes)mesh.castShadow=true;
+		scene.root.addChild(group);
+	}
+
 	function addLarge(repeated:Bool):Void {
 		var positions:Array<Float>=[],uvs:Array<Float>=[],elements:Array<Int>=[];
 		var count=repeated?3:66000;
 		for(i in 0...count){var corner=i%3;positions.push(corner==0?-.2:corner==1 ? 0.2 : 0);positions.push(3);positions.push(corner==2 ? 0.2 : -0.2);uvs.push(0);uvs.push(0);}
 		for(i in 0...(repeated?196608:count))elements.push(repeated?i%3:i);
-		large=new MeshObject(new Geometry3D(positions,uvs,elements),new LambertTextureMaterial(null,0xffffff));large.material.cullMode=CullMode3D.NONE;large.castShadow=true;scene.root.addChild(large);
+		large=new MeshObject(new Geometry3D(positions,uvs,elements),new LambertTextureMaterial(null,0xffffff));large.material.cullMode=CullMode3D.NONE;large.castShadow=true;large.shadowMobility=hx.render3d.ShadowMobility3D.STATIC;scene.root.addChild(large);
 	}
 }

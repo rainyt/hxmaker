@@ -124,6 +124,12 @@ class Scene3DStats {
 	public var shadowGeometryRebuilds:Int = 0;
 	/** 当前阴影几何 GPU 缓冲的预留容量，不含深度贴图及 CPU 副本。 */
 	public var shadowGeometryBytes:Int = 0;
+	/** 最近重绘的静态与动态阴影几何实际上传量；动态数据仅上传一次供各级联共用。 */
+	public var shadowStaticUploadedBytes:Int = 0;
+	public var shadowDynamicUploadedBytes:Int = 0;
+	/** 静态重建按级联计数，动态重建按对象组计数。 */
+	public var shadowStaticGeometryRebuilds:Int = 0;
+	public var shadowDynamicGeometryRebuilds:Int = 0;
 
 	/** 阴影目标估算显存字节数。 */
 	public var shadowMapBytes:Int = 0;
@@ -168,6 +174,8 @@ class Scene3DStats {
 		drawCalls = triangles = visibleMeshes = culledMeshes = uploadedBytes = textureSlots = compositeDrawCalls = 0;
 		shadowDrawCalls = shadowTriangles = shadowUploadedBytes = shadowMapBytes = shadowMapSize = 0;
 		shadowGeometryCacheHits = shadowGeometryRebuilds = shadowGeometryBytes = 0;
+		shadowStaticUploadedBytes = shadowDynamicUploadedBytes = 0;
+		shadowStaticGeometryRebuilds = shadowDynamicGeometryRebuilds = 0;
 		shadowStatus = "关闭"; shadowCacheHit = false;
 		shadowCascades = shadowDepthBits = 0; shadowWorldTexels = [];
 		shadowFitMode = "关闭"; shadowEffectiveDistance = 0; shadowEffectiveFilter = 0; shadowEffectiveFilterRadius = 0;

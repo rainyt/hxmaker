@@ -664,5 +664,8 @@
       "node": "memorial_head",
       "radius": 3.0
     }
-  ]
+  ],
+  "shadowMobility": {
+    "gate": "dynamic"
+  }
 }

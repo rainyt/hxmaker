@@ -129,6 +129,18 @@ class ExplorerWorld {
 		model = assets.getModel("world").createInstance(-1, {pbrEnabled: true});
 		view.root.addChild(model);
 		for (mesh in model.meshes) {
+			mesh.shadowMobility = hx.render3d.ShadowMobility3D.STATIC;
+			var overrides:Dynamic = data.shadowMobility;
+			var node:Node3D = mesh;
+			while (node != null && node != model) {
+				var mobility:Dynamic = overrides == null ? null : Reflect.field(overrides, node.name);
+				if (mobility != null) {
+					if (mobility != "static" && mobility != "dynamic") throw "无效的阴影更新策略：" + node.name;
+					mesh.shadowMobility = mobility == "static" ? hx.render3d.ShadowMobility3D.STATIC : hx.render3d.ShadowMobility3D.DYNAMIC;
+					break;
+				}
+				node = node.parent;
+			}
 			mesh.castShadow = mesh.name.indexOf("terrain") < 0 && mesh.name.indexOf("courtyard") < 0;
 			mesh.receiveShadow = mesh.name.indexOf("pine") < 0 && mesh.name.indexOf("terrain") < 0;
 		}

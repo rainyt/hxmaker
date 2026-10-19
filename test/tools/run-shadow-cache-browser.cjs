@@ -27,6 +27,17 @@ const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'playwright');
   s=await command('large');assert(s.stats.shadowTriangles>=22000);await reference('顶点上限');await command('removeLarge');pass('超过 65535 顶点正确拆批');
   s=await command('indices');assert(s.stats.shadowTriangles>=65536);await reference('索引上限');await command('removeLarge');pass('重复索引超过批次容量正确拆批');
   s=await command('auto');assert.equal(s.stats.shadowCascades,2);await reference('两级阴影');s=await command('camera');assert(s.stats.shadowGeometryCacheHits>0);assert.equal(s.stats.shadowUploadedBytes,0);pass('相机取景两级阴影复用各级几何');
+  s=await command('dynamic');assert(s.stats.shadowDynamicGeometryRebuilds>0);await reference('切换动态');
+  for(const name of ['move','parent','mirror']){s=await command(name);assert.equal(s.stats.shadowUploadedBytes,0,name+' 动态变换不应上传几何');await reference('动态 '+name);}pass('动态物体与父级移动、镜像仅更新矩阵，静态几何不重传');
+  for(const name of ['geometry','replace']){s=await command(name);assert(s.stats.shadowDynamicUploadedBytes>0);assert.equal(s.stats.shadowStaticUploadedBytes,0);assert.equal(s.stats.shadowDynamicGeometryRebuilds,1);await reference('动态 '+name);}pass('动态顶点修改仅重建一个对象，两个级联共享上传');
+  s=await command('dynamicMask');await reference('动态 MASK');
+  for(const name of ['opacity','cutoff']){s=await command(name);assert.equal(s.stats.shadowUploadedBytes,0);await reference('动态 MASK '+name);}
+  for(const name of ['atlas','atlasMutate','uv']){s=await command(name);assert(s.stats.shadowDynamicUploadedBytes>0);assert.equal(s.stats.shadowStaticUploadedBytes,0);await reference('动态 MASK '+name);}pass('动态 MASK 材质参数、图集和 UV 正确失效');
+  s=await command('static');assert(s.stats.shadowStaticUploadedBytes>0);assert.equal(s.stats.shadowDynamicUploadedBytes,0);await reference('切回静态');pass('运行时切换静态／动态策略后阴影正确');
+  s=await command('group');assert.equal(s.stats.shadowDynamicGeometryRebuilds,1);await reference('多网格模型');
+  await command('capture');for(const name of ['groupMove','groupMirror']){s=await command(name);assert.equal(s.stats.shadowUploadedBytes,0);assert(s.reused>0);await reference(name);}
+  for(const name of ['groupChild','groupVertex']){s=await command(name);assert.equal(s.stats.shadowStaticUploadedBytes,0);assert.equal(s.stats.shadowDynamicGeometryRebuilds,1);assert(s.stats.shadowDynamicUploadedBytes>0);await reference(name);}
+  const dynamicImage=await pixels();await command('groupStatic');const staticImage=await pixels();let different=0;for(let i=0;i<dynamicImage.length;i++)if(Math.abs(dynamicImage[i]-staticImage[i])>3)different++;assert(different<dynamicImage.length*.001,'模型局部空间投影与世界空间投影不一致：'+different);await command('groupDynamic');await reference('模型切回动态');pass('多网格模型共享缓存，根变换零上传，子变换与顶点正确失效，投影与静态路径一致');
   s=await command('disable');assert.equal(s.stats.shadowGeometryBytes,0);s=await command('enable');assert(s.stats.shadowGeometryRebuilds>0);pass('关闭阴影释放几何，重新开启重建');
   const image=await pixels();await page.evaluate(()=>window.__shadowCache.command('lose'));await page.waitForFunction(()=>window.__shadowCache.state().error===-1);await page.waitForFunction(()=>window.__shadowCache.state().error===0&&window.__shadowCache.state().stats.shadowGeometryBytes>0,null,{timeout:30000});assert.deepEqual(await pixels(),image);pass('上下文恢复重新创建几何，阴影像素一致');
   await page.evaluate(()=>window.__shadowCache.command('dispose'));assert.equal((await state()).disposedBytes,0);assert.equal((await state()).disposedHandles,0);pass('场景销毁释放所有阴影几何缓存');

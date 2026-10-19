@@ -46,7 +46,14 @@ def export_world(output):
             spawn = world_position(obj)
     if spawn is None:
         raise ValueError('场景缺少出生点')
-    data = {'format': 'hxmaker-explorer-world-1', 'spawn': spawn, 'colliders': boxes, 'interactions': interactions}
+    mobility = {}
+    for obj in bpy.data.collections['WorldVisuals'].all_objects:
+        value = obj.get('hx_shadow_mobility', 'static')
+        if value not in ('static', 'dynamic'):
+            raise ValueError(f'{obj.name} 的 hx_shadow_mobility 必须为 static 或 dynamic')
+        if obj.type == 'MESH':
+            mobility[obj.name] = value
+    data = {'shadowMobility': mobility, 'format': 'hxmaker-explorer-world-1', 'spawn': spawn, 'colliders': boxes, 'interactions': interactions}
     (output / 'scene.json').write_text(json.dumps(data, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
     addon.export_fog(scene, output / 'fog.json')
     bpy.ops.object.select_all(action='DESELECT')

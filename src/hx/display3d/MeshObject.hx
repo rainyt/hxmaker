@@ -5,6 +5,7 @@ import hx.geom.Bounds3D;
 import hx.geometry.Geometry3D;
 import hx.material.Material3D;
 import hx.render3d.Math3D;
+import hx.render3d.ShadowMobility3D;
 
 /** 三维网格节点；几何和材质可共享，销毁节点仅释放引用。 */
 class MeshObject extends Node3D {
@@ -39,6 +40,16 @@ class MeshObject extends Node3D {
 
 	private var __castShadow:Bool = false;
 	private var __receiveShadow:Bool = true;
+	private var __shadowMobility:ShadowMobility3D = ShadowMobility3D.DYNAMIC;
+
+	/** 阴影几何的更新策略，默认动态；静态对象被修改时仍会正确重建。 */
+	public var shadowMobility(get, set):ShadowMobility3D;
+	private function get_shadowMobility():ShadowMobility3D { return __shadowMobility; }
+	private function set_shadowMobility(value:ShadowMobility3D):ShadowMobility3D {
+		if (value != ShadowMobility3D.STATIC && value != ShadowMobility3D.DYNAMIC) throw "无效的阴影更新策略";
+		if (__shadowMobility != value) { __shadowMobility = value; invalidate(); }
+		return value;
+	}
 
 	/** 是否允许投射阴影，仍受材质透明模式与光照阴影设置约束。 */
 	public var castShadow(get, set):Bool;

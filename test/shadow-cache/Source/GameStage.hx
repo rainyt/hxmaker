@@ -63,9 +63,15 @@ class GameStage extends hx.display.Stage {
 	function renderer():hx.render3d.openfl.Renderer3D {
 		var render:hx.core.Render=cast Hxmaker.engine.renderer;var display=render.__scene3DDisplays.get(scene);return display==null?null:display.renderer3D;
 	}
+	function pbrGroupBatches():Int {
+		var render=renderer(),count=0;
+		if(render!=null&&render.mainGeometry!=null&&group!=null)for(entry in render.mainGeometry.entries)
+			for(range in entry.ranges)if(group.meshes.indexOf(range.mesh)>=0){count++;break;}
+		return count;
+	}
 	function state():Dynamic {
 		var render=renderer();var gl=render==null?null:render.gl;
-		return {ready:ready,stats:scene.stats,error:gl==null||gl.isContextLost()?-1:gl.getError(),disposedBytes:disposedBytes,disposedHandles:disposedHandles,
+		return {ready:ready,pbrGroupBatches:pbrGroupBatches(),stats:scene.stats,error:gl==null||gl.isContextLost()?-1:gl.getError(),disposedBytes:disposedBytes,disposedHandles:disposedHandles,
 			reused:reused(),mainReused:mainReused(),autoStatic:box.effectiveGeometryMobility==hx.render3d.GeometryMobility3D.STATIC,autoShadowStatic:box.effectiveShadowMobility==hx.render3d.ShadowMobility3D.STATIC,groupAutoStatic:group==null||group.isDisposed||group.meshes.length==0?false:group.meshes[0].effectiveGeometryMobility==hx.render3d.GeometryMobility3D.STATIC,disposedMainBytes:disposedMainBytes,disposedMainHandles:disposedMainHandles,webgl:gl==null?'':gl.getParameter(gl.VERSION)};
 	}
 	function pixels():Array<Int> {
@@ -116,6 +122,12 @@ class GameStage extends hx.display.Stage {
 			case 'groupFreeze':animateGroup=false;scene.requestRender();
 			case 'groupSpeedZero':group.animation.speed=0;scene.requestRender();
 			case 'transparent':mask.material.alphaMode=AlphaMode3D.BLEND;mask.material.opacity=.5;
+			case 'pbrGroup':
+				for(i in 0...group.meshes.length){var pbr=new hx.material.PbrMaterial3D(null,0xd9b765,0,i == 0 ? 0.25 : 0.85);pbr.baseColorFactor=i==0?[.1,.8,.2]:[.8,.1,.4];group.meshes[i].material=pbr;}
+			case 'pbrFactor':(cast group.meshes[1].material:hx.material.PbrMaterial3D).baseColorFactor=[.15,.3,.95];
+			case 'pbrRoughness':(cast group.meshes[1].material:hx.material.PbrMaterial3D).roughness=.12;
+			case 'pbrMetallic':(cast group.meshes[1].material:hx.material.PbrMaterial3D).metallic=.8;
+			case 'pbrEmission':(cast group.meshes[1].material:hx.material.PbrMaterial3D).emissive=[.2,.05,.1];
 			case 'pbrMapped':for(mesh in group.meshes){var pbr=new hx.material.PbrMaterial3D(null,0xd9b765,0,.7);pbr.normalTexture=assets.getBitmapData('shadow-mask');mesh.material=pbr;}
 			case 'groupFarPart':group.rotationY=0;group.setScale(1,1,1);group.meshes[1].x=50;group.meshes[1].material=new hx.material.PbrMaterial3D(null,0x4488cc,0,.8);
 			case 'groupShift':group.x-=50;

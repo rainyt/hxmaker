@@ -15,6 +15,34 @@ import hx.utils.ColorUtils;
  * 路径及描边数据类型位于 hx.display.graphics 包。
  */
 class Graphics extends DisplayObject {
+	/** 路径填充和描边的边缘覆盖抗锯齿，默认开启；低层三角形不受影响。 */
+	public var antialiasing(get, set):Bool;
+	private var __antialiasing:Bool = true;
+	/** 向外过渡带宽度，单位为最终物理屏幕像素，范围为 (0, 4]。 */
+	public var antialiasWidth(get, set):Float;
+	private var __antialiasWidth:Float = 1;
+
+	private function get_antialiasing():Bool return __antialiasing;
+	private function set_antialiasing(value:Bool):Bool {
+		if (__antialiasing != value) {
+			__antialiasing = value;
+			setDirty();
+			setFilterDirty();
+		}
+		return value;
+	}
+
+	private function get_antialiasWidth():Float return __antialiasWidth;
+	private function set_antialiasWidth(value:Float):Float {
+		if (!Math.isFinite(value) || value <= 0 || value > 4) throw "抗锯齿过渡宽度必须在 (0, 4] 物理像素范围内";
+		if (__antialiasWidth != value) {
+			__antialiasWidth = value;
+			setDirty();
+			setFilterDirty();
+		}
+		return value;
+	}
+
 	private var __beginFill:Null<Int> = null;
 	private var __bitmapData:BitmapData;
 	private var __bitmapSmoothing:Bool = true;
@@ -249,19 +277,27 @@ class Graphics extends DisplayObject {
 			var minX = Math.POSITIVE_INFINITY, minY = Math.POSITIVE_INFINITY;
 			var maxX = Math.NEGATIVE_INFINITY, maxY = Math.NEGATIVE_INFINITY;
 			var found = false;
-			for (draw in __graphicsDrawData.draws) switch draw {
-				case DRAW_TRIANGLE(vertices, indices, _, _, _, _):
-					// 仅统计真正被三角形引用的顶点，不让未使用顶点扩大点击范围。
-					for (index in indices) {
-						if (index < 0 || index >= Std.int(vertices.length / 2)) continue;
-						var offset = index * 2;
-						var x = vertices[offset], y = vertices[offset + 1];
-						if (!Math.isFinite(x) || !Math.isFinite(y)) continue;
-						minX = Math.min(minX, x); minY = Math.min(minY, y);
-						maxX = Math.max(maxX, x); maxY = Math.max(maxY, y);
-						found = true;
-					}
-				default:
+			for (draw in __graphicsDrawData.draws) {
+				var vertices:Array<Float>, indices:Array<Int>;
+				switch draw {
+					case DRAW_TRIANGLE(v, i, _, _, _, _):
+						vertices = v; indices = i;
+					case DRAW_PATH(mesh, _, _):
+						// 透明过渡带不改变布局和命中的几何边界。
+						vertices = mesh.vertices; indices = mesh.indices;
+					default:
+						continue;
+				}
+				// 仅统计真正被三角形引用的顶点，不让未使用顶点扩大点击范围。
+				for (index in indices) {
+					if (index < 0 || index >= Std.int(vertices.length / 2)) continue;
+					var offset = index * 2;
+					var x = vertices[offset], y = vertices[offset + 1];
+					if (!Math.isFinite(x) || !Math.isFinite(y)) continue;
+					minX = Math.min(minX, x); minY = Math.min(minY, y);
+					maxX = Math.max(maxX, x); maxY = Math.max(maxY, y);
+					found = true;
+				}
 			}
 			if (found) __sizeRect.setTo(minX, minY, maxX - minX, maxY - minY);
 			else __sizeRect.setTo(0, 0, 0, 0);
@@ -288,7 +324,7 @@ class Graphics extends DisplayObject {
 		if (mesh.indices.length == 0) return;
 		__resetLineRun();
 		__recordMaterial(null, true, color);
-		__graphicsDrawData.draws.push(DRAW_TRIANGLE(mesh.vertices, mesh.indices, mesh.uvs, alpha, transform, false));
+		__graphicsDrawData.draws.push(DRAW_PATH(mesh, alpha, transform));
 		__geometryChanged();
 	}
 

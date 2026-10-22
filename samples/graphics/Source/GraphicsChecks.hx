@@ -3,6 +3,7 @@ package;
 import hx.display.Graphics;
 import hx.display.Stage;
 import hx.display.graphics.GraphicsPath;
+import hx.display.graphics.GraphicsMesh;
 import hx.display.graphics.GraphicsStrokeStyle;
 import hx.geom.ColorTransform;
 import hx.geom.Point;
@@ -29,7 +30,11 @@ class GraphicsChecks {
 			{name: "空集、重复点和零半径安全", check: degenerateInputs},
 			{name: "非法输入明确报错", check: invalidInputs},
 			{name: "自交、孔洞拒绝且提交原子化", check: unsupportedContours},
-			{name: "低层引用修改可手动失效", check: borrowedGeometry}
+			{name: "低层引用修改可手动失效", check: borrowedGeometry},
+			{name: "抗锯齿仅处理外轮廓", check: antialiasBoundary},
+			{name: "抗锯齿缩放旋转及镜像", check: antialiasTransform},
+			{name: "描边端点与圆角覆盖率", check: antialiasStroke},
+			{name: "增量折线使过渡缓存失效", check: antialiasIncremental}
 		];
 		var report:Array<String> = [];
 		var passed = 0;
@@ -284,8 +289,83 @@ class GraphicsChecks {
 		for (draw in g.__graphicsDrawData.draws) switch draw {
 			case DRAW_TRIANGLE(vertices, indices, _, alpha, color, _):
 				result.push({vertices: vertices, indices: indices, alpha: alpha, color: color});
+			case DRAW_PATH(mesh, alpha, color):
+				result.push({vertices: mesh.vertices, indices: mesh.indices, alpha: alpha, color: color});
 			default:
 		}
+		return result;
+	}
+
+	private static function antialiasBoundary():Void {
+		var g = new Graphics();
+		g.fillPath(new GraphicsPath().moveTo(0, 0).lineTo(10, 0).lineTo(10, 10).lineTo(0, 10).closePath());
+		var mesh = firstPathMesh(g);
+		var original = mesh.vertices.copy();
+		var aa = mesh.getAntialiased(1, 0, 0, 1, 1);
+		ensure(aa.coverage != null, "没有生成边缘覆盖率");
+		ensure(aa.vertices.length == 16, "矩形应该只有四个外侧过渡顶点，不能为内部对角线生成过渡带");
+		ensure(aa.indices.length == 30, "矩形应为两个内部三角形和八个边缘三角形");
+		for (i in 0...4) near(aa.coverage[i], 1);
+		for (i in 4...8) near(aa.coverage[i], 0);
+		ensure(mesh.vertices.join(",") == original.join(","), "抗锯齿修改了基础网格");
+		near(g.getBounds(g).width, 10);
+		ensure(mesh.getAntialiased(0, 0, 0, 1, 1) == mesh, "奇异变换应安全回退");
+	}
+
+	private static function antialiasTransform():Void {
+		var g = new Graphics();
+		g.strokePath(new GraphicsPath().moveTo(0, 0).lineTo(100, 0), 0xffffff, 10);
+		var mesh = firstPathMesh(g);
+		var aa = mesh.getAntialiased(2, 0, 0, 3, 1);
+		near(minimum(aa.vertices, 0), -0.5);
+		near(minimum(aa.vertices, 1), -5 - 1 / 3);
+		var rotated = mesh.getAntialiased(0, 2, -3, 0, 1);
+		near(minimum(rotated.vertices, 0), -0.5);
+		near(minimum(rotated.vertices, 1), -5 - 1 / 3);
+		var mirrored = mesh.getAntialiased(-2, 0, 0, 3, 1);
+		near(minimum(mirrored.vertices, 0), -0.5);
+		near(minimum(mirrored.vertices, 1), -5 - 1 / 3);
+	}
+
+	private static function antialiasStroke():Void {
+		var path = new GraphicsPath().moveTo(0, 0).lineTo(100, 0).lineTo(100, 100);
+		var styles = [new GraphicsStrokeStyle(BUTT, MITER), new GraphicsStrokeStyle(SQUARE, BEVEL), new GraphicsStrokeStyle(ROUND, ROUND)];
+		for (style in styles) {
+			var g = new Graphics();
+			g.strokePath(path, 0xffffff, 10, 0.5, style);
+			var aa = firstPathMesh(g).getAntialiased(1, 0, 0, 1, 1);
+			ensure(aa.coverage != null, "描边端点或圆角的边界未正确焊接");
+			ensure(aa.coverage.length * 2 == aa.vertices.length, "覆盖率与顶点数量不一致");
+			for (value in aa.coverage) ensure(value >= 0 && value <= 1, "覆盖率超出范围");
+		}
+	}
+
+	private static function antialiasIncremental():Void {
+		var g = new Graphics();
+		g.beginLineStyle(0xffffff, 4);
+		g.moveTo(0, 0); g.lineTo(10, 0);
+		var mesh = firstPathMesh(g);
+		var first = mesh.getAntialiased(1, 0, 0, 1, 1);
+		var snapshot = first.vertices.copy();
+		g.lineTo(20, 10);
+		var next = mesh.getAntialiased(1, 0, 0, 1, 1);
+		ensure(first != next && next.coverage != null, "继续绘制后沿用了旧过渡缓存");
+		ensure(first.vertices.join(",") == snapshot.join(","), "新绘制污染了旧过渡网格");
+		g.antialiasing = false;
+		near(g.getBounds(g).width, 20 + Math.sqrt(2));
+	}
+
+	private static function firstPathMesh(g:Graphics):GraphicsMesh {
+		for (draw in g.__graphicsDrawData.draws) switch draw {
+			case DRAW_PATH(mesh, _, _): return mesh;
+			default:
+		}
+		throw "没有找到路径网格命令";
+	}
+
+	private static function minimum(vertices:Array<Float>, axis:Int):Float {
+		var result = Math.POSITIVE_INFINITY;
+		for (i in 0...Std.int(vertices.length / 2)) result = Math.min(result, vertices[i * 2 + axis]);
 		return result;
 	}
 

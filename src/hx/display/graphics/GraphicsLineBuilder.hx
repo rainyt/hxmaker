@@ -50,5 +50,6 @@ class GraphicsLineBuilder {
 		previous = current;
 		current = next;
 		pointCount++;
+		mesh.invalidateAntialias();
 	}
 }

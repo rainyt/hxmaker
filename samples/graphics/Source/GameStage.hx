@@ -27,6 +27,9 @@ class GameStage extends Stage {
 	private var strokes:Array<GraphicsPath> = [];
 	private var redraw:Graphics;
 	private var redrawCount:Int = 0;
+	private var antialiasTargets:Array<Graphics> = [];
+	private var antialiasEnabled:Bool = true;
+	private var antialiasSize:Float = 1;
 
 	override public function onStageInit():Void {
 		super.onStageInit();
@@ -36,7 +39,7 @@ class GameStage extends Stage {
 		showStrokes();
 		showLegacy();
 		showInk();
-		status = text("点击右侧按钮运行检查；在左下区域拖动绘制。", 24, 744, 14, 0xa8b8d5);
+		status = text("边缘抗锯齿已开启（1 物理像素）；可切换开关对照，在左下区域拖动手绘。", 24, 744, 14, 0xa8b8d5);
 		action("清空手绘", 24, 776, clearInk);
 		action("静止画面重绘", 180, 776, redrawShape);
 		action("运行回归检查", 336, 776, () -> {
@@ -44,6 +47,16 @@ class GameStage extends Stage {
 			results.data = report.join("\n");
 			status.data = "回归检查已完成，详细结果显示在右下区域及控制台。";
 			for (line in report) trace(line);
+		});
+		action("抗锯齿开关", 492, 776, () -> {
+			antialiasEnabled = !antialiasEnabled;
+			for (graphics in antialiasTargets) graphics.antialiasing = antialiasEnabled;
+			status.data = "边缘抗锯齿：" + (antialiasEnabled ? "开启" : "关闭") + "，过渡宽度：" + antialiasSize + " 物理像素。";
+		});
+		action("切换过渡宽度", 648, 776, () -> {
+			antialiasSize = antialiasSize == 0.5 ? 1 : (antialiasSize == 1 ? 2 : 0.5);
+			for (graphics in antialiasTargets) graphics.antialiasWidth = antialiasSize;
+			status.data = "边缘抗锯齿：" + (antialiasEnabled ? "开启" : "关闭") + "，过渡宽度：" + antialiasSize + " 物理像素。";
 		});
 		#if graphics_checks
 		var report = GraphicsChecks.run();
@@ -54,9 +67,8 @@ class GameStage extends Stage {
 
 	private function showShapes():Void {
 		panel("曲线轮廓与凹多边形填充", 24, 92, 520, 210);
-		var graphics = new Graphics();
+		var graphics = pathGraphics();
 		graphics.x = 46; graphics.y = 137;
-		addChild(graphics);
 		var heart = new GraphicsPath().moveTo(65, 28);
 		heart.bezierCurveTo(15, -25, -30, 45, 65, 120);
 		heart.bezierCurveTo(160, 45, 115, -25, 65, 28).closePath();
@@ -84,8 +96,7 @@ class GameStage extends Stage {
 		for (i in 0...3) {
 			var x = 590 + i * 167;
 			text(Std.string(caps[i]) + " / " + Std.string(joins[i]), x, 133, 13);
-			var graphics = new Graphics();
-			addChild(graphics);
+			var graphics = pathGraphics();
 			var path = new GraphicsPath().moveTo(x + 10, 236).lineTo(x + 62, 177).lineTo(x + 114, 236);
 			graphics.strokePath(path, 0x8faaff, 18, 0.55, new GraphicsStrokeStyle(caps[i], joins[i], 2));
 			// 半透明转角应保持连贯，不出现重复叠加形成的深色补片。
@@ -97,8 +108,7 @@ class GameStage extends Stage {
 
 	private function showLegacy():Void {
 		panel("旧接口参数传递与独立描边颜色", 24, 320, 520, 130);
-		var graphics = new Graphics();
-		addChild(graphics);
+		var graphics = pathGraphics();
 		graphics.beginLineStyle(0xffcd70, 8);
 		graphics.beginFill(0x5988f0);
 		graphics.drawRect(48, 371, 78, 52, 0.5);
@@ -116,10 +126,9 @@ class GameStage extends Stage {
 		area.background = new Quad(496, 200, 0x111725);
 		area.mouseClickEnabled = true;
 		addChild(area);
-		ink = new Graphics();
+		ink = pathGraphics();
 		ink.x = 36; ink.y = 510;
 		ink.mouseEnabled = false;
-		addChild(ink);
 		area.addEventListener(MouseEvent.MOUSE_DOWN, (e:MouseEvent) -> {
 			drawing = true;
 			lastInkX = e.stageX - 36; lastInkY = e.stageY - 510;
@@ -156,6 +165,15 @@ class GameStage extends Stage {
 	private function refreshInk():Void {
 		ink.clear();
 		for (path in strokes) ink.strokePath(path, 0x7fdbce, 5, 0.8, new GraphicsStrokeStyle(ROUND, ROUND));
+	}
+
+	private function pathGraphics():Graphics {
+		var graphics = new Graphics();
+		graphics.antialiasing = antialiasEnabled;
+		graphics.antialiasWidth = antialiasSize;
+		antialiasTargets.push(graphics);
+		addChild(graphics);
+		return graphics;
 	}
 
 	private function clearInk():Void {

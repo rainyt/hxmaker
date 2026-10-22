@@ -45,4 +45,7 @@ enum Draw {
 	 * 渲染三角形
 	 */
 	DRAW_TRIANGLE(vertices:Array<Float>, indices:Array<Int>, uvs:Array<Float>, alpha:Float, colorTransform:ColorTransform, applyBlendAddMode:Bool);
+
+	/** 纯色路径网格，后端按最终屏幕变换生成边缘覆盖率。 */
+	DRAW_PATH(mesh:GraphicsMesh, alpha:Float, colorTransform:ColorTransform);
 }

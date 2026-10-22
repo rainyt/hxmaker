@@ -234,6 +234,8 @@ class Spine extends Graphics implements ISpine {
 			switch draw {
 				case BEGIN_FILL(color):
 				case BEGIN_BITMAP_DATA(bitmapData, smoothing):
+				case DRAW_PATH(_, _, _):
+					// 路径颜色由 Graphics 创建，不属于 Spine 的颜色对象池。
 				case DRAW_TRIANGLE(vertices, indices, uvs, alpha, colorTransform, applyBlendAddMode):
 					pool.release(colorTransform);
 			}

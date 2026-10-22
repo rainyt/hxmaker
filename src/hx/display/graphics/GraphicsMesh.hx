@@ -6,8 +6,28 @@ class GraphicsMesh {
 	public var vertices:Array<Float> = [];
 	public var indices:Array<Int> = [];
 	public var uvs:Array<Float> = [];
+	/** 每顶点边缘覆盖率；为空时全部为 1，复用后端已有的透明度通道。 */
+	public var coverage:Array<Float>;
+	private var cachedAntialias:GraphicsMesh;
+	private var cachedAntialiasKey:String;
 
 	public function new() {}
+
+	/** 按本地坐标到最终物理像素的线性变换缓存过渡网格，平移不影响缓存。 */
+	public function getAntialiased(a:Float, b:Float, c:Float, d:Float, width:Float):GraphicsMesh {
+		var key = a + ":" + b + ":" + c + ":" + d + ":" + width;
+		if (cachedAntialias == null || cachedAntialiasKey != key) {
+			cachedAntialias = GraphicsAntialiaser.build(this, a, b, c, d, width);
+			cachedAntialiasKey = key;
+		}
+		return cachedAntialias;
+	}
+
+	/** 增量折线修改顶点后需要显式丢弃过渡缓存。 */
+	public function invalidateAntialias():Void {
+		cachedAntialias = null;
+		cachedAntialiasKey = null;
+	}
 
 	public function addVertex(x:Float, y:Float):Int {
 		if (!Math.isFinite(x) || !Math.isFinite(y))

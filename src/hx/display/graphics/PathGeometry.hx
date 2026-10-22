@@ -197,8 +197,9 @@ class PathGeometry {
 			}
 			if (!closed && style.cap == ROUND) {
 				var first = segments[0], last = segments[count - 1];
-				fan(mesh, points[0], points[0], half, Math.atan2(first.dy, first.dx) + Math.PI / 2, Math.PI, tolerance);
-				fan(mesh, points[points.length - 1], points[points.length - 1], half,
+				// 从直径端点三角化半圆，保持与线段共享完整直径边，避免边界提取出现 T 形接缝。
+				fan(mesh, first.startLeft, points[0], half, Math.atan2(first.dy, first.dx) + Math.PI / 2, Math.PI, tolerance);
+				fan(mesh, last.endRight, points[points.length - 1], half,
 					Math.atan2(last.dy, last.dx) - Math.PI / 2, Math.PI, tolerance);
 			}
 		}

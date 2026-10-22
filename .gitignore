@@ -2,5 +2,6 @@ Export
 .DS_Store
 api_docs
 bin
-.marscode/deviceInfo.json
 /.zcode
+samples/3d/pbr-material/.marscode/deviceInfo.json
+.marscode

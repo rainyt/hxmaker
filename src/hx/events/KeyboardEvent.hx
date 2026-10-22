@@ -19,6 +19,21 @@ class KeyboardEvent extends Event {
 	 */
 	public var keyCode:Int;
 
+	/** 本次按键是否按住 Shift。 */
+	public var shiftKey:Bool = false;
+
+	/** 本次按键是否按住 Ctrl。 */
+	public var ctrlKey:Bool = false;
+
+	/** 本次按键是否按住 Alt。 */
+	public var altKey:Bool = false;
+
+	/** 本次按键是否按住 Command 等系统修饰键。 */
+	public var metaKey:Bool = false;
+
+	/** 本次按键是否属于输入法组合过程。 */
+	public var isComposing:Bool = false;
+
 	/**
 	 * 转换为字符串表示
 	 * @return 键盘事件的字符串描述

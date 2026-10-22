@@ -1,0 +1,9 @@
+<project>
+    <meta title="hxmaker Tab 焦点切换示例" package="hxmaker.examples.tabfocus" version="1.0.0" />
+    <app main="Main" file="tab-focus" path="Export" />
+    <source path="Source" />
+    <haxelib name="hxmaker-openfl" />
+    <haxelib name="spine-haxe" />
+    <haxelib name="actuate" />
+    <window width="800" height="600" background="#171e2b" />
+</project>

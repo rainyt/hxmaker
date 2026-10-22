@@ -73,6 +73,56 @@ class Stage extends Box {
 	}
 
 	/**
+	 * 从当前焦点切到下一个可用对象；reverse 为 true 时反向切换，首尾循环。
+	 * 没有有效的接口焦点时不查询显示树，也不主动选中第一个对象。
+	 * 返回是否接管了本次切换；仅有当前对象时保留焦点并返回 true。
+	 */
+	public function focusNext(reverse:Bool = false):Bool {
+		var current = focus;
+		if (current == null || current.stage != this || current.isDisposed || !(current is ITabFocusable))
+			return false;
+		var focusable:ITabFocusable = cast current;
+		if (!focusable.tabEnabled || focusable.tabIndex < 0)
+			return false;
+		var candidates:Array<{display:DisplayObject, tabIndex:Int, order:Int}> = [];
+		__collectTabFocus(this, candidates);
+		candidates.sort((a, b) -> a.tabIndex == b.tabIndex ? a.order - b.order : a.tabIndex < b.tabIndex ? -1 : 1);
+		var index = -1;
+		for (i in 0...candidates.length) {
+			if (candidates[i].display == current) {
+				index = i;
+				break;
+			}
+		}
+		if (index < 0)
+			return false;
+		var next = candidates[(index + (reverse ? candidates.length - 1 : 1)) % candidates.length].display;
+		if (next != current) {
+			focus = next;
+			// 焦点事件允许业务再次转移焦点，此时不激活已经失焦的对象。
+			if (focus == next && !next.isDisposed && next.stage == this)
+				cast(next, ITabFocusable).focus();
+		}
+		return true;
+	}
+
+	private function __collectTabFocus(object:DisplayObject, candidates:Array<{display:DisplayObject, tabIndex:Int, order:Int}>):Void {
+		if (object.isDisposed || !object.visible || !object.mouseEnabled || object.alpha <= 0 || object.stage != this)
+			return;
+		if (object is ITabFocusable) {
+			var focusable:ITabFocusable = cast object;
+			if (focusable.tabEnabled && focusable.tabIndex >= 0)
+				candidates.push({display: object, tabIndex: focusable.tabIndex, order: candidates.length});
+		}
+		if (object is DisplayObjectContainer) {
+			var container = cast(object, DisplayObjectContainer);
+			if (container.mouseChildren)
+				for (child in container.children)
+					__collectTabFocus(child, candidates);
+		}
+	}
+
+	/**
 	 * 是否为自定义渲染，如果为自定义渲染，引擎则只生效触摸事件，但不会进行额外渲染
 	 */
 	public var customRender(default, set):Bool = false;
@@ -128,6 +178,9 @@ class Stage extends Box {
 	 */
 	public function new() {
 		super();
+		#if (html5 && !wechat)
+		hx.utils.inputs.HTML5FocusNavigation.init();
+		#end
 	}
 
 	/**
@@ -317,11 +370,22 @@ class Stage extends Box {
 		__contextMenuEvents.dispatchEvent(event);
 		if (event.isDefaultPrevented)
 			return;
+		var current = focus;
 		if (focus != null && focus.stage != null && focus.stage == this) {
 			focus.dispatchEvent(event);
 		} else {
 			this.dispatchEvent(event);
 		}
+		// 先让当前焦点处理或取消按键；只有原焦点仍有效时才执行默认切换。
+		if (!event.isDefaultPrevented && event.type == KeyboardEvent.KEY_DOWN && event.keyCode == Keyboard.TAB
+			&& !event.isComposing && !event.ctrlKey && !event.altKey && !event.metaKey
+			&& !KeyboardTools.isKeyDown(Keyboard.CONTROL) && !KeyboardTools.isKeyDown(Keyboard.ALTERNATE)
+			&& !KeyboardTools.isKeyDown(Keyboard.COMMAND) && current != null && focus == current && current.stage == this
+			#if (html5 && !wechat)
+			&& !hx.utils.inputs.HTML5FocusNavigation.isExternalEditorFocused()
+			#end
+			&& focusNext(event.shiftKey || KeyboardTools.isKeyDown(Keyboard.SHIFT)))
+			event.preventDefault();
 	}
 
 	/**

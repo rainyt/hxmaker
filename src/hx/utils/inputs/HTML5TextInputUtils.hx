@@ -22,6 +22,11 @@ class HTML5TextInputUtils {
 	/** 输入法组合期间保留原生缓冲，确认后再提交和过滤。 */
 	private static var __composing:Bool = false;
 
+	/** 焦点导航需同时兼容浏览器未提供 isComposing 的组合输入事件。 */
+	public static function isComposing():Bool {
+		return input != null && __composing;
+	}
+
 	/**
 	 * 打开输入
 	 */

@@ -1,0 +1,10 @@
+<project>
+    <meta title="hxmaker 路径绘图示例" package="hxmaker.examples.graphics" version="1.0.0" />
+    <app main="Main" file="graphics" path="Export" />
+    <haxelib name="hxmaker-openfl" />
+    <haxelib name="spine-haxe" />
+    <haxelib name="actuate" />
+    <source path="../../src" />
+    <source path="Source" />
+    <window width="1120" height="820" background="#171d2b" />
+</project>

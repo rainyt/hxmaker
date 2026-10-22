@@ -1,412 +1,360 @@
 package hx.display;
 
+import hx.display.graphics.GraphicsMesh;
+import hx.display.graphics.GraphicsDrawData;
+import hx.display.graphics.GraphicsLineBuilder;
+import hx.display.graphics.GraphicsPath;
+import hx.display.graphics.GraphicsStrokeStyle;
 import hx.geom.Point;
 import hx.geom.Rectangle;
-import hx.utils.ColorUtils;
 import hx.geom.ColorTransform;
+import hx.utils.ColorUtils;
 
 /**
- * 渲染图形，用于渲染网格三角形使用
+ * 二维图形绘制入口，支持三角形、基础形状和可复用路径。
+ * 路径及描边数据类型位于 hx.display.graphics 包。
  */
 class Graphics extends DisplayObject {
 	private var __beginFill:Null<Int> = null;
-
+	private var __bitmapData:BitmapData;
+	private var __bitmapSmoothing:Bool = true;
 	@:noCompletion private var __sizeDirty:Bool = false;
 	@:noCompletion private var __sizeRect:Rectangle = new Rectangle();
-
-	/**
-	 * 图形绘制命令数据
-	 */
 	private var __graphicsDrawData:GraphicsDrawData = new GraphicsDrawData();
-
-	/**
-	 * 纯色块渲染
-	 * @param color 
-	 */
-	public function beginFill(color:Int):Void {
-		__graphicsDrawData.draws.push(BEGIN_FILL(color));
-		__beginFill = color;
-		__sizeDirty = true;
-	}
-
-	/**
-	 * 图形渲染
-	 * @param bitmapData 
-	 * @param smoothing 
-	 */
-	public function beginBitmapData(bitmapData:BitmapData, smoothing:Bool = true):Void {
-		__graphicsDrawData.draws.push(BEGIN_BITMAP_DATA(bitmapData, smoothing));
-		__beginFill = null;
-		__sizeDirty = true;
-	}
-
-	/**
-	 * 渲染三角形，这允许分开一次次绘制
-	 * @param vertices 坐标顶点
-	 * @param indices 顶点索引
-	 * @param uvs 纹理坐标
-	 * @param alpha 本次绘制的透明度
-	 * @param colorTransform 颜色变换
-	 * @param applyBlendAddMode 是否应用ADD混合模式
-	 */
-	public function drawTriangles(vertices:Array<Float>, indices:Array<Int>, uvs:Array<Float>, alpha:Float = 1, ?colorTransform:ColorTransform,
-			applyBlendAddMode:Bool = false):Void {
-		if (colorTransform == null && __beginFill != null) {
-			var color = ColorUtils.toShaderColor(__beginFill);
-			colorTransform = new ColorTransform(color.r, color.g, color.b, 1);
-		}
-		__graphicsDrawData.draws.push(DRAW_TRIANGLE(vertices, indices, uvs, alpha, colorTransform, applyBlendAddMode));
-		__sizeDirty = true;
-	}
-
-	/**
-	 * 渲染矩形
-	 * @param x 坐标x 
-	 * @param y 坐标y
-	 * @param width 宽度
-	 * @param height 高度
-	 */
-	public function drawRect(x:Float, y:Float, width:Float, height:Float, alpha:Float = 1, ?colorTransform:ColorTransform):Void {
-		drawTriangles([x, y, x + width, y, x, y + height, x + width, y + height], [0, 1, 2, 1, 2, 3], [0, 0, 1, 0, 0, 1, 1, 1], alpha, colorTransform);
-		__sizeDirty = true;
-	}
-
+	private var __hasRecordedMaterial:Bool = false;
+	private var __recordedBitmap:BitmapData;
+	private var __recordedSmoothing:Bool = true;
+	private var __recordedFill:Int = 0xffffff;
 	private var __lineSize:Float = 1;
-
-	private var __lineColor:Int = 0x000000;
-
-	/**
-	 * 准备线段的颜色长度
-	 * @param line 
-	 */
-	public function beginLineStyle(color:UInt, line:Float):Void {
-		this.beginFill(color);
-		this.__lineColor = color;
-		this.__lineSize = line;
-	}
-
+	private var __lineColor:Null<Int> = null;
 	private var __posX:Float = 0;
 	private var __posY:Float = 0;
-	private var __lineDrawing = false;
-	private var __lastVertices:Array<Float>;
+	private var __lineBuilder:GraphicsLineBuilder;
+	private var __lineRunAlpha:Float = 1;
+	private var __lineRunSmoothing:Bool = true;
+	private var __lineRunColor:Int = 0;
 
-	/**
-	 * 移动到指定的坐标进行开始绘制线条
-	 * @param x 
-	 * @param y 
-	 */
-	public function moveTo(x:Float, y:Float):Void {
-		__posX = x;
-		__posY = y;
-		__lineDrawing = false;
-		__lastVertices = null;
+	/** 设置后续基础形状的纯色填充，不改变已设置的描边颜色。 */
+	public function beginFill(color:Int):Void {
+		__beginFill = color;
+		__bitmapData = null;
+		__resetLineRun();
+	}
+
+	/** 设置后续基础形状的位图填充。 */
+	public function beginBitmapData(bitmapData:BitmapData, smoothing:Bool = true):Void {
+		if (bitmapData == null) throw "位图填充不能为空";
+		__bitmapData = bitmapData;
+		__bitmapSmoothing = smoothing;
+		__beginFill = null;
+		__resetLineRun();
 	}
 
 	/**
-	 * 开始绘制到指定为止的现象，请注意，多次调用lineTo方法，会补充线段的连接处的断点
-	 * @param x 
-	 * @param y 
+	 * 提交三角形，保留数组和颜色变换引用以兼容 Spine 等动态网格。
+	 * 提交后修改引用数据需自行调用 invalidate()；普通路径接口采用提交时快照。
+	 * 顶点和 UV 按 x/y、u/v 成对存放，索引必须组成完整三角形。
+	 */
+	public function drawTriangles(vertices:Array<Float>, indices:Array<Int>, uvs:Array<Float>, alpha:Float = 1,
+			?colorTransform:ColorTransform, applyBlendAddMode:Bool = false):Void {
+		alpha = __normalizeAlpha(alpha);
+		if (vertices == null || indices == null || uvs == null) throw "三角形的顶点、索引和 UV 数组不能为空";
+		if (vertices.length % 2 != 0 || indices.length % 3 != 0) throw "顶点必须成对，索引必须组成完整三角形";
+		if (vertices.length == 0 && indices.length == 0) return;
+		if (uvs.length < vertices.length || uvs.length % 2 != 0) throw "UV 数量不足或没有成对存放";
+		for (value in vertices) if (!Math.isFinite(value)) throw "三角形顶点必须是有限数值";
+		for (value in uvs) if (!Math.isFinite(value)) throw "三角形 UV 必须是有限数值";
+		var count = Std.int(vertices.length / 2);
+		for (index in indices) if (index < 0 || index >= count) throw "三角形顶点索引越界";
+		__validateColorTransform(colorTransform);
+		if (indices.length == 0) return;
+		if (colorTransform == null && __beginFill != null) colorTransform = __makeColor(__beginFill);
+		__resetLineRun();
+		__recordMaterial(__bitmapData, __bitmapSmoothing, __beginFill == null ? 0xffffff : __beginFill);
+		__graphicsDrawData.draws.push(DRAW_TRIANGLE(vertices, indices, uvs, alpha, colorTransform, applyBlendAddMode));
+		__geometryChanged();
+	}
+
+	/** 渲染矩形；负宽高表示向相反方向延伸。 */
+	public function drawRect(x:Float, y:Float, width:Float, height:Float, alpha:Float = 1, ?colorTransform:ColorTransform):Void {
+		__validateRect(x, y, width, height);
+		if (width == 0 || height == 0) return;
+		drawTriangles([x, y, x + width, y, x, y + height, x + width, y + height], [0, 1, 2, 1, 2, 3],
+			[0, 0, 1, 0, 0, 1, 1, 1], alpha, colorTransform);
+	}
+
+	/** 设置独立的描边颜色和宽度；线宽为零时不绘制。 */
+	public function beginLineStyle(color:UInt, line:Float):Void {
+		if (!Math.isFinite(line) || line < 0) throw "线宽必须是非负有限数值";
+		__lineColor = color;
+		__lineSize = line;
+		__resetLineRun();
+	}
+
+	/** 移动画笔并开始新的开放折线。 */
+	public function moveTo(x:Float, y:Float):Void {
+		__validatePoint(x, y);
+		__posX = x;
+		__posY = y;
+		__resetLineRun();
+	}
+
+	/**
+	 * 延续开放折线。smoothing 为 true 时使用削角，为 false 时使用受限斜接。
+	 * 同样式连续线段共享转角网格；修改样式或插入其他绘图会开始新的描边段。
 	 */
 	public function lineTo(x:Float, y:Float, smoothing:Bool = true, alpha:Float = 1):Void {
-		var nextVertices = __mathLine(__posX, __posY, x, y);
-		if (__lineDrawing && __lastVertices != null) {
-			// 补充断成
-			if (!smoothing) {
-				__lastVertices[2] = nextVertices[0];
-				__lastVertices[3] = nextVertices[1];
-				__lastVertices[6] = nextVertices[4];
-				__lastVertices[7] = nextVertices[5];
-			} else {
-				var vertices = [
-					__lastVertices[2],
-					__lastVertices[3],
-					nextVertices[0],
-					nextVertices[1],
-					__lastVertices[6],
-					__lastVertices[7],
-					nextVertices[4],
-					nextVertices[5]
-				];
-				this.drawTriangles(vertices, [0, 1, 2, 1, 2, 3], [0, 0, 1, 0, 0, 1, 1, 1], alpha);
-			}
+		__validatePoint(x, y);
+		alpha = __normalizeAlpha(alpha);
+		if (x == __posX && y == __posY) return;
+		if (__lineSize == 0) { moveTo(x, y); return; }
+		var color = __strokeColor();
+		var continued = __lineBuilder != null && __lineRunAlpha == alpha && __lineRunSmoothing == smoothing && __lineRunColor == color;
+		var builder = continued ? __lineBuilder : new GraphicsLineBuilder(__posX, __posY, __lineSize, smoothing);
+		builder.append(x, y);
+		if (continued) {
+			__geometryChanged();
+		} else {
+			__submitSolid(builder.mesh, color, alpha, __makeColor(color));
 		}
-		__lastVertices = nextVertices;
-		this.drawTriangles(nextVertices, [0, 1, 2, 1, 2, 3], [0, 0, 1, 0, 0, 1, 1, 1], alpha);
+		__lineBuilder = builder;
+		__lineRunAlpha = alpha;
+		__lineRunSmoothing = smoothing;
+		__lineRunColor = color;
 		__posX = x;
 		__posY = y;
-		__lineDrawing = true;
 	}
 
-	/**
-	 * 绘制线段
-	 * @param x1 起点坐标x
-	 * @param y1 起点坐标y
-	 * @param x2 结束坐标x
-	 * @param y2 结束坐标y
-	 * @param alpha 透明度
-	 * @param colorTransform 颜色
-	 */
+	/** 绘制独立线段，不移动画笔。 */
 	public function drawLine(x1:Float, y1:Float, x2:Float, y2:Float, alpha:Float = 1, ?colorTransform:ColorTransform):Void {
-		this.drawTriangles(__mathLine(x1, y1, x2, y2), [0, 1, 2, 1, 2, 3], [0, 0, 1, 0, 0, 1, 1, 1], alpha, colorTransform);
+		var path = new GraphicsPath().moveTo(x1, y1).lineTo(x2, y2);
+		__drawStroke(path, __lineSize, alpha, colorTransform);
 	}
 
-	private function __mathLine(x1:Float, y1:Float, x2:Float, y2:Float):Array<Float> {
-		// 计算出线段长度
-		var dx = x2 - x1;
-		var dy = y2 - y1;
-		var length = Math.sqrt(dx * dx + dy * dy);
-		// 计算出线段弧度
-		var radian = Math.atan2(dy, dx);
-		var cos:Float = Math.cos(radian);
-		var sin:Float = Math.sin(radian);
-		// 绘制线段
-		var vertices = [];
-		var offsetX1 = x1 + sin * 0.5 * __lineSize;
-		var offsetY1 = y1 - cos * 0.5 * __lineSize;
-		var offsetX2 = x1 - sin * 0.5 * __lineSize;
-		var offsetY2 = y1 + cos * 0.5 * __lineSize;
-		vertices.push(offsetX1);
-		vertices.push(offsetY1);
-		vertices.push(offsetX1 + cos * length);
-		vertices.push(offsetY1 + sin * length);
-		vertices.push(offsetX2);
-		vertices.push(offsetY2);
-		vertices.push(offsetX2 + cos * length);
-		vertices.push(offsetY2 + sin * length);
-		return vertices;
-	}
-
-	/**
-	 * 渲染矩形，UVs会根据 textureSize计算
-	 * @param x 
-	 * @param y 
-	 * @param width 
-	 * @param height 
-	 * @param alpha 
-	 * @param colorTransform 
-	 */
+	/** 按给定纹理尺寸计算矩形 UV；纹理宽高必须大于零。 */
 	public function drawRectMask(x:Float, y:Float, width:Float, height:Float, textureWidth:Float, textureHeight:Float, alpha:Float = 1,
 			?colorTransform:ColorTransform):Void {
-		drawTriangles([x, y, x + width, y, x, y + height, x + width, y + height], [0, 1, 2, 1, 2, 3], [
-			x / textureWidth,
-			y / textureHeight,
-			(x + width) / textureWidth,
-			y / textureHeight,
-			x / textureWidth,
-			(y + height) / textureHeight,
-			(x + width) / textureWidth,
-			(y + height) / textureHeight
-		], alpha, colorTransform);
-		__sizeDirty = true;
+		__validateRect(x, y, width, height);
+		if (!Math.isFinite(textureWidth) || !Math.isFinite(textureHeight) || textureWidth <= 0 || textureHeight <= 0)
+			throw "纹理宽高必须是大于零的有限数值";
+		if (width == 0 || height == 0) return;
+		drawRectUVs(x, y, width, height, [x / textureWidth, y / textureHeight, (x + width) / textureWidth, y / textureHeight,
+			x / textureWidth, (y + height) / textureHeight, (x + width) / textureWidth, (y + height) / textureHeight], alpha, colorTransform);
 	}
 
-	/**
-	 * 渲染矩形，可提供UVs
-	 * @param x 坐标x 
-	 * @param y 坐标y
-	 * @param width 宽度
-	 * @param height 高度
-	 */
+	/** 使用自定义 UV 渲染矩形。 */
 	public function drawRectUVs(x:Float, y:Float, width:Float, height:Float, uvs:Array<Float>, alpha:Float = 1, ?colorTransform:ColorTransform):Void {
+		__validateRect(x, y, width, height);
+		if (width == 0 || height == 0) return;
 		drawTriangles([x, y, x + width, y, x, y + height, x + width, y + height], [0, 1, 2, 1, 2, 3], uvs, alpha, colorTransform);
-		__sizeDirty = true;
 	}
 
 	/**
-	 * 清理
+	 * 填充简单凹多边形路径，开放轮廓隐式闭合。
+	 * 多个轮廓只支持彼此分离的图形；孔洞、嵌套和自交会明确报错。
+	 * tolerance 为本地坐标的细分误差；提交不改变当前填充和描边样式。
 	 */
+	public function fillPath(path:GraphicsPath, color:Int = 0xffffff, alpha:Float = 1, tolerance:Float = 0.25):Void {
+		if (path == null) throw "填充路径不能为空";
+		alpha = __normalizeAlpha(alpha);
+		var mesh = path.getFillMesh(tolerance);
+		__submitSolid(mesh, color, alpha, __makeColor(color));
+	}
+
+	/**
+	 * 绘制路径描边，支持端点、转角和斜接限制，样式取提交时的值。
+	 * 自交和完全折返路径允许绘制，重叠区域按正常透明度混合。
+	 */
+	public function strokePath(path:GraphicsPath, color:Int = 0x000000, width:Float = 1, alpha:Float = 1,
+			?style:GraphicsStrokeStyle, tolerance:Float = 0.25):Void {
+		if (path == null) throw "描边路径不能为空";
+		if (!Math.isFinite(width) || width < 0) throw "线宽必须是非负有限数值";
+		alpha = __normalizeAlpha(alpha);
+		if (style == null) style = new GraphicsStrokeStyle();
+		style.validate();
+		var mesh = path.getStrokeMesh(width, style, tolerance);
+		__submitSolid(mesh, color, alpha, __makeColor(color));
+	}
+
+	/** 绘制圆形描边；smooth 保留旧接口的细分密度语义。 */
+	public function drawCircleLine(x:Float, y:Float, radius:Float, smooth:Int = 10, alpha:Float = 1, ?colorTransform:ColorTransform):Void {
+		__validatePoint(x, y);
+		var steps = __circleSteps(radius, smooth);
+		if (steps == 0) return;
+		var path = new GraphicsPath();
+		for (i in 0...steps) {
+			var angle = Math.PI * 2 * i / steps;
+			var px = x + Math.cos(angle) * radius, py = y + Math.sin(angle) * radius;
+			if (i == 0) path.moveTo(px, py); else path.lineTo(px, py);
+		}
+		path.closePath();
+		__drawStroke(path, __lineSize, alpha, colorTransform);
+	}
+
+	/** 绘制实心圆，支持位图填充；半径为零时跳过。 */
+	public function drawCircle(x:Float, y:Float, radius:Float, smooth:Int = 10, alpha:Float = 1, ?colorTransform:ColorTransform):Void {
+		__validatePoint(x, y);
+		var steps = __circleSteps(radius, smooth);
+		if (steps == 0) return;
+		var vertices:Array<Float> = [x, y], uvs:Array<Float> = [0.5, 0.5];
+		var indices:Array<Int> = [];
+		for (i in 0...steps) {
+			var angle = Math.PI * 2 * i / steps;
+			var cos = Math.cos(angle), sin = Math.sin(angle);
+			vertices.push(x + cos * radius); vertices.push(y + sin * radius);
+			uvs.push(0.5 + cos * 0.5); uvs.push(0.5 + sin * 0.5);
+			indices.push(0); indices.push(i + 1); indices.push((i + 1) % steps + 1);
+		}
+		drawTriangles(vertices, indices, uvs, alpha, colorTransform);
+	}
+
+	/** 绘制点集，默认保留旧接口的闭合行为；closed=false 时绘制开放折线。 */
+	public function drawLines(lines:Array<Point>, alpha:Float = 1, ?color:ColorTransform, closed:Bool = true):Void {
+		if (lines == null) throw "折线点集不能为空";
+		var path = new GraphicsPath();
+		for (i in 0...lines.length) {
+			var p = lines[i];
+			if (p == null) throw "折线点不能为空";
+			if (i == 0) path.moveTo(p.x, p.y); else path.lineTo(p.x, p.y);
+		}
+		if (closed && lines.length > 2) path.closePath();
+		__drawStroke(path, __lineSize, alpha, color);
+	}
+
+	/** 清空图形、渲染游标、填充、描边及画笔状态，并通知舞台刷新。 */
 	public function clear():Void {
 		__graphicsDrawData.draws = [];
+		__graphicsDrawData.index = 0;
+		__graphicsDrawData.currentBitmapData = null;
+		__graphicsDrawData.smoothing = true;
+		__hasRecordedMaterial = false;
+		__recordedBitmap = null;
 		__beginFill = null;
-		__sizeDirty = true;
+		__bitmapData = null;
+		__bitmapSmoothing = true;
+		__lineColor = null;
+		__lineSize = 1;
+		__posX = __posY = 0;
+		__resetLineRun();
+		__geometryChanged();
 	}
 
-	override function setTransformDirty(value:Bool = true) {
-		super.setTransformDirty(value);
-		__sizeDirty = true;
+	/** 外部修改低层网格后，也要使尺寸缓存失效。普通变换不重新扫描顶点。 */
+	override public function invalidate():Void {
+		__geometryChanged();
 	}
 
 	override function __getRect():Rectangle {
 		if (__sizeDirty) {
-			// 这里对Graphic的尺寸进行重新测量
-			__sizeRect.setTo(0, 0, 0, 0);
-			for (draw in this.__graphicsDrawData.draws) {
-				switch draw {
-					case DRAW_TRIANGLE(vertices, indices, uvs, alpha, colorTransform, applyBlendAddMode):
-						var len = Std.int(vertices.length / 2);
-						__sizeRect.setTo(vertices[0], vertices[1], 0, 0);
-						for (i in 0...len) {
-							var tx = vertices[i * 2];
-							var ty = vertices[i * 2 + 1];
-							if (tx < __sizeRect.left) {
-								__sizeRect.left = tx;
-							} else if (tx > __sizeRect.right) {
-								__sizeRect.right = tx;
-							}
-							if (ty < __sizeRect.top) {
-								__sizeRect.top = ty;
-							} else if (ty > __sizeRect.bottom) {
-								__sizeRect.bottom = ty;
-							}
-						}
-					default:
-				}
+			var minX = Math.POSITIVE_INFINITY, minY = Math.POSITIVE_INFINITY;
+			var maxX = Math.NEGATIVE_INFINITY, maxY = Math.NEGATIVE_INFINITY;
+			var found = false;
+			for (draw in __graphicsDrawData.draws) switch draw {
+				case DRAW_TRIANGLE(vertices, indices, _, _, _, _):
+					// 仅统计真正被三角形引用的顶点，不让未使用顶点扩大点击范围。
+					for (index in indices) {
+						if (index < 0 || index >= Std.int(vertices.length / 2)) continue;
+						var offset = index * 2;
+						var x = vertices[offset], y = vertices[offset + 1];
+						if (!Math.isFinite(x) || !Math.isFinite(y)) continue;
+						minX = Math.min(minX, x); minY = Math.min(minY, y);
+						maxX = Math.max(maxX, x); maxY = Math.max(maxY, y);
+						found = true;
+					}
+				default:
 			}
+			if (found) __sizeRect.setTo(minX, minY, maxX - minX, maxY - minY);
+			else __sizeRect.setTo(0, 0, 0, 0);
 			__sizeDirty = false;
 		}
 		return __sizeRect;
 	}
 
+	// 保留 Quad 与渲染后端使用的延迟更新钩子。
 	private var __graphicsDirty:Bool = false;
-
-	/**
-	 * 当发生脏数据时，直接更新形状数据
-	 */
 	private function updateGraphics():Void {
 		__graphicsDirty = false;
 	}
 
-	/**
-	 * 绘制圆形
-	 * @param x 
-	 * @param y 
-	 * @param radius 半径
-	 * @param smooth 平滑值，值越高圆形会显示得越平滑，但是相应性能越差
-	 * @param alpha 
-	 * @param colorTransform 
-	 */
-	public function drawCircleLine(x:Float, y:Float, radius:Float, smooth:Int = 10, alpha:Float = 1, ?colorTransform:ColorTransform):Void {
-		// http://slabode.exofire.net/circle_draw.shtml
-
-		var _smooth:Float = smooth;
-		var _steps:Int = Std.int(_smooth * Math.sqrt(radius));
-
-		// Precompute the value based on segments
-		var theta = 2 * 3.1415926 / _steps;
-
-		var tangential_factor = Math.tan(theta);
-		var radial_factor = Math.cos(theta);
-
-		var x2:Float = radius;
-		var y2:Float = 0;
-
-		var _verts:Array<Point> = [];
-
-		for (_ in 0..._steps) {
-			var __x = x2 + x;
-			var __y = y2 + y;
-
-			_verts.push(new Point(__x, __y));
-
-			var tx = -y2;
-			var ty = x2;
-
-			x2 += tx * tangential_factor;
-			y2 += ty * tangential_factor;
-
-			x2 *= radial_factor;
-			y2 *= radial_factor;
-		}
-
-		drawLines(_verts);
+	private function __drawStroke(path:GraphicsPath, width:Float, alpha:Float, transform:ColorTransform):Void {
+		alpha = __normalizeAlpha(alpha);
+		__validateColorTransform(transform);
+		var color = __strokeColor();
+		var mesh = path.getStrokeMesh(width, new GraphicsStrokeStyle(BUTT, BEVEL), 0.25);
+		__submitSolid(mesh, color, alpha, transform == null ? __makeColor(color) : transform);
 	}
 
-	/**
-	 * 绘制实心圆形
-	 * @param x 圆心x坐标
-	 * @param y 圆心y坐标
-	 * @param radius 半径
-	 * @param smooth 平滑值，值越高圆形会显示得越平滑，但是相应性能越差
-	 * @param alpha 透明度
-	 * @param colorTransform 颜色变换
-	 */
-	public function drawCircle(x:Float, y:Float, radius:Float, smooth:Int = 10, alpha:Float = 1, ?colorTransform:ColorTransform):Void {
-		// http://slabode.exofire.net/circle_draw.shtml
+	private function __submitSolid(mesh:GraphicsMesh, color:Int, alpha:Float, transform:ColorTransform):Void {
+		if (mesh.indices.length == 0) return;
+		__resetLineRun();
+		__recordMaterial(null, true, color);
+		__graphicsDrawData.draws.push(DRAW_TRIANGLE(mesh.vertices, mesh.indices, mesh.uvs, alpha, transform, false));
+		__geometryChanged();
+	}
 
-		var _smooth:Float = smooth;
-		var _steps:Int = Std.int(_smooth * Math.sqrt(radius));
-
-		// Precompute the value based on segments
-		var theta = 2 * 3.1415926 / _steps;
-
-		var tangential_factor = Math.tan(theta);
-		var radial_factor = Math.cos(theta);
-
-		var x2:Float = radius;
-		var y2:Float = 0;
-
-		var vertices:Array<Float> = [];
-		var indices:Array<Int> = [];
-		var uvs:Array<Float> = [];
-
-		// 添加圆心点
-		vertices.push(x);
-		vertices.push(y);
-		uvs.push(0.5);
-		uvs.push(0.5);
-
-		// 计算圆周上的点
-		for (i in 0..._steps) {
-			var __x = x2 + x;
-			var __y = y2 + y;
-
-			vertices.push(__x);
-			vertices.push(__y);
-			uvs.push(0.5 + x2 / (radius * 2));
-			uvs.push(0.5 + y2 / (radius * 2));
-
-			// 计算三角形索引
-			if (i > 0) {
-				indices.push(0);
-				indices.push(i);
-				indices.push(i + 1);
-			}
-
-			var tx = -y2;
-			var ty = x2;
-
-			x2 += tx * tangential_factor;
-			y2 += ty * tangential_factor;
-
-			x2 *= radial_factor;
-			y2 *= radial_factor;
+	/** 相邻绘制使用同一材质时不重复记录切换命令。 */
+	private function __recordMaterial(bitmapData:BitmapData, smoothing:Bool, color:Int):Void {
+		if (__hasRecordedMaterial && __recordedBitmap == bitmapData) {
+			if (bitmapData != null && __recordedSmoothing == smoothing) return;
+			if (bitmapData == null && __recordedFill == color) return;
 		}
+		if (bitmapData == null) __graphicsDrawData.draws.push(BEGIN_FILL(color));
+		else __graphicsDrawData.draws.push(BEGIN_BITMAP_DATA(bitmapData, smoothing));
+		__hasRecordedMaterial = true;
+		__recordedBitmap = bitmapData;
+		__recordedSmoothing = smoothing;
+		__recordedFill = color;
+	}
 
-		// 连接最后一个点和第一个点
-		indices.push(0);
-		indices.push(_steps);
-		indices.push(1);
+	private function __resetLineRun():Void {
+		__lineBuilder = null;
+	}
 
-		// 绘制三角形扇形
-		drawTriangles(vertices, indices, uvs, alpha, colorTransform);
+	private function __strokeColor():Int {
+		return __lineColor != null ? __lineColor : (__beginFill != null ? __beginFill : 0x000000);
+	}
+
+	private function __geometryChanged():Void {
 		__sizeDirty = true;
+		setTransformDirty();
+		setFilterDirty();
+		if (__parent != null) {
+			@:privateAccess __parent.__layoutDirty = true;
+		}
 	}
 
-	public function drawLines(lines:Array<Point>, alpha:Float = 1, ?color:ColorTransform):Void {
-		var _count:Int = lines.length;
+	private static function __makeColor(value:Int):ColorTransform {
+		var color = ColorUtils.toShaderColor(value);
+		return new ColorTransform(color.r, color.g, color.b, 1);
+	}
 
-		if (_count == 2) {
-			drawLine(lines[0].x, lines[0].y, lines[1].x, lines[1].y, alpha, color);
-			return;
-		}
+	private static function __normalizeAlpha(alpha:Float):Float {
+		if (!Math.isFinite(alpha)) throw "透明度必须是有限数值";
+		return Math.max(0, Math.min(1, alpha));
+	}
 
-		if (_count == 1) {
-			// drawPoint(lines[0].x, lines[0].y);
-			return;
-		}
+	private static function __validatePoint(x:Float, y:Float):Void {
+		if (!Math.isFinite(x) || !Math.isFinite(y)) throw "绘图坐标必须是有限数值";
+	}
 
-		// start the polygon by drawing this start point
-		// drawLine(lines[0].x, lines[0].y, lines[1].x, lines[1].y, alpha, color);
-		this.moveTo(lines[0].x, lines[0].y);
-		this.lineTo(lines[1].x, lines[1].y);
+	private static function __validateRect(x:Float, y:Float, width:Float, height:Float):Void {
+		__validatePoint(x, y);
+		__validatePoint(width, height);
+	}
 
-		// draw the rest of the points
-		for (i in 1..._count - 1) {
-			// drawLine(lines[i].x, lines[i].y, lines[i + 1].x, lines[i + 1].y, alpha, color);
-			this.lineTo(lines[i + 1].x, lines[i + 1].y);
-		}
-		// join last point to first point
-		// drawLine(lines[_count - 1].x, lines[_count - 1].y, lines[0].x, lines[0].y, alpha, color);
-		this.lineTo(lines[0].x, lines[0].y);
+	private static function __validateColorTransform(transform:ColorTransform):Void {
+		if (transform == null) return;
+		for (value in [transform.redMultiplier, transform.greenMultiplier, transform.blueMultiplier, transform.alphaMultiplier,
+			transform.redOffset, transform.greenOffset, transform.blueOffset, transform.alphaOffset])
+			if (!Math.isFinite(value)) throw "颜色变换必须使用有限数值";
+	}
+
+	private static function __circleSteps(radius:Float, smooth:Int):Int {
+		if (!Math.isFinite(radius) || radius < 0) throw "圆形半径必须是非负有限数值";
+		if (smooth <= 0) throw "圆形平滑值必须大于零";
+		if (radius == 0) return 0;
+		var count = smooth * Math.sqrt(radius);
+		if (!Math.isFinite(count) || count > 16384) throw "圆形细分超过了 16384 段，请降低平滑值或改用路径圆弧";
+		return Std.int(Math.max(3, count));
 	}
 }

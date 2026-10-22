@@ -1,0 +1,319 @@
+{
+  "browser": "155.0.8059.85",
+  "backend": "软件 WebGL，仅验证功能；隐藏恐龙以隔离原探索流程，群体另做专项验证",
+  "cases": [
+    "静止时复用三维缓存",
+    "Blender GLB、天空、IBL、距离雾与碰撞世界加载",
+    "真实鼠标拖动环顾",
+    "跳跃并回落到碰撞地面",
+    "闸门真实阻挡，任务未完成不能打开",
+    "行走接近并与导览机器人交互",
+    "探索并激活南侧信标",
+    "绕过建筑并激活东侧信标",
+    "穿过庭院并激活西侧信标",
+    "开启闸门、实际穿过门洞并完成档案任务",
+    "页面刷新恢复任务、闸门和玩家位置",
+    "键盘切换距离雾",
+    "两次销毁重进，释放控制器、场景和碰撞代理",
+    "屏幕方向按钮支持持续移动并在抬起时停止"
+  ],
+  "final": {
+    "ready": true,
+    "failure": "",
+    "position": [
+      0,
+      0.0019999999999998977,
+      24.925500583648702
+    ],
+    "yaw": 0,
+    "pitch": -0.02,
+    "collected": [],
+    "gateOpen": false,
+    "complete": false,
+    "grounded": true,
+    "hint": "WASD 移动 · 拖动环顾 · Shift 奔跑 · 空格跳跃",
+    "fog": true,
+    "stats": {
+      "autoMobilityTransitions": 161,
+      "autoDynamicMeshes": 0,
+      "autoStaticMeshes": 161,
+      "geometryCacheHits": 28,
+      "geometryRebuilds": 0,
+      "geometryCacheBytes": 2407552,
+      "geometryIndexUploadedBytes": 0,
+      "geometryDynamicUploadedBytes": 0,
+      "geometryStaticUploadedBytes": 0,
+      "skinPaletteUploadedBytes": 0,
+      "gpuSkinMeshes": 0,
+      "splitReasons": {
+        "h": {}
+      },
+      "shadowStatus": "开启",
+      "shadowDegradation": "",
+      "shadowSlopeBiases": [
+        0.003,
+        0.003
+      ],
+      "shadowDepthBiases": [
+        0.0005,
+        0.0005
+      ],
+      "shadowCascadeUpdated": [
+        true,
+        true
+      ],
+      "shadowEffectiveFilterRadius": 1.25,
+      "shadowEffectiveFilter": 1,
+      "shadowEffectiveDistance": 70,
+      "shadowFitMode": "自动相机范围",
+      "shadowWorldTexels": [
+        0.05470430107526883,
+        0.20483870967741938
+      ],
+      "shadowDepthBits": 24,
+      "shadowCascades": 2,
+      "shadowMapSize": 1024,
+      "shadowMapBytes": 16777216,
+      "shadowDynamicGeometryRebuilds": 0,
+      "shadowStaticGeometryRebuilds": 1,
+      "shadowDynamicUploadedBytes": 0,
+      "shadowStaticUploadedBytes": 393198,
+      "shadowGeometryBytes": 1049216,
+      "shadowGeometryRebuilds": 1,
+      "shadowGeometryCacheHits": 1,
+      "shadowIndexUploadedBytes": 158310,
+      "shadowUploadedBytes": 393198,
+      "shadowTriangles": 53134,
+      "shadowDrawCalls": 4,
+      "shadowCacheHit": false,
+      "targetBytes": 2752512,
+      "compositeDrawCalls": 1,
+      "textureSlots": 3,
+      "uploadedBytes": 0,
+      "culledMeshes": 22,
+      "visibleMeshes": 61,
+      "triangles": 32777,
+      "drawCalls": 29,
+      "targetHeight": 512,
+      "targetWidth": 896,
+      "stateVao": true,
+      "stateCompositeOnly": false,
+      "stateTextureSlots": 4,
+      "stateQueryCount": 0,
+      "samplerRestoreCpuMs": 0,
+      "stateRestoreCpuMs": 0.10000000055879354,
+      "stateSnapshotCpuMs": 0,
+      "stateFlushCpuMs": 0,
+      "stateCpuMs": 0.10000000055879354,
+      "softParticleStatus": "关闭",
+      "softDepthTargetBytes": 0,
+      "softDepthUploadedBytes": 0,
+      "softDepthTriangles": 0,
+      "softDepthDrawCalls": 0,
+      "bloomStatus": "启用",
+      "bloomTargetBytes": 917504,
+      "bloomDrawCalls": 3,
+      "postProcessCpuMs": 0,
+      "compositeCpuMs": 0,
+      "mainCpuMs": 0.7000000001862645,
+      "shadowCpuMs": 0.6999999992549419,
+      "renderCpuMs": 1.800000000745058,
+      "profileReady": true,
+      "redrawThisFrame": true,
+      "redrawId": 13,
+      "renderId": 15,
+      "skippedLights": 0,
+      "activeLights": 1,
+      "environmentTextureBytes": 16864,
+      "environmentStatus": "启用",
+      "skyboxTextureBytes": 2109456,
+      "skyboxDrawCalls": 1,
+      "skyboxStatus": "启用",
+      "fogStatus": "启用"
+    },
+    "dinosaurs": {
+      "count": 20,
+      "mode": 2,
+      "animation": true,
+      "shadows": true,
+      "disposed": false,
+      "positions": [
+        [
+          3.0408478251244966,
+          0.04,
+          11.584024900964414
+        ],
+        [
+          20.28708079320362,
+          0.04,
+          11.07844758007021
+        ],
+        [
+          -7.672050625687806,
+          0.04,
+          14.805783994234291
+        ],
+        [
+          -1.0493345529252032,
+          0.04,
+          8.526102732315703
+        ],
+        [
+          -20.372830137662184,
+          0.04,
+          10.830584324395357
+        ],
+        [
+          -15.343096184066532,
+          0.04,
+          6.7468752920951545
+        ],
+        [
+          -6.969926042465683,
+          0.04,
+          11.636061154483626
+        ],
+        [
+          8.970125051594662,
+          0.04,
+          16.512082893813858
+        ],
+        [
+          17.043388040498957,
+          0.04,
+          20.11162415672557
+        ],
+        [
+          11.047287673287686,
+          0.04,
+          11.834276153317656
+        ],
+        [
+          14.985044350593762,
+          0.04,
+          16.884161125470644
+        ],
+        [
+          9.72192144101266,
+          0.04,
+          7.328837420043753
+        ],
+        [
+          -4.447285221559006,
+          0.04,
+          8.604864690897012
+        ],
+        [
+          12.350069472854015,
+          0.04,
+          19.616375509294063
+        ],
+        [
+          -17.494574208269213,
+          0.04,
+          12.13345697164826
+        ],
+        [
+          -7.670269733923899,
+          0.04,
+          18.462682305581225
+        ],
+        [
+          7.796587757750276,
+          0.04,
+          10.750328753050002
+        ],
+        [
+          -11.542363529613239,
+          0.04,
+          15.169928917538396
+        ],
+        [
+          15.499745689355446,
+          0.04,
+          7.967487210103804
+        ],
+        [
+          14.759959944373222,
+          0.04,
+          12.312215276605805
+        ]
+      ],
+      "times": [
+        0.20908891392679832,
+        0.2987195090194809,
+        0.3950606013282529,
+        0.45030067333146195,
+        0.5747043589784055,
+        0.7024040168840737,
+        0.7685531155575935,
+        0.8710025994402348,
+        0.9830268580388322,
+        0.04077441568891149,
+        0.17322466745822002,
+        0.20371101321352228,
+        0.1768302266287154,
+        0.21453820173089228,
+        0.19197896000367898,
+        0.18593809523149102,
+        0.1808112831809681,
+        0.21355986531998616,
+        0.17958092179447085,
+        0.2088915083914416
+      ],
+      "valid": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "triangles": [
+        2736,
+        2736,
+        2736,
+        2736,
+        2736,
+        2736,
+        2736,
+        2736,
+        2736,
+        2736,
+        2736,
+        2736,
+        2736,
+        2736,
+        2736,
+        2736,
+        2736,
+        2736,
+        2736,
+        2736
+      ]
+    },
+    "inputScale": 1,
+    "releases": 2,
+    "lastRelease": {
+      "sceneDisposed": true,
+      "controllerDisposed": true,
+      "collisionDisposed": true,
+      "colliders": 0,
+      "nodes": 0
+    }
+  }
+}

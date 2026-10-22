@@ -1,0 +1,11 @@
+package hx.display3d;
+
+/** 实例化选项；默认继续使用无光照材质。 */
+typedef Model3DOptions = {
+	/** 是否为导入材质启用基础光照，省略时为 false。 */
+	@:optional var lightingEnabled:Bool;
+	/** 是否使用 PBR 材质，省略时为 false；true 优先于 lightingEnabled。 */
+	@:optional var pbrEnabled:Bool;
+	/** 请求后端使用 GPU 蒙皮；不支持的设备或材质自动保留 CPU 路径，默认关闭。 */
+	@:optional var gpuSkinning:Bool;
+}

@@ -1,0 +1,4863 @@
+{
+  "schemaVersion": 1,
+  "suiteVersion": "2026-10-16-v1",
+  "environment": {
+    "createdAt": "2026-10-16 15:44:13",
+    "stageWidth": 1280,
+    "stageHeight": 800,
+    "devicePixelRatio": 2,
+    "targetFrameRate": 60,
+    "platform": "HTML5",
+    "versionLabel": "未标记，比较前请记录源码版本",
+    "versions": {
+      "hxmaker": "1.0.0",
+      "hxmakerOpenfl": "1.0.0",
+      "haxe": "4.307",
+      "lime": "8.0.2",
+      "openfl": "9.2.8"
+    },
+    "heapAvailable": true,
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+    "windowWidth": 2048,
+    "windowHeight": 1001,
+    "browserDpr": 2,
+    "gl": {
+      "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+      "renderer": "WebKit WebGL",
+      "vendor": "WebKit",
+      "maxTextureUnits": 16,
+      "maxTextureSize": 16384,
+      "canvasWidth": 2560,
+      "canvasHeight": 1600
+    }
+  },
+  "assetManifest": {
+    "schemaVersion": 1,
+    "description": "原创固定负载；高密度版本增加计算量，不代表美术复杂度",
+    "models": {
+      "robot": {
+        "triangles": 192,
+        "vertices": 384,
+        "joints": 15,
+        "meshes": 16,
+        "blendedMeshes": 1
+      },
+      "robot-dense": {
+        "triangles": 12288,
+        "vertices": 7776,
+        "joints": 15,
+        "meshes": 16,
+        "blendedMeshes": 16
+      }
+    },
+    "files": [
+      {
+        "name": "robot-dense.glb",
+        "bytes": 510904,
+        "sha256": "0b3734d49d1186b7db4bb63df3f57082862f323a6d4b1fd69b7d3d1cdebef7c0"
+      },
+      {
+        "name": "robot.glb",
+        "bytes": 53556,
+        "sha256": "18992fb4927ba4b183df74f8f3dd11b2d8e598486c240a2a884ffef6d58a3f12"
+      },
+      {
+        "name": "tile_00.png",
+        "bytes": 196,
+        "sha256": "34e3e4864ab1c55d6d1e90205cf400089b8f6daedf3b1d4c7e440dab285b8d04"
+      },
+      {
+        "name": "tile_01.png",
+        "bytes": 196,
+        "sha256": "37266a4976bf33273a97dff570b2bb1a36937c4a5d6f0958413bd0348ebc7bfe"
+      },
+      {
+        "name": "tile_02.png",
+        "bytes": 196,
+        "sha256": "437c9aadf9aaf88eb13cad099aa77a3ac6a26f2239b480594c75dfc11c8097f9"
+      },
+      {
+        "name": "tile_03.png",
+        "bytes": 197,
+        "sha256": "34b379c111fc7b428dd3a88e0d8e978eb008a411dcd06f7a2e4d2686cc3cf574"
+      },
+      {
+        "name": "tile_04.png",
+        "bytes": 197,
+        "sha256": "cc5d852aefe4d79a9ba1883f5c454cb5f85154ab413f481fc622b9859133ae39"
+      },
+      {
+        "name": "tile_05.png",
+        "bytes": 196,
+        "sha256": "b900d7ba421dea4b0ef5ffb0da8881d77cd03b2f23cb2cf7f9d272503b1fc16b"
+      },
+      {
+        "name": "tile_06.png",
+        "bytes": 196,
+        "sha256": "e594df8bd89e4b3837ba62f27b0b092f93ca996332f46976737e154931e689ad"
+      },
+      {
+        "name": "tile_07.png",
+        "bytes": 196,
+        "sha256": "ef1ad1b2fed47115b3c048695ff2624d11513c04bc50aed4ccfb1071f5f6f1a1"
+      },
+      {
+        "name": "tile_08.png",
+        "bytes": 195,
+        "sha256": "455c7a73ff312ca4f249dee1f617e1b452c63310a1ac0e9d3c8363820a0284a2"
+      },
+      {
+        "name": "tile_09.png",
+        "bytes": 197,
+        "sha256": "84b891cf458180baa2d133be529cd6e23e7f45d3d4f0228cc41eaaaf4db98d6a"
+      },
+      {
+        "name": "tile_10.png",
+        "bytes": 197,
+        "sha256": "7c639ebc2887f8484529b6f2a29977f19e4746c8db6048a33b3b089e55bbe8e1"
+      },
+      {
+        "name": "tile_11.png",
+        "bytes": 196,
+        "sha256": "11f6d019abf84d8e34771d47702912c2251fc6cf6982cfc6c1771e22d0660b1e"
+      },
+      {
+        "name": "tile_12.png",
+        "bytes": 196,
+        "sha256": "2d6be69b7d958e501dd116efc794d88e435de51a617e0dd0d8eb7fa75b943d43"
+      },
+      {
+        "name": "tile_13.png",
+        "bytes": 197,
+        "sha256": "fdb87635528f4e5ec132cc0a5d7b724ed73a98b7f13d77c09c639938a0d5b3b9"
+      },
+      {
+        "name": "tile_14.png",
+        "bytes": 197,
+        "sha256": "e32c59140a76fe3d520533dd91af70c0386cfbf2f0bd190744a649d60e7cc2b5"
+      },
+      {
+        "name": "tile_15.png",
+        "bytes": 192,
+        "sha256": "00d75e6d6b50972404bdcd00564cb37f02e59d92ba1437b26365898a296f0545"
+      },
+      {
+        "name": "tile_16.png",
+        "bytes": 197,
+        "sha256": "27bd94eb28cdf0186b92c71b9f64d4b2fb4a701b5bc5b70f60cf56c847223002"
+      },
+      {
+        "name": "tile_17.png",
+        "bytes": 197,
+        "sha256": "c7e59339f29d252a5bcdd2b16a3867c80544a57c72e79b6e755bb3c28e4830fc"
+      },
+      {
+        "name": "tile_18.png",
+        "bytes": 197,
+        "sha256": "371b617736b7b3f09a51efbceb5fa9c7cc7068d69cf7a63275e6650b09b2c989"
+      },
+      {
+        "name": "tile_19.png",
+        "bytes": 196,
+        "sha256": "550eb0b147cbb4f774ccc59165b204729401f475a852131e42d929c838853946"
+      }
+    ]
+  },
+  "metricsNote": "3D 耗时为 CPU 墙钟提交时间，不是 GPU 时间；目标附件为估算；JS 堆可能不可用且包含记录器自身分配",
+  "performance": [
+    {
+      "caseSpec": {
+        "id": "empty",
+        "label": "空场景开销",
+        "kind": "empty",
+        "count": 0,
+        "dense": false,
+        "animated": false,
+        "multi": true,
+        "shadow": false,
+        "shadowSize": 1024,
+        "cached": false,
+        "nestedMask": false,
+        "secondView": false,
+        "textureSwap": false,
+        "renderScale": 1
+      },
+      "complete": true,
+      "reason": "完成",
+      "samples": 240,
+      "warmupFrames": 120,
+      "setupMs": 1.300000011920929,
+      "wallDurationMs": 6012.5,
+      "sampledDurationMs": 4002.800000011921,
+      "meanObservedFps": 59.958029379255834,
+      "longFramesOver33ms": 0,
+      "metrics": {
+        "frameIntervalMs": {
+          "count": 240,
+          "mean": 16.678333333383005,
+          "min": 13,
+          "p50": 16.69999998807907,
+          "p95": 18,
+          "p99": 19.399999976158142,
+          "max": 20.19999998807907
+        },
+        "animationCpuMs": {
+          "count": 240,
+          "mean": 0.0004166665176550547,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0.09999996423721313
+        },
+        "renderCpuMs": {
+          "count": 240,
+          "mean": 2.1645833340783915,
+          "min": 0.9000000357627869,
+          "p50": 2.300000011920929,
+          "p95": 3.5,
+          "p99": 4.400000035762787,
+          "max": 5.399999976158142
+        },
+        "shadowCpuMs": {
+          "count": 240,
+          "mean": 0.0024999996026357015,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0.09999996423721313,
+          "max": 0.10000002384185791
+        },
+        "mainCpuMs": {
+          "count": 240,
+          "mean": 0.016666665921608606,
+          "min": 0,
+          "p50": 0,
+          "p95": 0.10000002384185791,
+          "p99": 0.10000002384185791,
+          "max": 0.10000002384185791
+        },
+        "compositeCpuMs": {
+          "count": 240,
+          "mean": 0.03250000054637591,
+          "min": 0,
+          "p50": 0,
+          "p95": 0.10000002384185791,
+          "p99": 0.10000002384185791,
+          "max": 0.20000004768371582
+        },
+        "stateCpuMs": {
+          "count": 240,
+          "mean": 2.084583334128062,
+          "min": 0.800000011920929,
+          "p50": 2.199999988079071,
+          "p95": 3.5,
+          "p99": 4.300000011920929,
+          "max": 5.300000011920929
+        },
+        "mainDrawCalls": {
+          "count": 240,
+          "mean": 0,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "shadowDrawCalls": {
+          "count": 240,
+          "mean": 0,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "compositeDrawCalls": {
+          "count": 240,
+          "mean": 1,
+          "min": 1,
+          "p50": 1,
+          "p95": 1,
+          "p99": 1,
+          "max": 1
+        },
+        "mainTriangles": {
+          "count": 240,
+          "mean": 0,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "shadowTriangles": {
+          "count": 240,
+          "mean": 0,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "mainUploadedBytes": {
+          "count": 240,
+          "mean": 0,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "shadowUploadedBytes": {
+          "count": 240,
+          "mean": 0,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "textureSlots": {
+          "count": 240,
+          "mean": 0,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "targetBytes": {
+          "count": 240,
+          "mean": 9072000,
+          "min": 9072000,
+          "p50": 9072000,
+          "p95": 9072000,
+          "p99": 9072000,
+          "max": 9072000
+        },
+        "shadowMapBytes": {
+          "count": 240,
+          "mean": 0,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "visibleMeshes": {
+          "count": 240,
+          "mean": 0,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "culledMeshes": {
+          "count": 240,
+          "mean": 0,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "redrawnScenes": {
+          "count": 240,
+          "mean": 1,
+          "min": 1,
+          "p50": 1,
+          "p95": 1,
+          "p99": 1,
+          "max": 1
+        },
+        "cacheReferences": {
+          "count": 240,
+          "mean": 29,
+          "min": 29,
+          "p50": 29,
+          "p95": 29,
+          "p99": 29,
+          "max": 29
+        },
+        "cacheEntries": {
+          "count": 240,
+          "mean": 26,
+          "min": 26,
+          "p50": 26,
+          "p95": 26,
+          "p99": 26,
+          "max": 26
+        },
+        "jsHeapBytes": {
+          "count": 240,
+          "mean": 33250038.883333333,
+          "min": 20015008,
+          "p50": 31488908,
+          "p95": 45715888,
+          "p99": 46828872,
+          "max": 46828872
+        },
+        "animationAndRenderCpuMs": {
+          "count": 240,
+          "mean": 2.1650000005960464,
+          "min": 0.9000000357627869,
+          "p50": 2.300000011920929,
+          "p95": 3.5,
+          "p99": 4.400000035762787,
+          "max": 5.399999976158142
+        }
+      },
+      "scene": {
+        "sceneCount": 1,
+        "modelCount": 0,
+        "boxCount": 0,
+        "viewports": [
+          {
+            "width": 900,
+            "height": 420,
+            "renderScale": 1
+          }
+        ],
+        "cameras": [
+          {
+            "fieldOfView": 60,
+            "near": 0.05,
+            "far": 200,
+            "x": 0.6400000000000001,
+            "y": 4,
+            "z": 7
+          }
+        ],
+        "lighting": [
+          {
+            "ambientColor": 16777215,
+            "ambientIntensity": 0.32,
+            "color": 16777215,
+            "intensity": 0.85,
+            "shadowBias": 0.001,
+            "shadowSlopeBias": 0.002,
+            "shadowPadding": 0.1
+          }
+        ],
+        "sourceTriangles": 192,
+        "geometryNote": "躯干双权重，其余网格刚性优化",
+        "environment": {
+          "createdAt": "2026-10-16 15:42:23",
+          "stageWidth": 1280,
+          "stageHeight": 800,
+          "devicePixelRatio": 2,
+          "targetFrameRate": 60,
+          "platform": "HTML5",
+          "versionLabel": "未标记，比较前请记录源码版本",
+          "versions": {
+            "hxmaker": "1.0.0",
+            "hxmakerOpenfl": "1.0.0",
+            "haxe": "4.307",
+            "lime": "8.0.2",
+            "openfl": "9.2.8"
+          },
+          "heapAvailable": true,
+          "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+          "windowWidth": 2048,
+          "windowHeight": 1001,
+          "browserDpr": 2,
+          "gl": {
+            "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+            "renderer": "WebKit WebGL",
+            "vendor": "WebKit",
+            "maxTextureUnits": 16,
+            "maxTextureSize": 16384,
+            "canvasWidth": 2560,
+            "canvasHeight": 1600
+          }
+        },
+        "targets": [
+          {
+            "width": 1800,
+            "height": 840,
+            "shadowSize": 0,
+            "shadowStatus": "关闭"
+          }
+        ],
+        "simulationStepSeconds": 0.016666666666666666
+      },
+      "budget": {
+        "targetFps": 60,
+        "frameBudgetMs": 16.666666666666668,
+        "p95ToleranceMs": 20.833333333333336,
+        "p95WithinTolerance": true,
+        "note": "仅为帧间隔预算参考，完整功能验收需结合人工画面检查；CPU 提交耗时不是 GPU 耗时"
+      }
+    },
+    {
+      "caseSpec": {
+        "id": "boxes-multi",
+        "label": "256 方块 / 20 贴图 / 多纹理",
+        "kind": "boxes",
+        "count": 256,
+        "dense": false,
+        "animated": false,
+        "multi": true,
+        "shadow": false,
+        "shadowSize": 1024,
+        "cached": false,
+        "nestedMask": false,
+        "secondView": false,
+        "textureSwap": false,
+        "renderScale": 1
+      },
+      "complete": true,
+      "reason": "完成",
+      "samples": 240,
+      "warmupFrames": 120,
+      "setupMs": 1.0999999642372131,
+      "wallDurationMs": 5996.099999964237,
+      "sampledDurationMs": 4003.300000011921,
+      "meanObservedFps": 59.95054080365831,
+      "longFramesOver33ms": 0,
+      "metrics": {
+        "frameIntervalMs": {
+          "count": 240,
+          "mean": 16.680416666716336,
+          "min": 14.399999976158142,
+          "p50": 16.69999998807907,
+          "p95": 17.80000001192093,
+          "p99": 18.80000001192093,
+          "max": 19.599999964237213
+        },
+        "animationCpuMs": {
+          "count": 240,
+          "mean": 0.0008333335320154826,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0.10000002384185791
+        },
+        "renderCpuMs": {
+          "count": 240,
+          "mean": 3.1770833348234495,
+          "min": 2,
+          "p50": 2.699999988079071,
+          "p95": 4.800000011920929,
+          "p99": 5.700000047683716,
+          "max": 6.300000011920929
+        },
+        "shadowCpuMs": {
+          "count": 240,
+          "mean": 0.003750000149011612,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0.10000002384185791,
+          "max": 0.10000002384185791
+        },
+        "mainCpuMs": {
+          "count": 240,
+          "mean": 1.3095833366115888,
+          "min": 1,
+          "p50": 1.199999988079071,
+          "p95": 2.5,
+          "p99": 2.900000035762787,
+          "max": 3.199999988079071
+        },
+        "compositeCpuMs": {
+          "count": 240,
+          "mean": 0.014999999850988387,
+          "min": 0,
+          "p50": 0,
+          "p95": 0.10000002384185791,
+          "p99": 0.10000002384185791,
+          "max": 0.10000002384185791
+        },
+        "stateCpuMs": {
+          "count": 240,
+          "mean": 1.665833334128062,
+          "min": 0.699999988079071,
+          "p50": 1.2999999523162842,
+          "p95": 2.900000035762787,
+          "p99": 3.5,
+          "max": 5.000000059604645
+        },
+        "mainDrawCalls": {
+          "count": 240,
+          "mean": 15,
+          "min": 15,
+          "p50": 15,
+          "p95": 15,
+          "p99": 15,
+          "max": 15
+        },
+        "shadowDrawCalls": {
+          "count": 240,
+          "mean": 0,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "compositeDrawCalls": {
+          "count": 240,
+          "mean": 1,
+          "min": 1,
+          "p50": 1,
+          "p95": 1,
+          "p99": 1,
+          "max": 1
+        },
+        "mainTriangles": {
+          "count": 240,
+          "mean": 3074,
+          "min": 3074,
+          "p50": 3074,
+          "p95": 3074,
+          "p99": 3074,
+          "max": 3074
+        },
+        "shadowTriangles": {
+          "count": 240,
+          "mean": 0,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "mainUploadedBytes": {
+          "count": 240,
+          "mean": 338140,
+          "min": 338140,
+          "p50": 338140,
+          "p95": 338140,
+          "p99": 338140,
+          "max": 338140
+        },
+        "shadowUploadedBytes": {
+          "count": 240,
+          "mean": 0,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "textureSlots": {
+          "count": 240,
+          "mean": 16,
+          "min": 16,
+          "p50": 16,
+          "p95": 16,
+          "p99": 16,
+          "max": 16
+        },
+        "targetBytes": {
+          "count": 240,
+          "mean": 9072000,
+          "min": 9072000,
+          "p50": 9072000,
+          "p95": 9072000,
+          "p99": 9072000,
+          "max": 9072000
+        },
+        "shadowMapBytes": {
+          "count": 240,
+          "mean": 0,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "visibleMeshes": {
+          "count": 240,
+          "mean": 257,
+          "min": 257,
+          "p50": 257,
+          "p95": 257,
+          "p99": 257,
+          "max": 257
+        },
+        "culledMeshes": {
+          "count": 240,
+          "mean": 0,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "redrawnScenes": {
+          "count": 240,
+          "mean": 1,
+          "min": 1,
+          "p50": 1,
+          "p95": 1,
+          "p99": 1,
+          "max": 1
+        },
+        "cacheReferences": {
+          "count": 240,
+          "mean": 29,
+          "min": 29,
+          "p50": 29,
+          "p95": 29,
+          "p99": 29,
+          "max": 29
+        },
+        "cacheEntries": {
+          "count": 240,
+          "mean": 26,
+          "min": 26,
+          "p50": 26,
+          "p95": 26,
+          "p99": 26,
+          "max": 26
+        },
+        "jsHeapBytes": {
+          "count": 240,
+          "mean": 35290025.06666667,
+          "min": 21558884,
+          "p50": 34001260,
+          "p95": 48849076,
+          "p99": 51960368,
+          "max": 51960368
+        },
+        "animationAndRenderCpuMs": {
+          "count": 240,
+          "mean": 3.177916668355465,
+          "min": 2,
+          "p50": 2.699999988079071,
+          "p95": 4.800000011920929,
+          "p99": 5.700000047683716,
+          "max": 6.300000011920929
+        }
+      },
+      "scene": {
+        "sceneCount": 1,
+        "modelCount": 0,
+        "boxCount": 256,
+        "viewports": [
+          {
+            "width": 900,
+            "height": 420,
+            "renderScale": 1
+          }
+        ],
+        "cameras": [
+          {
+            "fieldOfView": 60,
+            "near": 0.05,
+            "far": 200,
+            "x": 4.4799999999999995,
+            "y": 10.08,
+            "z": 20.16
+          }
+        ],
+        "lighting": [
+          {
+            "ambientColor": 16777215,
+            "ambientIntensity": 0.32,
+            "color": 16777215,
+            "intensity": 0.85,
+            "shadowBias": 0.001,
+            "shadowSlopeBias": 0.002,
+            "shadowPadding": 0.1
+          }
+        ],
+        "sourceTriangles": 192,
+        "geometryNote": "躯干双权重，其余网格刚性优化",
+        "environment": {
+          "createdAt": "2026-10-16 15:42:29",
+          "stageWidth": 1280,
+          "stageHeight": 800,
+          "devicePixelRatio": 2,
+          "targetFrameRate": 60,
+          "platform": "HTML5",
+          "versionLabel": "未标记，比较前请记录源码版本",
+          "versions": {
+            "hxmaker": "1.0.0",
+            "hxmakerOpenfl": "1.0.0",
+            "haxe": "4.307",
+            "lime": "8.0.2",
+            "openfl": "9.2.8"
+          },
+          "heapAvailable": true,
+          "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+          "windowWidth": 2048,
+          "windowHeight": 1001,
+          "browserDpr": 2,
+          "gl": {
+            "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+            "renderer": "WebKit WebGL",
+            "vendor": "WebKit",
+            "maxTextureUnits": 16,
+            "maxTextureSize": 16384,
+            "canvasWidth": 2560,
+            "canvasHeight": 1600
+          }
+        },
+        "targets": [
+          {
+            "width": 1800,
+            "height": 840,
+            "shadowSize": 0,
+            "shadowStatus": "关闭"
+          }
+        ],
+        "simulationStepSeconds": 0.016666666666666666
+      },
+      "budget": {
+        "targetFps": 60,
+        "frameBudgetMs": 16.666666666666668,
+        "p95ToleranceMs": 20.833333333333336,
+        "p95WithinTolerance": true,
+        "note": "仅为帧间隔预算参考，完整功能验收需结合人工画面检查；CPU 提交耗时不是 GPU 耗时"
+      }
+    },
+    {
+      "caseSpec": {
+        "id": "boxes-single",
+        "label": "256 方块 / 20 贴图 / 单纹理",
+        "kind": "boxes",
+        "count": 256,
+        "dense": false,
+        "animated": false,
+        "multi": false,
+        "shadow": false,
+        "shadowSize": 1024,
+        "cached": false,
+        "nestedMask": false,
+        "secondView": false,
+        "textureSwap": false,
+        "renderScale": 1
+      },
+      "complete": true,
+      "reason": "完成",
+      "samples": 240,
+      "warmupFrames": 120,
+      "setupMs": 1.300000011920929,
+      "wallDurationMs": 6013.5,
+      "sampledDurationMs": 4003.699999988079,
+      "meanObservedFps": 59.94455129023518,
+      "longFramesOver33ms": 0,
+      "metrics": {
+        "frameIntervalMs": {
+          "count": 240,
+          "mean": 16.682083333283664,
+          "min": 15.699999988079071,
+          "p50": 16.69999998807907,
+          "p95": 17.599999964237213,
+          "p99": 17.69999998807907,
+          "max": 17.899999976158142
+        },
+        "animationCpuMs": {
+          "count": 240,
+          "mean": 0,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "renderCpuMs": {
+          "count": 240,
+          "mean": 3.3395833323399224,
+          "min": 2.700000047683716,
+          "p50": 3.300000011920929,
+          "p95": 3.800000011920929,
+          "p99": 4.899999976158142,
+          "max": 5.700000047683716
+        },
+        "shadowCpuMs": {
+          "count": 240,
+          "mean": 0.0033333336313565573,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0.10000002384185791,
+          "max": 0.10000002384185791
+        },
+        "mainCpuMs": {
+          "count": 240,
+          "mean": 1.8562500014901162,
+          "min": 1.5999999642372131,
+          "p50": 1.899999976158142,
+          "p95": 2,
+          "p99": 2.199999988079071,
+          "max": 3.5
+        },
+        "compositeCpuMs": {
+          "count": 240,
+          "mean": 0.018749999006589253,
+          "min": 0,
+          "p50": 0,
+          "p95": 0.10000002384185791,
+          "p99": 0.10000002384185791,
+          "max": 0.19999998807907104
+        },
+        "stateCpuMs": {
+          "count": 240,
+          "mean": 1.331249999254942,
+          "min": 0.800000011920929,
+          "p50": 1.300000011920929,
+          "p95": 1.7999999523162842,
+          "p99": 2.199999988079071,
+          "max": 3.300000011920929
+        },
+        "mainDrawCalls": {
+          "count": 240,
+          "mean": 257,
+          "min": 257,
+          "p50": 257,
+          "p95": 257,
+          "p99": 257,
+          "max": 257
+        },
+        "shadowDrawCalls": {
+          "count": 240,
+          "mean": 0,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "compositeDrawCalls": {
+          "count": 240,
+          "mean": 1,
+          "min": 1,
+          "p50": 1,
+          "p95": 1,
+          "p99": 1,
+          "max": 1
+        },
+        "mainTriangles": {
+          "count": 240,
+          "mean": 3074,
+          "min": 3074,
+          "p50": 3074,
+          "p95": 3074,
+          "p99": 3074,
+          "max": 3074
+        },
+        "shadowTriangles": {
+          "count": 240,
+          "mean": 0,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "mainUploadedBytes": {
+          "count": 240,
+          "mean": 338140,
+          "min": 338140,
+          "p50": 338140,
+          "p95": 338140,
+          "p99": 338140,
+          "max": 338140
+        },
+        "shadowUploadedBytes": {
+          "count": 240,
+          "mean": 0,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "textureSlots": {
+          "count": 240,
+          "mean": 1,
+          "min": 1,
+          "p50": 1,
+          "p95": 1,
+          "p99": 1,
+          "max": 1
+        },
+        "targetBytes": {
+          "count": 240,
+          "mean": 9072000,
+          "min": 9072000,
+          "p50": 9072000,
+          "p95": 9072000,
+          "p99": 9072000,
+          "max": 9072000
+        },
+        "shadowMapBytes": {
+          "count": 240,
+          "mean": 0,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "visibleMeshes": {
+          "count": 240,
+          "mean": 257,
+          "min": 257,
+          "p50": 257,
+          "p95": 257,
+          "p99": 257,
+          "max": 257
+        },
+        "culledMeshes": {
+          "count": 240,
+          "mean": 0,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "redrawnScenes": {
+          "count": 240,
+          "mean": 1,
+          "min": 1,
+          "p50": 1,
+          "p95": 1,
+          "p99": 1,
+          "max": 1
+        },
+        "cacheReferences": {
+          "count": 240,
+          "mean": 29,
+          "min": 29,
+          "p50": 29,
+          "p95": 29,
+          "p99": 29,
+          "max": 29
+        },
+        "cacheEntries": {
+          "count": 240,
+          "mean": 26,
+          "min": 26,
+          "p50": 26,
+          "p95": 26,
+          "p99": 26,
+          "max": 26
+        },
+        "jsHeapBytes": {
+          "count": 240,
+          "mean": 37090345.30833333,
+          "min": 22434629,
+          "p50": 34471497,
+          "p95": 48577585,
+          "p99": 55746901,
+          "max": 55746901
+        },
+        "animationAndRenderCpuMs": {
+          "count": 240,
+          "mean": 3.3395833323399224,
+          "min": 2.700000047683716,
+          "p50": 3.300000011920929,
+          "p95": 3.800000011920929,
+          "p99": 4.899999976158142,
+          "max": 5.700000047683716
+        }
+      },
+      "scene": {
+        "sceneCount": 1,
+        "modelCount": 0,
+        "boxCount": 256,
+        "viewports": [
+          {
+            "width": 900,
+            "height": 420,
+            "renderScale": 1
+          }
+        ],
+        "cameras": [
+          {
+            "fieldOfView": 60,
+            "near": 0.05,
+            "far": 200,
+            "x": 4.4799999999999995,
+            "y": 10.08,
+            "z": 20.16
+          }
+        ],
+        "lighting": [
+          {
+            "ambientColor": 16777215,
+            "ambientIntensity": 0.32,
+            "color": 16777215,
+            "intensity": 0.85,
+            "shadowBias": 0.001,
+            "shadowSlopeBias": 0.002,
+            "shadowPadding": 0.1
+          }
+        ],
+        "sourceTriangles": 192,
+        "geometryNote": "躯干双权重，其余网格刚性优化",
+        "environment": {
+          "createdAt": "2026-10-16 15:42:35",
+          "stageWidth": 1280,
+          "stageHeight": 800,
+          "devicePixelRatio": 2,
+          "targetFrameRate": 60,
+          "platform": "HTML5",
+          "versionLabel": "未标记，比较前请记录源码版本",
+          "versions": {
+            "hxmaker": "1.0.0",
+            "hxmakerOpenfl": "1.0.0",
+            "haxe": "4.307",
+            "lime": "8.0.2",
+            "openfl": "9.2.8"
+          },
+          "heapAvailable": true,
+          "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+          "windowWidth": 2048,
+          "windowHeight": 1001,
+          "browserDpr": 2,
+          "gl": {
+            "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+            "renderer": "WebKit WebGL",
+            "vendor": "WebKit",
+            "maxTextureUnits": 16,
+            "maxTextureSize": 16384,
+            "canvasWidth": 2560,
+            "canvasHeight": 1600
+          }
+        },
+        "targets": [
+          {
+            "width": 1800,
+            "height": 840,
+            "shadowSize": 0,
+            "shadowStatus": "关闭"
+          }
+        ],
+        "simulationStepSeconds": 0.016666666666666666
+      },
+      "budget": {
+        "targetFps": 60,
+        "frameBudgetMs": 16.666666666666668,
+        "p95ToleranceMs": 20.833333333333336,
+        "p95WithinTolerance": true,
+        "note": "仅为帧间隔预算参考，完整功能验收需结合人工画面检查；CPU 提交耗时不是 GPU 耗时"
+      }
+    },
+    {
+      "caseSpec": {
+        "id": "actors-10",
+        "label": "低模角色 ×10",
+        "kind": "actors",
+        "count": 10,
+        "dense": false,
+        "animated": true,
+        "multi": true,
+        "shadow": false,
+        "shadowSize": 1024,
+        "cached": false,
+        "nestedMask": false,
+        "secondView": false,
+        "textureSwap": false,
+        "renderScale": 1
+      },
+      "complete": true,
+      "reason": "完成",
+      "samples": 240,
+      "warmupFrames": 120,
+      "setupMs": 4,
+      "wallDurationMs": 3600.599999964237,
+      "sampledDurationMs": 2400.699999988079,
+      "meanObservedFps": 99.97084183829372,
+      "longFramesOver33ms": 0,
+      "metrics": {
+        "frameIntervalMs": {
+          "count": 240,
+          "mean": 10.002916666616995,
+          "min": 3.699999988079071,
+          "p50": 10,
+          "p95": 10.899999976158142,
+          "p99": 11.099999964237213,
+          "max": 16.19999998807907
+        },
+        "animationCpuMs": {
+          "count": 240,
+          "mean": 0.20041666676600775,
+          "min": 0,
+          "p50": 0.19999998807907104,
+          "p95": 0.30000001192092896,
+          "p99": 0.30000001192092896,
+          "max": 0.5
+        },
+        "renderCpuMs": {
+          "count": 240,
+          "mean": 2.1870833347241083,
+          "min": 1.800000011920929,
+          "p50": 2.199999988079071,
+          "p95": 2.400000035762787,
+          "p99": 3.199999988079071,
+          "max": 4.199999988079071
+        },
+        "shadowCpuMs": {
+          "count": 240,
+          "mean": 0.0029166663686434426,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0.10000002384185791,
+          "max": 0.10000002384185791
+        },
+        "mainCpuMs": {
+          "count": 240,
+          "mean": 0.7375000009934107,
+          "min": 0.5999999642372131,
+          "p50": 0.7000000476837158,
+          "p95": 0.8999999761581421,
+          "p99": 0.9000000357627869,
+          "max": 0.9000000357627869
+        },
+        "compositeCpuMs": {
+          "count": 240,
+          "mean": 0.011666666964689891,
+          "min": 0,
+          "p50": 0,
+          "p95": 0.10000002384185791,
+          "p99": 0.10000002384185791,
+          "max": 0.10000002384185791
+        },
+        "stateCpuMs": {
+          "count": 240,
+          "mean": 1.3645833318432172,
+          "min": 1,
+          "p50": 1.399999976158142,
+          "p95": 1.5000000596046448,
+          "p99": 2.099999964237213,
+          "max": 3.399999976158142
+        },
+        "mainDrawCalls": {
+          "count": 240,
+          "mean": 1,
+          "min": 1,
+          "p50": 1,
+          "p95": 1,
+          "p99": 1,
+          "max": 1
+        },
+        "shadowDrawCalls": {
+          "count": 240,
+          "mean": 0,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "compositeDrawCalls": {
+          "count": 240,
+          "mean": 1,
+          "min": 1,
+          "p50": 1,
+          "p95": 1,
+          "p99": 1,
+          "max": 1
+        },
+        "mainTriangles": {
+          "count": 240,
+          "mean": 1922,
+          "min": 1922,
+          "p50": 1922,
+          "p95": 1922,
+          "p99": 1922,
+          "max": 1922
+        },
+        "shadowTriangles": {
+          "count": 240,
+          "mean": 0,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "mainUploadedBytes": {
+          "count": 240,
+          "mean": 211420,
+          "min": 211420,
+          "p50": 211420,
+          "p95": 211420,
+          "p99": 211420,
+          "max": 211420
+        },
+        "shadowUploadedBytes": {
+          "count": 240,
+          "mean": 0,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "textureSlots": {
+          "count": 240,
+          "mean": 4,
+          "min": 4,
+          "p50": 4,
+          "p95": 4,
+          "p99": 4,
+          "max": 4
+        },
+        "targetBytes": {
+          "count": 240,
+          "mean": 9072000,
+          "min": 9072000,
+          "p50": 9072000,
+          "p95": 9072000,
+          "p99": 9072000,
+          "max": 9072000
+        },
+        "shadowMapBytes": {
+          "count": 240,
+          "mean": 0,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "visibleMeshes": {
+          "count": 240,
+          "mean": 161,
+          "min": 161,
+          "p50": 161,
+          "p95": 161,
+          "p99": 161,
+          "max": 161
+        },
+        "culledMeshes": {
+          "count": 240,
+          "mean": 0,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "redrawnScenes": {
+          "count": 240,
+          "mean": 1,
+          "min": 1,
+          "p50": 1,
+          "p95": 1,
+          "p99": 1,
+          "max": 1
+        },
+        "cacheReferences": {
+          "count": 240,
+          "mean": 29,
+          "min": 29,
+          "p50": 29,
+          "p95": 29,
+          "p99": 29,
+          "max": 29
+        },
+        "cacheEntries": {
+          "count": 240,
+          "mean": 26,
+          "min": 26,
+          "p50": 26,
+          "p95": 26,
+          "p99": 26,
+          "max": 26
+        },
+        "jsHeapBytes": {
+          "count": 240,
+          "mean": 42285296.43333333,
+          "min": 22974358,
+          "p50": 41210210,
+          "p95": 61918598,
+          "p99": 63270777,
+          "max": 63270777
+        },
+        "animationAndRenderCpuMs": {
+          "count": 240,
+          "mean": 2.387500001490116,
+          "min": 2,
+          "p50": 2.399999976158142,
+          "p95": 2.600000023841858,
+          "p99": 3.5,
+          "max": 4.399999976158142
+        }
+      },
+      "scene": {
+        "sceneCount": 1,
+        "modelCount": 10,
+        "boxCount": 0,
+        "viewports": [
+          {
+            "width": 900,
+            "height": 420,
+            "renderScale": 1
+          }
+        ],
+        "cameras": [
+          {
+            "fieldOfView": 60,
+            "near": 0.05,
+            "far": 200,
+            "x": 2.5600000000000005,
+            "y": 5.760000000000001,
+            "z": 11.520000000000001
+          }
+        ],
+        "lighting": [
+          {
+            "ambientColor": 16777215,
+            "ambientIntensity": 0.32,
+            "color": 16777215,
+            "intensity": 0.85,
+            "shadowBias": 0.001,
+            "shadowSlopeBias": 0.002,
+            "shadowPadding": 0.1
+          }
+        ],
+        "sourceTriangles": 192,
+        "geometryNote": "躯干双权重，其余网格刚性优化",
+        "environment": {
+          "createdAt": "2026-10-16 15:42:41",
+          "stageWidth": 1280,
+          "stageHeight": 800,
+          "devicePixelRatio": 2,
+          "targetFrameRate": 60,
+          "platform": "HTML5",
+          "versionLabel": "未标记，比较前请记录源码版本",
+          "versions": {
+            "hxmaker": "1.0.0",
+            "hxmakerOpenfl": "1.0.0",
+            "haxe": "4.307",
+            "lime": "8.0.2",
+            "openfl": "9.2.8"
+          },
+          "heapAvailable": true,
+          "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+          "windowWidth": 2048,
+          "windowHeight": 1001,
+          "browserDpr": 2,
+          "gl": {
+            "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+            "renderer": "WebKit WebGL",
+            "vendor": "WebKit",
+            "maxTextureUnits": 16,
+            "maxTextureSize": 16384,
+            "canvasWidth": 2560,
+            "canvasHeight": 1600
+          }
+        },
+        "targets": [
+          {
+            "width": 1800,
+            "height": 840,
+            "shadowSize": 0,
+            "shadowStatus": "关闭"
+          }
+        ],
+        "simulationStepSeconds": 0.016666666666666666
+      },
+      "budget": {
+        "targetFps": 60,
+        "frameBudgetMs": 16.666666666666668,
+        "p95ToleranceMs": 20.833333333333336,
+        "p95WithinTolerance": true,
+        "note": "仅为帧间隔预算参考，完整功能验收需结合人工画面检查；CPU 提交耗时不是 GPU 耗时"
+      }
+    },
+    {
+      "caseSpec": {
+        "id": "actors-30-multi",
+        "label": "低模角色 ×30 / 多纹理",
+        "kind": "actors",
+        "count": 30,
+        "dense": false,
+        "animated": true,
+        "multi": true,
+        "shadow": false,
+        "shadowSize": 1024,
+        "cached": false,
+        "nestedMask": false,
+        "secondView": false,
+        "textureSwap": false,
+        "renderScale": 1
+      },
+      "complete": true,
+      "reason": "完成",
+      "samples": 240,
+      "warmupFrames": 120,
+      "setupMs": 5.5,
+      "wallDurationMs": 3600.899999976158,
+      "sampledDurationMs": 2399.900000035763,
+      "meanObservedFps": 100.00416683879477,
+      "longFramesOver33ms": 0,
+      "metrics": {
+        "frameIntervalMs": {
+          "count": 240,
+          "mean": 9.999583333482345,
+          "min": 9.099999964237213,
+          "p50": 10,
+          "p95": 10.699999988079071,
+          "p99": 10.900000035762787,
+          "max": 11.099999964237213
+        },
+        "animationCpuMs": {
+          "count": 240,
+          "mean": 0.6354166686534881,
+          "min": 0.3999999761581421,
+          "p50": 0.6000000238418579,
+          "p95": 0.800000011920929,
+          "p99": 0.800000011920929,
+          "max": 0.800000011920929
+        },
+        "renderCpuMs": {
+          "count": 240,
+          "mean": 3.7691666677594187,
+          "min": 3.100000023841858,
+          "p50": 3.799999952316284,
+          "p95": 4.100000023841858,
+          "p99": 4.5,
+          "max": 6
+        },
+        "shadowCpuMs": {
+          "count": 240,
+          "mean": 0.0016666668156782786,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0.10000002384185791,
+          "max": 0.10000002384185791
+        },
+        "mainCpuMs": {
+          "count": 240,
+          "mean": 2.1958333333333333,
+          "min": 1.7999999523162842,
+          "p50": 2.199999988079071,
+          "p95": 2.400000035762787,
+          "p99": 2.5,
+          "max": 4
+        },
+        "compositeCpuMs": {
+          "count": 240,
+          "mean": 0.009166666368643443,
+          "min": 0,
+          "p50": 0,
+          "p95": 0.09999996423721313,
+          "p99": 0.10000002384185791,
+          "max": 0.10000002384185791
+        },
+        "stateCpuMs": {
+          "count": 240,
+          "mean": 1.3233333334326745,
+          "min": 0.9000000357627869,
+          "p50": 1.300000011920929,
+          "p95": 1.5999999642372131,
+          "p99": 1.800000011920929,
+          "max": 2.100000023841858
+        },
+        "mainDrawCalls": {
+          "count": 240,
+          "mean": 1,
+          "min": 1,
+          "p50": 1,
+          "p95": 1,
+          "p99": 1,
+          "max": 1
+        },
+        "shadowDrawCalls": {
+          "count": 240,
+          "mean": 0,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "compositeDrawCalls": {
+          "count": 240,
+          "mean": 1,
+          "min": 1,
+          "p50": 1,
+          "p95": 1,
+          "p99": 1,
+          "max": 1
+        },
+        "mainTriangles": {
+          "count": 240,
+          "mean": 5762,
+          "min": 5762,
+          "p50": 5762,
+          "p95": 5762,
+          "p99": 5762,
+          "max": 5762
+        },
+        "shadowTriangles": {
+          "count": 240,
+          "mean": 0,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "mainUploadedBytes": {
+          "count": 240,
+          "mean": 633820,
+          "min": 633820,
+          "p50": 633820,
+          "p95": 633820,
+          "p99": 633820,
+          "max": 633820
+        },
+        "shadowUploadedBytes": {
+          "count": 240,
+          "mean": 0,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "textureSlots": {
+          "count": 240,
+          "mean": 4,
+          "min": 4,
+          "p50": 4,
+          "p95": 4,
+          "p99": 4,
+          "max": 4
+        },
+        "targetBytes": {
+          "count": 240,
+          "mean": 9072000,
+          "min": 9072000,
+          "p50": 9072000,
+          "p95": 9072000,
+          "p99": 9072000,
+          "max": 9072000
+        },
+        "shadowMapBytes": {
+          "count": 240,
+          "mean": 0,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "visibleMeshes": {
+          "count": 240,
+          "mean": 481,
+          "min": 481,
+          "p50": 481,
+          "p95": 481,
+          "p99": 481,
+          "max": 481
+        },
+        "culledMeshes": {
+          "count": 240,
+          "mean": 0,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "redrawnScenes": {
+          "count": 240,
+          "mean": 1,
+          "min": 1,
+          "p50": 1,
+          "p95": 1,
+          "p99": 1,
+          "max": 1
+        },
+        "cacheReferences": {
+          "count": 240,
+          "mean": 29,
+          "min": 29,
+          "p50": 29,
+          "p95": 29,
+          "p99": 29,
+          "max": 29
+        },
+        "cacheEntries": {
+          "count": 240,
+          "mean": 26,
+          "min": 26,
+          "p50": 26,
+          "p95": 26,
+          "p99": 26,
+          "max": 26
+        },
+        "jsHeapBytes": {
+          "count": 240,
+          "mean": 66084995.145833336,
+          "min": 42775625,
+          "p50": 69383917,
+          "p95": 80396105,
+          "p99": 83009185,
+          "max": 100184545
+        },
+        "animationAndRenderCpuMs": {
+          "count": 240,
+          "mean": 4.404583336412907,
+          "min": 3.600000023841858,
+          "p50": 4.400000035762787,
+          "p95": 4.899999976158142,
+          "p99": 5.099999964237213,
+          "max": 6.599999964237213
+        }
+      },
+      "scene": {
+        "sceneCount": 1,
+        "modelCount": 30,
+        "boxCount": 0,
+        "viewports": [
+          {
+            "width": 900,
+            "height": 420,
+            "renderScale": 1
+          }
+        ],
+        "cameras": [
+          {
+            "fieldOfView": 60,
+            "near": 0.05,
+            "far": 200,
+            "x": 3.8400000000000007,
+            "y": 8.640000000000002,
+            "z": 17.280000000000005
+          }
+        ],
+        "lighting": [
+          {
+            "ambientColor": 16777215,
+            "ambientIntensity": 0.32,
+            "color": 16777215,
+            "intensity": 0.85,
+            "shadowBias": 0.001,
+            "shadowSlopeBias": 0.002,
+            "shadowPadding": 0.1
+          }
+        ],
+        "sourceTriangles": 192,
+        "geometryNote": "躯干双权重，其余网格刚性优化",
+        "environment": {
+          "createdAt": "2026-10-16 15:42:44",
+          "stageWidth": 1280,
+          "stageHeight": 800,
+          "devicePixelRatio": 2,
+          "targetFrameRate": 60,
+          "platform": "HTML5",
+          "versionLabel": "未标记，比较前请记录源码版本",
+          "versions": {
+            "hxmaker": "1.0.0",
+            "hxmakerOpenfl": "1.0.0",
+            "haxe": "4.307",
+            "lime": "8.0.2",
+            "openfl": "9.2.8"
+          },
+          "heapAvailable": true,
+          "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+          "windowWidth": 2048,
+          "windowHeight": 1001,
+          "browserDpr": 2,
+          "gl": {
+            "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+            "renderer": "WebKit WebGL",
+            "vendor": "WebKit",
+            "maxTextureUnits": 16,
+            "maxTextureSize": 16384,
+            "canvasWidth": 2560,
+            "canvasHeight": 1600
+          }
+        },
+        "targets": [
+          {
+            "width": 1800,
+            "height": 840,
+            "shadowSize": 0,
+            "shadowStatus": "关闭"
+          }
+        ],
+        "simulationStepSeconds": 0.016666666666666666
+      },
+      "budget": {
+        "targetFps": 60,
+        "frameBudgetMs": 16.666666666666668,
+        "p95ToleranceMs": 20.833333333333336,
+        "p95WithinTolerance": true,
+        "note": "仅为帧间隔预算参考，完整功能验收需结合人工画面检查；CPU 提交耗时不是 GPU 耗时"
+      }
+    },
+    {
+      "caseSpec": {
+        "id": "actors-30-single",
+        "label": "低模角色 ×30 / 单纹理",
+        "kind": "actors",
+        "count": 30,
+        "dense": false,
+        "animated": true,
+        "multi": false,
+        "shadow": false,
+        "shadowSize": 1024,
+        "cached": false,
+        "nestedMask": false,
+        "secondView": false,
+        "textureSwap": false,
+        "renderScale": 1
+      },
+      "complete": true,
+      "reason": "完成",
+      "samples": 240,
+      "warmupFrames": 120,
+      "setupMs": 4.699999988079071,
+      "wallDurationMs": 3598.300000011921,
+      "sampledDurationMs": 2399.7999999523163,
+      "meanObservedFps": 100.0083340298228,
+      "longFramesOver33ms": 0,
+      "metrics": {
+        "frameIntervalMs": {
+          "count": 240,
+          "mean": 9.999166666467984,
+          "min": 5.800000011920929,
+          "p50": 10,
+          "p95": 10.800000011920929,
+          "p99": 13,
+          "max": 17.600000023841858
+        },
+        "animationCpuMs": {
+          "count": 240,
+          "mean": 0.551249998062849,
+          "min": 0.3999999761581421,
+          "p50": 0.5,
+          "p95": 0.699999988079071,
+          "p99": 0.7000000476837158,
+          "max": 0.800000011920929
+        },
+        "renderCpuMs": {
+          "count": 240,
+          "mean": 4.945000000049671,
+          "min": 4,
+          "p50": 4.899999976158142,
+          "p95": 5.400000035762787,
+          "p99": 6.400000035762787,
+          "max": 7.899999976158142
+        },
+        "shadowCpuMs": {
+          "count": 240,
+          "mean": 0.0033333331346511843,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0.10000002384185791,
+          "max": 0.10000002384185791
+        },
+        "mainCpuMs": {
+          "count": 240,
+          "mean": 3.3633333317935468,
+          "min": 2.800000011920929,
+          "p50": 3.399999976158142,
+          "p95": 3.699999988079071,
+          "p99": 4.100000023841858,
+          "max": 5.699999988079071
+        },
+        "compositeCpuMs": {
+          "count": 240,
+          "mean": 0.017500000447034834,
+          "min": 0,
+          "p50": 0,
+          "p95": 0.10000002384185791,
+          "p99": 0.10000002384185791,
+          "max": 0.10000002384185791
+        },
+        "stateCpuMs": {
+          "count": 240,
+          "mean": 1.374583335965872,
+          "min": 0.800000011920929,
+          "p50": 1.399999976158142,
+          "p95": 1.699999988079071,
+          "p99": 2,
+          "max": 3.100000023841858
+        },
+        "mainDrawCalls": {
+          "count": 240,
+          "mean": 273.4166666666667,
+          "min": 257,
+          "p50": 274,
+          "p95": 288,
+          "p99": 290,
+          "max": 290
+        },
+        "shadowDrawCalls": {
+          "count": 240,
+          "mean": 0,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "compositeDrawCalls": {
+          "count": 240,
+          "mean": 1,
+          "min": 1,
+          "p50": 1,
+          "p95": 1,
+          "p99": 1,
+          "max": 1
+        },
+        "mainTriangles": {
+          "count": 240,
+          "mean": 5762,
+          "min": 5762,
+          "p50": 5762,
+          "p95": 5762,
+          "p99": 5762,
+          "max": 5762
+        },
+        "shadowTriangles": {
+          "count": 240,
+          "mean": 0,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "mainUploadedBytes": {
+          "count": 240,
+          "mean": 633820,
+          "min": 633820,
+          "p50": 633820,
+          "p95": 633820,
+          "p99": 633820,
+          "max": 633820
+        },
+        "shadowUploadedBytes": {
+          "count": 240,
+          "mean": 0,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "textureSlots": {
+          "count": 240,
+          "mean": 1,
+          "min": 1,
+          "p50": 1,
+          "p95": 1,
+          "p99": 1,
+          "max": 1
+        },
+        "targetBytes": {
+          "count": 240,
+          "mean": 9072000,
+          "min": 9072000,
+          "p50": 9072000,
+          "p95": 9072000,
+          "p99": 9072000,
+          "max": 9072000
+        },
+        "shadowMapBytes": {
+          "count": 240,
+          "mean": 0,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "visibleMeshes": {
+          "count": 240,
+          "mean": 481,
+          "min": 481,
+          "p50": 481,
+          "p95": 481,
+          "p99": 481,
+          "max": 481
+        },
+        "culledMeshes": {
+          "count": 240,
+          "mean": 0,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "redrawnScenes": {
+          "count": 240,
+          "mean": 1,
+          "min": 1,
+          "p50": 1,
+          "p95": 1,
+          "p99": 1,
+          "max": 1
+        },
+        "cacheReferences": {
+          "count": 240,
+          "mean": 29,
+          "min": 29,
+          "p50": 29,
+          "p95": 29,
+          "p99": 29,
+          "max": 29
+        },
+        "cacheEntries": {
+          "count": 240,
+          "mean": 26,
+          "min": 26,
+          "p50": 26,
+          "p95": 26,
+          "p99": 26,
+          "max": 26
+        },
+        "jsHeapBytes": {
+          "count": 240,
+          "mean": 56829419.75833333,
+          "min": 28577737,
+          "p50": 57412337,
+          "p95": 85229685,
+          "p99": 91960388,
+          "max": 91960388
+        },
+        "animationAndRenderCpuMs": {
+          "count": 240,
+          "mean": 5.4962499981125195,
+          "min": 4.5,
+          "p50": 5.499999940395355,
+          "p95": 6,
+          "p99": 7,
+          "max": 8.599999964237213
+        }
+      },
+      "scene": {
+        "sceneCount": 1,
+        "modelCount": 30,
+        "boxCount": 0,
+        "viewports": [
+          {
+            "width": 900,
+            "height": 420,
+            "renderScale": 1
+          }
+        ],
+        "cameras": [
+          {
+            "fieldOfView": 60,
+            "near": 0.05,
+            "far": 200,
+            "x": 3.8400000000000007,
+            "y": 8.640000000000002,
+            "z": 17.280000000000005
+          }
+        ],
+        "lighting": [
+          {
+            "ambientColor": 16777215,
+            "ambientIntensity": 0.32,
+            "color": 16777215,
+            "intensity": 0.85,
+            "shadowBias": 0.001,
+            "shadowSlopeBias": 0.002,
+            "shadowPadding": 0.1
+          }
+        ],
+        "sourceTriangles": 192,
+        "geometryNote": "躯干双权重，其余网格刚性优化",
+        "environment": {
+          "createdAt": "2026-10-16 15:42:48",
+          "stageWidth": 1280,
+          "stageHeight": 800,
+          "devicePixelRatio": 2,
+          "targetFrameRate": 60,
+          "platform": "HTML5",
+          "versionLabel": "未标记，比较前请记录源码版本",
+          "versions": {
+            "hxmaker": "1.0.0",
+            "hxmakerOpenfl": "1.0.0",
+            "haxe": "4.307",
+            "lime": "8.0.2",
+            "openfl": "9.2.8"
+          },
+          "heapAvailable": true,
+          "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+          "windowWidth": 2048,
+          "windowHeight": 1001,
+          "browserDpr": 2,
+          "gl": {
+            "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+            "renderer": "WebKit WebGL",
+            "vendor": "WebKit",
+            "maxTextureUnits": 16,
+            "maxTextureSize": 16384,
+            "canvasWidth": 2560,
+            "canvasHeight": 1600
+          }
+        },
+        "targets": [
+          {
+            "width": 1800,
+            "height": 840,
+            "shadowSize": 0,
+            "shadowStatus": "关闭"
+          }
+        ],
+        "simulationStepSeconds": 0.016666666666666666
+      },
+      "budget": {
+        "targetFps": 60,
+        "frameBudgetMs": 16.666666666666668,
+        "p95ToleranceMs": 20.833333333333336,
+        "p95WithinTolerance": true,
+        "note": "仅为帧间隔预算参考，完整功能验收需结合人工画面检查；CPU 提交耗时不是 GPU 耗时"
+      }
+    },
+    {
+      "caseSpec": {
+        "id": "dense-1",
+        "label": "全双权重高密度角色 ×1",
+        "kind": "actors",
+        "count": 1,
+        "dense": true,
+        "animated": true,
+        "multi": true,
+        "shadow": false,
+        "shadowSize": 1024,
+        "cached": false,
+        "nestedMask": false,
+        "secondView": false,
+        "textureSwap": false,
+        "renderScale": 1
+      },
+      "complete": true,
+      "reason": "完成",
+      "samples": 240,
+      "warmupFrames": 120,
+      "setupMs": 2.899999976158142,
+      "wallDurationMs": 3601.199999988079,
+      "sampledDurationMs": 2400,
+      "meanObservedFps": 100,
+      "longFramesOver33ms": 0,
+      "metrics": {
+        "frameIntervalMs": {
+          "count": 240,
+          "mean": 10,
+          "min": 5.600000023841858,
+          "p50": 10,
+          "p95": 10.900000035762787,
+          "p99": 11,
+          "max": 17.30000001192093
+        },
+        "animationCpuMs": {
+          "count": 240,
+          "mean": 0.47874999965230625,
+          "min": 0.2999999523162842,
+          "p50": 0.5,
+          "p95": 0.6000000238418579,
+          "p99": 0.6000000238418579,
+          "max": 0.6000000238418579
+        },
+        "renderCpuMs": {
+          "count": 240,
+          "mean": 2.7450000010430813,
+          "min": 2.099999964237213,
+          "p50": 2.600000023841858,
+          "p95": 3.5,
+          "p99": 5.200000047683716,
+          "max": 8.800000011920929
+        },
+        "shadowCpuMs": {
+          "count": 240,
+          "mean": 0.0016666665673255921,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0.09999996423721313,
+          "max": 0.10000002384185791
+        },
+        "mainCpuMs": {
+          "count": 240,
+          "mean": 1.1833333325882753,
+          "min": 0.8999999761581421,
+          "p50": 1.100000023841858,
+          "p95": 1.600000023841858,
+          "p99": 2,
+          "max": 2.699999988079071
+        },
+        "compositeCpuMs": {
+          "count": 240,
+          "mean": 0.021250000596046446,
+          "min": 0,
+          "p50": 0,
+          "p95": 0.10000002384185791,
+          "p99": 0.10000002384185791,
+          "max": 0.19999998807907104
+        },
+        "stateCpuMs": {
+          "count": 240,
+          "mean": 1.504583334674438,
+          "min": 0.800000011920929,
+          "p50": 1.4000000357627869,
+          "p95": 2.199999988079071,
+          "p99": 3.800000011920929,
+          "max": 7.400000035762787
+        },
+        "mainDrawCalls": {
+          "count": 240,
+          "mean": 1,
+          "min": 1,
+          "p50": 1,
+          "p95": 1,
+          "p99": 1,
+          "max": 1
+        },
+        "shadowDrawCalls": {
+          "count": 240,
+          "mean": 0,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "compositeDrawCalls": {
+          "count": 240,
+          "mean": 1,
+          "min": 1,
+          "p50": 1,
+          "p95": 1,
+          "p99": 1,
+          "max": 1
+        },
+        "mainTriangles": {
+          "count": 240,
+          "mean": 12290,
+          "min": 12290,
+          "p50": 12290,
+          "p95": 12290,
+          "p99": 12290,
+          "max": 12290
+        },
+        "shadowTriangles": {
+          "count": 240,
+          "mean": 0,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "mainUploadedBytes": {
+          "count": 240,
+          "mean": 478300,
+          "min": 478300,
+          "p50": 478300,
+          "p95": 478300,
+          "p99": 478300,
+          "max": 478300
+        },
+        "shadowUploadedBytes": {
+          "count": 240,
+          "mean": 0,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "textureSlots": {
+          "count": 240,
+          "mean": 4,
+          "min": 4,
+          "p50": 4,
+          "p95": 4,
+          "p99": 4,
+          "max": 4
+        },
+        "targetBytes": {
+          "count": 240,
+          "mean": 9072000,
+          "min": 9072000,
+          "p50": 9072000,
+          "p95": 9072000,
+          "p99": 9072000,
+          "max": 9072000
+        },
+        "shadowMapBytes": {
+          "count": 240,
+          "mean": 0,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "visibleMeshes": {
+          "count": 240,
+          "mean": 17,
+          "min": 17,
+          "p50": 17,
+          "p95": 17,
+          "p99": 17,
+          "max": 17
+        },
+        "culledMeshes": {
+          "count": 240,
+          "mean": 0,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "redrawnScenes": {
+          "count": 240,
+          "mean": 1,
+          "min": 1,
+          "p50": 1,
+          "p95": 1,
+          "p99": 1,
+          "max": 1
+        },
+        "cacheReferences": {
+          "count": 240,
+          "mean": 29,
+          "min": 29,
+          "p50": 29,
+          "p95": 29,
+          "p99": 29,
+          "max": 29
+        },
+        "cacheEntries": {
+          "count": 240,
+          "mean": 26,
+          "min": 26,
+          "p50": 26,
+          "p95": 26,
+          "p99": 26,
+          "max": 26
+        },
+        "jsHeapBytes": {
+          "count": 240,
+          "mean": 66747514.954166666,
+          "min": 29182139,
+          "p50": 64657083,
+          "p95": 96887095,
+          "p99": 112588076,
+          "max": 112588076
+        },
+        "animationAndRenderCpuMs": {
+          "count": 240,
+          "mean": 3.2237500006953876,
+          "min": 2.5,
+          "p50": 3.099999964237213,
+          "p95": 4.099999964237213,
+          "p99": 5.700000047683716,
+          "max": 9.300000011920929
+        }
+      },
+      "scene": {
+        "sceneCount": 1,
+        "modelCount": 1,
+        "boxCount": 0,
+        "viewports": [
+          {
+            "width": 900,
+            "height": 420,
+            "renderScale": 1
+          }
+        ],
+        "cameras": [
+          {
+            "fieldOfView": 60,
+            "near": 0.05,
+            "far": 200,
+            "x": 0.6400000000000001,
+            "y": 4,
+            "z": 7
+          }
+        ],
+        "lighting": [
+          {
+            "ambientColor": 16777215,
+            "ambientIntensity": 0.32,
+            "color": 16777215,
+            "intensity": 0.85,
+            "shadowBias": 0.001,
+            "shadowSlopeBias": 0.002,
+            "shadowPadding": 0.1
+          }
+        ],
+        "sourceTriangles": 12288,
+        "geometryNote": "所有网格双权重 CPU 蒙皮",
+        "environment": {
+          "createdAt": "2026-10-16 15:42:51",
+          "stageWidth": 1280,
+          "stageHeight": 800,
+          "devicePixelRatio": 2,
+          "targetFrameRate": 60,
+          "platform": "HTML5",
+          "versionLabel": "未标记，比较前请记录源码版本",
+          "versions": {
+            "hxmaker": "1.0.0",
+            "hxmakerOpenfl": "1.0.0",
+            "haxe": "4.307",
+            "lime": "8.0.2",
+            "openfl": "9.2.8"
+          },
+          "heapAvailable": true,
+          "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+          "windowWidth": 2048,
+          "windowHeight": 1001,
+          "browserDpr": 2,
+          "gl": {
+            "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+            "renderer": "WebKit WebGL",
+            "vendor": "WebKit",
+            "maxTextureUnits": 16,
+            "maxTextureSize": 16384,
+            "canvasWidth": 2560,
+            "canvasHeight": 1600
+          }
+        },
+        "targets": [
+          {
+            "width": 1800,
+            "height": 840,
+            "shadowSize": 0,
+            "shadowStatus": "关闭"
+          }
+        ],
+        "simulationStepSeconds": 0.016666666666666666
+      },
+      "budget": {
+        "targetFps": 60,
+        "frameBudgetMs": 16.666666666666668,
+        "p95ToleranceMs": 20.833333333333336,
+        "p95WithinTolerance": true,
+        "note": "仅为帧间隔预算参考，完整功能验收需结合人工画面检查；CPU 提交耗时不是 GPU 耗时"
+      }
+    },
+    {
+      "caseSpec": {
+        "id": "dense-4",
+        "label": "全双权重高密度角色 ×4",
+        "kind": "actors",
+        "count": 4,
+        "dense": true,
+        "animated": true,
+        "multi": true,
+        "shadow": false,
+        "shadowSize": 1024,
+        "cached": false,
+        "nestedMask": false,
+        "secondView": false,
+        "textureSwap": false,
+        "renderScale": 1
+      },
+      "complete": true,
+      "reason": "完成",
+      "samples": 240,
+      "warmupFrames": 120,
+      "setupMs": 7.199999988079071,
+      "wallDurationMs": 3835.7000000476837,
+      "sampledDurationMs": 2627,
+      "meanObservedFps": 91.35896459840122,
+      "longFramesOver33ms": 1,
+      "metrics": {
+        "frameIntervalMs": {
+          "count": 240,
+          "mean": 10.945833333333333,
+          "min": 8.300000011920929,
+          "p50": 10.399999976158142,
+          "p95": 14.399999976158142,
+          "p99": 20.80000001192093,
+          "max": 47.700000047683716
+        },
+        "animationCpuMs": {
+          "count": 240,
+          "mean": 2.1174999992052714,
+          "min": 1.800000011920929,
+          "p50": 2.100000023841858,
+          "p95": 2.399999976158142,
+          "p99": 2.5,
+          "max": 2.5
+        },
+        "renderCpuMs": {
+          "count": 240,
+          "mean": 7.912083332737287,
+          "min": 5.699999988079071,
+          "p50": 7.399999976158142,
+          "p95": 10.300000011920929,
+          "p99": 17.5,
+          "max": 44.799999952316284
+        },
+        "shadowCpuMs": {
+          "count": 240,
+          "mean": 0.0029166671137015026,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0.10000002384185791,
+          "max": 0.10000002384185791
+        },
+        "mainCpuMs": {
+          "count": 240,
+          "mean": 5.917916667213043,
+          "min": 4.199999988079071,
+          "p50": 5.600000023841858,
+          "p95": 7.800000011920929,
+          "p99": 13,
+          "max": 18.30000001192093
+        },
+        "compositeCpuMs": {
+          "count": 240,
+          "mean": 0.021666666865348815,
+          "min": 0,
+          "p50": 0,
+          "p95": 0.10000002384185791,
+          "p99": 0.10000002384185791,
+          "max": 0.10000002384185791
+        },
+        "stateCpuMs": {
+          "count": 240,
+          "mean": 1.8470833338797092,
+          "min": 1.100000023841858,
+          "p50": 1.600000023841858,
+          "p95": 2.300000011920929,
+          "p99": 3.899999976158142,
+          "max": 39.299999952316284
+        },
+        "mainDrawCalls": {
+          "count": 240,
+          "mean": 1,
+          "min": 1,
+          "p50": 1,
+          "p95": 1,
+          "p99": 1,
+          "max": 1
+        },
+        "shadowDrawCalls": {
+          "count": 240,
+          "mean": 0,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "compositeDrawCalls": {
+          "count": 240,
+          "mean": 1,
+          "min": 1,
+          "p50": 1,
+          "p95": 1,
+          "p99": 1,
+          "max": 1
+        },
+        "mainTriangles": {
+          "count": 240,
+          "mean": 49154,
+          "min": 49154,
+          "p50": 49154,
+          "p95": 49154,
+          "p99": 49154,
+          "max": 49154
+        },
+        "shadowTriangles": {
+          "count": 240,
+          "mean": 0,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "mainUploadedBytes": {
+          "count": 240,
+          "mean": 1912540,
+          "min": 1912540,
+          "p50": 1912540,
+          "p95": 1912540,
+          "p99": 1912540,
+          "max": 1912540
+        },
+        "shadowUploadedBytes": {
+          "count": 240,
+          "mean": 0,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "textureSlots": {
+          "count": 240,
+          "mean": 4,
+          "min": 4,
+          "p50": 4,
+          "p95": 4,
+          "p99": 4,
+          "max": 4
+        },
+        "targetBytes": {
+          "count": 240,
+          "mean": 9072000,
+          "min": 9072000,
+          "p50": 9072000,
+          "p95": 9072000,
+          "p99": 9072000,
+          "max": 9072000
+        },
+        "shadowMapBytes": {
+          "count": 240,
+          "mean": 0,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "visibleMeshes": {
+          "count": 240,
+          "mean": 65,
+          "min": 65,
+          "p50": 65,
+          "p95": 65,
+          "p99": 65,
+          "max": 65
+        },
+        "culledMeshes": {
+          "count": 240,
+          "mean": 0,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "redrawnScenes": {
+          "count": 240,
+          "mean": 1,
+          "min": 1,
+          "p50": 1,
+          "p95": 1,
+          "p99": 1,
+          "max": 1
+        },
+        "cacheReferences": {
+          "count": 240,
+          "mean": 29,
+          "min": 29,
+          "p50": 29,
+          "p95": 29,
+          "p99": 29,
+          "max": 29
+        },
+        "cacheEntries": {
+          "count": 240,
+          "mean": 26,
+          "min": 26,
+          "p50": 26,
+          "p95": 26,
+          "p99": 26,
+          "max": 26
+        },
+        "jsHeapBytes": {
+          "count": 240,
+          "mean": 316547693.525,
+          "min": 161507500,
+          "p50": 291728016,
+          "p95": 492817857,
+          "p99": 605310209,
+          "max": 605310209
+        },
+        "animationAndRenderCpuMs": {
+          "count": 240,
+          "mean": 10.029583331942558,
+          "min": 7.600000023841858,
+          "p50": 9.5,
+          "p95": 12.399999976158142,
+          "p99": 19.80000001192093,
+          "max": 47
+        }
+      },
+      "scene": {
+        "sceneCount": 1,
+        "modelCount": 4,
+        "boxCount": 0,
+        "viewports": [
+          {
+            "width": 900,
+            "height": 420,
+            "renderScale": 1
+          }
+        ],
+        "cameras": [
+          {
+            "fieldOfView": 60,
+            "near": 0.05,
+            "far": 200,
+            "x": 1.2800000000000002,
+            "y": 4,
+            "z": 7
+          }
+        ],
+        "lighting": [
+          {
+            "ambientColor": 16777215,
+            "ambientIntensity": 0.32,
+            "color": 16777215,
+            "intensity": 0.85,
+            "shadowBias": 0.001,
+            "shadowSlopeBias": 0.002,
+            "shadowPadding": 0.1
+          }
+        ],
+        "sourceTriangles": 12288,
+        "geometryNote": "所有网格双权重 CPU 蒙皮",
+        "environment": {
+          "createdAt": "2026-10-16 15:42:55",
+          "stageWidth": 1280,
+          "stageHeight": 800,
+          "devicePixelRatio": 2,
+          "targetFrameRate": 60,
+          "platform": "HTML5",
+          "versionLabel": "未标记，比较前请记录源码版本",
+          "versions": {
+            "hxmaker": "1.0.0",
+            "hxmakerOpenfl": "1.0.0",
+            "haxe": "4.307",
+            "lime": "8.0.2",
+            "openfl": "9.2.8"
+          },
+          "heapAvailable": true,
+          "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+          "windowWidth": 2048,
+          "windowHeight": 1001,
+          "browserDpr": 2,
+          "gl": {
+            "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+            "renderer": "WebKit WebGL",
+            "vendor": "WebKit",
+            "maxTextureUnits": 16,
+            "maxTextureSize": 16384,
+            "canvasWidth": 2560,
+            "canvasHeight": 1600
+          }
+        },
+        "targets": [
+          {
+            "width": 1800,
+            "height": 840,
+            "shadowSize": 0,
+            "shadowStatus": "关闭"
+          }
+        ],
+        "simulationStepSeconds": 0.016666666666666666
+      },
+      "budget": {
+        "targetFps": 60,
+        "frameBudgetMs": 16.666666666666668,
+        "p95ToleranceMs": 20.833333333333336,
+        "p95WithinTolerance": true,
+        "note": "仅为帧间隔预算参考，完整功能验收需结合人工画面检查；CPU 提交耗时不是 GPU 耗时"
+      }
+    },
+    {
+      "caseSpec": {
+        "id": "dense-shadow-1024",
+        "label": "高密度角色 ×4 / 阴影 1024",
+        "kind": "actors",
+        "count": 4,
+        "dense": true,
+        "animated": true,
+        "multi": true,
+        "shadow": true,
+        "shadowSize": 1024,
+        "cached": false,
+        "nestedMask": false,
+        "secondView": false,
+        "textureSwap": false,
+        "renderScale": 1
+      },
+      "complete": true,
+      "reason": "完成",
+      "samples": 240,
+      "warmupFrames": 120,
+      "setupMs": 10.399999976158142,
+      "wallDurationMs": 4578.199999988079,
+      "sampledDurationMs": 3041.100000023842,
+      "meanObservedFps": 78.9188122712566,
+      "longFramesOver33ms": 0,
+      "metrics": {
+        "frameIntervalMs": {
+          "count": 240,
+          "mean": 12.671250000099342,
+          "min": 9.899999976158142,
+          "p50": 12.300000011920929,
+          "p95": 15.5,
+          "p99": 19.80000001192093,
+          "max": 26.30000001192093
+        },
+        "animationCpuMs": {
+          "count": 240,
+          "mean": 2.1179166667163374,
+          "min": 1.699999988079071,
+          "p50": 2.100000023841858,
+          "p95": 2.5,
+          "p99": 2.600000023841858,
+          "max": 3.100000023841858
+        },
+        "renderCpuMs": {
+          "count": 240,
+          "mean": 9.601249999801318,
+          "min": 7.199999988079071,
+          "p50": 9.399999976158142,
+          "p95": 11.899999976158142,
+          "p99": 15,
+          "max": 23.19999998807907
+        },
+        "shadowCpuMs": {
+          "count": 240,
+          "mean": 2.8637500007947287,
+          "min": 1.699999988079071,
+          "p50": 2.5,
+          "p95": 4.699999988079071,
+          "p99": 8.199999988079071,
+          "max": 16.100000023841858
+        },
+        "mainCpuMs": {
+          "count": 240,
+          "mean": 5.0800000004470345,
+          "min": 3.599999964237213,
+          "p50": 5.099999964237213,
+          "p95": 6.199999988079071,
+          "p99": 7.900000035762787,
+          "max": 9.799999952316284
+        },
+        "compositeCpuMs": {
+          "count": 240,
+          "mean": 0.02333333417773247,
+          "min": 0,
+          "p50": 0,
+          "p95": 0.10000002384185791,
+          "p99": 0.10000002384185791,
+          "max": 0.19999998807907104
+        },
+        "stateCpuMs": {
+          "count": 240,
+          "mean": 1.5683333317438761,
+          "min": 1,
+          "p50": 1.5,
+          "p95": 2,
+          "p99": 3,
+          "max": 4.299999952316284
+        },
+        "mainDrawCalls": {
+          "count": 240,
+          "mean": 1,
+          "min": 1,
+          "p50": 1,
+          "p95": 1,
+          "p99": 1,
+          "max": 1
+        },
+        "shadowDrawCalls": {
+          "count": 240,
+          "mean": 1,
+          "min": 1,
+          "p50": 1,
+          "p95": 1,
+          "p99": 1,
+          "max": 1
+        },
+        "compositeDrawCalls": {
+          "count": 240,
+          "mean": 1,
+          "min": 1,
+          "p50": 1,
+          "p95": 1,
+          "p99": 1,
+          "max": 1
+        },
+        "mainTriangles": {
+          "count": 240,
+          "mean": 49154,
+          "min": 49154,
+          "p50": 49154,
+          "p95": 49154,
+          "p99": 49154,
+          "max": 49154
+        },
+        "shadowTriangles": {
+          "count": 240,
+          "mean": 49152,
+          "min": 49152,
+          "p50": 49152,
+          "p95": 49152,
+          "p99": 49152,
+          "max": 49152
+        },
+        "mainUploadedBytes": {
+          "count": 240,
+          "mean": 1912540,
+          "min": 1912540,
+          "p50": 1912540,
+          "p95": 1912540,
+          "p99": 1912540,
+          "max": 1912540
+        },
+        "shadowUploadedBytes": {
+          "count": 240,
+          "mean": 668160,
+          "min": 668160,
+          "p50": 668160,
+          "p95": 668160,
+          "p99": 668160,
+          "max": 668160
+        },
+        "textureSlots": {
+          "count": 240,
+          "mean": 4,
+          "min": 4,
+          "p50": 4,
+          "p95": 4,
+          "p99": 4,
+          "max": 4
+        },
+        "targetBytes": {
+          "count": 240,
+          "mean": 9072000,
+          "min": 9072000,
+          "p50": 9072000,
+          "p95": 9072000,
+          "p99": 9072000,
+          "max": 9072000
+        },
+        "shadowMapBytes": {
+          "count": 240,
+          "mean": 6291456,
+          "min": 6291456,
+          "p50": 6291456,
+          "p95": 6291456,
+          "p99": 6291456,
+          "max": 6291456
+        },
+        "visibleMeshes": {
+          "count": 240,
+          "mean": 65,
+          "min": 65,
+          "p50": 65,
+          "p95": 65,
+          "p99": 65,
+          "max": 65
+        },
+        "culledMeshes": {
+          "count": 240,
+          "mean": 0,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "redrawnScenes": {
+          "count": 240,
+          "mean": 1,
+          "min": 1,
+          "p50": 1,
+          "p95": 1,
+          "p99": 1,
+          "max": 1
+        },
+        "cacheReferences": {
+          "count": 240,
+          "mean": 29,
+          "min": 29,
+          "p50": 29,
+          "p95": 29,
+          "p99": 29,
+          "max": 29
+        },
+        "cacheEntries": {
+          "count": 240,
+          "mean": 26,
+          "min": 26,
+          "p50": 26,
+          "p95": 26,
+          "p99": 26,
+          "max": 26
+        },
+        "jsHeapBytes": {
+          "count": 240,
+          "mean": 276823990.5833333,
+          "min": 65577377,
+          "p50": 219890237,
+          "p95": 526310998,
+          "p99": 552525274,
+          "max": 552525274
+        },
+        "animationAndRenderCpuMs": {
+          "count": 240,
+          "mean": 11.719166666517655,
+          "min": 9.099999964237213,
+          "p50": 11.400000035762787,
+          "p95": 14.300000011920929,
+          "p99": 17.5,
+          "max": 25.400000035762787
+        }
+      },
+      "scene": {
+        "sceneCount": 1,
+        "modelCount": 4,
+        "boxCount": 0,
+        "viewports": [
+          {
+            "width": 900,
+            "height": 420,
+            "renderScale": 1
+          }
+        ],
+        "cameras": [
+          {
+            "fieldOfView": 60,
+            "near": 0.05,
+            "far": 200,
+            "x": 1.2800000000000002,
+            "y": 4,
+            "z": 7
+          }
+        ],
+        "lighting": [
+          {
+            "ambientColor": 16777215,
+            "ambientIntensity": 0.32,
+            "color": 16777215,
+            "intensity": 0.85,
+            "shadowBias": 0.001,
+            "shadowSlopeBias": 0.002,
+            "shadowPadding": 0.1
+          }
+        ],
+        "sourceTriangles": 12288,
+        "geometryNote": "所有网格双权重 CPU 蒙皮",
+        "environment": {
+          "createdAt": "2026-10-16 15:42:59",
+          "stageWidth": 1280,
+          "stageHeight": 800,
+          "devicePixelRatio": 2,
+          "targetFrameRate": 60,
+          "platform": "HTML5",
+          "versionLabel": "未标记，比较前请记录源码版本",
+          "versions": {
+            "hxmaker": "1.0.0",
+            "hxmakerOpenfl": "1.0.0",
+            "haxe": "4.307",
+            "lime": "8.0.2",
+            "openfl": "9.2.8"
+          },
+          "heapAvailable": true,
+          "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+          "windowWidth": 2048,
+          "windowHeight": 1001,
+          "browserDpr": 2,
+          "gl": {
+            "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+            "renderer": "WebKit WebGL",
+            "vendor": "WebKit",
+            "maxTextureUnits": 16,
+            "maxTextureSize": 16384,
+            "canvasWidth": 2560,
+            "canvasHeight": 1600
+          }
+        },
+        "targets": [
+          {
+            "width": 1800,
+            "height": 840,
+            "shadowSize": 1024,
+            "shadowStatus": "开启"
+          }
+        ],
+        "simulationStepSeconds": 0.016666666666666666
+      },
+      "budget": {
+        "targetFps": 60,
+        "frameBudgetMs": 16.666666666666668,
+        "p95ToleranceMs": 20.833333333333336,
+        "p95WithinTolerance": true,
+        "note": "仅为帧间隔预算参考，完整功能验收需结合人工画面检查；CPU 提交耗时不是 GPU 耗时"
+      }
+    },
+    {
+      "caseSpec": {
+        "id": "dense-shadow-512",
+        "label": "高密度角色 ×4 / 阴影 512",
+        "kind": "actors",
+        "count": 4,
+        "dense": true,
+        "animated": true,
+        "multi": true,
+        "shadow": true,
+        "shadowSize": 512,
+        "cached": false,
+        "nestedMask": false,
+        "secondView": false,
+        "textureSwap": false,
+        "renderScale": 1
+      },
+      "complete": true,
+      "reason": "完成",
+      "samples": 240,
+      "warmupFrames": 120,
+      "setupMs": 7.5,
+      "wallDurationMs": 4329.699999988079,
+      "sampledDurationMs": 2899.399999976158,
+      "meanObservedFps": 82.77574670689575,
+      "longFramesOver33ms": 0,
+      "metrics": {
+        "frameIntervalMs": {
+          "count": 240,
+          "mean": 12.080833333233992,
+          "min": 9.899999976158142,
+          "p50": 11.700000047683716,
+          "p95": 14.699999988079071,
+          "p99": 17.19999998807907,
+          "max": 18.19999998807907
+        },
+        "animationCpuMs": {
+          "count": 240,
+          "mean": 2.055833333482345,
+          "min": 1.699999988079071,
+          "p50": 2,
+          "p95": 2.5,
+          "p99": 2.600000023841858,
+          "max": 5.099999964237213
+        },
+        "renderCpuMs": {
+          "count": 240,
+          "mean": 9.055000001440446,
+          "min": 7.199999988079071,
+          "p50": 8.899999976158142,
+          "p95": 10.600000023841858,
+          "p99": 14.199999988079071,
+          "max": 15
+        },
+        "shadowCpuMs": {
+          "count": 240,
+          "mean": 2.605000000198682,
+          "min": 1.7999999523162842,
+          "p50": 2.300000011920929,
+          "p95": 4.299999952316284,
+          "p99": 4.800000011920929,
+          "max": 7.099999964237213
+        },
+        "mainCpuMs": {
+          "count": 240,
+          "mean": 4.918750002235174,
+          "min": 3.5,
+          "p50": 4.899999976158142,
+          "p95": 6,
+          "p99": 9.399999976158142,
+          "max": 11.199999988079071
+        },
+        "compositeCpuMs": {
+          "count": 240,
+          "mean": 0.020416667064030964,
+          "min": 0,
+          "p50": 0,
+          "p95": 0.10000002384185791,
+          "p99": 0.10000002384185791,
+          "max": 0.19999998807907104
+        },
+        "stateCpuMs": {
+          "count": 240,
+          "mean": 1.4366666659712792,
+          "min": 0.8999999761581421,
+          "p50": 1.4000000357627869,
+          "p95": 1.800000011920929,
+          "p99": 2.100000023841858,
+          "max": 4.300000011920929
+        },
+        "mainDrawCalls": {
+          "count": 240,
+          "mean": 1,
+          "min": 1,
+          "p50": 1,
+          "p95": 1,
+          "p99": 1,
+          "max": 1
+        },
+        "shadowDrawCalls": {
+          "count": 240,
+          "mean": 1,
+          "min": 1,
+          "p50": 1,
+          "p95": 1,
+          "p99": 1,
+          "max": 1
+        },
+        "compositeDrawCalls": {
+          "count": 240,
+          "mean": 1,
+          "min": 1,
+          "p50": 1,
+          "p95": 1,
+          "p99": 1,
+          "max": 1
+        },
+        "mainTriangles": {
+          "count": 240,
+          "mean": 49154,
+          "min": 49154,
+          "p50": 49154,
+          "p95": 49154,
+          "p99": 49154,
+          "max": 49154
+        },
+        "shadowTriangles": {
+          "count": 240,
+          "mean": 49152,
+          "min": 49152,
+          "p50": 49152,
+          "p95": 49152,
+          "p99": 49152,
+          "max": 49152
+        },
+        "mainUploadedBytes": {
+          "count": 240,
+          "mean": 1912540,
+          "min": 1912540,
+          "p50": 1912540,
+          "p95": 1912540,
+          "p99": 1912540,
+          "max": 1912540
+        },
+        "shadowUploadedBytes": {
+          "count": 240,
+          "mean": 668160,
+          "min": 668160,
+          "p50": 668160,
+          "p95": 668160,
+          "p99": 668160,
+          "max": 668160
+        },
+        "textureSlots": {
+          "count": 240,
+          "mean": 4,
+          "min": 4,
+          "p50": 4,
+          "p95": 4,
+          "p99": 4,
+          "max": 4
+        },
+        "targetBytes": {
+          "count": 240,
+          "mean": 9072000,
+          "min": 9072000,
+          "p50": 9072000,
+          "p95": 9072000,
+          "p99": 9072000,
+          "max": 9072000
+        },
+        "shadowMapBytes": {
+          "count": 240,
+          "mean": 1572864,
+          "min": 1572864,
+          "p50": 1572864,
+          "p95": 1572864,
+          "p99": 1572864,
+          "max": 1572864
+        },
+        "visibleMeshes": {
+          "count": 240,
+          "mean": 65,
+          "min": 65,
+          "p50": 65,
+          "p95": 65,
+          "p99": 65,
+          "max": 65
+        },
+        "culledMeshes": {
+          "count": 240,
+          "mean": 0,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "redrawnScenes": {
+          "count": 240,
+          "mean": 1,
+          "min": 1,
+          "p50": 1,
+          "p95": 1,
+          "p99": 1,
+          "max": 1
+        },
+        "cacheReferences": {
+          "count": 240,
+          "mean": 29,
+          "min": 29,
+          "p50": 29,
+          "p95": 29,
+          "p99": 29,
+          "max": 29
+        },
+        "cacheEntries": {
+          "count": 240,
+          "mean": 26,
+          "min": 26,
+          "p50": 26,
+          "p95": 26,
+          "p99": 26,
+          "max": 26
+        },
+        "jsHeapBytes": {
+          "count": 240,
+          "mean": 154854827.0625,
+          "min": 82012021,
+          "p50": 155178501,
+          "p95": 212588015,
+          "p99": 238152391,
+          "max": 238152391
+        },
+        "animationAndRenderCpuMs": {
+          "count": 240,
+          "mean": 11.110833334922791,
+          "min": 9.199999988079071,
+          "p50": 10.800000071525574,
+          "p95": 12.900000035762787,
+          "p99": 16.30000001192093,
+          "max": 17
+        }
+      },
+      "scene": {
+        "sceneCount": 1,
+        "modelCount": 4,
+        "boxCount": 0,
+        "viewports": [
+          {
+            "width": 900,
+            "height": 420,
+            "renderScale": 1
+          }
+        ],
+        "cameras": [
+          {
+            "fieldOfView": 60,
+            "near": 0.05,
+            "far": 200,
+            "x": 1.2800000000000002,
+            "y": 4,
+            "z": 7
+          }
+        ],
+        "lighting": [
+          {
+            "ambientColor": 16777215,
+            "ambientIntensity": 0.32,
+            "color": 16777215,
+            "intensity": 0.85,
+            "shadowBias": 0.001,
+            "shadowSlopeBias": 0.002,
+            "shadowPadding": 0.1
+          }
+        ],
+        "sourceTriangles": 12288,
+        "geometryNote": "所有网格双权重 CPU 蒙皮",
+        "environment": {
+          "createdAt": "2026-10-16 15:43:03",
+          "stageWidth": 1280,
+          "stageHeight": 800,
+          "devicePixelRatio": 2,
+          "targetFrameRate": 60,
+          "platform": "HTML5",
+          "versionLabel": "未标记，比较前请记录源码版本",
+          "versions": {
+            "hxmaker": "1.0.0",
+            "hxmakerOpenfl": "1.0.0",
+            "haxe": "4.307",
+            "lime": "8.0.2",
+            "openfl": "9.2.8"
+          },
+          "heapAvailable": true,
+          "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+          "windowWidth": 2048,
+          "windowHeight": 1001,
+          "browserDpr": 2,
+          "gl": {
+            "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+            "renderer": "WebKit WebGL",
+            "vendor": "WebKit",
+            "maxTextureUnits": 16,
+            "maxTextureSize": 16384,
+            "canvasWidth": 2560,
+            "canvasHeight": 1600
+          }
+        },
+        "targets": [
+          {
+            "width": 1800,
+            "height": 840,
+            "shadowSize": 512,
+            "shadowStatus": "开启"
+          }
+        ],
+        "simulationStepSeconds": 0.016666666666666666
+      },
+      "budget": {
+        "targetFps": 60,
+        "frameBudgetMs": 16.666666666666668,
+        "p95ToleranceMs": 20.833333333333336,
+        "p95WithinTolerance": true,
+        "note": "仅为帧间隔预算参考，完整功能验收需结合人工画面检查；CPU 提交耗时不是 GPU 耗时"
+      }
+    },
+    {
+      "caseSpec": {
+        "id": "static-redraw",
+        "label": "静止角色 ×30 / 每帧重绘",
+        "kind": "actors",
+        "count": 30,
+        "dense": false,
+        "animated": false,
+        "multi": true,
+        "shadow": false,
+        "shadowSize": 1024,
+        "cached": false,
+        "nestedMask": false,
+        "secondView": false,
+        "textureSwap": false,
+        "renderScale": 1
+      },
+      "complete": true,
+      "reason": "完成",
+      "samples": 240,
+      "warmupFrames": 120,
+      "setupMs": 5.700000047683716,
+      "wallDurationMs": 3606,
+      "sampledDurationMs": 2399.5,
+      "meanObservedFps": 100.02083767451552,
+      "longFramesOver33ms": 0,
+      "metrics": {
+        "frameIntervalMs": {
+          "count": 240,
+          "mean": 9.997916666666667,
+          "min": 5.199999988079071,
+          "p50": 10,
+          "p95": 10.800000011920929,
+          "p99": 11.099999964237213,
+          "max": 17.80000001192093
+        },
+        "animationCpuMs": {
+          "count": 240,
+          "mean": 0,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "renderCpuMs": {
+          "count": 240,
+          "mean": 4.212916666766008,
+          "min": 3,
+          "p50": 4,
+          "p95": 5.5,
+          "p99": 10.100000023841858,
+          "max": 16.80000001192093
+        },
+        "shadowCpuMs": {
+          "count": 240,
+          "mean": 0.005416666467984517,
+          "min": 0,
+          "p50": 0,
+          "p95": 0.09999996423721313,
+          "p99": 0.10000002384185791,
+          "max": 0.10000002384185791
+        },
+        "mainCpuMs": {
+          "count": 240,
+          "mean": 2.23666666423281,
+          "min": 1.5,
+          "p50": 2.199999988079071,
+          "p95": 2.800000011920929,
+          "p99": 3.300000011920929,
+          "max": 5
+        },
+        "compositeCpuMs": {
+          "count": 240,
+          "mean": 0.017083333681027095,
+          "min": 0,
+          "p50": 0,
+          "p95": 0.10000002384185791,
+          "p99": 0.10000002384185791,
+          "max": 0.10000002384185791
+        },
+        "stateCpuMs": {
+          "count": 240,
+          "mean": 1.5795833319425583,
+          "min": 0.8999999165534973,
+          "p50": 1.399999976158142,
+          "p95": 2.5,
+          "p99": 4.800000011920929,
+          "max": 14.100000023841858
+        },
+        "mainDrawCalls": {
+          "count": 240,
+          "mean": 1,
+          "min": 1,
+          "p50": 1,
+          "p95": 1,
+          "p99": 1,
+          "max": 1
+        },
+        "shadowDrawCalls": {
+          "count": 240,
+          "mean": 0,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "compositeDrawCalls": {
+          "count": 240,
+          "mean": 1,
+          "min": 1,
+          "p50": 1,
+          "p95": 1,
+          "p99": 1,
+          "max": 1
+        },
+        "mainTriangles": {
+          "count": 240,
+          "mean": 5762,
+          "min": 5762,
+          "p50": 5762,
+          "p95": 5762,
+          "p99": 5762,
+          "max": 5762
+        },
+        "shadowTriangles": {
+          "count": 240,
+          "mean": 0,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "mainUploadedBytes": {
+          "count": 240,
+          "mean": 633820,
+          "min": 633820,
+          "p50": 633820,
+          "p95": 633820,
+          "p99": 633820,
+          "max": 633820
+        },
+        "shadowUploadedBytes": {
+          "count": 240,
+          "mean": 0,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "textureSlots": {
+          "count": 240,
+          "mean": 4,
+          "min": 4,
+          "p50": 4,
+          "p95": 4,
+          "p99": 4,
+          "max": 4
+        },
+        "targetBytes": {
+          "count": 240,
+          "mean": 9072000,
+          "min": 9072000,
+          "p50": 9072000,
+          "p95": 9072000,
+          "p99": 9072000,
+          "max": 9072000
+        },
+        "shadowMapBytes": {
+          "count": 240,
+          "mean": 0,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "visibleMeshes": {
+          "count": 240,
+          "mean": 481,
+          "min": 481,
+          "p50": 481,
+          "p95": 481,
+          "p99": 481,
+          "max": 481
+        },
+        "culledMeshes": {
+          "count": 240,
+          "mean": 0,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "redrawnScenes": {
+          "count": 240,
+          "mean": 1,
+          "min": 1,
+          "p50": 1,
+          "p95": 1,
+          "p99": 1,
+          "max": 1
+        },
+        "cacheReferences": {
+          "count": 240,
+          "mean": 29,
+          "min": 29,
+          "p50": 29,
+          "p95": 29,
+          "p99": 29,
+          "max": 29
+        },
+        "cacheEntries": {
+          "count": 240,
+          "mean": 26,
+          "min": 26,
+          "p50": 26,
+          "p95": 26,
+          "p99": 26,
+          "max": 26
+        },
+        "jsHeapBytes": {
+          "count": 240,
+          "mean": 76777724.66666667,
+          "min": 29833607,
+          "p50": 79285551,
+          "p95": 119169907,
+          "p99": 129083871,
+          "max": 129083871
+        },
+        "animationAndRenderCpuMs": {
+          "count": 240,
+          "mean": 4.212916666766008,
+          "min": 3,
+          "p50": 4,
+          "p95": 5.5,
+          "p99": 10.100000023841858,
+          "max": 16.80000001192093
+        }
+      },
+      "scene": {
+        "sceneCount": 1,
+        "modelCount": 30,
+        "boxCount": 0,
+        "viewports": [
+          {
+            "width": 900,
+            "height": 420,
+            "renderScale": 1
+          }
+        ],
+        "cameras": [
+          {
+            "fieldOfView": 60,
+            "near": 0.05,
+            "far": 200,
+            "x": 3.8400000000000007,
+            "y": 8.640000000000002,
+            "z": 17.280000000000005
+          }
+        ],
+        "lighting": [
+          {
+            "ambientColor": 16777215,
+            "ambientIntensity": 0.32,
+            "color": 16777215,
+            "intensity": 0.85,
+            "shadowBias": 0.001,
+            "shadowSlopeBias": 0.002,
+            "shadowPadding": 0.1
+          }
+        ],
+        "sourceTriangles": 192,
+        "geometryNote": "躯干双权重，其余网格刚性优化",
+        "environment": {
+          "createdAt": "2026-10-16 15:43:08",
+          "stageWidth": 1280,
+          "stageHeight": 800,
+          "devicePixelRatio": 2,
+          "targetFrameRate": 60,
+          "platform": "HTML5",
+          "versionLabel": "未标记，比较前请记录源码版本",
+          "versions": {
+            "hxmaker": "1.0.0",
+            "hxmakerOpenfl": "1.0.0",
+            "haxe": "4.307",
+            "lime": "8.0.2",
+            "openfl": "9.2.8"
+          },
+          "heapAvailable": true,
+          "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+          "windowWidth": 2048,
+          "windowHeight": 1001,
+          "browserDpr": 2,
+          "gl": {
+            "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+            "renderer": "WebKit WebGL",
+            "vendor": "WebKit",
+            "maxTextureUnits": 16,
+            "maxTextureSize": 16384,
+            "canvasWidth": 2560,
+            "canvasHeight": 1600
+          }
+        },
+        "targets": [
+          {
+            "width": 1800,
+            "height": 840,
+            "shadowSize": 0,
+            "shadowStatus": "关闭"
+          }
+        ],
+        "simulationStepSeconds": 0.016666666666666666
+      },
+      "budget": {
+        "targetFps": 60,
+        "frameBudgetMs": 16.666666666666668,
+        "p95ToleranceMs": 20.833333333333336,
+        "p95WithinTolerance": true,
+        "note": "仅为帧间隔预算参考，完整功能验收需结合人工画面检查；CPU 提交耗时不是 GPU 耗时"
+      }
+    },
+    {
+      "caseSpec": {
+        "id": "static-cached",
+        "label": "静止角色 ×30 / 静态复用",
+        "kind": "actors",
+        "count": 30,
+        "dense": false,
+        "animated": false,
+        "multi": true,
+        "shadow": false,
+        "shadowSize": 1024,
+        "cached": true,
+        "nestedMask": false,
+        "secondView": false,
+        "textureSwap": false,
+        "renderScale": 1
+      },
+      "complete": true,
+      "reason": "完成",
+      "samples": 240,
+      "warmupFrames": 120,
+      "setupMs": 4.299999952316284,
+      "wallDurationMs": 3601.399999976158,
+      "sampledDurationMs": 2400.699999988079,
+      "meanObservedFps": 99.97084183829372,
+      "longFramesOver33ms": 0,
+      "metrics": {
+        "frameIntervalMs": {
+          "count": 240,
+          "mean": 10.002916666616995,
+          "min": 6,
+          "p50": 10,
+          "p95": 10.800000011920929,
+          "p99": 11.800000011920929,
+          "max": 14.099999964237213
+        },
+        "animationCpuMs": {
+          "count": 240,
+          "mean": 0.0004166667660077413,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0.10000002384185791
+        },
+        "renderCpuMs": {
+          "count": 240,
+          "mean": 1.837916669001182,
+          "min": 0.8999999761581421,
+          "p50": 1.5,
+          "p95": 3.600000023841858,
+          "p99": 4.199999988079071,
+          "max": 4.800000011920929
+        },
+        "shadowCpuMs": {
+          "count": 240,
+          "mean": 0,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "mainCpuMs": {
+          "count": 240,
+          "mean": 0,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "compositeCpuMs": {
+          "count": 240,
+          "mean": 0.02833333214124044,
+          "min": 0,
+          "p50": 0,
+          "p95": 0.10000002384185791,
+          "p99": 0.10000002384185791,
+          "max": 0.20000004768371582
+        },
+        "stateCpuMs": {
+          "count": 240,
+          "mean": 1.4570833357671897,
+          "min": 0.699999988079071,
+          "p50": 1.2000000476837158,
+          "p95": 3,
+          "p99": 3.600000023841858,
+          "max": 4.300000011920929
+        },
+        "mainDrawCalls": {
+          "count": 240,
+          "mean": 0,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "shadowDrawCalls": {
+          "count": 240,
+          "mean": 0,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "compositeDrawCalls": {
+          "count": 240,
+          "mean": 1,
+          "min": 1,
+          "p50": 1,
+          "p95": 1,
+          "p99": 1,
+          "max": 1
+        },
+        "mainTriangles": {
+          "count": 240,
+          "mean": 0,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "shadowTriangles": {
+          "count": 240,
+          "mean": 0,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "mainUploadedBytes": {
+          "count": 240,
+          "mean": 0,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "shadowUploadedBytes": {
+          "count": 240,
+          "mean": 0,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "textureSlots": {
+          "count": 240,
+          "mean": 0,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "targetBytes": {
+          "count": 240,
+          "mean": 9072000,
+          "min": 9072000,
+          "p50": 9072000,
+          "p95": 9072000,
+          "p99": 9072000,
+          "max": 9072000
+        },
+        "shadowMapBytes": {
+          "count": 240,
+          "mean": 0,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "visibleMeshes": {
+          "count": 240,
+          "mean": 481,
+          "min": 481,
+          "p50": 481,
+          "p95": 481,
+          "p99": 481,
+          "max": 481
+        },
+        "culledMeshes": {
+          "count": 240,
+          "mean": 0,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "redrawnScenes": {
+          "count": 240,
+          "mean": 0,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "cacheReferences": {
+          "count": 240,
+          "mean": 29,
+          "min": 29,
+          "p50": 29,
+          "p95": 29,
+          "p99": 29,
+          "max": 29
+        },
+        "cacheEntries": {
+          "count": 240,
+          "mean": 26,
+          "min": 26,
+          "p50": 26,
+          "p95": 26,
+          "p99": 26,
+          "max": 26
+        },
+        "jsHeapBytes": {
+          "count": 240,
+          "mean": 54264611,
+          "min": 40285413,
+          "p50": 54490921,
+          "p95": 65305789,
+          "p99": 65999649,
+          "max": 65999649
+        },
+        "animationAndRenderCpuMs": {
+          "count": 240,
+          "mean": 1.8383333357671896,
+          "min": 0.8999999761581421,
+          "p50": 1.5,
+          "p95": 3.600000023841858,
+          "p99": 4.199999988079071,
+          "max": 4.800000011920929
+        }
+      },
+      "scene": {
+        "sceneCount": 1,
+        "modelCount": 30,
+        "boxCount": 0,
+        "viewports": [
+          {
+            "width": 900,
+            "height": 420,
+            "renderScale": 1
+          }
+        ],
+        "cameras": [
+          {
+            "fieldOfView": 60,
+            "near": 0.05,
+            "far": 200,
+            "x": 3.8400000000000007,
+            "y": 8.640000000000002,
+            "z": 17.280000000000005
+          }
+        ],
+        "lighting": [
+          {
+            "ambientColor": 16777215,
+            "ambientIntensity": 0.32,
+            "color": 16777215,
+            "intensity": 0.85,
+            "shadowBias": 0.001,
+            "shadowSlopeBias": 0.002,
+            "shadowPadding": 0.1
+          }
+        ],
+        "sourceTriangles": 192,
+        "geometryNote": "躯干双权重，其余网格刚性优化",
+        "environment": {
+          "createdAt": "2026-10-16 15:43:11",
+          "stageWidth": 1280,
+          "stageHeight": 800,
+          "devicePixelRatio": 2,
+          "targetFrameRate": 60,
+          "platform": "HTML5",
+          "versionLabel": "未标记，比较前请记录源码版本",
+          "versions": {
+            "hxmaker": "1.0.0",
+            "hxmakerOpenfl": "1.0.0",
+            "haxe": "4.307",
+            "lime": "8.0.2",
+            "openfl": "9.2.8"
+          },
+          "heapAvailable": true,
+          "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+          "windowWidth": 2048,
+          "windowHeight": 1001,
+          "browserDpr": 2,
+          "gl": {
+            "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+            "renderer": "WebKit WebGL",
+            "vendor": "WebKit",
+            "maxTextureUnits": 16,
+            "maxTextureSize": 16384,
+            "canvasWidth": 2560,
+            "canvasHeight": 1600
+          }
+        },
+        "targets": [
+          {
+            "width": 1800,
+            "height": 840,
+            "shadowSize": 0,
+            "shadowStatus": "关闭"
+          }
+        ],
+        "simulationStepSeconds": 0.016666666666666666
+      },
+      "budget": {
+        "targetFps": 60,
+        "frameBudgetMs": 16.666666666666668,
+        "p95ToleranceMs": 20.833333333333336,
+        "p95WithinTolerance": true,
+        "note": "仅为帧间隔预算参考，完整功能验收需结合人工画面检查；CPU 提交耗时不是 GPU 耗时"
+      }
+    },
+    {
+      "caseSpec": {
+        "id": "two-views",
+        "label": "双 Scene3D / 角色合计 ×12",
+        "kind": "actors",
+        "count": 10,
+        "dense": false,
+        "animated": true,
+        "multi": true,
+        "shadow": false,
+        "shadowSize": 1024,
+        "cached": false,
+        "nestedMask": false,
+        "secondView": true,
+        "textureSwap": false,
+        "renderScale": 1
+      },
+      "complete": true,
+      "reason": "完成",
+      "samples": 240,
+      "warmupFrames": 120,
+      "setupMs": 2.299999952316284,
+      "wallDurationMs": 3614.5,
+      "sampledDurationMs": 2400.399999976158,
+      "meanObservedFps": 99.98333611164131,
+      "longFramesOver33ms": 0,
+      "metrics": {
+        "frameIntervalMs": {
+          "count": 240,
+          "mean": 10.001666666567326,
+          "min": 8.899999976158142,
+          "p50": 10,
+          "p95": 10.699999988079071,
+          "p99": 10.900000035762787,
+          "max": 11
+        },
+        "animationCpuMs": {
+          "count": 240,
+          "mean": 0.27375000218550366,
+          "min": 0.09999996423721313,
+          "p50": 0.30000001192092896,
+          "p95": 0.40000003576278687,
+          "p99": 0.40000003576278687,
+          "max": 0.5
+        },
+        "renderCpuMs": {
+          "count": 240,
+          "mean": 3.342083333681027,
+          "min": 2.699999988079071,
+          "p50": 3.300000011920929,
+          "p95": 3.800000011920929,
+          "p99": 4.599999964237213,
+          "max": 5.800000011920929
+        },
+        "shadowCpuMs": {
+          "count": 240,
+          "mean": 0.0029166663686434426,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0.10000002384185791,
+          "max": 0.10000002384185791
+        },
+        "mainCpuMs": {
+          "count": 240,
+          "mean": 0.9316666682561239,
+          "min": 0.6999999284744263,
+          "p50": 0.9000000357627869,
+          "p95": 1.100000023841858,
+          "p99": 1.2000000476837158,
+          "max": 1.9000000357627869
+        },
+        "compositeCpuMs": {
+          "count": 240,
+          "mean": 0.017500000447034834,
+          "min": 0,
+          "p50": 0,
+          "p95": 0.10000002384185791,
+          "p99": 0.10000002384185791,
+          "max": 0.20000004768371582
+        },
+        "stateCpuMs": {
+          "count": 240,
+          "mean": 2.223749998708566,
+          "min": 1.5999999046325684,
+          "p50": 2.199999988079071,
+          "p95": 2.600000023841858,
+          "p99": 3.099999964237213,
+          "max": 4.599999964237213
+        },
+        "mainDrawCalls": {
+          "count": 240,
+          "mean": 2,
+          "min": 2,
+          "p50": 2,
+          "p95": 2,
+          "p99": 2,
+          "max": 2
+        },
+        "shadowDrawCalls": {
+          "count": 240,
+          "mean": 0,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "compositeDrawCalls": {
+          "count": 240,
+          "mean": 2,
+          "min": 2,
+          "p50": 2,
+          "p95": 2,
+          "p99": 2,
+          "max": 2
+        },
+        "mainTriangles": {
+          "count": 240,
+          "mean": 2308,
+          "min": 2308,
+          "p50": 2308,
+          "p95": 2308,
+          "p99": 2308,
+          "max": 2308
+        },
+        "shadowTriangles": {
+          "count": 240,
+          "mean": 0,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "mainUploadedBytes": {
+          "count": 240,
+          "mean": 253880,
+          "min": 253880,
+          "p50": 253880,
+          "p95": 253880,
+          "p99": 253880,
+          "max": 253880
+        },
+        "shadowUploadedBytes": {
+          "count": 240,
+          "mean": 0,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "textureSlots": {
+          "count": 240,
+          "mean": 4,
+          "min": 4,
+          "p50": 4,
+          "p95": 4,
+          "p99": 4,
+          "max": 4
+        },
+        "targetBytes": {
+          "count": 240,
+          "mean": 10051200,
+          "min": 10051200,
+          "p50": 10051200,
+          "p95": 10051200,
+          "p99": 10051200,
+          "max": 10051200
+        },
+        "shadowMapBytes": {
+          "count": 240,
+          "mean": 0,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "visibleMeshes": {
+          "count": 240,
+          "mean": 194,
+          "min": 194,
+          "p50": 194,
+          "p95": 194,
+          "p99": 194,
+          "max": 194
+        },
+        "culledMeshes": {
+          "count": 240,
+          "mean": 0,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "redrawnScenes": {
+          "count": 240,
+          "mean": 2,
+          "min": 2,
+          "p50": 2,
+          "p95": 2,
+          "p99": 2,
+          "max": 2
+        },
+        "cacheReferences": {
+          "count": 240,
+          "mean": 29,
+          "min": 29,
+          "p50": 29,
+          "p95": 29,
+          "p99": 29,
+          "max": 29
+        },
+        "cacheEntries": {
+          "count": 240,
+          "mean": 26,
+          "min": 26,
+          "p50": 26,
+          "p95": 26,
+          "p99": 26,
+          "max": 26
+        },
+        "jsHeapBytes": {
+          "count": 240,
+          "mean": 41995426.6,
+          "min": 23903713,
+          "p50": 42416853,
+          "p95": 60241169,
+          "p99": 61117153,
+          "max": 61117153
+        },
+        "animationAndRenderCpuMs": {
+          "count": 240,
+          "mean": 3.615833335866531,
+          "min": 3,
+          "p50": 3.600000023841858,
+          "p95": 4.100000023841858,
+          "p99": 4.899999976158142,
+          "max": 6.100000023841858
+        }
+      },
+      "scene": {
+        "sceneCount": 2,
+        "modelCount": 12,
+        "boxCount": 0,
+        "viewports": [
+          {
+            "width": 900,
+            "height": 420,
+            "renderScale": 1
+          },
+          {
+            "width": 240,
+            "height": 170,
+            "renderScale": 1
+          }
+        ],
+        "cameras": [
+          {
+            "fieldOfView": 60,
+            "near": 0.05,
+            "far": 200,
+            "x": 2.5600000000000005,
+            "y": 5.760000000000001,
+            "z": 11.520000000000001
+          },
+          {
+            "fieldOfView": 60,
+            "near": 0.05,
+            "far": 200,
+            "x": 1.4000000000000001,
+            "y": 4,
+            "z": 7
+          }
+        ],
+        "lighting": [
+          {
+            "ambientColor": 16777215,
+            "ambientIntensity": 0.32,
+            "color": 16777215,
+            "intensity": 0.85,
+            "shadowBias": 0.001,
+            "shadowSlopeBias": 0.002,
+            "shadowPadding": 0.1
+          },
+          {
+            "ambientColor": 16777215,
+            "ambientIntensity": 0.32,
+            "color": 16777215,
+            "intensity": 0.85,
+            "shadowBias": 0.001,
+            "shadowSlopeBias": 0.002,
+            "shadowPadding": 0.1
+          }
+        ],
+        "sourceTriangles": 192,
+        "geometryNote": "躯干双权重，其余网格刚性优化",
+        "environment": {
+          "createdAt": "2026-10-16 15:43:15",
+          "stageWidth": 1280,
+          "stageHeight": 800,
+          "devicePixelRatio": 2,
+          "targetFrameRate": 60,
+          "platform": "HTML5",
+          "versionLabel": "未标记，比较前请记录源码版本",
+          "versions": {
+            "hxmaker": "1.0.0",
+            "hxmakerOpenfl": "1.0.0",
+            "haxe": "4.307",
+            "lime": "8.0.2",
+            "openfl": "9.2.8"
+          },
+          "heapAvailable": true,
+          "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+          "windowWidth": 2048,
+          "windowHeight": 1001,
+          "browserDpr": 2,
+          "gl": {
+            "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+            "renderer": "WebKit WebGL",
+            "vendor": "WebKit",
+            "maxTextureUnits": 16,
+            "maxTextureSize": 16384,
+            "canvasWidth": 2560,
+            "canvasHeight": 1600
+          }
+        },
+        "targets": [
+          {
+            "width": 1800,
+            "height": 840,
+            "shadowSize": 0,
+            "shadowStatus": "关闭"
+          },
+          {
+            "width": 480,
+            "height": 340,
+            "shadowSize": 0,
+            "shadowStatus": "关闭"
+          }
+        ],
+        "simulationStepSeconds": 0.016666666666666666
+      },
+      "budget": {
+        "targetFps": 60,
+        "frameBudgetMs": 16.666666666666668,
+        "p95ToleranceMs": 20.833333333333336,
+        "p95WithinTolerance": true,
+        "note": "仅为帧间隔预算参考，完整功能验收需结合人工画面检查；CPU 提交耗时不是 GPU 耗时"
+      }
+    },
+    {
+      "caseSpec": {
+        "id": "nested-mask",
+        "label": "嵌套二维遮罩 / 贴图切换",
+        "kind": "actors",
+        "count": 10,
+        "dense": false,
+        "animated": true,
+        "multi": true,
+        "shadow": false,
+        "shadowSize": 1024,
+        "cached": false,
+        "nestedMask": true,
+        "secondView": false,
+        "textureSwap": true,
+        "renderScale": 1
+      },
+      "complete": true,
+      "reason": "完成",
+      "samples": 240,
+      "warmupFrames": 120,
+      "setupMs": 1.800000011920929,
+      "wallDurationMs": 3603.100000023842,
+      "sampledDurationMs": 2400,
+      "meanObservedFps": 100,
+      "longFramesOver33ms": 0,
+      "metrics": {
+        "frameIntervalMs": {
+          "count": 240,
+          "mean": 10,
+          "min": 9,
+          "p50": 10,
+          "p95": 10.700000047683716,
+          "p99": 10.899999976158142,
+          "max": 10.899999976158142
+        },
+        "animationCpuMs": {
+          "count": 240,
+          "mean": 0.2362499992052714,
+          "min": 0.09999996423721313,
+          "p50": 0.19999998807907104,
+          "p95": 0.30000001192092896,
+          "p99": 0.40000003576278687,
+          "max": 0.5
+        },
+        "renderCpuMs": {
+          "count": 240,
+          "mean": 2.0229166614512604,
+          "min": 1.5,
+          "p50": 2,
+          "p95": 2.400000035762787,
+          "p99": 3.300000011920929,
+          "max": 3.699999988079071
+        },
+        "shadowCpuMs": {
+          "count": 240,
+          "mean": 0.0033333333830038708,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0.10000002384185791,
+          "max": 0.10000002384185791
+        },
+        "mainCpuMs": {
+          "count": 240,
+          "mean": 0.7654166641334693,
+          "min": 0.5999999642372131,
+          "p50": 0.7000000476837158,
+          "p95": 0.9000000357627869,
+          "p99": 1.100000023841858,
+          "max": 1.9000000357627869
+        },
+        "compositeCpuMs": {
+          "count": 240,
+          "mean": 0.00999999965230624,
+          "min": 0,
+          "p50": 0,
+          "p95": 0.10000002384185791,
+          "p99": 0.10000002384185791,
+          "max": 0.10000002384185791
+        },
+        "stateCpuMs": {
+          "count": 240,
+          "mean": 1.1704166633387407,
+          "min": 0.7000000476837158,
+          "p50": 1.100000023841858,
+          "p95": 1.5,
+          "p99": 1.800000011920929,
+          "max": 2.300000011920929
+        },
+        "mainDrawCalls": {
+          "count": 240,
+          "mean": 1.5,
+          "min": 1,
+          "p50": 1,
+          "p95": 2,
+          "p99": 2,
+          "max": 2
+        },
+        "shadowDrawCalls": {
+          "count": 240,
+          "mean": 0,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "compositeDrawCalls": {
+          "count": 240,
+          "mean": 1,
+          "min": 1,
+          "p50": 1,
+          "p95": 1,
+          "p99": 1,
+          "max": 1
+        },
+        "mainTriangles": {
+          "count": 240,
+          "mean": 1922,
+          "min": 1922,
+          "p50": 1922,
+          "p95": 1922,
+          "p99": 1922,
+          "max": 1922
+        },
+        "shadowTriangles": {
+          "count": 240,
+          "mean": 0,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "mainUploadedBytes": {
+          "count": 240,
+          "mean": 211420,
+          "min": 211420,
+          "p50": 211420,
+          "p95": 211420,
+          "p99": 211420,
+          "max": 211420
+        },
+        "shadowUploadedBytes": {
+          "count": 240,
+          "mean": 0,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "textureSlots": {
+          "count": 240,
+          "mean": 12.5,
+          "min": 12,
+          "p50": 12,
+          "p95": 13,
+          "p99": 13,
+          "max": 13
+        },
+        "targetBytes": {
+          "count": 240,
+          "mean": 9072000,
+          "min": 9072000,
+          "p50": 9072000,
+          "p95": 9072000,
+          "p99": 9072000,
+          "max": 9072000
+        },
+        "shadowMapBytes": {
+          "count": 240,
+          "mean": 0,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "visibleMeshes": {
+          "count": 240,
+          "mean": 161,
+          "min": 161,
+          "p50": 161,
+          "p95": 161,
+          "p99": 161,
+          "max": 161
+        },
+        "culledMeshes": {
+          "count": 240,
+          "mean": 0,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "redrawnScenes": {
+          "count": 240,
+          "mean": 1,
+          "min": 1,
+          "p50": 1,
+          "p95": 1,
+          "p99": 1,
+          "max": 1
+        },
+        "cacheReferences": {
+          "count": 240,
+          "mean": 29,
+          "min": 29,
+          "p50": 29,
+          "p95": 29,
+          "p99": 29,
+          "max": 29
+        },
+        "cacheEntries": {
+          "count": 240,
+          "mean": 26,
+          "min": 26,
+          "p50": 26,
+          "p95": 26,
+          "p99": 26,
+          "max": 26
+        },
+        "jsHeapBytes": {
+          "count": 240,
+          "mean": 42730402.85,
+          "min": 23869345,
+          "p50": 41993169,
+          "p95": 61843345,
+          "p99": 64720377,
+          "max": 64720377
+        },
+        "animationAndRenderCpuMs": {
+          "count": 240,
+          "mean": 2.2591666606565317,
+          "min": 1.699999988079071,
+          "p50": 2.199999988079071,
+          "p95": 2.699999988079071,
+          "p99": 3.599999964237213,
+          "max": 3.899999976158142
+        }
+      },
+      "scene": {
+        "sceneCount": 1,
+        "modelCount": 10,
+        "boxCount": 0,
+        "viewports": [
+          {
+            "width": 900,
+            "height": 420,
+            "renderScale": 1
+          }
+        ],
+        "cameras": [
+          {
+            "fieldOfView": 60,
+            "near": 0.05,
+            "far": 200,
+            "x": 2.5600000000000005,
+            "y": 5.760000000000001,
+            "z": 11.520000000000001
+          }
+        ],
+        "lighting": [
+          {
+            "ambientColor": 16777215,
+            "ambientIntensity": 0.32,
+            "color": 16777215,
+            "intensity": 0.85,
+            "shadowBias": 0.001,
+            "shadowSlopeBias": 0.002,
+            "shadowPadding": 0.1
+          }
+        ],
+        "sourceTriangles": 192,
+        "geometryNote": "躯干双权重，其余网格刚性优化",
+        "environment": {
+          "createdAt": "2026-10-16 15:43:19",
+          "stageWidth": 1280,
+          "stageHeight": 800,
+          "devicePixelRatio": 2,
+          "targetFrameRate": 60,
+          "platform": "HTML5",
+          "versionLabel": "未标记，比较前请记录源码版本",
+          "versions": {
+            "hxmaker": "1.0.0",
+            "hxmakerOpenfl": "1.0.0",
+            "haxe": "4.307",
+            "lime": "8.0.2",
+            "openfl": "9.2.8"
+          },
+          "heapAvailable": true,
+          "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+          "windowWidth": 2048,
+          "windowHeight": 1001,
+          "browserDpr": 2,
+          "gl": {
+            "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+            "renderer": "WebKit WebGL",
+            "vendor": "WebKit",
+            "maxTextureUnits": 16,
+            "maxTextureSize": 16384,
+            "canvasWidth": 2560,
+            "canvasHeight": 1600
+          }
+        },
+        "targets": [
+          {
+            "width": 1800,
+            "height": 840,
+            "shadowSize": 0,
+            "shadowStatus": "关闭"
+          }
+        ],
+        "simulationStepSeconds": 0.016666666666666666
+      },
+      "budget": {
+        "targetFps": 60,
+        "frameBudgetMs": 16.666666666666668,
+        "p95ToleranceMs": 20.833333333333336,
+        "p95WithinTolerance": true,
+        "note": "仅为帧间隔预算参考，完整功能验收需结合人工画面检查；CPU 提交耗时不是 GPU 耗时"
+      }
+    }
+  ],
+  "comparisons": [
+    {
+      "reference": "boxes-single",
+      "candidate": "boxes-multi",
+      "sameTargets": true,
+      "renderCpuMeanChangePercent": -4.86587640867806,
+      "mainDrawCalls": {
+        "reference": 257,
+        "candidate": 15
+      },
+      "frameP95Ms": {
+        "reference": 17.599999964237213,
+        "candidate": 17.80000001192093
+      },
+      "note": "仅供同环境对照；目标尺寸、实际阴影状态或可见负载不同需另行解释"
+    },
+    {
+      "reference": "actors-30-single",
+      "candidate": "actors-30-multi",
+      "sameTargets": true,
+      "renderCpuMeanChangePercent": -23.778227144154528,
+      "mainDrawCalls": {
+        "reference": 273.4166666666667,
+        "candidate": 1
+      },
+      "frameP95Ms": {
+        "reference": 10.800000011920929,
+        "candidate": 10.699999988079071
+      },
+      "note": "仅供同环境对照；目标尺寸、实际阴影状态或可见负载不同需另行解释"
+    },
+    {
+      "reference": "static-redraw",
+      "candidate": "static-cached",
+      "sameTargets": true,
+      "renderCpuMeanChangePercent": -56.37424581644916,
+      "mainDrawCalls": {
+        "reference": 1,
+        "candidate": 0
+      },
+      "frameP95Ms": {
+        "reference": 10.800000011920929,
+        "candidate": 10.800000011920929
+      },
+      "note": "仅供同环境对照；目标尺寸、实际阴影状态或可见负载不同需另行解释"
+    },
+    {
+      "reference": "dense-shadow-1024",
+      "candidate": "dense-shadow-512",
+      "sameTargets": true,
+      "renderCpuMeanChangePercent": -5.6893633471910015,
+      "mainDrawCalls": {
+        "reference": 1,
+        "candidate": 1
+      },
+      "frameP95Ms": {
+        "reference": 15.5,
+        "candidate": 14.699999988079071
+      },
+      "note": "仅供同环境对照；目标尺寸、实际阴影状态或可见负载不同需另行解释"
+    }
+  ],
+  "recordingInProgress": false,
+  "soakSampledMs": 0,
+  "manualVisualChecks": [],
+  "samplers": [],
+  "poolLoads": [
+    {
+      "complete": true,
+      "elapsedMs": 194.60000002384186,
+      "before": {
+        "atMs": 279.69999998807907,
+        "references": 0,
+        "cacheEntries": 0,
+        "jsHeapBytes": 13290703
+      },
+      "after": {
+        "atMs": 474.30000001192093,
+        "references": 29,
+        "cacheEntries": 26,
+        "jsHeapBytes": 18629092
+      },
+      "cacheEnabled": true
+    }
+  ],
+  "lifecycle": [],
+  "lifecycleInProgress": false,
+  "events": [],
+  "errors": [],
+  "context": {
+    "lost": false,
+    "restoredAtMs": 0,
+    "diagnosticSequence": 0
+  },
+  "resources": {
+    "atMs": 116024.5,
+    "references": 29,
+    "cacheEntries": 26,
+    "jsHeapBytes": 53605381
+  },
+  "overallVerdict": "未自动判定",
+  "acceptanceNote": "需检查目标平台、所有必需案例及人工画面记录"
+}

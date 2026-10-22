@@ -1,0 +1,307 @@
+{
+  "backend": "请求硬件 ANGLE Metal，以实际 renderer 为准",
+  "viewport": [
+    1120,
+    760
+  ],
+  "pixelRatio": 1,
+  "browser": "155.0.8059.85",
+  "runs": [
+    {
+      "variant": "before",
+      "renderer": {
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1 Pro, Unspecified Version)",
+        "target": [
+          896,
+          512
+        ]
+      },
+      "scenarios": [
+        {
+          "name": "hidden",
+          "frames": 181,
+          "p50FrameMs": 16.699999999999818,
+          "p95FrameMs": 16.700000000000728,
+          "renderCpuMs": 0.340331491746667,
+          "mainCpuMs": 0,
+          "shadowCpuMs": 0,
+          "uploadedBytes": 0,
+          "shadowUploadedBytes": 0,
+          "drawCalls": 0,
+          "skinPaletteUploadedBytes": 0,
+          "gpuSkinMeshes": 0
+        },
+        {
+          "name": "frozen",
+          "frames": 181,
+          "p50FrameMs": 16.69999999999891,
+          "p95FrameMs": 16.799999999999272,
+          "renderCpuMs": 0.3591160221251747,
+          "mainCpuMs": 0,
+          "shadowCpuMs": 0,
+          "uploadedBytes": 0,
+          "shadowUploadedBytes": 0,
+          "drawCalls": 0,
+          "skinPaletteUploadedBytes": 0,
+          "gpuSkinMeshes": 0
+        },
+        {
+          "name": "rigid_shadow",
+          "frames": 181,
+          "p50FrameMs": 16.69999999999891,
+          "p95FrameMs": 16.700000000000728,
+          "renderCpuMs": 2.732596685044797,
+          "mainCpuMs": 1.6419889502824176,
+          "shadowCpuMs": 0.7668508287488344,
+          "uploadedBytes": 0,
+          "shadowUploadedBytes": 0,
+          "drawCalls": 49.43646408839779,
+          "skinPaletteUploadedBytes": 0,
+          "gpuSkinMeshes": 0
+        },
+        {
+          "name": "animated_shadow",
+          "frames": 182,
+          "p50FrameMs": 16.700000000000728,
+          "p95FrameMs": 16.799999999999272,
+          "renderCpuMs": 5.542857142851002,
+          "mainCpuMs": 3.979670329664189,
+          "shadowCpuMs": 1.3032967033540155,
+          "uploadedBytes": 8173629.89010989,
+          "shadowUploadedBytes": 1519200,
+          "drawCalls": 50.142857142857146,
+          "skinPaletteUploadedBytes": 0,
+          "gpuSkinMeshes": 0
+        }
+      ],
+      "animation": {
+        "meanMs": 4.478333333341611,
+        "p50Ms": 4.5,
+        "p95Ms": 4.7000000001862645
+      }
+    },
+    {
+      "variant": "after",
+      "renderer": {
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1 Pro, Unspecified Version)",
+        "target": [
+          896,
+          512
+        ]
+      },
+      "scenarios": [
+        {
+          "name": "hidden",
+          "frames": 181,
+          "p50FrameMs": 16.699999999999818,
+          "p95FrameMs": 16.799999999999272,
+          "renderCpuMs": 0.3165745856600572,
+          "mainCpuMs": 0,
+          "shadowCpuMs": 0,
+          "uploadedBytes": 0,
+          "shadowUploadedBytes": 0,
+          "drawCalls": 0,
+          "skinPaletteUploadedBytes": 0,
+          "gpuSkinMeshes": 0
+        },
+        {
+          "name": "frozen",
+          "frames": 181,
+          "p50FrameMs": 16.69999999999891,
+          "p95FrameMs": 16.700000000000728,
+          "renderCpuMs": 0.3679558011029142,
+          "mainCpuMs": 0,
+          "shadowCpuMs": 0,
+          "uploadedBytes": 0,
+          "shadowUploadedBytes": 0,
+          "drawCalls": 0,
+          "skinPaletteUploadedBytes": 0,
+          "gpuSkinMeshes": 100
+        },
+        {
+          "name": "rigid_shadow",
+          "frames": 181,
+          "p50FrameMs": 16.69999999999891,
+          "p95FrameMs": 16.700000000000728,
+          "renderCpuMs": 3.1033149170972285,
+          "mainCpuMs": 1.3436464087893538,
+          "shadowCpuMs": 1.1972375690566572,
+          "uploadedBytes": 0,
+          "shadowUploadedBytes": 0,
+          "drawCalls": 67.85082872928177,
+          "skinPaletteUploadedBytes": 76022.09944751381,
+          "gpuSkinMeshes": 100
+        },
+        {
+          "name": "animated_shadow",
+          "frames": 181,
+          "p50FrameMs": 16.69999999999709,
+          "p95FrameMs": 16.700000000000728,
+          "renderCpuMs": 3.507734806595874,
+          "mainCpuMs": 2.1977900552475895,
+          "shadowCpuMs": 1.0337016574873779,
+          "uploadedBytes": 580005.4806629834,
+          "shadowUploadedBytes": 314880,
+          "drawCalls": 66.39226519337016,
+          "skinPaletteUploadedBytes": 75265.41436464088,
+          "gpuSkinMeshes": 100
+        }
+      ],
+      "animation": {
+        "meanMs": 1.6433333333322986,
+        "p50Ms": 1.6000000005587935,
+        "p95Ms": 1.800000000745058
+      }
+    },
+    {
+      "variant": "before",
+      "renderer": {
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1 Pro, Unspecified Version)",
+        "target": [
+          896,
+          512
+        ]
+      },
+      "scenarios": [
+        {
+          "name": "hidden",
+          "frames": 181,
+          "p50FrameMs": 16.699999999999818,
+          "p95FrameMs": 16.700000000000728,
+          "renderCpuMs": 0.3668508287570671,
+          "mainCpuMs": 0,
+          "shadowCpuMs": 0,
+          "uploadedBytes": 0,
+          "shadowUploadedBytes": 0,
+          "drawCalls": 0,
+          "skinPaletteUploadedBytes": 0,
+          "gpuSkinMeshes": 0
+        },
+        {
+          "name": "frozen",
+          "frames": 181,
+          "p50FrameMs": 16.69999999999891,
+          "p95FrameMs": 16.700000000000728,
+          "renderCpuMs": 0.3983425414498422,
+          "mainCpuMs": 0,
+          "shadowCpuMs": 0,
+          "uploadedBytes": 0,
+          "shadowUploadedBytes": 0,
+          "drawCalls": 0,
+          "skinPaletteUploadedBytes": 0,
+          "gpuSkinMeshes": 0
+        },
+        {
+          "name": "rigid_shadow",
+          "frames": 181,
+          "p50FrameMs": 16.69999999999891,
+          "p95FrameMs": 16.700000000000728,
+          "renderCpuMs": 3.1662983425393785,
+          "mainCpuMs": 1.8364640883689756,
+          "shadowCpuMs": 0.9220994475313066,
+          "uploadedBytes": 3077.657458563536,
+          "shadowUploadedBytes": 0,
+          "drawCalls": 49.86187845303867,
+          "skinPaletteUploadedBytes": 0,
+          "gpuSkinMeshes": 0
+        },
+        {
+          "name": "animated_shadow",
+          "frames": 181,
+          "p50FrameMs": 16.69999999999709,
+          "p95FrameMs": 16.799999999999272,
+          "renderCpuMs": 5.674585635357058,
+          "mainCpuMs": 4.123756906038243,
+          "shadowCpuMs": 1.274033149164067,
+          "uploadedBytes": 8546968.839779006,
+          "shadowUploadedBytes": 1519200,
+          "drawCalls": 50.75690607734806,
+          "skinPaletteUploadedBytes": 0,
+          "gpuSkinMeshes": 0
+        }
+      ],
+      "animation": {
+        "meanMs": 4.446111111110076,
+        "p50Ms": 4.400000000372529,
+        "p95Ms": 4.7000000001862645
+      }
+    },
+    {
+      "variant": "after",
+      "renderer": {
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1 Pro, Unspecified Version)",
+        "target": [
+          896,
+          512
+        ]
+      },
+      "scenarios": [
+        {
+          "name": "hidden",
+          "frames": 182,
+          "p50FrameMs": 16.699999999999818,
+          "p95FrameMs": 16.700000000000728,
+          "renderCpuMs": 0.34230769231690317,
+          "mainCpuMs": 0,
+          "shadowCpuMs": 0,
+          "uploadedBytes": 0,
+          "shadowUploadedBytes": 0,
+          "drawCalls": 0,
+          "skinPaletteUploadedBytes": 0,
+          "gpuSkinMeshes": 0
+        },
+        {
+          "name": "frozen",
+          "frames": 181,
+          "p50FrameMs": 16.69999999999891,
+          "p95FrameMs": 16.799999999999272,
+          "renderCpuMs": 0.4082872928043014,
+          "mainCpuMs": 0,
+          "shadowCpuMs": 0,
+          "uploadedBytes": 0,
+          "shadowUploadedBytes": 0,
+          "drawCalls": 0,
+          "skinPaletteUploadedBytes": 0,
+          "gpuSkinMeshes": 100
+        },
+        {
+          "name": "rigid_shadow",
+          "frames": 181,
+          "p50FrameMs": 16.69999999999891,
+          "p95FrameMs": 16.700000000000728,
+          "renderCpuMs": 2.9734806629690183,
+          "mainCpuMs": 1.4033149171579444,
+          "shadowCpuMs": 1.105524861866104,
+          "uploadedBytes": 3650.033149171271,
+          "shadowUploadedBytes": 0,
+          "drawCalls": 68.57458563535911,
+          "skinPaletteUploadedBytes": 76099.88950276242,
+          "gpuSkinMeshes": 100
+        },
+        {
+          "name": "animated_shadow",
+          "frames": 181,
+          "p50FrameMs": 16.69999999999709,
+          "p95FrameMs": 16.799999999999272,
+          "renderCpuMs": 3.6237569060742607,
+          "mainCpuMs": 2.311602209905646,
+          "shadowCpuMs": 1.0303867404138185,
+          "uploadedBytes": 617060.4198895028,
+          "shadowUploadedBytes": 314880,
+          "drawCalls": 68.66298342541437,
+          "skinPaletteUploadedBytes": 76587.8453038674,
+          "gpuSkinMeshes": 100
+        }
+      ],
+      "animation": {
+        "meanMs": 1.6527777777777777,
+        "p50Ms": 1.6000000005587935,
+        "p95Ms": 1.7999999998137355
+      }
+    }
+  ]
+}

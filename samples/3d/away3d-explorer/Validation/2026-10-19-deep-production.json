@@ -1,0 +1,10 @@
+{
+  "backend": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1 Pro, Unspecified Version)",
+  "pixelRatio": 2,
+  "cases": [
+    "普通 HTML5 构建成功",
+    "页面无测试命令入口",
+    "启动及定格后无脚本和 GL 错误"
+  ],
+  "screenshot": "2026-10-19-deep-preview.png"
+}

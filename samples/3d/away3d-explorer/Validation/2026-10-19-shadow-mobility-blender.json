@@ -1,0 +1,8 @@
+{
+  "backend": "Blender 5.2.2 LTS 后台导出",
+  "meshCount": 83,
+  "gate": "dynamic",
+  "staticCount": 82,
+  "invalidValueRejected": true,
+  "glbExported": true
+}

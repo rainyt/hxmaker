@@ -1,0 +1,371 @@
+{
+  "环境": "Chrome 无头浏览器，SwiftShader 软件 WebGL，相同 1120×760 视口；用于查询次数与 CPU 热点对照，不代表硬件帧率",
+  "用户录制": {
+    "总CPU采样毫秒": 5179.385,
+    "getParameter自身采样毫秒": 2646.3,
+    "顶点整理自身采样毫秒": 452.3
+  },
+  "优化前": {
+    "errors": [],
+    "idle": {
+      "frames": 22,
+      "queries": 726,
+      "queriesPerFrame": 33,
+      "p50": 216.60000000000036,
+      "p95": 266.6999999999989,
+      "cpu": [
+        {
+          "name": "getParameter",
+          "line": 0,
+          "ms": 3822.103
+        },
+        {
+          "name": "(program)",
+          "line": 0,
+          "ms": 327.448
+        },
+        {
+          "name": "drawScene",
+          "line": 42340,
+          "ms": 41.184
+        },
+        {
+          "name": "vertex",
+          "line": 40839,
+          "ms": 33.001
+        },
+        {
+          "name": "hx_render3d_openfl_Renderer3D.floatData",
+          "line": 41764,
+          "ms": 11.489
+        },
+        {
+          "name": "render",
+          "line": 41833,
+          "ms": 11.327
+        },
+        {
+          "name": "(garbage collector)",
+          "line": 0,
+          "ms": 5.348
+        },
+        {
+          "name": "save",
+          "line": 41541,
+          "ms": 4.555
+        },
+        {
+          "name": "endFill",
+          "line": 18696,
+          "ms": 3.377
+        },
+        {
+          "name": "uniformKey",
+          "line": 35174,
+          "ms": 2.706
+        },
+        {
+          "name": "Reflect.compare",
+          "line": 7587,
+          "ms": 2.625
+        },
+        {
+          "name": "hx_render3d_openfl_Renderer3D.indexData",
+          "line": 41798,
+          "ms": 2.575
+        },
+        {
+          "name": "__disable",
+          "line": 44193,
+          "ms": 2.266
+        },
+        {
+          "name": "applyLighting",
+          "line": 42721,
+          "ms": 2.07
+        },
+        {
+          "name": "draw",
+          "line": 37848,
+          "ms": 1.929
+        },
+        {
+          "name": "bufferData",
+          "line": 0,
+          "ms": 1.923
+        }
+      ]
+    },
+    "moving": {
+      "frames": 18,
+      "queries": 594,
+      "queriesPerFrame": 33,
+      "p50": 249.89999999999782,
+      "p95": 400,
+      "cpu": [
+        {
+          "name": "getParameter",
+          "line": 0,
+          "ms": 3762.212
+        },
+        {
+          "name": "(program)",
+          "line": 0,
+          "ms": 57.764
+        },
+        {
+          "name": "drawCascade",
+          "line": 43507,
+          "ms": 55.161
+        },
+        {
+          "name": "vertex",
+          "line": 40839,
+          "ms": 40.992
+        },
+        {
+          "name": "drawScene",
+          "line": 42340,
+          "ms": 30.063
+        },
+        {
+          "name": "(garbage collector)",
+          "line": 0,
+          "ms": 10.84
+        },
+        {
+          "name": "flush",
+          "line": 43520,
+          "ms": 8.122
+        },
+        {
+          "name": "hx_render3d_openfl_Renderer3D.floatData",
+          "line": 41764,
+          "ms": 7.547
+        },
+        {
+          "name": "getWorldVertices",
+          "line": 27925,
+          "ms": 5.8
+        },
+        {
+          "name": "render",
+          "line": 43212,
+          "ms": 5.337
+        },
+        {
+          "name": "render",
+          "line": 41833,
+          "ms": 5.196
+        },
+        {
+          "name": "save",
+          "line": 41541,
+          "ms": 4.445
+        },
+        {
+          "name": "hx_render3d_openfl_ShadowPass3D.floats",
+          "line": 43170,
+          "ms": 3.998
+        },
+        {
+          "name": "transformed",
+          "line": 31883,
+          "ms": 2.784
+        },
+        {
+          "name": "submit",
+          "line": 42467,
+          "ms": 2.61
+        },
+        {
+          "name": "uniformKey",
+          "line": 35174,
+          "ms": 2.572
+        }
+      ]
+    }
+  },
+  "优化后": {
+    "errors": [],
+    "backend": "软件 WebGL；帧率不代表硬件性能",
+    "idle": {
+      "frames": 191,
+      "queries": 0,
+      "queriesPerFrame": 0,
+      "p50": 16.700000000000728,
+      "p95": 33.399999999999636,
+      "cpu": [
+        {
+          "name": "(idle)",
+          "line": 0,
+          "ms": 3770.976
+        },
+        {
+          "name": "(program)",
+          "line": 0,
+          "ms": 335.751
+        },
+        {
+          "name": "update",
+          "line": 99903,
+          "ms": 10.451
+        },
+        {
+          "name": "tick",
+          "line": 1,
+          "ms": 9.606
+        },
+        {
+          "name": "clear",
+          "line": 0,
+          "ms": 7.288
+        },
+        {
+          "name": "draw",
+          "line": 37893,
+          "ms": 7.027
+        },
+        {
+          "name": "draw",
+          "line": 37893,
+          "ms": 6.164
+        },
+        {
+          "name": "getGamepads",
+          "line": 0,
+          "ms": 5.413
+        },
+        {
+          "name": "bufferData",
+          "line": 0,
+          "ms": 3.72
+        },
+        {
+          "name": "set_x",
+          "line": 4359,
+          "ms": 2.861
+        },
+        {
+          "name": "getWorldBounds",
+          "line": 15967,
+          "ms": 2.752
+        },
+        {
+          "name": "openfl_display__$internal_Context3DGraphics.buildBuffer",
+          "line": 92184,
+          "ms": 2.725
+        },
+        {
+          "name": "keys",
+          "line": 11671,
+          "ms": 2.688
+        },
+        {
+          "name": "renderDisplayObject",
+          "line": 18561,
+          "ms": 2.676
+        },
+        {
+          "name": "handleApplicationEvent",
+          "line": 325,
+          "ms": 2.582
+        },
+        {
+          "name": "(garbage collector)",
+          "line": 0,
+          "ms": 2.556
+        }
+      ]
+    },
+    "moving": {
+      "frames": 21,
+      "queries": 0,
+      "queriesPerFrame": 0,
+      "p50": 216.60000000000036,
+      "p95": 266.6999999999989,
+      "cpu": [
+        {
+          "name": "(idle)",
+          "line": 0,
+          "ms": 3658.42
+        },
+        {
+          "name": "drawCascade",
+          "line": 43673,
+          "ms": 83.691
+        },
+        {
+          "name": "(program)",
+          "line": 0,
+          "ms": 82.852
+        },
+        {
+          "name": "drawScene",
+          "line": 42506,
+          "ms": 47.91
+        },
+        {
+          "name": "vertex",
+          "line": 41001,
+          "ms": 43.741
+        },
+        {
+          "name": "(garbage collector)",
+          "line": 0,
+          "ms": 23.205
+        },
+        {
+          "name": "render",
+          "line": 41999,
+          "ms": 19.989
+        },
+        {
+          "name": "render",
+          "line": 43378,
+          "ms": 9.15
+        },
+        {
+          "name": "flush",
+          "line": 43686,
+          "ms": 8.085
+        },
+        {
+          "name": "hx_render3d_openfl_ShadowPass3D.floats",
+          "line": 43336,
+          "ms": 5.609
+        },
+        {
+          "name": "hx_render3d_openfl_Renderer3D.indexData",
+          "line": 41964,
+          "ms": 4.888
+        },
+        {
+          "name": "Reflect.compare",
+          "line": 7625,
+          "ms": 4.317
+        },
+        {
+          "name": "hx_render3d_openfl_Renderer3D.floatData",
+          "line": 41930,
+          "ms": 3.718
+        },
+        {
+          "name": "uniformKey",
+          "line": 35219,
+          "ms": 3.325
+        },
+        {
+          "name": "draw",
+          "line": 37893,
+          "ms": 2.885
+        },
+        {
+          "name": "transformed",
+          "line": 31928,
+          "ms": 2.592
+        }
+      ]
+    }
+  }
+}

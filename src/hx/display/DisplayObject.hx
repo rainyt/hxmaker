@@ -1009,7 +1009,8 @@ class DisplayObject extends EventDispatcher {
 			stage.__updateTransform(null);
 		var p = point.clone();
 		p.x = __worldTransform.__transformX(p.x, p.y);
-		p.y = __worldTransform.__transformY(p.x, p.y);
+		// X、Y 都必须使用原始输入，旋转时不能把已变换的 X 再用于 Y。
+		p.y = __worldTransform.__transformY(point.x, point.y);
 		return p;
 	}
 
@@ -1023,7 +1024,8 @@ class DisplayObject extends EventDispatcher {
 			stage.__updateTransform(null);
 		var p = point.clone();
 		p.x = __worldTransform.__transformInverseX(p.x, p.y);
-		p.y = __worldTransform.__transformInverseY(p.x, p.y);
+		// 逆变换同样使用原始输入，避免旋转与错切下的坐标串扰。
+		p.y = __worldTransform.__transformInverseY(point.x, point.y);
 		return p;
 	}
 

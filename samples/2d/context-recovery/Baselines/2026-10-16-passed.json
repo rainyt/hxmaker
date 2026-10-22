@@ -1,0 +1,220 @@
+{
+  "version": 2,
+  "pure2D": true,
+  "sequence": 4,
+  "restoredEvents": 4,
+  "generation": 4,
+  "recovered": 4,
+  "lost": false,
+  "pending": false,
+  "text": {
+    "generation": 5,
+    "resident": 11,
+    "pending": 0,
+    "prepared": 11,
+    "stale": 0,
+    "prepareTotal": 66,
+    "atlasCount": 1,
+    "glyphCount": 108,
+    "glyphWrites": 324,
+    "cpuPixels": true
+  },
+  "textSnapshots": [
+    {
+      "reason": "丢失前",
+      "at": "2026-10-16 16:44:58",
+      "sequence": 1,
+      "generation": 0,
+      "pending": false,
+      "text": {
+        "generation": 0,
+        "resident": 11,
+        "pending": 0,
+        "prepared": 11,
+        "stale": 0,
+        "prepareTotal": 11,
+        "atlasCount": 1,
+        "glyphCount": 108,
+        "glyphWrites": 108,
+        "cpuPixels": false
+      }
+    },
+    {
+      "reason": "恢复事件后的文字状态",
+      "at": "2026-10-16 16:45:00",
+      "sequence": 1,
+      "generation": 1,
+      "pending": false,
+      "text": {
+        "generation": 1,
+        "resident": 11,
+        "pending": 0,
+        "prepared": 11,
+        "stale": 0,
+        "prepareTotal": 22,
+        "atlasCount": 1,
+        "glyphCount": 108,
+        "glyphWrites": 216,
+        "cpuPixels": true
+      }
+    },
+    {
+      "reason": "丢失前",
+      "at": "2026-10-16 16:45:01",
+      "sequence": 2,
+      "generation": 1,
+      "pending": false,
+      "text": {
+        "generation": 1,
+        "resident": 11,
+        "pending": 0,
+        "prepared": 11,
+        "stale": 0,
+        "prepareTotal": 22,
+        "atlasCount": 1,
+        "glyphCount": 108,
+        "glyphWrites": 216,
+        "cpuPixels": true
+      }
+    },
+    {
+      "reason": "恢复事件后的文字状态",
+      "at": "2026-10-16 16:45:03",
+      "sequence": 2,
+      "generation": 2,
+      "pending": false,
+      "text": {
+        "generation": 2,
+        "resident": 11,
+        "pending": 0,
+        "prepared": 11,
+        "stale": 0,
+        "prepareTotal": 33,
+        "atlasCount": 1,
+        "glyphCount": 108,
+        "glyphWrites": 216,
+        "cpuPixels": true
+      }
+    },
+    {
+      "reason": "丢失前",
+      "at": "2026-10-16 16:45:03",
+      "sequence": 3,
+      "generation": 2,
+      "pending": false,
+      "text": {
+        "generation": 2,
+        "resident": 11,
+        "pending": 0,
+        "prepared": 11,
+        "stale": 0,
+        "prepareTotal": 33,
+        "atlasCount": 1,
+        "glyphCount": 108,
+        "glyphWrites": 216,
+        "cpuPixels": true
+      }
+    },
+    {
+      "reason": "恢复事件后的文字状态",
+      "at": "2026-10-16 16:45:05",
+      "sequence": 3,
+      "generation": 3,
+      "pending": false,
+      "text": {
+        "generation": 3,
+        "resident": 11,
+        "pending": 0,
+        "prepared": 11,
+        "stale": 0,
+        "prepareTotal": 44,
+        "atlasCount": 1,
+        "glyphCount": 108,
+        "glyphWrites": 216,
+        "cpuPixels": true
+      }
+    },
+    {
+      "reason": "手动请求重建文字图集",
+      "at": "2026-10-16 16:45:05",
+      "sequence": 3,
+      "generation": 3,
+      "pending": false,
+      "text": {
+        "generation": 4,
+        "resident": 11,
+        "pending": 11,
+        "prepared": 0,
+        "stale": 11,
+        "prepareTotal": 44,
+        "atlasCount": 0,
+        "glyphCount": 0,
+        "glyphWrites": 216,
+        "cpuPixels": true
+      }
+    },
+    {
+      "reason": "丢失前",
+      "at": "2026-10-16 16:45:06",
+      "sequence": 4,
+      "generation": 3,
+      "pending": false,
+      "text": {
+        "generation": 4,
+        "resident": 11,
+        "pending": 0,
+        "prepared": 11,
+        "stale": 0,
+        "prepareTotal": 55,
+        "atlasCount": 1,
+        "glyphCount": 108,
+        "glyphWrites": 324,
+        "cpuPixels": true
+      }
+    },
+    {
+      "reason": "恢复事件后的文字状态",
+      "at": "2026-10-16 16:45:07",
+      "sequence": 4,
+      "generation": 4,
+      "pending": false,
+      "text": {
+        "generation": 5,
+        "resident": 11,
+        "pending": 0,
+        "prepared": 11,
+        "stale": 0,
+        "prepareTotal": 66,
+        "atlasCount": 1,
+        "glyphCount": 108,
+        "glyphWrites": 324,
+        "cpuPixels": true
+      }
+    }
+  ],
+  "manual": [
+    {
+      "passed": true,
+      "sequence": 4,
+      "restoredEvents": 4,
+      "generation": 4,
+      "recovered": 4,
+      "text": {
+        "generation": 5,
+        "resident": 11,
+        "pending": 0,
+        "prepared": 11,
+        "stale": 0,
+        "prepareTotal": 66,
+        "atlasCount": 1,
+        "glyphCount": 108,
+        "glyphWrites": 324,
+        "cpuPixels": true
+      },
+      "at": "2026-10-16 16:45:09"
+    }
+  ],
+  "errors": [],
+  "createdAt": "2026-10-16 16:45:11",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.6.2 Safari/605.1.15"
+}

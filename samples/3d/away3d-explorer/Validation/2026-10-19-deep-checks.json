@@ -1,0 +1,103 @@
+{
+  "backend": "SwiftShader 软件 WebGL，仅验证正确性",
+  "cases": [
+    "gpu：GPU 蒙皮已启用",
+    "gpu：CPU 顶点与法线一致，主场景和阴影画面一致",
+    "gpu：负缩放与非均匀模型缩放画面一致",
+    "gpu：手动设置法线与切线保持写入值并回退 CPU",
+    "gpu：通用几何修改使相应网格回退 CPU",
+    "gpu：销毁重进释放场景与节点",
+    "gpu：销毁释放动态、不变及骨骼属性缓冲和程序",
+    "gpu：上下文恢复后重建几何与蒙皮程序",
+    "webgl1：GPU 蒙皮已启用",
+    "webgl1：CPU 顶点与法线一致，主场景和阴影画面一致",
+    "webgl1：负缩放与非均匀模型缩放画面一致",
+    "webgl1：手动设置法线与切线保持写入值并回退 CPU",
+    "webgl1：通用几何修改使相应网格回退 CPU",
+    "webgl1：销毁重进释放场景与节点",
+    "webgl1：销毁释放动态、不变及骨骼属性缓冲和程序",
+    "webgl1：上下文恢复后重建几何与蒙皮程序",
+    "fallback：uniform 容量不足时自动回退 CPU",
+    "fallback：CPU 顶点与法线一致，主场景和阴影画面一致",
+    "fallback：负缩放与非均匀模型缩放画面一致",
+    "fallback：销毁重进释放场景与节点",
+    "fallback：销毁释放动态、不变及骨骼属性缓冲和程序",
+    "attributes：顶点属性不足时自动回退 CPU",
+    "attributes：CPU 顶点与法线一致，主场景和阴影画面一致",
+    "attributes：负缩放与非均匀模型缩放画面一致",
+    "attributes：销毁重进释放场景与节点",
+    "attributes：销毁释放动态、不变及骨骼属性缓冲和程序",
+    "shader：骨骼着色器编译失败时自动回退 CPU",
+    "shader：CPU 顶点与法线一致，主场景和阴影画面一致",
+    "shader：负缩放与非均匀模型缩放画面一致",
+    "shader：销毁重进释放场景与节点",
+    "shader：销毁释放动态、不变及骨骼属性缓冲和程序"
+  ],
+  "pixels": [
+    {
+      "variant": "gpu",
+      "mean": 0.008673513849984438,
+      "largeFraction": 0.00023031434796140678,
+      "max": 116
+    },
+    {
+      "variant": "gpu",
+      "kind": "非均匀模型镜像",
+      "mean": 0.00798755057578587,
+      "largeFraction": 0.0002191098661686897,
+      "max": 116
+    },
+    {
+      "variant": "webgl1",
+      "mean": 0.008673513849984438,
+      "largeFraction": 0.00023031434796140678,
+      "max": 116
+    },
+    {
+      "variant": "webgl1",
+      "kind": "非均匀模型镜像",
+      "mean": 0.00798755057578587,
+      "largeFraction": 0.0002191098661686897,
+      "max": 116
+    },
+    {
+      "variant": "fallback",
+      "mean": 0,
+      "largeFraction": 0,
+      "max": 0
+    },
+    {
+      "variant": "fallback",
+      "kind": "非均匀模型镜像",
+      "mean": 0,
+      "largeFraction": 0,
+      "max": 0
+    },
+    {
+      "variant": "attributes",
+      "mean": 0,
+      "largeFraction": 0,
+      "max": 0
+    },
+    {
+      "variant": "attributes",
+      "kind": "非均匀模型镜像",
+      "mean": 0,
+      "largeFraction": 0,
+      "max": 0
+    },
+    {
+      "variant": "shader",
+      "mean": 0,
+      "largeFraction": 0,
+      "max": 0
+    },
+    {
+      "variant": "shader",
+      "kind": "非均匀模型镜像",
+      "mean": 0,
+      "largeFraction": 0,
+      "max": 0
+    }
+  ]
+}

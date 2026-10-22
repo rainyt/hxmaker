@@ -3,5 +3,6 @@ Export
 api_docs
 bin
 /.zcode
-samples/3d/pbr-material/.marscode/deviceInfo.json
+.claude 
 .marscode
+samples/3d/pbr-material/.marscode/deviceInfo.json

@@ -1,0 +1,14 @@
+<project>
+    <meta title="hxmaker 二维上下文恢复" package="samples.hxmaker.contextrecovery" version="1.0.0" />
+    <app main="Main" file="ContextRecovery" path="Export" />
+    <source path="Source" />
+    <assets path="Assets" rename="assets" />
+    <haxelib name="hxmaker" />
+    <haxelib name="hxmaker-openfl" />
+    <haxelib name="openfl" />
+    <haxelib name="openfl-glsl" />
+    <haxelib name="vector-math" />
+    <haxelib name="actuate" />
+    <haxelib name="spine-haxe" />
+    <window width="1000" height="700" background="#162134" hardware="true" allow-high-dpi="true" />
+</project>

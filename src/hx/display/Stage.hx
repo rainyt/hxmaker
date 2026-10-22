@@ -9,6 +9,7 @@ import hx.events.MouseEvent;
 import hx.utils.SoundManager;
 import hx.events.Event;
 import hx.events.KeyboardEvent;
+import hx.events.TouchEvent;
 
 /**
  * 游戏引擎舞台类，是所有显示对象的根容器
@@ -18,6 +19,13 @@ class Stage extends Box {
 	/** 当前舞台已经打开的菜单；浮层遵守引擎已有的舞台叠放顺序。 */
 	public var openedContextMenu(default, null):ContextMenu;
 	private var __contextMenuEvents:EventDispatcher = new ContextMenuEventDispatcher();
+	private var __pointerCaptureListeners:Array<MouseEvent->Void> = [];
+	/** 捕获期间观察舞台原始指针事件，早于 UI 冒泡；监听不得改写或取消源事件。 */
+	public function addPointerCaptureListener(listener:MouseEvent->Void):Void {
+		if (listener == null || isDisposed) throw "不能添加无效的指针捕获监听";
+		if (__pointerCaptureListeners.indexOf(listener) < 0) __pointerCaptureListeners.push(listener);
+	}
+	public function removePointerCaptureListener(listener:MouseEvent->Void):Void { __pointerCaptureListeners.remove(listener); }
 	/**
 	 * 舞台宽度的内部存储
 	 */
@@ -159,6 +167,11 @@ class Stage extends Box {
 	 * @return 是否成功处理了鼠标事件
 	 */
 	public function handleMouseEvent(event:hx.events.MouseEvent, needHitTest:Bool, dispatch:Bool = true):Bool {
+		// 已开始的拖动即使跨过会消费事件的二维 UI，也必须收到移动和抬起。
+		if (dispatch && __pointerCaptureListeners.length > 0
+			&& (event.type == MouseEvent.MOUSE_DOWN || event.type == MouseEvent.MOUSE_MOVE || event.type == MouseEvent.MOUSE_UP
+				|| event.type == TouchEvent.TOUCH_BEGIN || event.type == TouchEvent.TOUCH_MOVE || event.type == TouchEvent.TOUCH_END || event.type == TouchEvent.TOUCH_CANCEL))
+			for (listener in __pointerCaptureListeners.copy()) listener(event);
 		if (!needHitTest) {
 			// 上层舞台已经命中时，本舞台只接收原有舞台通知，不打开菜单。
 			event.target = this;
@@ -361,6 +374,7 @@ class Stage extends Box {
 	}
 
 	override public function dispose():Void {
+		__pointerCaptureListeners = [];
 		if (openedContextMenu != null)
 			openedContextMenu.close();
 		if (focus != null && focus.stage == this)

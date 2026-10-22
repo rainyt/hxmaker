@@ -6,6 +6,14 @@ This file provides guidance to Codex (Codex.ai/code) when working with code in t
 
 hxmaker 是一个使用 Haxe 编写的统一 2D 游戏引擎，核心引擎逻辑与渲染后端分离，可通过 `IEngine` 接口适配到不同的渲染后端（当前主要支持 OpenFL，后端实现在单独的 [hxmaker-openfl](https://github.com/rainyt/hxmaker-openfl) 库中）。
 
+## 应用启动规范
+
+- 项目启动类统一继承 `hx.core.HxmakerApplication`，类名使用 `HxmakerApplication`。
+- 启动类构造函数先调用 `super()`，再通过 `init(GameStage, width, height)` 初始化业务舞台。
+- 业务舞台继承 `hx.display.Stage`，在 `onStageInit()` 中先调用 `super.onStageInit()`，再创建场景和界面。
+- 启动类只负责应用初始化；场景、资源和更新逻辑放在业务舞台或场景中。
+- 示例项目与脚手架遵循同一规范，不在启动类中重复调用 `Hxmaker.init` 或 `initOpenFLRoot`。
+
 ## 构建命令
 
 ```bash

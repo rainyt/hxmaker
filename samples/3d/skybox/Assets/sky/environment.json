@@ -1,0 +1,10 @@
+{
+  "format": "hxmaker-ibl-1",
+  "layerWidth": 32,
+  "layerHeight": 16,
+  "levels": 4,
+  "radianceRange": 4.698079649666485,
+  "samples": 32,
+  "encoding": "linear-rgb-range",
+  "source": "程序生成摄影棚"
+}

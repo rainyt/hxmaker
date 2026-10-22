@@ -18,6 +18,10 @@ class FPS extends DisplayObjectContainer {
 	 */
 	public var autoShowTop:Bool = true;
 
+	/** 统计文字的刷新间隔（秒）；设为 0 可逐帧刷新，统计采集本身仍逐帧进行。 */
+	public var refreshInterval:Float = 0.25;
+	private var refreshElapsed:Float = 1e30;
+
 	public function new(autoShowTop:Bool = true) {
 		super();
 		this.autoShowTop = autoShowTop;
@@ -37,6 +41,12 @@ class FPS extends DisplayObjectContainer {
 
 	override function onUpdate(dt:Float) {
 		super.onUpdate(dt);
+		if (autoShowTop && this.parent != null && this.parent.children[this.parent.children.length - 1] != this) {
+			this.parent.addChild(this);
+		}
+		refreshElapsed += dt;
+		if (refreshElapsed < refreshInterval) return;
+		refreshElapsed = 0;
 		// 使用数组存储统计信息，方便后续追加其他内容
 		var stats:Array<String> = [
 			"FPS:" + ContextStats.fps,
@@ -61,8 +71,5 @@ class FPS extends DisplayObjectContainer {
 		this.label.data = stats.join("\n");
 		this.__bg.width = label.width + 10;
 		this.__bg.height = label.height + 10;
-		if (autoShowTop && this.parent != null && this.parent.children[this.parent.children.length - 1] != this) {
-			this.parent.addChild(this);
-		}
 	}
 }

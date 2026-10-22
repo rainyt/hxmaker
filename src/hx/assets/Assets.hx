@@ -42,7 +42,7 @@ class Assets extends Future<Assets, Dynamic> {
 	public var name:String;
 
 	/**
-	 * 尝试重新加载次数
+	 * 尝试重新加载次数，设置为`-1`则允许无限重新加载
 	 */
 	public var tryLoadTimes:Int = MAX_TRY_LOAD_TIMES;
 
@@ -366,6 +366,21 @@ class Assets extends Future<Assets, Dynamic> {
 		pushFuture(new hx.assets.JsonFuture(path, false));
 	}
 
+	/** 加载并构建模型资产；按内容识别 GLB 或 FBX，图片就绪后才完成。 */
+	public function loadModel(path:String):Void {
+		pushFuture(new ModelFuture(getNativePath(path), false));
+	}
+
+	/** 获取统一模型资产，不区分原始模型文件格式。 */
+	public function getModel(name:String):ModelAsset {
+		var value = getObject(name);
+		if (value == null)
+			return null;
+		if (!Std.isOfType(value, ModelAsset))
+			throw "资源不是模型资产：" + name;
+		return cast value;
+	}
+
 	/**
 	 * 加载字符串
 	 * @param path 
@@ -543,7 +558,6 @@ class Assets extends Future<Assets, Dynamic> {
 			newObj.retain();
 			this.assetObjects.push(newObj);
 		}
-
 	}
 
 	public function clean(dispose:Bool = true):Void {
@@ -807,7 +821,7 @@ class Assets extends Future<Assets, Dynamic> {
 		if (isError)
 			return;
 		this.isError = true;
-		if (__tryLoadTimes++ >= tryLoadTimes) {
+		if (tryLoadTimes != -1 && __tryLoadTimes++ >= tryLoadTimes) {
 			super.errorValue(data);
 		} else {
 			// 1秒后重试

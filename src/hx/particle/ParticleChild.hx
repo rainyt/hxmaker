@@ -91,6 +91,8 @@ class ParticleChild {
 	public var particle:Particle;
 
 	public var image:Image;
+	// 仅复用坐标转换的输入输出点，每次仍按当前发射器位置重新计算。
+	private var __emitPoint:Point = new Point();
 
 	public function new(parent:Particle, id:Int) {
 		this.id = id;
@@ -171,7 +173,9 @@ class ParticleChild {
 
 		if (particle.dynamicEmitPoint) {
 			if (particle.localToGlobalEmitPoint) {
-				var stagePos = this.particle.parent.localToGlobal(new Point(particle.x, particle.y));
+				__emitPoint.x = particle.x;
+				__emitPoint.y = particle.y;
+				var stagePos = this.particle.parent.localToGlobal(__emitPoint, __emitPoint);
 				posX = localX + stagePos.x / particle.scaleX;
 				posY = localY + stagePos.y / particle.scaleY;
 			} else {
@@ -350,7 +354,9 @@ class ParticleChild {
 	public function updatePosition():Void {
 		if (particle.dynamicEmitPoint) {
 			if (particle.localToGlobalEmitPoint) {
-				var stagePos = particle.parent.localToGlobal(new Point(particle.x, particle.y));
+				__emitPoint.x = particle.x;
+				__emitPoint.y = particle.y;
+				var stagePos = particle.parent.localToGlobal(__emitPoint, __emitPoint);
 				this.image.x = this.__localX - stagePos.x / particle.scaleX;
 				this.image.y = this.__localY - stagePos.y / particle.scaleY;
 			} else {

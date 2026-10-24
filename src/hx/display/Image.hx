@@ -15,6 +15,20 @@ using haxe.io.Path;
  */
 @:keep
 class Image extends DisplayObject implements IDataProider<BitmapData> implements IRootDataProvider<Dynamic> {
+	private var __worldFrameX:Float = 0;
+	private var __worldFrameY:Float = 0;
+
+	override function __prepareWorldTransform():Void {
+		super.__prepareWorldTransform();
+		var frame = this.data == null ? null : this.data.frameRect;
+		var x = frame == null ? 0. : frame.x, y = frame == null ? 0. : frame.y;
+		if (__worldFrameX != x || __worldFrameY != y) {
+			__worldFrameX = x;
+			__worldFrameY = y;
+			this.setTransformDirty();
+		}
+	}
+
 	@:noCompletion private var __bitmapData:BitmapData;
 	@:noCompletion private var __smoothing:Bool = true;
 	@:noCompletion private var __graphic:Graphics;
@@ -223,7 +237,8 @@ class Image extends DisplayObject implements IDataProider<BitmapData> implements
 	private function set_data(value:BitmapData):BitmapData {
 		__bitmapData = value;
 		__uvsDirty = true;
-		this.setDirty();
+		// 图集裁边偏移参与世界矩阵，换图时必须同步失效。
+		this.setTransformDirty();
 		return value;
 	}
 
@@ -267,7 +282,9 @@ class Image extends DisplayObject implements IDataProider<BitmapData> implements
 	 * 更新tranform
 	 * @param parent 如果提供了parent，则会根据parent更新worldTransform
 	 */
-	override private function __updateTransform(parent:DisplayObject):Void {
+	override private function __updateWorldTransform(parent:DisplayObject):Void {
+		if (parent == this)
+			parent = null;
 		if (parent != null) {
 			this.__worldAlpha = parent.__worldAlpha * this.__alpha;
 			// 世界矩阵
@@ -290,6 +307,7 @@ class Image extends DisplayObject implements IDataProider<BitmapData> implements
 			this.__worldTransform.translate(this.__originWorldX, this.__originWorldY);
 			this.__worldTransform.concat(__transform);
 		}
+		this.__markWorldTransformUpdated(parent);
 	}
 
 	override function __getRect():Rectangle {

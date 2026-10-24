@@ -1,0 +1,770 @@
+{
+  "round": 0,
+  "config": {
+    "mode": "direct",
+    "count": 50000,
+    "textures": 6,
+    "scenario": "static",
+    "warmup": 500,
+    "duration": 500,
+    "diagnostic": false,
+    "seed": 8731201,
+    "width": 960,
+    "height": 640,
+    "dpr": 1
+  },
+  "frames": 32,
+  "elapsed": 513,
+  "visibility": "visible",
+  "metrics": {
+    "interval": {
+      "mean": 16.659374999813735,
+      "p50": 16.600000023841858,
+      "p95": 19,
+      "p99": 20.099999994039536,
+      "max": 20.099999994039536
+    },
+    "frameCpu": {
+      "mean": 0.7843749988824129,
+      "p50": 0.5,
+      "p95": 2.0999999940395355,
+      "p99": 2.300000011920929,
+      "max": 2.300000011920929
+    },
+    "update": {
+      "mean": 0.003124999813735485,
+      "p50": 0,
+      "p95": 0,
+      "p99": 0.09999999403953552,
+      "max": 0.09999999403953552
+    },
+    "build": {
+      "mean": 0,
+      "p50": 0,
+      "p95": 0,
+      "p99": 0,
+      "max": 0
+    },
+    "render": {
+      "mean": 0.37187500204890966,
+      "p50": 0.30000001192092896,
+      "p95": 0.9000000059604645,
+      "p99": 1,
+      "max": 1
+    },
+    "draws": null,
+    "uploadBytes": null,
+    "uploadCalls": null
+  },
+  "gpuMs": null,
+  "memory": 233952170,
+  "fps": 60.026261490072756,
+  "overBudget": 3,
+  "directBatches": 4,
+  "fallbackBatches": 0,
+  "events": [
+    {
+      "method": "Runtime.consoleAPICalled",
+      "params": {
+        "type": "log",
+        "args": [
+          {
+            "type": "string",
+            "value": "src/hx/core/Engine.hx:350: [HXMAKER] size changed, 960, 640, scaleFactor, 1"
+          }
+        ],
+        "executionContextId": 37,
+        "timestamp": 1792811391760.891,
+        "stackTrace": {
+          "callFrames": [
+            {
+              "functionName": "haxe_Log.trace",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 9409,
+              "columnNumber": 10
+            },
+            {
+              "functionName": "__onStageSizeEventImpl",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 15918,
+              "columnNumber": 11
+            },
+            {
+              "functionName": "__onStageSizeEvent",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 15867,
+              "columnNumber": 7
+            },
+            {
+              "functionName": "init",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 15843,
+              "columnNumber": 7
+            },
+            {
+              "functionName": "hx_core_Hxmaker.init",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 17068,
+              "columnNumber": 26
+            },
+            {
+              "functionName": "init",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 3346,
+              "columnNumber": 31
+            },
+            {
+              "functionName": "Main",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 3354,
+              "columnNumber": 6
+            },
+            {
+              "functionName": "DocumentClass",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 3364,
+              "columnNumber": 6
+            },
+            {
+              "functionName": "ApplicationMain.start",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 955,
+              "columnNumber": 2
+            },
+            {
+              "functionName": "tmp",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 925,
+              "columnNumber": 18
+            },
+            {
+              "functionName": "dispatch",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 58660,
+              "columnNumber": 15
+            },
+            {
+              "functionName": "display_onUnload",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 79959,
+              "columnNumber": 20
+            },
+            {
+              "functionName": "__dispatchEvent",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 1127,
+              "columnNumber": 14
+            },
+            {
+              "functionName": "__dispatchEvent",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 1886,
+              "columnNumber": 71
+            },
+            {
+              "functionName": "__dispatchWithCapture",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 1926,
+              "columnNumber": 14
+            },
+            {
+              "functionName": "dispatchEvent",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 1776,
+              "columnNumber": 14
+            },
+            {
+              "functionName": "onLoaded",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 80033,
+              "columnNumber": 7
+            },
+            {
+              "functionName": "this_onComplete",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 80056,
+              "columnNumber": 7
+            },
+            {
+              "functionName": "__dispatchEvent",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 1127,
+              "columnNumber": 14
+            },
+            {
+              "functionName": "__dispatchEvent",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 1886,
+              "columnNumber": 71
+            },
+            {
+              "functionName": "__dispatchWithCapture",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 1926,
+              "columnNumber": 14
+            },
+            {
+              "functionName": "dispatchEvent",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 1776,
+              "columnNumber": 14
+            },
+            {
+              "functionName": "start",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 79932,
+              "columnNumber": 16
+            },
+            {
+              "functionName": "",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 921,
+              "columnNumber": 12
+            },
+            {
+              "functionName": "dispatch",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 58660,
+              "columnNumber": 15
+            },
+            {
+              "functionName": "start",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 69512,
+              "columnNumber": 18
+            },
+            {
+              "functionName": "updateProgress",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 69525,
+              "columnNumber": 8
+            },
+            {
+              "functionName": "load",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 69491,
+              "columnNumber": 7
+            },
+            {
+              "functionName": "ApplicationMain.create",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 928,
+              "columnNumber": 17
+            },
+            {
+              "functionName": "lime_system_System.embed.$hx_exports.lime.embed",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 66079,
+              "columnNumber": 59
+            },
+            {
+              "functionName": "",
+              "scriptId": "50",
+              "url": "http://127.0.0.1:8765/index.html?count=50000&textures=6&scenario=static&warmup=500&duration=500&mode=direct",
+              "lineNumber": 41,
+              "columnNumber": 7
+            }
+          ]
+        }
+      }
+    },
+    {
+      "method": "Runtime.consoleAPICalled",
+      "params": {
+        "type": "log",
+        "args": [
+          {
+            "type": "string",
+            "value": "src/hx/core/Engine.hx:218: [HXMAKER] init, 960, 640"
+          }
+        ],
+        "executionContextId": 37,
+        "timestamp": 1792811391761.031,
+        "stackTrace": {
+          "callFrames": [
+            {
+              "functionName": "haxe_Log.trace",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 9409,
+              "columnNumber": 10
+            },
+            {
+              "functionName": "init",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 15845,
+              "columnNumber": 11
+            },
+            {
+              "functionName": "hx_core_Hxmaker.init",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 17068,
+              "columnNumber": 26
+            },
+            {
+              "functionName": "init",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 3346,
+              "columnNumber": 31
+            },
+            {
+              "functionName": "Main",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 3354,
+              "columnNumber": 6
+            },
+            {
+              "functionName": "DocumentClass",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 3364,
+              "columnNumber": 6
+            },
+            {
+              "functionName": "ApplicationMain.start",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 955,
+              "columnNumber": 2
+            },
+            {
+              "functionName": "tmp",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 925,
+              "columnNumber": 18
+            },
+            {
+              "functionName": "dispatch",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 58660,
+              "columnNumber": 15
+            },
+            {
+              "functionName": "display_onUnload",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 79959,
+              "columnNumber": 20
+            },
+            {
+              "functionName": "__dispatchEvent",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 1127,
+              "columnNumber": 14
+            },
+            {
+              "functionName": "__dispatchEvent",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 1886,
+              "columnNumber": 71
+            },
+            {
+              "functionName": "__dispatchWithCapture",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 1926,
+              "columnNumber": 14
+            },
+            {
+              "functionName": "dispatchEvent",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 1776,
+              "columnNumber": 14
+            },
+            {
+              "functionName": "onLoaded",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 80033,
+              "columnNumber": 7
+            },
+            {
+              "functionName": "this_onComplete",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 80056,
+              "columnNumber": 7
+            },
+            {
+              "functionName": "__dispatchEvent",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 1127,
+              "columnNumber": 14
+            },
+            {
+              "functionName": "__dispatchEvent",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 1886,
+              "columnNumber": 71
+            },
+            {
+              "functionName": "__dispatchWithCapture",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 1926,
+              "columnNumber": 14
+            },
+            {
+              "functionName": "dispatchEvent",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 1776,
+              "columnNumber": 14
+            },
+            {
+              "functionName": "start",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 79932,
+              "columnNumber": 16
+            },
+            {
+              "functionName": "",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 921,
+              "columnNumber": 12
+            },
+            {
+              "functionName": "dispatch",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 58660,
+              "columnNumber": 15
+            },
+            {
+              "functionName": "start",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 69512,
+              "columnNumber": 18
+            },
+            {
+              "functionName": "updateProgress",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 69525,
+              "columnNumber": 8
+            },
+            {
+              "functionName": "load",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 69491,
+              "columnNumber": 7
+            },
+            {
+              "functionName": "ApplicationMain.create",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 928,
+              "columnNumber": 17
+            },
+            {
+              "functionName": "lime_system_System.embed.$hx_exports.lime.embed",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 66079,
+              "columnNumber": 59
+            },
+            {
+              "functionName": "",
+              "scriptId": "50",
+              "url": "http://127.0.0.1:8765/index.html?count=50000&textures=6&scenario=static&warmup=500&duration=500&mode=direct",
+              "lineNumber": 41,
+              "columnNumber": 7
+            }
+          ]
+        }
+      }
+    },
+    {
+      "method": "Runtime.consoleAPICalled",
+      "params": {
+        "type": "log",
+        "args": [
+          {
+            "type": "string",
+            "value": "src/hx/core/Engine.hx:350: [HXMAKER] size changed, 960, 640, scaleFactor, 1"
+          }
+        ],
+        "executionContextId": 37,
+        "timestamp": 1792811391785.016,
+        "stackTrace": {
+          "callFrames": [
+            {
+              "functionName": "haxe_Log.trace",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 9409,
+              "columnNumber": 10
+            },
+            {
+              "functionName": "__onStageSizeEventImpl",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 15918,
+              "columnNumber": 11
+            },
+            {
+              "functionName": "__onStageSizeEvent",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 15867,
+              "columnNumber": 7
+            },
+            {
+              "functionName": "__dispatchEvent",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 1127,
+              "columnNumber": 14
+            },
+            {
+              "functionName": "__dispatchEvent",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 1886,
+              "columnNumber": 71
+            },
+            {
+              "functionName": "__dispatchEvent",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 81142,
+              "columnNumber": 76
+            },
+            {
+              "functionName": "__dispatchWithCapture",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 1926,
+              "columnNumber": 14
+            },
+            {
+              "functionName": "dispatchEvent",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 1776,
+              "columnNumber": 14
+            },
+            {
+              "functionName": "ApplicationMain.start",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 956,
+              "columnNumber": 8
+            },
+            {
+              "functionName": "tmp",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 925,
+              "columnNumber": 18
+            },
+            {
+              "functionName": "dispatch",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 58660,
+              "columnNumber": 15
+            },
+            {
+              "functionName": "display_onUnload",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 79959,
+              "columnNumber": 20
+            },
+            {
+              "functionName": "__dispatchEvent",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 1127,
+              "columnNumber": 14
+            },
+            {
+              "functionName": "__dispatchEvent",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 1886,
+              "columnNumber": 71
+            },
+            {
+              "functionName": "__dispatchWithCapture",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 1926,
+              "columnNumber": 14
+            },
+            {
+              "functionName": "dispatchEvent",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 1776,
+              "columnNumber": 14
+            },
+            {
+              "functionName": "onLoaded",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 80033,
+              "columnNumber": 7
+            },
+            {
+              "functionName": "this_onComplete",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 80056,
+              "columnNumber": 7
+            },
+            {
+              "functionName": "__dispatchEvent",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 1127,
+              "columnNumber": 14
+            },
+            {
+              "functionName": "__dispatchEvent",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 1886,
+              "columnNumber": 71
+            },
+            {
+              "functionName": "__dispatchWithCapture",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 1926,
+              "columnNumber": 14
+            },
+            {
+              "functionName": "dispatchEvent",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 1776,
+              "columnNumber": 14
+            },
+            {
+              "functionName": "start",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 79932,
+              "columnNumber": 16
+            },
+            {
+              "functionName": "",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 921,
+              "columnNumber": 12
+            },
+            {
+              "functionName": "dispatch",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 58660,
+              "columnNumber": 15
+            },
+            {
+              "functionName": "start",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 69512,
+              "columnNumber": 18
+            },
+            {
+              "functionName": "updateProgress",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 69525,
+              "columnNumber": 8
+            },
+            {
+              "functionName": "load",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 69491,
+              "columnNumber": 7
+            },
+            {
+              "functionName": "ApplicationMain.create",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 928,
+              "columnNumber": 17
+            },
+            {
+              "functionName": "lime_system_System.embed.$hx_exports.lime.embed",
+              "scriptId": "46",
+              "url": "http://127.0.0.1:8765/render-benchmark.js",
+              "lineNumber": 66079,
+              "columnNumber": 59
+            },
+            {
+              "functionName": "",
+              "scriptId": "50",
+              "url": "http://127.0.0.1:8765/index.html?count=50000&textures=6&scenario=static&warmup=500&duration=500&mode=direct",
+              "lineNumber": 41,
+              "columnNumber": 7
+            }
+          ]
+        }
+      }
+    },
+    {
+      "method": "Log.entryAdded",
+      "params": {
+        "entry": {
+          "source": "other",
+          "level": "warning",
+          "text": "<meta name=\"apple-mobile-web-app-capable\" content=\"yes\"> is deprecated. Please include <meta name=\"mobile-web-app-capable\" content=\"yes\">",
+          "timestamp": 1792811391837.604,
+          "url": "http://127.0.0.1:8765/index.html?count=50000&textures=6&scenario=static&warmup=500&duration=500&mode=direct"
+        }
+      }
+    }
+  ]
+}

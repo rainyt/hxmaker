@@ -1,0 +1,11 @@
+<project>
+    <meta title="hxmaker 二维渲染性能基线" package="hxmaker.examples.renderbenchmark" version="1.0.0" />
+    <app main="Main" file="render-benchmark" path="Export" />
+    <haxelib name="hxmaker-openfl" />
+    <haxelib name="spine-haxe" />
+    <haxelib name="actuate" />
+    <source path="../../src" />
+    <source path="Source" />
+    <window width="960" height="640" background="#152031" fps="60" resizable="false" />
+    <define name="openfl_always_render" />
+</project>

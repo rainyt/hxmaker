@@ -1,0 +1,770 @@
+{
+  "round": 0,
+  "config": {
+    "mode": "graphics",
+    "count": 160,
+    "textures": 6,
+    "scenario": "cache",
+    "warmup": 500,
+    "duration": 500,
+    "diagnostic": false,
+    "seed": 8731201,
+    "width": 960,
+    "height": 640,
+    "dpr": 1
+  },
+  "frames": 32,
+  "elapsed": 515.8000000119209,
+  "visibility": "visible",
+  "metrics": {
+    "interval": {
+      "mean": 16.643749999813735,
+      "p50": 16.69999998807907,
+      "p95": 17.400000005960464,
+      "p99": 17.5,
+      "max": 17.5
+    },
+    "frameCpu": {
+      "mean": 0.3218749975785613,
+      "p50": 0.29999998211860657,
+      "p95": 0.8999999761581421,
+      "p99": 1,
+      "max": 1
+    },
+    "update": {
+      "mean": 0.003124999813735485,
+      "p50": 0,
+      "p95": 0,
+      "p99": 0.09999999403953552,
+      "max": 0.09999999403953552
+    },
+    "build": {
+      "mean": 0,
+      "p50": 0,
+      "p95": 0,
+      "p99": 0,
+      "max": 0
+    },
+    "render": {
+      "mean": 0.24999999906867743,
+      "p50": 0.19999998807907104,
+      "p95": 0.699999988079071,
+      "p99": 0.800000011920929,
+      "max": 0.800000011920929
+    },
+    "draws": null,
+    "uploadBytes": null,
+    "uploadCalls": null
+  },
+  "gpuMs": null,
+  "memory": 163143807,
+  "fps": 60.08261359436373,
+  "overBudget": 0,
+  "directBatches": 0,
+  "fallbackBatches": 0,
+  "events": [
+    {
+      "method": "Runtime.consoleAPICalled",
+      "params": {
+        "type": "log",
+        "args": [
+          {
+            "type": "string",
+            "value": "src/hx/core/Engine.hx:350: [HXMAKER] size changed, 960, 640, scaleFactor, 1"
+          }
+        ],
+        "executionContextId": 34,
+        "timestamp": 1792811387612.74,
+        "stackTrace": {
+          "callFrames": [
+            {
+              "functionName": "haxe_Log.trace",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 9409,
+              "columnNumber": 10
+            },
+            {
+              "functionName": "__onStageSizeEventImpl",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 15918,
+              "columnNumber": 11
+            },
+            {
+              "functionName": "__onStageSizeEvent",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 15867,
+              "columnNumber": 7
+            },
+            {
+              "functionName": "init",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 15843,
+              "columnNumber": 7
+            },
+            {
+              "functionName": "hx_core_Hxmaker.init",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 17068,
+              "columnNumber": 26
+            },
+            {
+              "functionName": "init",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 3346,
+              "columnNumber": 31
+            },
+            {
+              "functionName": "Main",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 3354,
+              "columnNumber": 6
+            },
+            {
+              "functionName": "DocumentClass",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 3364,
+              "columnNumber": 6
+            },
+            {
+              "functionName": "ApplicationMain.start",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 955,
+              "columnNumber": 2
+            },
+            {
+              "functionName": "tmp",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 925,
+              "columnNumber": 18
+            },
+            {
+              "functionName": "dispatch",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 57917,
+              "columnNumber": 15
+            },
+            {
+              "functionName": "display_onUnload",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 79216,
+              "columnNumber": 20
+            },
+            {
+              "functionName": "__dispatchEvent",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 1127,
+              "columnNumber": 14
+            },
+            {
+              "functionName": "__dispatchEvent",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 1886,
+              "columnNumber": 71
+            },
+            {
+              "functionName": "__dispatchWithCapture",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 1926,
+              "columnNumber": 14
+            },
+            {
+              "functionName": "dispatchEvent",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 1776,
+              "columnNumber": 14
+            },
+            {
+              "functionName": "onLoaded",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 79290,
+              "columnNumber": 7
+            },
+            {
+              "functionName": "this_onComplete",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 79313,
+              "columnNumber": 7
+            },
+            {
+              "functionName": "__dispatchEvent",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 1127,
+              "columnNumber": 14
+            },
+            {
+              "functionName": "__dispatchEvent",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 1886,
+              "columnNumber": 71
+            },
+            {
+              "functionName": "__dispatchWithCapture",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 1926,
+              "columnNumber": 14
+            },
+            {
+              "functionName": "dispatchEvent",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 1776,
+              "columnNumber": 14
+            },
+            {
+              "functionName": "start",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 79189,
+              "columnNumber": 16
+            },
+            {
+              "functionName": "",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 921,
+              "columnNumber": 12
+            },
+            {
+              "functionName": "dispatch",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 57917,
+              "columnNumber": 15
+            },
+            {
+              "functionName": "start",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 68769,
+              "columnNumber": 18
+            },
+            {
+              "functionName": "updateProgress",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 68782,
+              "columnNumber": 8
+            },
+            {
+              "functionName": "load",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 68748,
+              "columnNumber": 7
+            },
+            {
+              "functionName": "ApplicationMain.create",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 928,
+              "columnNumber": 17
+            },
+            {
+              "functionName": "lime_system_System.embed.$hx_exports.lime.embed",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 65336,
+              "columnNumber": 59
+            },
+            {
+              "functionName": "",
+              "scriptId": "39",
+              "url": "http://127.0.0.1:8765/baseline.html?count=160&textures=6&scenario=cache&warmup=500&duration=500&mode=graphics",
+              "lineNumber": 41,
+              "columnNumber": 7
+            }
+          ]
+        }
+      }
+    },
+    {
+      "method": "Runtime.consoleAPICalled",
+      "params": {
+        "type": "log",
+        "args": [
+          {
+            "type": "string",
+            "value": "src/hx/core/Engine.hx:218: [HXMAKER] init, 960, 640"
+          }
+        ],
+        "executionContextId": 34,
+        "timestamp": 1792811387612.892,
+        "stackTrace": {
+          "callFrames": [
+            {
+              "functionName": "haxe_Log.trace",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 9409,
+              "columnNumber": 10
+            },
+            {
+              "functionName": "init",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 15845,
+              "columnNumber": 11
+            },
+            {
+              "functionName": "hx_core_Hxmaker.init",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 17068,
+              "columnNumber": 26
+            },
+            {
+              "functionName": "init",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 3346,
+              "columnNumber": 31
+            },
+            {
+              "functionName": "Main",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 3354,
+              "columnNumber": 6
+            },
+            {
+              "functionName": "DocumentClass",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 3364,
+              "columnNumber": 6
+            },
+            {
+              "functionName": "ApplicationMain.start",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 955,
+              "columnNumber": 2
+            },
+            {
+              "functionName": "tmp",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 925,
+              "columnNumber": 18
+            },
+            {
+              "functionName": "dispatch",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 57917,
+              "columnNumber": 15
+            },
+            {
+              "functionName": "display_onUnload",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 79216,
+              "columnNumber": 20
+            },
+            {
+              "functionName": "__dispatchEvent",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 1127,
+              "columnNumber": 14
+            },
+            {
+              "functionName": "__dispatchEvent",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 1886,
+              "columnNumber": 71
+            },
+            {
+              "functionName": "__dispatchWithCapture",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 1926,
+              "columnNumber": 14
+            },
+            {
+              "functionName": "dispatchEvent",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 1776,
+              "columnNumber": 14
+            },
+            {
+              "functionName": "onLoaded",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 79290,
+              "columnNumber": 7
+            },
+            {
+              "functionName": "this_onComplete",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 79313,
+              "columnNumber": 7
+            },
+            {
+              "functionName": "__dispatchEvent",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 1127,
+              "columnNumber": 14
+            },
+            {
+              "functionName": "__dispatchEvent",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 1886,
+              "columnNumber": 71
+            },
+            {
+              "functionName": "__dispatchWithCapture",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 1926,
+              "columnNumber": 14
+            },
+            {
+              "functionName": "dispatchEvent",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 1776,
+              "columnNumber": 14
+            },
+            {
+              "functionName": "start",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 79189,
+              "columnNumber": 16
+            },
+            {
+              "functionName": "",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 921,
+              "columnNumber": 12
+            },
+            {
+              "functionName": "dispatch",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 57917,
+              "columnNumber": 15
+            },
+            {
+              "functionName": "start",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 68769,
+              "columnNumber": 18
+            },
+            {
+              "functionName": "updateProgress",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 68782,
+              "columnNumber": 8
+            },
+            {
+              "functionName": "load",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 68748,
+              "columnNumber": 7
+            },
+            {
+              "functionName": "ApplicationMain.create",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 928,
+              "columnNumber": 17
+            },
+            {
+              "functionName": "lime_system_System.embed.$hx_exports.lime.embed",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 65336,
+              "columnNumber": 59
+            },
+            {
+              "functionName": "",
+              "scriptId": "39",
+              "url": "http://127.0.0.1:8765/baseline.html?count=160&textures=6&scenario=cache&warmup=500&duration=500&mode=graphics",
+              "lineNumber": 41,
+              "columnNumber": 7
+            }
+          ]
+        }
+      }
+    },
+    {
+      "method": "Runtime.consoleAPICalled",
+      "params": {
+        "type": "log",
+        "args": [
+          {
+            "type": "string",
+            "value": "src/hx/core/Engine.hx:350: [HXMAKER] size changed, 960, 640, scaleFactor, 1"
+          }
+        ],
+        "executionContextId": 34,
+        "timestamp": 1792811387622.272,
+        "stackTrace": {
+          "callFrames": [
+            {
+              "functionName": "haxe_Log.trace",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 9409,
+              "columnNumber": 10
+            },
+            {
+              "functionName": "__onStageSizeEventImpl",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 15918,
+              "columnNumber": 11
+            },
+            {
+              "functionName": "__onStageSizeEvent",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 15867,
+              "columnNumber": 7
+            },
+            {
+              "functionName": "__dispatchEvent",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 1127,
+              "columnNumber": 14
+            },
+            {
+              "functionName": "__dispatchEvent",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 1886,
+              "columnNumber": 71
+            },
+            {
+              "functionName": "__dispatchEvent",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 80399,
+              "columnNumber": 76
+            },
+            {
+              "functionName": "__dispatchWithCapture",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 1926,
+              "columnNumber": 14
+            },
+            {
+              "functionName": "dispatchEvent",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 1776,
+              "columnNumber": 14
+            },
+            {
+              "functionName": "ApplicationMain.start",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 956,
+              "columnNumber": 8
+            },
+            {
+              "functionName": "tmp",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 925,
+              "columnNumber": 18
+            },
+            {
+              "functionName": "dispatch",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 57917,
+              "columnNumber": 15
+            },
+            {
+              "functionName": "display_onUnload",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 79216,
+              "columnNumber": 20
+            },
+            {
+              "functionName": "__dispatchEvent",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 1127,
+              "columnNumber": 14
+            },
+            {
+              "functionName": "__dispatchEvent",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 1886,
+              "columnNumber": 71
+            },
+            {
+              "functionName": "__dispatchWithCapture",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 1926,
+              "columnNumber": 14
+            },
+            {
+              "functionName": "dispatchEvent",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 1776,
+              "columnNumber": 14
+            },
+            {
+              "functionName": "onLoaded",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 79290,
+              "columnNumber": 7
+            },
+            {
+              "functionName": "this_onComplete",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 79313,
+              "columnNumber": 7
+            },
+            {
+              "functionName": "__dispatchEvent",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 1127,
+              "columnNumber": 14
+            },
+            {
+              "functionName": "__dispatchEvent",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 1886,
+              "columnNumber": 71
+            },
+            {
+              "functionName": "__dispatchWithCapture",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 1926,
+              "columnNumber": 14
+            },
+            {
+              "functionName": "dispatchEvent",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 1776,
+              "columnNumber": 14
+            },
+            {
+              "functionName": "start",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 79189,
+              "columnNumber": 16
+            },
+            {
+              "functionName": "",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 921,
+              "columnNumber": 12
+            },
+            {
+              "functionName": "dispatch",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 57917,
+              "columnNumber": 15
+            },
+            {
+              "functionName": "start",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 68769,
+              "columnNumber": 18
+            },
+            {
+              "functionName": "updateProgress",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 68782,
+              "columnNumber": 8
+            },
+            {
+              "functionName": "load",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 68748,
+              "columnNumber": 7
+            },
+            {
+              "functionName": "ApplicationMain.create",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 928,
+              "columnNumber": 17
+            },
+            {
+              "functionName": "lime_system_System.embed.$hx_exports.lime.embed",
+              "scriptId": "45",
+              "url": "http://127.0.0.1:8765/baseline.js",
+              "lineNumber": 65336,
+              "columnNumber": 59
+            },
+            {
+              "functionName": "",
+              "scriptId": "39",
+              "url": "http://127.0.0.1:8765/baseline.html?count=160&textures=6&scenario=cache&warmup=500&duration=500&mode=graphics",
+              "lineNumber": 41,
+              "columnNumber": 7
+            }
+          ]
+        }
+      }
+    },
+    {
+      "method": "Log.entryAdded",
+      "params": {
+        "entry": {
+          "source": "other",
+          "level": "warning",
+          "text": "<meta name=\"apple-mobile-web-app-capable\" content=\"yes\"> is deprecated. Please include <meta name=\"mobile-web-app-capable\" content=\"yes\">",
+          "timestamp": 1792811387682.946,
+          "url": "http://127.0.0.1:8765/baseline.html?count=160&textures=6&scenario=cache&warmup=500&duration=500&mode=graphics"
+        }
+      }
+    }
+  ]
+}

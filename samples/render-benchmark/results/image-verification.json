@@ -1,0 +1,90 @@
+[
+  {
+    "first": "results/final-smoke/0-graphics-1000-1-rebuild.png",
+    "second": "results/final-smoke/0-direct-1000-1-rebuild.png",
+    "size": [
+      960,
+      640
+    ],
+    "differentPixels": 0,
+    "maxChannelDifference": 0,
+    "bounds": null
+  },
+  {
+    "first": "results/final-smoke/0-graphics-1000-6-static.png",
+    "second": "results/final-smoke/0-direct-1000-6-static.png",
+    "size": [
+      960,
+      640
+    ],
+    "differentPixels": 0,
+    "maxChannelDifference": 0,
+    "bounds": null
+  },
+  {
+    "first": "results/final-smoke/0-graphics-160-6-cache.png",
+    "second": "results/final-smoke/0-direct-160-6-cache.png",
+    "size": [
+      960,
+      640
+    ],
+    "differentPixels": 0,
+    "maxChannelDifference": 0,
+    "bounds": null
+  },
+  {
+    "first": "results/final-smoke/0-graphics-160-6-correctness.png",
+    "second": "results/final-smoke/0-direct-160-6-correctness.png",
+    "size": [
+      960,
+      640
+    ],
+    "differentPixels": 0,
+    "maxChannelDifference": 0,
+    "bounds": null
+  },
+  {
+    "first": "results/final-smoke/0-graphics-50000-6-static.png",
+    "second": "results/final-smoke/0-direct-50000-6-static.png",
+    "size": [
+      960,
+      640
+    ],
+    "differentPixels": 0,
+    "maxChannelDifference": 0,
+    "bounds": null
+  },
+  {
+    "first": "results/context/0-graphics-160-6-correctness-restored.png",
+    "second": "results/context/0-direct-160-6-correctness-restored.png",
+    "size": [
+      960,
+      640
+    ],
+    "differentPixels": 0,
+    "maxChannelDifference": 0,
+    "bounds": null
+  },
+  {
+    "first": "results/context/0-graphics-160-6-correctness.png",
+    "second": "results/context/0-direct-160-6-correctness.png",
+    "size": [
+      960,
+      640
+    ],
+    "differentPixels": 0,
+    "maxChannelDifference": 0,
+    "bounds": null
+  },
+  {
+    "first": "results/dpr2/0-graphics-160-6-correctness.png",
+    "second": "results/dpr2/0-direct-160-6-correctness.png",
+    "size": [
+      1920,
+      1280
+    ],
+    "differentPixels": 0,
+    "maxChannelDifference": 0,
+    "bounds": null
+  }
+]

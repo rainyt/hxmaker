@@ -1,0 +1,118 @@
+[
+  {
+    "count": 10000,
+    "textures": 1,
+    "graphics": {
+      "runs": 5,
+      "frames": 2109,
+      "meanCpuMedian": 4.304028435199746,
+      "p95CpuMedian": 5.700000017881393,
+      "cpuRange": [
+        3.2056872014892046,
+        4.566824645015866
+      ],
+      "fpsMedian": 59.99772520478243,
+      "intervalP95Median": 18.599999994039536
+    },
+    "direct": {
+      "runs": 5,
+      "frames": 2108,
+      "meanCpuMedian": 3.3829383885408464,
+      "p95CpuMedian": 6.699999988079071,
+      "cpuRange": [
+        2.6334123222325085,
+        3.778672985838488
+      ],
+      "fpsMedian": 59.98834349708265,
+      "intervalP95Median": 21.30000001192093
+    },
+    "reduction": 0.21400649659419657
+  },
+  {
+    "count": 10000,
+    "textures": 6,
+    "graphics": {
+      "runs": 5,
+      "frames": 2108,
+      "meanCpuMedian": 4.035545023979169,
+      "p95CpuMedian": 5.5999999940395355,
+      "cpuRange": [
+        3.082701421108856,
+        4.491232228151995
+      ],
+      "fpsMedian": 59.99687220107699,
+      "intervalP95Median": 18
+    },
+    "direct": {
+      "runs": 5,
+      "frames": 2109,
+      "meanCpuMedian": 3.012826603976678,
+      "p95CpuMedian": 6.0999999940395355,
+      "cpuRange": [
+        2.663270144665976,
+        3.712796208841541
+      ],
+      "fpsMedian": 59.997725204528194,
+      "intervalP95Median": 20
+    },
+    "reduction": 0.2534275826252732
+  },
+  {
+    "count": 50000,
+    "textures": 1,
+    "graphics": {
+      "runs": 5,
+      "frames": 2041,
+      "meanCpuMedian": 15.506682577522955,
+      "p95CpuMedian": 17.19999998807907,
+      "cpuRange": [
+        14.414014253083996,
+        19.406983240606397
+      ],
+      "fpsMedian": 59.9441849870023,
+      "intervalP95Median": 18.200000017881393
+    },
+    "direct": {
+      "runs": 5,
+      "frames": 2109,
+      "meanCpuMedian": 9.707109005389055,
+      "p95CpuMedian": 10.699999988079071,
+      "cpuRange": [
+        8.240758294672197,
+        13.488625590199543
+      ],
+      "fpsMedian": 60.00113746242326,
+      "intervalP95Median": 18
+    },
+    "reduction": 0.37400479071780457
+  },
+  {
+    "count": 50000,
+    "textures": 6,
+    "graphics": {
+      "runs": 5,
+      "frames": 1772,
+      "meanCpuMedian": 20.76597014976971,
+      "p95CpuMedian": 22,
+      "cpuRange": [
+        13.728672984722666,
+        23.508445947556883
+      ],
+      "fpsMedian": 47.651560410879924,
+      "intervalP95Median": 22.200000017881393
+    },
+    "direct": {
+      "runs": 5,
+      "frames": 2107,
+      "meanCpuMedian": 8.79952606530551,
+      "p95CpuMedian": 10.099999994039536,
+      "cpuRange": [
+        8.355581947361205,
+        9.881235153686406
+      ],
+      "fpsMedian": 59.99772520478243,
+      "intervalP95Median": 18
+    },
+    "reduction": 0.5762525900865221
+  }
+]

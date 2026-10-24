@@ -1,0 +1,10 @@
+<project>
+    <meta title="hxmaker 混合模式对照" package="hxmaker.examples.blendmode" version="1.0.0" />
+    <app main="Main" file="blend-mode" path="Export" />
+    <haxelib name="hxmaker-openfl" />
+    <haxelib name="spine-haxe" />
+    <haxelib name="actuate" />
+    <source path="../../../src" />
+    <source path="Source" />
+    <haxedef name="gl_stats" />
+</project>

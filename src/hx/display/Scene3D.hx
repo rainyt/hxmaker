@@ -257,7 +257,7 @@ class Scene3D extends DisplayObject {
 				return null;
 			current = current.parent;
 		}
-		stage.__updateTransform(null);
+		this.__ensureWorldTransform();
 		var m = __worldTransform, det = m.a * m.d - m.b * m.c;
 		if (Math.abs(det) < 1e-12)
 			return null;

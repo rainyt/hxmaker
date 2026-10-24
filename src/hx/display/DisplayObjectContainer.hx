@@ -1,6 +1,5 @@
 package hx.display;
 
-import hx.geom.Point;
 import hx.events.Event;
 import hx.ui.UIManager;
 import hx.layout.ILayout;
@@ -12,6 +11,7 @@ import hx.geom.Rectangle;
  */
 @:keep
 @:access(hx.display.DisplayObject)
+@:access(hx.geom.Matrix)
 class DisplayObjectContainer extends DisplayObject {
 	/**
 	 * 该容器中的所有子对象
@@ -132,6 +132,7 @@ class DisplayObjectContainer extends DisplayObject {
 		var isOneAddToStage = child.__parent == null;
 		this.__children.insert(index, child);
 		child.__parent = this;
+		child.setTransformDirty();
 		// 追加舞台处理
 		if (isOneAddToStage && this.stage != null && child.stage == null) {
 			child.__onAddToStage(this.stage);
@@ -161,6 +162,8 @@ class DisplayObjectContainer extends DisplayObject {
 				this.dispatchEvent(event);
 			}
 			child.__parent = null;
+			child.__worldTransformParent = null;
+			child.setTransformDirty();
 			child.__onRemoveFromStage();
 			this.__layoutDirty = true;
 			this.setDirty();
@@ -259,9 +262,13 @@ class DisplayObjectContainer extends DisplayObject {
 		}
 	}
 
+	override function __prepareWorldTransform():Void {
+		super.__prepareWorldTransform();
+		this.__updateLayout();
+	}
+
 	override function __updateTransform(parent:DisplayObject) {
 		super.__updateTransform(parent);
-		this.__updateLayout();
 		if (this.background != null) {
 			this.background.__updateTransform(this);
 		}
@@ -387,8 +394,10 @@ class DisplayObjectContainer extends DisplayObject {
 	public var mouseX(get, never):Float;
 
 	private function get_mouseX():Float {
-		if (stage != null)
-			return this.globalToLocal(new Point(stage.__stageX, 0)).x;
+		if (stage != null) {
+			this.__ensureWorldTransform();
+			return this.__worldTransform.__transformInverseX(stage.__stageX, stage.__stageY);
+		}
 		return 0;
 	}
 
@@ -398,8 +407,10 @@ class DisplayObjectContainer extends DisplayObject {
 	public var mouseY(get, never):Float;
 
 	private function get_mouseY():Float {
-		if (stage != null)
-			return this.globalToLocal(new Point(0, stage.__stageY)).y;
+		if (stage != null) {
+			this.__ensureWorldTransform();
+			return this.__worldTransform.__transformInverseY(stage.__stageX, stage.__stageY);
+		}
 		return 0;
 	}
 

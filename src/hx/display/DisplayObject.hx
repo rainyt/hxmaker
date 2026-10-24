@@ -39,6 +39,18 @@ class DisplayObject extends EventDispatcher {
 	@:noCompletion private var __root:Dynamic;
 	@:noCompletion private var __dirty:Bool = true;
 	@:noCompletion private var __transformDirty:Bool = true;
+	// 世界变换缓存独立于渲染脏标记，坐标查询不能消费渲染器的更新通知。
+	@:noCompletion private var __worldTransformDirty:Bool = true;
+	@:noCompletion private var __worldTransformVersion:Int = 0;
+	@:noCompletion private var __worldTransformParent:DisplayObject;
+	@:noCompletion private var __parentWorldTransformVersion:Int = -1;
+	// transform 返回可修改矩阵，因此还要识别绕过属性 setter 的原地修改。
+	@:noCompletion private var __worldLocalA:Float = 1;
+	@:noCompletion private var __worldLocalB:Float = 0;
+	@:noCompletion private var __worldLocalC:Float = 0;
+	@:noCompletion private var __worldLocalD:Float = 1;
+	@:noCompletion private var __worldLocalTX:Float = 0;
+	@:noCompletion private var __worldLocalTY:Float = 0;
 	@:noCompletion private var __width:Null<Float> = null;
 	@:noCompletion private var __height:Null<Float> = null;
 	@:noCompletion private var __transform:Matrix;
@@ -444,6 +456,31 @@ class DisplayObject extends EventDispatcher {
 	 * @param parent 如果提供了parent，则会根据parent更新worldTransform
 	 */
 	private function __updateTransform(parent:DisplayObject):Void {
+		this.__prepareWorldTransform();
+		this.__updateWorldTransform(parent);
+
+		if (this.filters != null) {
+			for (filter in this.filters) {
+				if (!filter.isStageRenderFilter) {
+					filter.updateTransform(this);
+				}
+			}
+		}
+	}
+
+	/** 准备当前节点的布局或对齐数据，不递归更新子节点的世界矩阵。 */
+	private function __prepareWorldTransform():Void {
+		if (!__worldTransformDirty && (__worldLocalA != __transform.a || __worldLocalB != __transform.b
+			|| __worldLocalC != __transform.c || __worldLocalD != __transform.d
+			|| __worldLocalTX != __transform.tx || __worldLocalTY != __transform.ty))
+			this.setTransformDirty();
+	}
+
+	/** 只计算当前节点；整树渲染更新和按需坐标查询共用同一套计算。 */
+	private function __updateWorldTransform(parent:DisplayObject):Void {
+		// 后端可能以自身作为渲染根参数，根节点不能与自己的世界矩阵相乘。
+		if (parent == this)
+			parent = null;
 		if (parent != null) {
 			this.__worldAlpha = parent.__worldAlpha * this.__alpha;
 			// 世界矩阵
@@ -458,15 +495,41 @@ class DisplayObject extends EventDispatcher {
 			this.__worldTransform.concat(__transform);
 		}
 
-		if (this.filters != null) {
-			for (filter in this.filters) {
-				if (!filter.isStageRenderFilter) {
-					filter.updateTransform(this);
-				}
-			}
-		}
+		this.__markWorldTransformUpdated(parent);
+	}
 
-		// this.__transformDirty = false;
+	/** 记录实际参与计算的父节点，离屏绘制后也能恢复正常显示树的变换。 */
+	private function __markWorldTransformUpdated(parent:DisplayObject):Void {
+		__worldTransformDirty = false;
+		__worldTransformParent = parent;
+		__parentWorldTransformVersion = parent == null ? -1 : parent.__worldTransformVersion;
+		__worldLocalA = __transform.a;
+		__worldLocalB = __transform.b;
+		__worldLocalC = __transform.c;
+		__worldLocalD = __transform.d;
+		__worldLocalTX = __transform.tx;
+		__worldLocalTY = __transform.ty;
+		__worldTransformVersion++;
+	}
+
+	/**
+	 * 只检查当前节点到根节点的祖先链。
+	 * 父节点版本变化时惰性刷新后代，避免移动容器时递归标记整棵子树。
+	 */
+	private function __ensureWorldTransform():Void {
+		var parent:DisplayObject = __parent;
+		if (parent != null)
+			parent.__ensureWorldTransform();
+		this.__prepareWorldTransform();
+		// 布局或准备逻辑可能重新挂载当前节点。
+		if (parent != __parent) {
+			parent = __parent;
+			if (parent != null)
+				parent.__ensureWorldTransform();
+		}
+		var parentVersion = parent == null ? -1 : parent.__worldTransformVersion;
+		if (__worldTransformDirty || __worldTransformParent != parent || __parentWorldTransformVersion != parentVersion)
+			this.__updateWorldTransform(parent);
 	}
 
 	/**
@@ -531,10 +594,12 @@ class DisplayObject extends EventDispatcher {
 	 * @return Rectangle
 	 */
 	public function getBounds(targetCoordinateSpace:DisplayObject = null):Rectangle {
-		if (this.__transformDirty && stage != null && stage.__transformDirty)
-			stage.__updateTransform(null);
+		this.__ensureWorldTransform();
 		var matrix = new Matrix();
 		if (targetCoordinateSpace != null && targetCoordinateSpace != this) {
+			targetCoordinateSpace.__ensureWorldTransform();
+			// 目标节点的待处理布局也可能改变当前节点。
+			this.__ensureWorldTransform();
 			matrix.copyFrom(this.__worldTransform);
 			if (this.__originInvertWorldPoint)
 				matrix.translate(-__originWorldX, -__originWorldY);
@@ -585,6 +650,7 @@ class DisplayObject extends EventDispatcher {
 	 * @return Rectangle
 	 */
 	private function __getWorldLocalBounds(rect:Rectangle):Rectangle {
+		this.__ensureWorldTransform();
 		// 如果存在变换矩阵，则使用变换矩阵计算边界
 		var ret = new Rectangle();
 		var m = __worldTransform.clone();
@@ -738,6 +804,7 @@ class DisplayObject extends EventDispatcher {
 
 	private function set_alpha(value:Float):Float {
 		__alpha = value;
+		__worldTransformDirty = true;
 		__colorTransformDirty = true;
 		this.setDirty();
 		return value;
@@ -875,6 +942,8 @@ class DisplayObject extends EventDispatcher {
 	 */
 	private function setTransformDirty(value:Bool = true):Void {
 		this.__transformDirty = value;
+		if (value)
+			this.__worldTransformDirty = true;
 		this.setDirty();
 	}
 
@@ -937,6 +1006,7 @@ class DisplayObject extends EventDispatcher {
 	 */
 	public function dispose():Void {
 		isDisposed = true;
+		__worldTransformParent = null;
 		contextMenu = null;
 		removeEventListeners();
 	}
@@ -1002,31 +1072,33 @@ class DisplayObject extends EventDispatcher {
 	/**
 	 * 本地坐标转换为世界坐标
 	 * @param point 
+	 * @param result 可复用的输出点，允许与输入点相同；省略时创建新点
 	 * @return Point
 	 */
-	public function localToGlobal(point:Point):Point {
-		if (this.__transformDirty && stage != null && stage.__transformDirty)
-			stage.__updateTransform(null);
-		var p = point.clone();
-		p.x = __worldTransform.__transformX(p.x, p.y);
-		// X、Y 都必须使用原始输入，旋转时不能把已变换的 X 再用于 Y。
-		p.y = __worldTransform.__transformY(point.x, point.y);
-		return p;
+	public function localToGlobal(point:Point, result:Point = null):Point {
+		this.__ensureWorldTransform();
+		var x = point.x, y = point.y;
+		if (result == null)
+			result = new Point();
+		result.x = __worldTransform.__transformX(x, y);
+		result.y = __worldTransform.__transformY(x, y);
+		return result;
 	}
 
 	/**
 	 * 世界坐标转换为本地坐标
 	 * @param point 
+	 * @param result 可复用的输出点，允许与输入点相同；省略时创建新点
 	 * @return Point
 	 */
-	public function globalToLocal(point:Point):Point {
-		if (this.__transformDirty && stage != null && stage.__transformDirty)
-			stage.__updateTransform(null);
-		var p = point.clone();
-		p.x = __worldTransform.__transformInverseX(p.x, p.y);
-		// 逆变换同样使用原始输入，避免旋转与错切下的坐标串扰。
-		p.y = __worldTransform.__transformInverseY(point.x, point.y);
-		return p;
+	public function globalToLocal(point:Point, result:Point = null):Point {
+		this.__ensureWorldTransform();
+		var x = point.x, y = point.y;
+		if (result == null)
+			result = new Point();
+		result.x = __worldTransform.__transformInverseX(x, y);
+		result.y = __worldTransform.__transformInverseY(x, y);
+		return result;
 	}
 
 	/**
@@ -1035,8 +1107,7 @@ class DisplayObject extends EventDispatcher {
 	public var touchX(get, never):Float;
 
 	private function get_touchX():Float {
-		if (this.__transformDirty && stage != null && stage.__transformDirty)
-			stage.__updateTransform(null);
+		this.__ensureWorldTransform();
 		return this.__worldTransform.__transformInverseX(Hxmaker.engine.touchX, Hxmaker.engine.touchY);
 	}
 
@@ -1046,8 +1117,7 @@ class DisplayObject extends EventDispatcher {
 	public var touchY(get, never):Float;
 
 	private function get_touchY():Float {
-		if (this.__transformDirty && stage != null && stage.__transformDirty)
-			stage.__updateTransform(null);
+		this.__ensureWorldTransform();
 		return this.__worldTransform.__transformInverseY(Hxmaker.engine.touchX, Hxmaker.engine.touchY);
 	}
 

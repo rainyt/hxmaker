@@ -41,7 +41,7 @@ class Stack extends Box {
 		return index;
 	}
 
-	override function __updateTransform(parent:DisplayObject) {
+	override function __prepareWorldTransform():Void {
 		if (__stackDirty) {
 			__stackDirty = false;
 			for (object in children) {
@@ -52,6 +52,6 @@ class Stack extends Box {
 				}
 			}
 		}
-		super.__updateTransform(parent);
+		super.__prepareWorldTransform();
 	}
 }

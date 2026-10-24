@@ -1,0 +1,14 @@
+--main DirectBatchSamplerChecks
+--class-path src
+--class-path test
+--library spine-haxe
+--library actuate
+--library openfl
+--library openfl-glsl
+--library vector-math
+--library lime
+--library hxmaker-openfl
+-D html5
+-D lime-html5
+-D lime-canvas
+--js bin/direct-batch-samplers-check.js

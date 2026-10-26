@@ -99,6 +99,10 @@ class BlendModeTextureLifetimeChecks {
 			renderer.setBatchTextures(batch, true);
 			for (input in inputs)
 				check(input.input == current, "默认批次缩小时，空余槽不能保留历史纹理引用");
+			MultiTextureShader.multiTextureEnabled = false;
+			inputs[2].input = stale;
+			renderer.setBatchTextures(batch, true);
+			check(inputs[2].input == current, "运行时关闭多纹理后，已编译着色器的空余槽仍须清理");
 			inputs[1].input = mask;
 			renderer.setBatchTextures(batch, false);
 			check(inputs[0].input == current && inputs[1].input == mask,
@@ -151,6 +155,14 @@ class BlendModeTextureLifetimeChecks {
 		check(StringTools.contains(message, "二维着色器输入 uSampler1") && StringTools.contains(message, "缺少纹理位图"),
 			"错误必须指出实际使用方及无效原因");
 		check(!StringTools.contains(message, "分离 Alpha"), "缺少位图不能误报为压缩纹理");
+		var invalid:BitmapData = Type.createEmptyInstance(BitmapData);
+		try {
+			TextureBridge3D.resolve(invalid, null, "二维批次纹理槽 0");
+		} catch (error:Dynamic) {
+			message = Std.string(error);
+		}
+		check(StringTools.contains(message, "二维批次纹理槽 0") && StringTools.contains(message, "已经释放或尺寸无效"),
+			"无效位图必须在上传前明确报错，不能误报为分离 Alpha 压缩纹理");
 	}
 
 	private static function main():Void {

@@ -35,7 +35,7 @@ class AssetObject<T> {
 		for (object in childAssetObjects) {
 			object.retain();
 		}
-		#if openfl
+		#if (openfl || hxmaker_unity)
 		hx.net.RequestQueue.retain(this.nativePath);
 		#end
 	}
@@ -47,7 +47,7 @@ class AssetObject<T> {
 		for (object in childAssetObjects) {
 			object.release();
 		}
-		#if openfl
+		#if (openfl || hxmaker_unity)
 		hx.net.RequestQueue.release(this.nativePath);
 		#end
 	}

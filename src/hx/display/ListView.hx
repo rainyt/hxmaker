@@ -198,7 +198,11 @@ class ListView extends Scroll implements IDataProider<ArrayCollection> {
 			this.__dataDirty = false;
 			__renderedRevision = __dataRevision;
 			if (autoVisible) {
+				#if hxmaker_unity
+				hx.utils.Timer.getInstance().nextFrame(this.invalidate);
+				#else
 				Timer.delay(this.invalidate, 16);
+				#end
 			}
 		}
 	}

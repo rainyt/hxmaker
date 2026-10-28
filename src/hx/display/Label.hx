@@ -1,8 +1,10 @@
 package hx.display;
 
 import hx.render.TextFieldRender;
+#if !hxmaker_unity
 import hx.text.TextFieldContextBitmapData;
 import hx.filters.StrokeFilter;
+#end
 #if openfl
 import hx.shader.StrokeShader;
 #end
@@ -21,7 +23,7 @@ class Label extends DisplayObject implements IDataProider<String> implements IRo
 	 * 释放文本缓存器
 	 */
 	public static function disposeTextFieldContextBitmapData():Void {
-		#if hxmaker_openfl
+		#if (hxmaker_openfl || hxmaker_unity)
 		hx.render.TextFieldRender.disposeTextFieldContextBitmapData();
 		#end
 	}
@@ -128,6 +130,9 @@ class Label extends DisplayObject implements IDataProider<String> implements IRo
 		rangeTextFormat.startIndex = startIndex;
 		rangeTextFormat.endIndex = startIndex + length;
 		__rangeTextFormats.push(rangeTextFormat);
+		#if hxmaker_unity
+		if (length < 0) rangeTextFormat.endIndex = -1;
+		#end
 		this.setTextFormatDirty();
 	}
 
@@ -243,11 +248,13 @@ class Label extends DisplayObject implements IDataProider<String> implements IRo
 		this.__textFormatDirty = value;
 		if (value)
 			this.setTransformDirty();
+		#if !hxmaker_unity
 		if (__textFormat != null) {
 			if (__filter != null) {
 				__filter.fontColor = __textFormat.color;
 			}
 		}
+		#end
 		this.setDirty();
 		#if hxmaker_openfl
 		if (value)
@@ -315,6 +322,9 @@ class Label extends DisplayObject implements IDataProider<String> implements IRo
 
 	private function set_horizontalAlign(value:HorizontalAlign):HorizontalAlign {
 		__horizontalAlign = value;
+		#if hxmaker_unity
+		setTextFormatDirty();
+		#end
 		this.setTransformDirty();
 		return value;
 	}
@@ -421,7 +431,9 @@ class Label extends DisplayObject implements IDataProider<String> implements IRo
 		return super.get_height();
 	}
 
+	#if !hxmaker_unity
 	private var __filter:StrokeFilter;
+	#end
 
 	/**
 	 * 设置描边，当设置描边后，shader会变更
@@ -429,6 +441,12 @@ class Label extends DisplayObject implements IDataProider<String> implements IRo
 	 * @param size 
 	 */
 	public function stroke(color:Int = 0x0, size:Int = 1):Void {
+		#if hxmaker_unity
+		var format:TextFormat = textFormat;
+		format.outline = size;
+		format.outlineColor = color;
+		textFormat = format;
+		#end
 		#if openfl
 		__filter = new StrokeFilter(size, color, textFormat != null ? textFormat.color : 0x0);
 		this.filters = [__filter];

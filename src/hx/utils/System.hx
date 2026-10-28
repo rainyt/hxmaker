@@ -17,7 +17,9 @@ class System {
 	public static var renderMode(get, never):String;
 
 	private static function get_renderMode():String {
-		#if openfl
+		#if hxmaker_unity
+		return "unity";
+		#elseif openfl
 		return openfl.Lib.current.stage.window.context.type;
 		#else
 		return "default";
@@ -40,7 +42,9 @@ class System {
 	public static var isPc(get, never):Bool;
 
 	public static function getPlatform():String {
-		#if android
+		#if hxmaker_unity
+		return hx.unity.NativeBridge.platform();
+		#elseif android
 		return "android";
 		#elseif ios
 		return "ios";
@@ -52,7 +56,9 @@ class System {
 	}
 
 	private static function get_isPc():Bool {
-		#if (android || ios || minigame)
+		#if hxmaker_unity
+		return hx.unity.NativeBridge.isDesktop();
+		#elseif (android || ios || minigame)
 		return false;
 		#elseif html5
 		var userAgent = js.Browser.navigator.userAgent;
@@ -76,7 +82,9 @@ class System {
 	 * @param text 文本
 	 */
 	public static function copy(text:String):Void {
-		#if wechat_zygame_dom
+		#if hxmaker_unity
+		hx.unity.NativeBridge.writeClipboard(text);
+		#elseif wechat_zygame_dom
 		if (Wx.setClipboardData != null) {
 			Wx.setClipboardData({
 				data: text,
@@ -99,7 +107,9 @@ class System {
 	 */
 	public static function readClipboardData():Future<String, String> {
 		var future:Future<String, String> = new Future("");
-		#if (ks || wechat)
+		#if hxmaker_unity
+		hx.utils.Timer.getInstance().nextFrame(() -> future.completeValue(hx.unity.NativeBridge.readClipboard()));
+		#elseif (ks || wechat)
 		if (Wx.getClipboardData == null) {
 			Actuate.timer(0.016).onComplete(() -> {
 				future.errorValue(FutureErrorEvent.create(FutureErrorEvent.LOAD_ERROR, -1, "读取剪切板失败！", null));

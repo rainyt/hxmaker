@@ -982,7 +982,11 @@ class FinderView extends Scroll {
 				this.__setRendererSelected(renderer, row);
 			}
 			if (this.autoVisible) {
+				#if hxmaker_unity
+				hx.utils.Timer.getInstance().nextFrame(this.invalidate);
+				#else
 				Timer.delay(this.invalidate, 16);
+				#end
 			}
 		} else {
 			// 只刷新全部行的选中状态

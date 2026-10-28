@@ -2,6 +2,8 @@ package hx.utils;
 
 #if (!wechat && hxmaker_openfl)
 typedef Storage = hx.core.OpenFLStorage;
+#elseif hxmaker_unity
+typedef Storage = hx.core.UnityStorage;
 #else
 class Storage implements IStorage {
 	public function new() {}

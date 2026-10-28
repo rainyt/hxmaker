@@ -4,7 +4,9 @@ import haxe.crypto.Md5;
 import haxe.crypto.Base64;
 import hx.utils.Timer;
 import hx.events.FutureErrorEvent;
+#if !hxmaker_unity
 import hx.core.OpenFlBitmapData;
+#end
 import hx.display.BitmapData;
 import haxe.io.Bytes;
 
@@ -74,7 +76,14 @@ class AssetsBundle {
 			return null;
 		var future = new Future<BitmapData, Dynamic>(null);
 		var bytes = get(name);
-		#if wechat_zygame_dom
+		#if hxmaker_unity
+		try {
+			var bitmap:BitmapData = hx.core.UnityBitmapData.fromBytes(bytes);
+			future.completeValue(bitmap, hx.net.RequestQueue.adoptBitmap(bitmap, "bundle:" + haxe.crypto.Sha256.make(bytes).toHex()));
+		} catch (error:Dynamic) {
+			future.errorValue(FutureErrorEvent.create(FutureErrorEvent.LOAD_ERROR, -1, Std.string(error), name));
+		}
+		#elseif wechat_zygame_dom
 		// 微信小游戏使用unzip包支持
 		return null;
 		#elseif lime

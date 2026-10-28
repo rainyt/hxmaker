@@ -11,7 +11,9 @@ import hx.display.ImageLoader;
 import hx.display.InputLabel;
 import hx.display.Quad;
 import hx.display.MovieClip;
+#if (spine_haxe || spine_hx)
 import hx.display.Spine;
+#end
 import hx.display.ListView;
 import hx.display.FinderView;
 import hx.display.BreadcrumbBar;

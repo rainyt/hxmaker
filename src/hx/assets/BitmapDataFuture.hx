@@ -1,6 +1,6 @@
 package hx.assets;
 
-#if openfl
+#if (openfl || hxmaker_unity)
 typedef BitmapDataFuture = hx.core.BitmapDataFuture;
 #else
 import hx.display.BitmapData;

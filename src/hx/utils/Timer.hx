@@ -6,6 +6,10 @@ package hx.utils;
 class Timer {
 	private static var __instances:Map<String, Timer> = [];
 
+	#if hxmaker_unity
+	/** Unity 宿主销毁时取消旧会话任务，避免下一次启动误触发。 */
+	public static function resetAll():Void { __instances.clear(); }
+	#end
 	public static function run(dt:Float):Void {
 		for (timer in __instances) {
 			timer.update(dt);

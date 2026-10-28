@@ -1,6 +1,6 @@
 package hx.assets;
 
-#if openfl
+#if (openfl || hxmaker_unity)
 typedef BytesFuture = hx.core.BytesFuture;
 #else
 import haxe.io.Bytes;

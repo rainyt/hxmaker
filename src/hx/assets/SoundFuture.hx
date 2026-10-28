@@ -1,6 +1,6 @@
 package hx.assets;
 
-#if openfl
+#if (openfl || hxmaker_unity)
 typedef SoundFuture = hx.core.SoundFuture;
 #else
 class SoundFuture extends Future<Sound, String> {

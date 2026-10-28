@@ -1,7 +1,9 @@
 package hx.display;
 
 import hx.filters.RenderFilter;
+#if !hxmaker_unity
 import hx.filters.InvertFilter;
+#end
 import hx.utils.ColorUtils;
 import hx.geom.PerspectiveProjection;
 import hx.geom.Vector3D;
@@ -16,7 +18,9 @@ import hx.geom.Matrix;
 import hx.geom.Rectangle;
 import hx.events.Event;
 import hx.layout.AnchorLayoutData;
+#if !hxmaker_unity
 import hx.filters.SubtractFilter;
+#end
 
 using hx.utils.MathUtils;
 
@@ -96,6 +100,9 @@ class DisplayObject extends EventDispatcher {
 	}
 
 	private function set_filters(value:Array<RenderFilter>):Array<RenderFilter> {
+		#if hxmaker_unity
+		if (value != null && value.length > 0) throw "Unity 后端首版不支持通用滤镜，请用 hxmaker_unity 条件编译区分";
+		#end
 		if (__filters != value) {
 			__filters = value;
 			this.setDirty();
@@ -131,6 +138,9 @@ class DisplayObject extends EventDispatcher {
 	}
 
 	private function set_shader(value:Shader):Shader {
+		#if hxmaker_unity
+		if (value != null) throw "Unity 后端不支持 OpenFL Shader 或运行时 GLSL 注入";
+		#end
 		if (__shader != value) {
 			__shader = value;
 			this.setDirty();
@@ -263,6 +273,10 @@ class DisplayObject extends EventDispatcher {
 	}
 
 	private function set_blendMode(value:BlendMode):BlendMode {
+		#if hxmaker_unity
+		if (value != NORMAL && value != ADD) throw "Unity 后端首版只支持 NORMAL 和 ADD 混合模式";
+		__addBlendMode = value == ADD ? 1 : 0;
+		#else
 		if (__blendMode != value) {
 			this.blendFilter = null;
 			this.__addBlendMode = 0;
@@ -301,6 +315,7 @@ class DisplayObject extends EventDispatcher {
 					this.blendFilter = new hx.filters.OverlayFilter();
 			}
 		}
+		#end
 		__blendMode = value;
 		this.setDirty();
 		return value;

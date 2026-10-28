@@ -21,10 +21,17 @@ class Future<T, DATA = Dynamic> {
 	public function new(?data:DATA, autoPost:Bool = true) {
 		__data = data;
 		this.autoPost = autoPost;
+		#if hxmaker_unity
+		// Unity 的资源与纹理 API 必须在主线程调用。
+		hx.utils.Timer.getInstance().nextFrame(() -> {
+			if (this.autoPost && !isComplete && !isError) post();
+		});
+		#else
 		Timer.delay(() -> {
 			if (this.autoPost)
 				post();
 		}, 16);
+		#end
 	}
 
 	/**

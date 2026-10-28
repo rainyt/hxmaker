@@ -1,6 +1,8 @@
 package hx.utils;
 
-#if wechat
+#if hxmaker_unity
+typedef TextInputUtils = hx.unity.UnityTextInputUtils;
+#elseif wechat
 typedef TextInputUtils = hx.utils.inputs.WechatTextInputUtils;
 #elseif html5
 typedef TextInputUtils = hx.utils.inputs.HTML5TextInputUtils;

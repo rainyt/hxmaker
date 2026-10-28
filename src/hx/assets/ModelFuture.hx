@@ -60,7 +60,11 @@ class ModelFuture extends Future<ModelAsset, String> {
 			asset.images[index] = object.data;
 			progressValue(0.7 + 0.3 * (index + 1) / asset.imageCount);
 			// 缓存命中可同步回调，延迟继续，避免图片数量较多时形成递归调用链。
+			#if hxmaker_unity
+			hx.utils.Timer.getInstance().nextFrame(() -> decodeNext(asset, index + 1));
+			#else
 			haxe.Timer.delay(() -> decodeNext(asset, index + 1), 0);
+			#end
 		});
 		future.onError(error -> fail("模型图片解码失败（" + image.name + "）：" + error.error, error.errorCode));
 		future.post();

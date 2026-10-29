@@ -79,6 +79,9 @@ class Scene3DInput extends EventDispatcher {
 
 	/** 绑定视口与可选相机控制器；左键或单指拖动旋转，抬起确认轻点后派发选择。 */
 	public function new(view:Scene3D, controller:OrbitCameraController3D = null) {
+		#if hxmaker_unity
+		super();
+		#end
 		if (view == null || view.isDisposed)
 			throw "三维输入适配需要有效视口";
 		this.view = view;

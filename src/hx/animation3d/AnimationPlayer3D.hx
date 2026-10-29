@@ -80,6 +80,9 @@ class AnimationPlayer3D extends EventDispatcher {
 
 	/** 保留原有单片段回调；独立使用播放器时，可选提供姿态混合适配。 */
 	public function new(clips:Array<AnimationClip3D>, apply:AnimationClip3D->Float->Void, blending:AnimationBlend3D = null) {
+		#if hxmaker_unity
+		super();
+		#end
 		if (clips == null || apply == null)
 			throw "动画片段与姿态回调不能为空";
 		if (blending != null && (blending.capture == null || blending.apply == null))

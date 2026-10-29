@@ -1,2 +1,3 @@
+--class-path tools
 --main Tools
---neko ../run.n
+--neko run.n

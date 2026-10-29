@@ -12,7 +12,7 @@ class Particle extends Box {
 	 * 粒子池
 	 */
 	private var __pool:ObjectPool<Image> = new ObjectPool<Image>(() -> {
-		return new Image();
+		return new Image(null);
 	}, (img:Image) -> {});
 
 	/**

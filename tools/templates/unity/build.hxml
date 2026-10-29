@@ -1,0 +1,6 @@
+--class-path Source
+--library hxmaker
+--library hxmaker-unity
+--main Main
+--cs build
+-D no-compilation

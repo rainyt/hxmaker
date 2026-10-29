@@ -54,6 +54,9 @@ class Geometry3D extends EventDispatcher {
 
 	/** 复制顶点、UV、三角形索引及可选法线，校验数据并计算初始包围盒。 */
 	public function new(positions:Array<Float>, uvs:Array<Float>, indices:Array<Int>, normals:Array<Float> = null, tangents:Array<Float> = null) {
+		#if hxmaker_unity
+		super();
+		#end
 		if (positions == null || uvs == null || indices == null)
 			throw "三维几何数据不能为空";
 		this.positions = positions.copy();

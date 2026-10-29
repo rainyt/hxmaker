@@ -534,7 +534,8 @@ class Assets extends Future<Assets, Dynamic> {
 		for (key => value in assets.xmls) {
 			this.xmls.set(key, value);
 		}
-		for (key => value in assets.objects) {
+		for (key in assets.objects.keys()) {
+			var value:Dynamic = assets.objects.get(key);
 			this.objects.set(key, value);
 		}
 		for (key => value in assets.styles) {

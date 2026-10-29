@@ -485,5 +485,9 @@ class Stage extends Box {
 
 /** 菜单打开期间使用的舞台输入侦听器，优先于焦点及冒泡处理。 */
 private class ContextMenuEventDispatcher extends EventDispatcher {
-	public function new() {}
+	public function new() {
+		#if hxmaker_unity
+		super();
+		#end
+	}
 }

@@ -19,7 +19,7 @@ class Matrix {
 	/**
 	 * 回收池
 	 */
-	public static var pool:ObjectPool<Matrix> = new ObjectPool(() -> new Matrix(), (m) -> m.identity());
+	public static var pool:ObjectPool<Matrix> = new ObjectPool<Matrix>(() -> new Matrix(1, 0, 0, 1, 0, 0), (m:Matrix) -> m.identity());
 
 	/**
 		影响像素沿_x_轴定位的值当缩放或旋转图像时。

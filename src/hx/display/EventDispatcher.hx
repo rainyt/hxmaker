@@ -12,6 +12,11 @@ class EventDispatcher implements IEventDispatcher {
 	 */
 	@:noCompletion private var __listeners:Map<String, Array<Event->Void>> = [];
 
+	#if hxmaker_unity
+	/** 显式声明基类构造，让 C# 子类通过 super() 执行监听表初始化。 */
+	public function new() {}
+	#end
+
 	/**
 	 * 添加事件侦听器
 	 * @param type 事件类型

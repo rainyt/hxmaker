@@ -851,6 +851,9 @@ class DisplayObject extends EventDispatcher {
 	 * 构造一个显示对象
 	 */
 	public function new() {
+		#if hxmaker_unity
+		super();
+		#end
 		__rotation = 0;
 		__rotationSine = 0;
 		__rotationCosine = 1;

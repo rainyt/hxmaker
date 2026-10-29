@@ -25,7 +25,7 @@ class Project {
 		if (FileSystem.isDirectory(srcFile)) {
 			var files = FileSystem.readDirectory(srcFile);
 			for (file in files) {
-				if (file.indexOf(".") == 0) {
+				if (file.indexOf(".") == 0 && file != ".gitignore" && file != ".gitkeep") {
 					continue;
 				}
 				var path = Path.join([srcFile, file]);
@@ -38,7 +38,7 @@ class Project {
 			}
 			var file = Path.extension(srcFile);
 			switch (file) {
-				case "hx", "xml":
+				case "hx", "xml", "json", "md", "txt", "py":
 					// 实现模板
 					var data = new Template(File.getContent(srcFile));
 					File.saveContent(destFile, data.execute(getProjectData()));

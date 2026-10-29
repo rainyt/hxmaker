@@ -17,6 +17,9 @@ class ArrayCollection extends EventDispatcher {
 	 * @param array 初始数组数据
 	 */
 	public function new(array:Array<Dynamic>) {
+		#if hxmaker_unity
+		super();
+		#end
 		this.source = array;
 	}
 

@@ -19,4 +19,16 @@
 
 ## 验证状态
 
-按项目要求未运行编译、测试或 Unity 编辑器。后续需要单独安排 Haxe C# 生成、Unity 导入、二维画面、资源生命周期、多镜头和 IL2CPP 验证；未验证前不能认定已达到发行质量。
+已按用户要求完成 Haxe C# 生成、Unity 2022.3.62f3c1 临时示例导入编译和场景生成。运行画面、资源生命周期、多镜头交互、URP 与 IL2CPP 仍待验证；当前由用户打开示例手动测试。
+
+## Unity 项目脚手架
+
+```sh
+haxelib run hxmaker create unity MyGame
+cd MyGame
+python3 build.py
+```
+
+已配置 `hxmaker` 包装命令时，可使用 `hxmaker create unity MyGame` 和 `hxmaker build unity`。模板包含 `Source`、`Assets`、`Packages`、`ProjectSettings` 和构建脚本，后端使用已安装的 `hxmaker-unity`。
+
+仓库内示例位于 `/Users/rainy/Documents/Github/hxmaker-unity/samples/basic/UnityProject`；用 Unity Hub 添加该目录，打开 `Assets/Scenes/Main.unity` 后进入播放模式。

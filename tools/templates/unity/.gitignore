@@ -1,0 +1,11 @@
+/build/
+/Library/
+/Temp/
+/Obj/
+/Logs/
+/UserSettings/
+/Assets/HxmakerGenerated/
+/Assets/HxmakerGenerated.meta
+*.csproj
+*.sln
+.DS_Store

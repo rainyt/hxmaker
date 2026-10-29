@@ -458,7 +458,7 @@ class Matrix3D {
 		}
 
 		for (i in 0...rawData.length) {
-			vector[i + index] = rawData[i];
+			vector[i + Std.int(index)] = rawData[i];
 		}
 
 		if (transpose) {

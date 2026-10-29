@@ -234,7 +234,12 @@ class Node3D extends EventDispatcher {
 	}
 
 	/** 创建无父节点的三维节点，不加入二维显示树。 */
-	public function new() { instanceId = nextInstanceId++; }
+	public function new() {
+		#if hxmaker_unity
+		super();
+		#end
+		instanceId = nextInstanceId++;
+	}
 
 	private function get_children():Array<Node3D> {
 		return __children.copy();

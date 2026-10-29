@@ -397,7 +397,11 @@ class Material3D extends EventDispatcher {
 	}
 
 	/** 创建无贴图基础材质，默认无光照、不透明且启用深度。 */
-	public function new() {}
+	public function new() {
+		#if hxmaker_unity
+		super();
+		#end
+	}
 
 	/** 校验 GLSL 名称及引擎保留参数。 */
 	private function validateUniformName(name:String):Void {

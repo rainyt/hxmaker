@@ -156,9 +156,12 @@ class UIAssets extends Assets {
 		UIManager.getInstance().applyAttributes(parent, parentXml, this);
 		buildUi(parentXml, parent, ids);
 		hx.utils.Timer.getInstance().nextFrame(() -> {
-			for (object in ids) {
-				if (object is UIAnimate) {
-					var animate:UIAnimate = object;
+			if (parent.isDisposed) return;
+			for (id in ids.keys()) {
+				// 映射同时保存控件和动画，防止 C# 在类型判断前将值强转为动画。
+				var object:Dynamic = ids.get(id);
+				if (Std.isOfType(object, UIAnimate)) {
+					var animate:UIAnimate = cast object;
 					if (@:privateAccess !animate.__isAutoPlay) {
 						@:privateAccess animate.__isAutoPlay = true;
 						animate.updateOption();

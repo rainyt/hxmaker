@@ -2,6 +2,7 @@
 
 | 示例 | 用途 |
 | --- | --- |
+| [ui-animate-seek](ui-animate-seek/README.md) | UIAnimate 与动画组的时间定位、拖动预览和手动验收 |
 | [blend-mode](blend-mode/README.md) | 全部 15 种混合模式、CPU 参考色、透明度分组与渲染状态恢复 |
 | [breadcrumb-bar](breadcrumb-bar/project.xml) | 面包屑导航与 FinderView |
 | [context-menu](context-menu/project.xml) | 通用右键菜单 |

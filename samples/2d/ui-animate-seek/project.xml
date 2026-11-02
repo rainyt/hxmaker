@@ -1,0 +1,10 @@
+<project>
+    <meta title="Hxmaker UIAnimate 时间定位示例" package="hxmaker.examples.uianimateseek" version="1.0.0" />
+    <app main="Main" file="ui-animate-seek" path="Export" />
+    <source path="Source" />
+    <assets path="Assets" rename="assets" />
+    <haxelib name="hxmaker-openfl" />
+    <haxelib name="spine-haxe" />
+    <haxelib name="actuate" />
+    <window width="1100" height="850" background="#171e2b" />
+</project>

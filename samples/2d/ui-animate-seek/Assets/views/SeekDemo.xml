@@ -1,0 +1,46 @@
+<Box id="demo" width="1100" height="400" y="110">
+    <Box y="12">
+        <Quad id="single" x="220" width="40" height="32" color="0x58a6ff"/>
+    </Box>
+    <Box y="76">
+        <Quad id="delayed" x="220" width="40" height="32" color="0xf2b66d"/>
+    </Box>
+    <Box y="140">
+        <Quad id="sequence" x="220" width="40" height="32" color="0xc49aff"/>
+    </Box>
+    <Box y="204">
+        <Quad id="implicit" x="940" alpha="0.85" width="40" height="32" color="0x6dd6b0"/>
+    </Box>
+    <Box y="268">
+        <Quad id="instant" x="220" width="40" height="32" color="0xf17c96"/>
+    </Box>
+    <Box y="332">
+        <Quad id="defaultEase" x="220" width="40" height="32" color="0xe2d97e"/>
+    </Box>
+    <animate-group id="timeline" auto="false">
+        <animate id="singleMove" target="single" duration="2" ease="Linear.easeNone">
+            <x start="220" end="940"/>
+            <alpha start="1" end="0.4"/>
+        </animate>
+        <animate target="delayed" duration="1" delay="1" ease="Quad.easeInOut">
+            <x start="220" end="940"/>
+            <rotation start="0" end="180"/>
+        </animate>
+        <animate target="sequence" duration="1" ease="Linear.easeNone">
+            <x start="220" end="580"/>
+        </animate>
+        <animate target="sequence" duration="1" delay="1.5" ease="Linear.easeNone">
+            <x start="580" end="940"/>
+        </animate>
+        <animate target="implicit" duration="2" delay="0.5" ease="Linear.easeNone">
+            <x start="220"/>
+            <alpha start="0.2"/>
+        </animate>
+        <animate target="instant" duration="0" delay="1" ease="Linear.easeNone">
+            <x start="220" end="940"/>
+        </animate>
+        <animate target="defaultEase" duration="2">
+            <x start="220" end="940"/>
+        </animate>
+    </animate-group>
+</Box>

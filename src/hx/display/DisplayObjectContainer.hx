@@ -29,15 +29,24 @@ class DisplayObjectContainer extends DisplayObject {
 	public var layout(get, set):ILayout;
 
 	private function set_layout(value:ILayout):ILayout {
-		__layout = value;
-		if (__layout != null) {
-			__layout.parent = this;
+		if (__layout != value) {
+			__layout = value;
+			if (__layout != null) {
+				__layout.parent = this;
+			}
+			invalidateLayout();
 		}
 		return value;
 	}
 
 	private function get_layout():ILayout {
 		return __layout;
+	}
+
+	/** 标记布局失效；原地修改布局参数后调用，下次布局或坐标查询时统一结算。 */
+	public function invalidateLayout():Void {
+		__layoutDirty = true;
+		setDirty();
 	}
 
 	/** 递归和按需查询共用入口；只消费开始前的变更，保留布局期间的新失效。 */

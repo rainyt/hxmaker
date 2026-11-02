@@ -24,6 +24,10 @@ class UIAnimateGroup extends UIAnimate {
 	}
 
 	override public function play(setStartOption:Bool = false, isReverse:Bool = false):Void {
+		if (timeline) {
+			playTimeline(isReverse);
+			return;
+		}
 		this.stop();
 		for (animate in animates) {
 			animate.play(setStartOption, isReverse);
@@ -47,5 +51,11 @@ class UIAnimateGroup extends UIAnimate {
 	override private function collectSeekTracks(tracks:Array<UIAnimate>):Void {
 		for (animate in animates)
 			animate.collectSeekTracks(tracks);
+	}
+
+	override private function stopSeekPlayback():Void {
+		super.stopSeekPlayback();
+		for (animate in animates)
+			animate.stopSeekPlayback();
 	}
 }

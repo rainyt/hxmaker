@@ -36,6 +36,8 @@ class GameStage extends Stage {
 	private var playing:Bool = false;
 	private var dragging:Bool = false;
 	private var nativePlaying:Bool = false;
+	private var nativeGroupPlaying:Bool = false;
+	private var nativeStartTime:Float = 0;
 
 	override public function onStageInit():Void {
 		super.onStageInit();
@@ -77,6 +79,13 @@ class GameStage extends Stage {
 			refreshStatus();
 		});
 		addAction("定位到末尾", 768, 565, 144, () -> locate(timeline.totalDuration));
+		addAction("原生播放整组", 924, 565, 152, () -> {
+			locate(0);
+			timeline.play(true);
+			nativePlaying = nativeGroupPlaying = true;
+			nativeStartTime = Timer.stamp();
+			refreshStatus();
+		});
 		addText("0 秒", 24, 627, 170, 28);
 		buildScrubber();
 		addText("2.5 秒", 1014, 627, 72, 28);
@@ -142,6 +151,7 @@ class GameStage extends Stage {
 	private function locate(time:Float):Void {
 		playing = false;
 		nativePlaying = false;
+		nativeGroupPlaying = false;
 		timeline.seek(time);
 		currentTime = Math.max(0, Math.min(timeline.totalDuration, time));
 		refreshStatus();
@@ -163,6 +173,10 @@ class GameStage extends Stage {
 		var stamp:Float = Timer.stamp();
 		var elapsed:Float = stamp - previousStamp;
 		previousStamp = stamp;
+		if (nativeGroupPlaying) {
+			currentTime = Math.min(timeline.totalDuration, stamp - nativeStartTime);
+			if (currentTime >= timeline.totalDuration) nativePlaying = nativeGroupPlaying = false;
+		}
 		if (playing) {
 			currentTime = Math.max(0, Math.min(timeline.totalDuration, currentTime + elapsed * direction));
 			timeline.seek(currentTime);
@@ -178,7 +192,7 @@ class GameStage extends Stage {
 		var ratio:Float = timeline.totalDuration == 0 ? 0 : currentTime / timeline.totalDuration;
 		scrubFill.width = Math.max(1, ratio * TRACK_WIDTH);
 		scrubHead.x = ratio * (TRACK_WIDTH - scrubHead.width);
-		var mode:String = nativePlaying ? "首行原生播放中，拖动时间轴可接管" : playing ? direction > 0 ? "正向预览" : "反向预览" : "已定位并保持静止";
+		var mode:String = nativePlaying ? (nativeGroupPlaying ? "整组原生播放中，拖动时间轴可接管" : "首行原生播放中，拖动时间轴可接管") : playing ? direction > 0 ? "正向预览" : "反向预览" : "已定位并保持静止";
 		status.data = mode + "  |  时间 " + format(currentTime) + " / " + format(timeline.totalDuration) + " 秒";
 		values.data = "位置 x：蓝 " + format(single.x) + "，橙 " + format(delayed.x) + "，紫 " + format(sequence.x)
 			+ "，绿 " + format(implicit.x) + "（透明度 " + format(implicit.alpha) + "），粉 " + format(instant.x) + "，黄 " + format(defaultEase.x);

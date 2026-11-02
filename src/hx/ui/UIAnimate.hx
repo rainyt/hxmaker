@@ -17,6 +17,8 @@ import motion.easing.IEasing;
 
 using Reflect;
 
+private typedef UIAnimateClock = {time:Float};
+
 /**
  * UI动画控制程序，通过XML配置实现动画
  */
@@ -69,6 +71,9 @@ class UIAnimate {
 	 */
 	public var auto:Bool = true;
 
+	/** 启用统一时间轴播放；旧 XML 未声明时保留原有补间行为。 */
+	public var timeline:Bool = false;
+
 	/**
 	 * 缓动函数
 	 */
@@ -82,6 +87,7 @@ class UIAnimate {
 	private var __isAutoPlay:Bool = false;
 	private var optionsInitialized:Bool = false;
 	private var activeTweens:Array<GenericActuator<DisplayObject>> = [];
+	private var timelineActuator:GenericActuator<UIAnimateClock>;
 
 	/** 包含延迟的总时长，单位为秒。 */
 	public var totalDuration(get, never):Float;
@@ -94,6 +100,7 @@ class UIAnimate {
 	public function new(target:DisplayObject, xml:Xml) {
 		this.target = target;
 		this.xml = xml;
+		this.timeline = xml.get("timeline") == "true";
 		this.duration = xml.exists("duration") ? Std.parseFloat(xml.get("duration")) : 0;
 		this.delay = xml.exists("delay") ? Std.parseFloat(xml.get("delay")) : 0;
 		var easeName:String = xml.get("ease");
@@ -117,6 +124,10 @@ class UIAnimate {
 	 * @param isReverse 是否反向播放
 	 */
 	public function play(setStartOption:Bool = false, isReverse:Bool = false):Void {
+		if (timeline) {
+			playTimeline(isReverse);
+			return;
+		}
 		if (!optionsInitialized)
 			updateOption();
 		if (setStartOption) {
@@ -164,6 +175,28 @@ class UIAnimate {
 	public function seek(time:Float):Void {
 		if (!Math.isFinite(time))
 			throw "动画定位时间必须为有限数值";
+		stopSeekPlayback();
+		applyTime(time);
+	}
+
+	/**
+	 * 使用与 seek 相同的规则播放完整时间轴，每次从首帧或反向末帧重新开始。
+	 * 所有片段共用一个时钟，延迟、空白区间、零时长和同属性覆盖均由时间求值决定。
+	 */
+	public function playTimeline(isReverse:Bool = false):Void {
+		stopSeekPlayback();
+		var total:Float = totalDuration;
+		var clock:UIAnimateClock = {time: isReverse ? total : 0};
+		applyTime(clock.time);
+		if (total == 0) return;
+		timelineActuator = Actuate.tween(clock, total, {time: isReverse ? 0.0 : total}, false)
+			.ease(Linear.easeNone)
+			.onUpdate(() -> applyTime(clock.time))
+			.onComplete(() -> timelineActuator = null);
+	}
+
+	/** 播放时不能调用 seek，否则会把驱动时间轴的自身时钟停掉。 */
+	private function applyTime(time:Float):Void {
 		time = Math.max(0, time);
 		var tracks:Array<UIAnimate> = [];
 		collectSeekTracks(tracks);
@@ -178,7 +211,6 @@ class UIAnimate {
 		}
 		var owners:Map<DisplayObject, Map<String, UIAnimate>> = [];
 		for (track in tracks) {
-			track.stopSeekPlayback();
 			var properties:Map<String, UIAnimate> = owners.get(track.target);
 			if (properties == null) {
 				properties = [];
@@ -242,7 +274,12 @@ class UIAnimate {
 	}
 
 	/** 只停止当前动画创建的补间，保留同一目标上的其他动画。 */
+	@:allow(hx.ui.UIAnimateGroup)
 	private function stopSeekPlayback():Void {
+		if (timelineActuator != null) {
+			Actuate.stop(timelineActuator, null, false, false);
+			timelineActuator = null;
+		}
 		for (actuate in activeTweens)
 			Actuate.stop(actuate, null, false, false);
 		activeTweens = [];
@@ -252,6 +289,7 @@ class UIAnimate {
 	 * 停止播放动画
 	 */
 	public function stop():Void {
+		stopSeekPlayback();
 		Actuate.stop(target);
 		activeTweens = [];
 	}

@@ -17,7 +17,7 @@
     <Box y="332">
         <Quad id="defaultEase" x="220" width="40" height="32" color="0xe2d97e"/>
     </Box>
-    <animate-group id="timeline" auto="false">
+    <animate-group id="timeline" auto="false" timeline="true">
         <animate id="singleMove" target="single" duration="2" ease="Linear.easeNone">
             <x start="220" end="940"/>
             <alpha start="1" end="0.4"/>

@@ -158,6 +158,26 @@ this.addChild(stack);
 
 Hxmaker 的布局系统通过 `ILayout` 接口实现，每个容器可以指定不同的布局策略。
 
+### 动态更新布局
+
+替换子对象的 `layoutData` 会自动标记其父容器布局失效；替换或清空容器的 `layout` 会标记容器自身失效。即使窗口和控件尺寸没有变化，新布局也会在后续布局处理或坐标查询时结算。`hide`、`includeInLayout` 变化同样会更新父布局，`visible` 仍只控制显示并保留布局占位。
+
+直接修改子对象的 `left`、`right`、`top`、`bottom`、`centerX`、`centerY` 也会通知父布局，相同值不会触发额外布局。原地修改已有布局数据的字段后，可以重新赋值给 `layoutData`，同一引用也会触发更新，以兼容既有代码。
+
+重复赋值同一个布局策略引用不会触发额外布局。原地修改布局数据或布局策略的字段后，也可以调用负责执行该布局的容器的 `invalidateLayout()`；它只标记失效，不立即递归重排。需要立即强制刷新整棵子树时，继续使用 `updateLayout()`。
+
+```haxe
+var data:AnchorLayoutData = cast child.layoutData;
+data.left = 24;
+child.parent.invalidateLayout();
+
+var layout:HorizontalLayout = cast box.layout;
+layout.gap = 12;
+box.invalidateLayout();
+```
+
+`BoxContainer`、`Scroll` 的子对象实际位于内部 `box`。替换子对象锚点会通知实际父容器；调用外层容器的 `invalidateLayout()` 也会同步标记内部 `box`，无需业务代码处理内部结构。
+
 ### AnchorLayout — 锚点布局
 
 锚点布局允许子对象相对于父容器进行定位，非常适合自适应界面。

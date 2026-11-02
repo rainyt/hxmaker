@@ -167,6 +167,12 @@ class BoxContainer extends Box {
 		return super.set_height(value);
 	}
 
+	/** 内部 box 执行实际布局，显式失效需要同步通知它。 */
+	override public function invalidateLayout():Void {
+		box.invalidateLayout();
+		super.invalidateLayout();
+	}
+
 	/**
 	 * 更新布局
 	 * 更新内部box的布局

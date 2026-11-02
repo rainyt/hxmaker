@@ -117,6 +117,8 @@ class DisplayObject extends EventDispatcher {
 	private function set_hide(value:Bool):Bool {
 		if (__hide != value) {
 			__hide = value;
+			if (__parent != null)
+				__parent.invalidateLayout();
 			this.setDirty();
 		}
 		return value;
@@ -226,6 +228,9 @@ class DisplayObject extends EventDispatcher {
 
 	private function set_layoutData(value:LayoutData):LayoutData {
 		__layoutData = value;
+		// 同一引用也可能已原地修改，重新赋值视为显式请求父布局更新。
+		if (__parent != null)
+			__parent.invalidateLayout();
 		return value;
 	}
 
@@ -1036,7 +1041,17 @@ class DisplayObject extends EventDispatcher {
 	public var contextMenu(get, set):ContextMenu;
 
 	/** 是否参与父容器布局；浮层保持显示和命中，但不参加普通内容布局。 */
-	public var includeInLayout:Bool = true;
+	public var includeInLayout(default, set):Bool = true;
+
+	private function set_includeInLayout(value:Bool):Bool {
+		if (includeInLayout != value) {
+			includeInLayout = value;
+			if (__parent != null)
+				__parent.invalidateLayout();
+		}
+		return value;
+	}
+
 	private var __contextMenu:ContextMenu;
 
 	private function get_contextMenu():ContextMenu {
@@ -1173,7 +1188,12 @@ class DisplayObject extends EventDispatcher {
 
 	private function set_centerX(value:Null<Float>):Null<Float> {
 		if (this.layoutData is AnchorLayoutData) {
-			return cast(this.layoutData, AnchorLayoutData).horizontalCenter = value;
+			var data:AnchorLayoutData = cast this.layoutData;
+			if (data.horizontalCenter != value) {
+				data.horizontalCenter = value;
+				if (__parent != null)
+					__parent.invalidateLayout();
+			}
 		}
 		return value;
 	}
@@ -1192,7 +1212,12 @@ class DisplayObject extends EventDispatcher {
 
 	private function set_centerY(value:Null<Float>):Null<Float> {
 		if (this.layoutData is AnchorLayoutData) {
-			return cast(this.layoutData, AnchorLayoutData).verticalCenter = value;
+			var data:AnchorLayoutData = cast this.layoutData;
+			if (data.verticalCenter != value) {
+				data.verticalCenter = value;
+				if (__parent != null)
+					__parent.invalidateLayout();
+			}
 		}
 		return value;
 	}
@@ -1211,7 +1236,12 @@ class DisplayObject extends EventDispatcher {
 
 	private function set_left(value:Null<Float>):Null<Float> {
 		if (this.layoutData is AnchorLayoutData) {
-			return cast(this.layoutData, AnchorLayoutData).left = value;
+			var data:AnchorLayoutData = cast this.layoutData;
+			if (data.left != value) {
+				data.left = value;
+				if (__parent != null)
+					__parent.invalidateLayout();
+			}
 		}
 		return value;
 	}
@@ -1230,7 +1260,12 @@ class DisplayObject extends EventDispatcher {
 
 	private function set_right(value:Null<Float>):Null<Float> {
 		if (this.layoutData is AnchorLayoutData) {
-			return cast(this.layoutData, AnchorLayoutData).right = value;
+			var data:AnchorLayoutData = cast this.layoutData;
+			if (data.right != value) {
+				data.right = value;
+				if (__parent != null)
+					__parent.invalidateLayout();
+			}
 		}
 		return value;
 	}
@@ -1249,7 +1284,12 @@ class DisplayObject extends EventDispatcher {
 
 	private function set_top(value:Null<Float>):Null<Float> {
 		if (this.layoutData is AnchorLayoutData) {
-			return cast(this.layoutData, AnchorLayoutData).top = value;
+			var data:AnchorLayoutData = cast this.layoutData;
+			if (data.top != value) {
+				data.top = value;
+				if (__parent != null)
+					__parent.invalidateLayout();
+			}
 		}
 		return value;
 	}
@@ -1268,7 +1308,12 @@ class DisplayObject extends EventDispatcher {
 
 	private function set_bottom(value:Null<Float>):Null<Float> {
 		if (this.layoutData is AnchorLayoutData) {
-			return cast(this.layoutData, AnchorLayoutData).bottom = value;
+			var data:AnchorLayoutData = cast this.layoutData;
+			if (data.bottom != value) {
+				data.bottom = value;
+				if (__parent != null)
+					__parent.invalidateLayout();
+			}
 		}
 		return value;
 	}

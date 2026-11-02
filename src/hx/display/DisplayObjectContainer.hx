@@ -21,6 +21,7 @@ class DisplayObjectContainer extends DisplayObject {
 	@:noCompletion private var __mouseChildren:Bool = true;
 	@:noCompletion private var __layout:ILayout;
 	@:noCompletion private var __layoutDirty:Bool = false;
+	@:noCompletion private var __updatingLayout:Bool = false;
 
 	/**
 	 * 布局
@@ -39,25 +40,49 @@ class DisplayObjectContainer extends DisplayObject {
 		return __layout;
 	}
 
-	private function __updateLayout() {
-		if (__layoutDirty) {
-			__layoutDirty = false;
+	/** 递归和按需查询共用入口；只消费开始前的变更，保留布局期间的新失效。 */
+	private function __updateLayout(force:Bool = false):Void {
+		if (__updatingLayout || (!force && !__layoutDirty))
+			return;
+		__layoutDirty = false;
+		__updatingLayout = true;
+		try {
 			updateLayout();
+		} catch (error:Dynamic) {
+			__layoutDirty = true;
+			__updatingLayout = false;
+			throw error;
 		}
+		__updatingLayout = false;
 	}
 
 	/**
 	 * 更新布局
 	 */
 	public function updateLayout():Void {
-		if (layout != null) {
-			layout.update(this.children.filter((object) -> !object.hide && object.includeInLayout));
+		// 公开调用仍强制刷新子树；直接调用时也保护布局中的边界查询。
+		var ownsLayout:Bool = !__updatingLayout;
+		if (ownsLayout) {
+			__layoutDirty = false;
+			__updatingLayout = true;
 		}
-		for (object in this.children) {
-			if (object is DisplayObjectContainer) {
-				cast(object, DisplayObjectContainer).updateLayout();
+		try {
+			if (layout != null) {
+				layout.update(this.children.filter((object) -> !object.hide && object.includeInLayout));
 			}
+			for (object in this.children) {
+				if (object is DisplayObjectContainer) {
+					cast(object, DisplayObjectContainer).__updateLayout(true);
+				}
+			}
+		} catch (error:Dynamic) {
+			__layoutDirty = true;
+			if (ownsLayout)
+				__updatingLayout = false;
+			throw error;
 		}
+		if (ownsLayout)
+			__updatingLayout = false;
 	}
 
 	/**
@@ -372,13 +397,21 @@ class DisplayObjectContainer extends DisplayObject {
 	}
 
 	override function set_width(value:Float):Float {
-		__layoutDirty = true;
-		return super.set_width(value);
+		var previousWidth:Null<Float> = __width;
+		var previousScale:Float = __scaleX;
+		var result:Float = super.set_width(value);
+		if (previousWidth != __width || previousScale != __scaleX)
+			__layoutDirty = true;
+		return result;
 	}
 
 	override function set_height(value:Float):Float {
-		__layoutDirty = true;
-		return super.set_height(value);
+		var previousHeight:Null<Float> = __height;
+		var previousScale:Float = __scaleY;
+		var result:Float = super.set_height(value);
+		if (previousHeight != __height || previousScale != __scaleY)
+			__layoutDirty = true;
+		return result;
 	}
 
 	override public function dispose():Void {

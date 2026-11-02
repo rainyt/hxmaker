@@ -197,6 +197,7 @@ class InputLabelOverflowCheck {
 		HTML5TextInputUtils.input = null; HTML5TextInputUtils.textureArea = null;
 
 		checkEmptyCaretAlignment();
+		checkViewportRefresh();
 		checkDragDeletion();
 		checkMasks();
 		#if overflow_browser_checks
@@ -209,6 +210,60 @@ class InputLabelOverflowCheck {
 			js.Browser.document.getElementById("result").textContent = "输入框溢出行为验证通过：" + checks + " 项断言";
 		prepareNativeBackspace();
 		#end
+	}
+
+	/** 静止输入框不重复测量，真实变动和异常恢复仍立即刷新。 */
+	static function checkViewportRefresh():Void {
+		host.focus = null;
+		var input:InputLabel = create("abcdefghijkl", 70);
+		for (_ in 0...3)
+			tick(input);
+		var text:Text = cast input.label.root;
+		var caretQueries:Int = 0;
+		var widthQueries:Int = 0;
+		var originalCaret:Int->Rectangle = text.getCaretBounds;
+		var originalWidth:Void->Float = input.label.getTextWidth;
+		untyped text.getCaretBounds = function(index:Int):Rectangle {
+			caretQueries++;
+			return originalCaret(index);
+		};
+		untyped input.label.getTextWidth = function():Float {
+			widthQueries++;
+			return originalWidth();
+		};
+		for (_ in 0...120)
+			input.onUpdate(0.016);
+		assert(caretQueries == 0 && widthQueries == 0, "静止失焦输入框的 120 帧不查询文本尺寸或光标布局");
+		input.width = 200;
+		input.refreshViewport();
+		assert(widthQueries > 0 && input.__viewport.width == 200 && input.__viewport.maskRect == null,
+			"同帧扩大输入框立即更新视口和裁剪");
+		input.width = 60;
+		input.refreshViewport();
+		assert(input.__viewport.width == 60 && input.__viewport.maskRect != null, "同帧再次缩小仍立即刷新");
+		var before:Int = caretQueries;
+		input.label.setTextFormatDirty();
+		TextFieldRender.prepareLabel(input.label);
+		input.refreshViewport();
+		assert(caretQueries > before, "文本脏标记提前被后端消费后仍按状态版本刷新");
+		before = caretQueries;
+		@:privateAccess text.layoutVersion++;
+		input.refreshViewport();
+		assert(caretQueries > before, "后端字符布局版本变化使视口缓存失效");
+		input.syncSelectionFromNative(0, 4);
+		input.refreshViewport();
+		assert(input.__selectionQuadCount > 0, "选区变化立即更新高亮");
+		input.label.horizontalAlign = CENTER;
+		input.refreshViewport();
+		assert(input.isViewportCurrent(true), "对齐变化完成后保存新的依赖版本");
+		input.label.setTransformDirty();
+		untyped input.label.getTextWidth = function():Float { throw "模拟测量异常"; };
+		var failed:Bool = false;
+		try input.refreshViewport() catch (error:Dynamic) failed = true;
+		assert(failed && !input.__refreshingViewport && !input.__viewportCurrent, "测量异常后释放刷新锁并使缓存失效");
+		untyped input.label.getTextWidth = originalWidth;
+		input.refreshViewport();
+		assert(input.isViewportCurrent(true), "测量异常恢复后可以再次刷新");
 	}
 
 	/** 空文本的光标需要按自身尺寸对齐，而不是沿用高度为零的文字原点。 */

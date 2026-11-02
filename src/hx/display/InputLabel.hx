@@ -8,11 +8,14 @@ import hx.utils.TextInputUtils;
 import hx.events.MouseEvent;
 import hx.events.Event;
 import hx.providers.ITextFieldLayoutProvider;
+import hx.providers.ITextFieldDataProvider;
 import StringTools;
 
 /**
  * 输入文本组件
  */
+@:access(hx.display.DisplayObject)
+@:access(hx.display.Label)
 class InputLabel extends Box implements IDataProider<String> implements ITabFocusable {
 	/** 默认参与 Tab 切换。 */
 	public var tabEnabled:Bool = true;
@@ -44,6 +47,19 @@ class InputLabel extends Box implements IDataProider<String> implements ITabFocu
 	private var __scrollX:Float = 0;
 	private var __scrollY:Float = 0;
 	private var __refreshingViewport:Bool = false;
+	private var __viewportCurrent:Bool = false;
+	private var __lastInputVersion:Int = -1;
+	private var __lastLabelVersion:Int = -1;
+	private var __lastPlaceholderVersion:Int = -1;
+	private var __lastViewportVersion:Int = -1;
+	private var __lastContentVersion:Int = -1;
+	private var __lastLabelRoot:ITextFieldDataProvider;
+	private var __lastPlaceholderRoot:ITextFieldDataProvider;
+	private var __lastLabelLayoutVersion:Int = -1;
+	private var __lastPlaceholderLayoutVersion:Int = -1;
+	private var __lastViewportFocused:Bool = false;
+	private var __lastFollowCaret:Bool = true;
+	private var __lastCaretWidth:Float = -1;
 	private var __dragStageX:Float = 0;
 	private var __dragStageY:Float = 0;
 
@@ -772,12 +788,66 @@ class InputLabel extends Box implements IDataProider<String> implements ITabFocu
 		}
 	}
 
-	/** 文本布局只在发生变动时扫描；静止输入框每帧仅比较缓存状态。 */
+	/** 没有布局版本接口的后端继续逐次测量，避免缓存无法观察的后端变化。 */
+	private static function textLayoutVersion(root:ITextFieldDataProvider):Int {
+		return Std.isOfType(root, ITextFieldLayoutProvider) ? cast(root, ITextFieldLayoutProvider).layoutVersion : -1;
+	}
+
+	private function isViewportCurrent(followCaret:Bool):Bool {
+		return __viewportCurrent && !__selectionDirty
+			&& __lastInputVersion == __changeVersion
+			&& __lastLabelVersion == label.__changeVersion
+			&& __lastPlaceholderVersion == placeholderLabel.__changeVersion
+			&& __lastViewportVersion == __viewport.__changeVersion
+			&& __lastContentVersion == __content.__changeVersion
+			&& __lastLabelRoot == label.root && __lastPlaceholderRoot == placeholderLabel.root
+			&& __lastLabelLayoutVersion >= 0 && __lastLabelLayoutVersion == textLayoutVersion(label.root)
+			&& (!placeholderLabel.visible || (__lastPlaceholderLayoutVersion >= 0
+				&& __lastPlaceholderLayoutVersion == textLayoutVersion(placeholderLabel.root)))
+			&& !label.__textFormatDirty
+			&& (!placeholderLabel.visible || !placeholderLabel.__textFormatDirty)
+			&& __lastViewportFocused == (stage != null && stage.focus == this)
+			&& __lastFollowCaret == followCaret && __lastCaretWidth == line.width;
+	}
+
+	/** 在测量、滚动和裁剪完成后保存依赖状态，渲染清理脏标记不会使缓存失效。 */
+	private function rememberViewport(followCaret:Bool):Void {
+		__lastInputVersion = __changeVersion;
+		__lastLabelVersion = label.__changeVersion;
+		__lastPlaceholderVersion = placeholderLabel.__changeVersion;
+		__lastViewportVersion = __viewport.__changeVersion;
+		__lastContentVersion = __content.__changeVersion;
+		__lastLabelRoot = label.root;
+		__lastPlaceholderRoot = placeholderLabel.root;
+		__lastLabelLayoutVersion = textLayoutVersion(label.root);
+		__lastPlaceholderLayoutVersion = textLayoutVersion(placeholderLabel.root);
+		__lastViewportFocused = stage != null && stage.focus == this;
+		__lastFollowCaret = followCaret;
+		__lastCaretWidth = line.width;
+		__viewportCurrent = true;
+	}
+
+	/** 先结算祖先布局，再判断依赖版本；光标闪烁不触发文字和选区的重复测量。 */
 	private function refreshViewport(followCaret:Bool = true):Void {
 		if (__refreshingViewport)
 			return;
 		__refreshingViewport = true;
-		ensureLayout(this);
+		try {
+			ensureLayout(this);
+			if (!isViewportCurrent(followCaret)) {
+				__viewportCurrent = false;
+				refreshViewportLayout(followCaret);
+				rememberViewport(followCaret);
+			}
+		} catch (error:Dynamic) {
+			__refreshingViewport = false;
+			__viewportCurrent = false;
+			throw error;
+		}
+		__refreshingViewport = false;
+	}
+
+	private function refreshViewportLayout(followCaret:Bool):Void {
 		var dirty = @:privateAccess label.__textFormatDirty;
 		label.getTextWidth();
 		label.getTextHeight();
@@ -849,7 +919,6 @@ class InputLabel extends Box implements IDataProider<String> implements ITabFocu
 		applyScroll();
 		updateLine(line.alpha);
 		updateClip();
-		__refreshingViewport = false;
 	}
 
 	private function applyScroll():Void {

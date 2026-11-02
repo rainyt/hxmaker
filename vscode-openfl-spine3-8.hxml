@@ -1,0 +1,13 @@
+--main SpineCompile
+--class-path src
+--class-path test
+--library spine-hx:3.8.2
+--library actuate
+--library openfl
+--library vector-math
+--library openfl-glsl
+--library lime
+--library hxmaker-openfl
+--js bin/main.js
+--macro hx.macro.SpineMacro.configure()
+--no-output

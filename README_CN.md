@@ -48,6 +48,8 @@
 | hx.events.KeyboardEvent | 键盘事件 | ✅ | / |
 | hx.assets.Assets | 资源加载器，支持图片、音频、精灵图、XML、JSON等常见资源格式加载 | ✅ | / |
 
+Spine 可按依赖库在编译期选择 `spine-hx 3.8.2` 或 `spine-haxe 4.2.x`。配置与当前边界见[双运行时支持说明](docs/Spine双运行时支持说明.md)，可运行工程见[Spine 3.8 示例](samples/2d/spine3.8/README.md)。本次改动尚未执行编译及运行验收。
+
 # 3D 能力与新技术
 
 hxmaker 通过 `hx.display.Scene3D` 将三维视口嵌入二维显示树：三维场景绘制到独立颜色／深度目标，再与文字、按钮及其他 UI 按二维顺序合成。三维节点、相机和模型统一使用 `hx.display3d`，渲染后端通过 `IScene3DRenderer` 接入。目前主要面向配套 [hxmaker-openfl](https://github.com/rainyt/hxmaker-openfl) 的 OpenGL/WebGL 路径。

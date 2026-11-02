@@ -1,4 +1,4 @@
---main Test
+--main SpineCompile
 --class-path src
 --class-path test
 --library spine-haxe
@@ -9,4 +9,5 @@
 --library lime
 --library hxmaker-openfl
 --js bin/main.js
+--macro hx.macro.SpineMacro.configure()
 --no-output

@@ -7,5 +7,6 @@
 | [context-menu](context-menu/project.xml) | 通用右键菜单 |
 | [tab-focus](tab-focus/README.md) | 输入框与接口自定义组件的 Tab 焦点切换 |
 | [context-recovery](context-recovery/README.md) | 纯二维静态上下文恢复 |
+| [spine3.8](spine3.8/README.md) | Spine 3.8 动画、裁剪、皮肤、插槽挂载与事件，固定使用 spine-hx 3.8.2 |
 
 启动与包引用约定见[示例目录说明](../README.md)。本次分类迁移尚未编译或测试。

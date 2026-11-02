@@ -4,23 +4,8 @@ package hx.display;
 import hx.geom.ColorTransform;
 import spine.Slot;
 import hx.display.ISpine.ISpineDrawOrder;
-#if spine_hx
-import spine.AnimationState.TrackEntry;
-import spine.utils.SkeletonClipping;
-import spine.AnimationState;
-import spine.AnimationStateData;
-import spine.support.graphics.TextureAtlas.AtlasRegion as TextureAtlasRegion;
-#else
-import spine.animation.TrackEntry;
-import spine.atlas.TextureAtlasRegion;
-import spine.SkeletonClipping;
-import spine.Physics;
-import spine.animation.AnimationStateData;
-import spine.animation.AnimationState;
-#end
-import spine.attachments.MeshAttachment;
-import spine.attachments.RegionAttachment;
-import spine.attachments.ClippingAttachment;
+import hx.spine.SpineTypes.TrackEntry;
+import hx.spine.SpineTypes.AnimationState;
 import spine.SkeletonData;
 import spine.Skeleton;
 
@@ -121,7 +106,7 @@ class SpineSprite extends Sprite implements ISpineDrawOrder {
 		this.onUpdateWorldTransformAfter();
 	}
 
-	override function onUpdate(dt:Float) {
+	override function onUpdate(dt:Float):Void {
 		this.spine.onUpdate(dt);
 		for (object in __slotDisplay) {
 			for (sub in object) {
@@ -148,6 +133,11 @@ class SpineSprite extends Sprite implements ISpineDrawOrder {
 	 */
 	public function play(name:String, index:Int = 0, isLoop:Bool = true):TrackEntry {
 		return this.spine.play(name, index, isLoop);
+	}
+
+	/** 停止动画并保留当前姿势。 */
+	public function stop():Void {
+		this.spine.stop();
 	}
 
 	/**
@@ -239,7 +229,15 @@ class SpineSprite extends Sprite implements ISpineDrawOrder {
 		return this.__slotDisplay[name];
 	}
 
-	public function onStart():Void {}
+	public function onStart():Void {
+		__drawIndex = 0;
+		for (graphics in __drawGraphics) {
+			if (graphics != null)
+				graphics.clear();
+		}
+		// 即使整帧没有可绘制插槽，也要移除上一帧的内容。
+		this.removeChildren();
+	}
 
 	public function onEnd():Void {
 		__colorTransformDirty = false;
@@ -258,31 +256,21 @@ class SpineSprite extends Sprite implements ISpineDrawOrder {
 	 */
 	public function onDrawOrder(slot:Slot, bitmapData:BitmapData, vertices:Array<Float>, triangles:Array<Int>, uvs:Array<Float>, alpha:Float,
 			color:ColorTransform, applyBlendAddMode:Bool, isStart:Bool):Void {
-		if (isStart) {
-			__drawIndex = 0;
-			for (graphics in __drawGraphics) {
-				if (graphics != null)
-					graphics.clear();
-			}
-			this.removeChildren();
-		}
-
-		var isDarwable = bitmapData != null;
+		var isDarwable:Bool = bitmapData != null;
 
 		if (isDarwable) {
-			var g = getDrawGraphicsAt(__drawIndex);
-			if (__colorTransformDirty) {
-				g.colorTransform = this.colorTransform;
-			}
+			// 每个插槽使用独立图形，防止后续插槽覆盖此前提交的数据。
+			var g:Graphics = getDrawGraphicsAt(__drawIndex++);
+			g.colorTransform = this.colorTransform;
 			g.beginBitmapData(bitmapData);
 			g.drawTriangles(vertices, triangles, uvs, alpha, color, applyBlendAddMode);
 			this.addChild(g);
 		}
 
-		var datas = getBindSoltDisplay(slot);
+		var datas:Array<DisplayObjectDraw> = getBindSoltDisplay(slot);
 		if (datas != null) {
 			for (data in datas) {
-				var display = data == null ? null : data.display;
+				var display:DisplayObject = data == null ? null : data.display;
 				if (display != null) {
 					#if spine_hx
 					display.x = slot.bone.getWorldX();
@@ -303,18 +291,30 @@ class SpineSprite extends Sprite implements ISpineDrawOrder {
 					if (data.drawFunction != null) {
 						data.drawFunction(display);
 					}
-					// if (isDarwable)
-					__drawIndex++;
 				}
 			}
 		}
 	}
 
-	override function addEventListener<T>(type:String, listener:T->Void) {
+	override public function dispose():Void {
+		if (isDisposed)
+			return;
+		updateEnabled = false;
+		super.dispose();
+		spine.dispose();
+		for (graphics in __drawGraphics) {
+			if (graphics != null && !graphics.isDisposed)
+				graphics.dispose();
+		}
+		__drawGraphics.resize(0);
+		__slotDisplay.clear();
+	}
+
+	override function addEventListener<T>(type:String, listener:T->Void):Void {
 		spine.addEventListener(type, listener);
 	}
 
-	override function removeEventListener<T>(type:String, listener:T->Void) {
+	override function removeEventListener<T>(type:String, listener:T->Void):Void {
 		spine.removeEventListener(type, listener);
 	}
 }

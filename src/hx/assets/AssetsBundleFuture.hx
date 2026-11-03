@@ -1,6 +1,7 @@
 package hx.assets;
 
 import haxe.io.Bytes;
+import hx.events.FutureErrorEvent;
 
 using haxe.io.Path;
 
@@ -8,6 +9,15 @@ using haxe.io.Path;
  * 资源压缩包加载器
  */
 class AssetsBundleFuture extends Future<AssetsBundle, String> {
+	/**
+	 * 通知加载失败，并保留资源路径
+	 */
+	private function fail(message:String):Void {
+		var event:FutureErrorEvent = FutureErrorEvent.create(FutureErrorEvent.LOAD_ERROR, -1, message, this.path);
+		event.path = this.path;
+		this.errorValue(event);
+	}
+
 	/**
 	 * 判断压缩包是否存在
 	 */
@@ -39,7 +49,7 @@ class AssetsBundleFuture extends Future<AssetsBundle, String> {
 					},
 					success: function(res:Dynamic):Void {
 						// 将文件缓存起来，避免下次重复下载
-						var cachePath = StringTools.replace(filePath, ".zip", ".cache");
+						var cachePath:String = StringTools.replace(filePath, ".zip", ".cache");
 						Wx.getFileSystemManager().writeFile({
 							filePath: cachePath,
 							data: "ok",
@@ -52,28 +62,27 @@ class AssetsBundleFuture extends Future<AssetsBundle, String> {
 						});
 					}
 				});
-				var assetsBundle = new AssetsBundle();
+				var assetsBundle:AssetsBundle = new AssetsBundle();
 				this.completeValue(assetsBundle);
 			},
-			fail: function(data:Dynamic) {
+			fail: function(data:Dynamic):Void {
 				trace("解压失败", data);
-				var assetsBundle = new AssetsBundle();
-				this.completeValue(assetsBundle);
+				this.fail("资源包解压失败：" + Std.string(data));
 			}
 		});
 		#else
-		trace("unzip not support");
+		this.fail("当前平台不支持通过文件路径解压资源包：" + filePath);
 		#end
 	}
 
-	override function post() {
+	override function post():Void {
 		super.post();
 		#if (wechat_zygame_dom > '5.6.4')
-		var id = haxe.crypto.Md5.encode(path);
+		var id:String = haxe.crypto.Md5.encode(path);
 		// 微信小游戏版本改进，将压缩包储存到本地，进行解压，如果压缩包已经存在，则不重复加载。使用Wx.downloadFile下载压缩包
-		var filePath = Path.join([Wx.env.USER_DATA_PATH, id + ".zip"]);
-		var cachePath = Path.join([Wx.env.USER_DATA_PATH, id + ".cache"]);
-		var target = Path.join([Wx.env.USER_DATA_PATH]);
+		var filePath:String = Path.join([Wx.env.USER_DATA_PATH, id + ".zip"]);
+		var cachePath:String = Path.join([Wx.env.USER_DATA_PATH, id + ".cache"]);
+		var target:String = Path.join([Wx.env.USER_DATA_PATH]);
 		trace("download bundle:", filePath, ">", target);
 		if (!existBundle(cachePath)) {
 			if (!existBundle(filePath))
@@ -85,9 +94,10 @@ class AssetsBundleFuture extends Future<AssetsBundle, String> {
 					success: function(res:Dynamic):Void {
 						unzip(filePath, target);
 					},
-					fail: function(data:Dynamic) {
+					fail: function(data:Dynamic):Void {
 						// 临时文件无法下载，意味着资源无法被下载
-						trace("wx.donwloadFile fail:", path, data);
+						trace("wx.downloadFile fail:", path, data);
+						this.fail("资源包下载失败：" + Std.string(data));
 					}
 				});
 			else {
@@ -95,14 +105,19 @@ class AssetsBundleFuture extends Future<AssetsBundle, String> {
 				unzip(filePath, target);
 			}
 		} else {
-			var assetsBundle = new AssetsBundle();
+			var assetsBundle:AssetsBundle = new AssetsBundle();
 			this.completeValue(assetsBundle);
 		}
 		#else
-		new BytesFuture(this.path, true).onComplete(function(bytes) {
+		new BytesFuture(this.path, true).onComplete(function(bytes:AssetObject<Bytes>):Void {
 			this.addAssetObject(bytes);
-			// 加载完成
-			var assetsBundle = new AssetsBundle(bytes.data);
+			var assetsBundle:AssetsBundle;
+			try {
+				assetsBundle = new AssetsBundle(bytes.data);
+			} catch (error:Dynamic) {
+				this.fail("资源包解析失败：" + Std.string(error));
+				return;
+			}
 			this.completeValue(assetsBundle);
 		}).onError(this.errorValue);
 		#end

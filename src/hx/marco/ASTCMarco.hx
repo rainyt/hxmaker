@@ -81,7 +81,8 @@ class ASTCMarco {
 		files.sort(Reflect.compare);
 		revisions.sort(Reflect.compare);
 		var content:Bytes = Bytes.ofString(Json.stringify({schemaVersion: 1, revision: Sha256.encode(revisions.join("\n")), files: files}));
-		Context.addResource("$hxmaker.astc.manifest", Compress.run(content, 9));
+		// 初始化宏没有调用方模块，资源名不能以 $ 开头，否则 Haxe 4.3 会触发断言。
+		Context.addResource("hxmaker.astc.manifest", Compress.run(content, 9));
 	}
 	#end
 }

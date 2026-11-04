@@ -7,7 +7,7 @@ import haxe.zip.Uncompress;
 
 /** 读取宏合并后内嵌的压缩清单，不访问网络或依赖平台文件系统。 */
 class ASTCManifest {
-	public static inline var RESOURCE_NAME:String = "$hxmaker.astc.manifest";
+	public static inline var RESOURCE_NAME:String = "hxmaker.astc.manifest";
 	public static var enabled:Bool = true;
 	private static var loaded:Bool = false;
 	private static var configured:Bool = false;

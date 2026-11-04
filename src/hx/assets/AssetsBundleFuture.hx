@@ -9,10 +9,18 @@ using haxe.io.Path;
  * 资源压缩包加载器
  */
 class AssetsBundleFuture extends Future<AssetsBundle, String> {
+	/** 可选资源包失败后允许继续按单文件加载；默认保留原来的失败行为。 */
+	public var optional:Bool = false;
+
 	/**
 	 * 通知加载失败，并保留资源路径
 	 */
 	private function fail(message:String):Void {
+		if (optional) {
+			trace("可选资源包不可用，继续加载单文件：" + this.path + "，" + message);
+			this.completeValue(new AssetsBundle());
+			return;
+		}
 		var event:FutureErrorEvent = FutureErrorEvent.create(FutureErrorEvent.LOAD_ERROR, -1, message, this.path);
 		event.path = this.path;
 		this.errorValue(event);
@@ -67,6 +75,7 @@ class AssetsBundleFuture extends Future<AssetsBundle, String> {
 			},
 			fail: function(data:Dynamic):Void {
 				trace("解压失败", data);
+				Wx.getFileSystemManager().unlink({filePath: filePath});
 				this.fail("资源包解压失败：" + Std.string(data));
 			}
 		});
@@ -89,14 +98,20 @@ class AssetsBundleFuture extends Future<AssetsBundle, String> {
 				Wx.downloadFile({
 					url: hx.assets.Assets.getDefaultNativePath(this.path),
 					filePath: filePath,
-					timeout: 60000,
+					timeout: optional ? 12000 : 60000,
 					enableHttp2: true,
 					success: function(res:Dynamic):Void {
-						unzip(filePath, target);
+						if (res.statusCode == 200)
+							unzip(filePath, target);
+						else {
+							Wx.getFileSystemManager().unlink({filePath: filePath});
+							this.fail("资源包下载 HTTP 状态异常：" + Std.string(res.statusCode));
+						}
 					},
 					fail: function(data:Dynamic):Void {
 						// 临时文件无法下载，意味着资源无法被下载
 						trace("wx.downloadFile fail:", path, data);
+						Wx.getFileSystemManager().unlink({filePath: filePath});
 						this.fail("资源包下载失败：" + Std.string(data));
 					}
 				});
@@ -119,7 +134,7 @@ class AssetsBundleFuture extends Future<AssetsBundle, String> {
 				return;
 			}
 			this.completeValue(assetsBundle);
-		}).onError(this.errorValue);
+		}).onError((error:FutureErrorEvent) -> this.fail(error.toString()));
 		#end
 	}
 }

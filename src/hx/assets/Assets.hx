@@ -263,10 +263,13 @@ class Assets extends Future<Assets, Dynamic> {
 	/**
 	 * 加载资源压缩包文件
 	 * @param path 
+	 * @param optional 为 true 时资源包失败不阻断后续单文件加载
 	 */
-	public function loadAssetsBundle(path:String):Void {
+	public function loadAssetsBundle(path:String, optional:Bool = false):Void {
 		path = getNativePath(path);
-		pushFuture(new hx.assets.AssetsBundleFuture(path, false));
+		var future:AssetsBundleFuture = new AssetsBundleFuture(path, false);
+		future.optional = optional;
+		pushFuture(future);
 	}
 
 	/**

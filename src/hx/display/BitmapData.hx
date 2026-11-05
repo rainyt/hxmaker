@@ -22,7 +22,29 @@ class BitmapData {
 	/**
 	 * 底层位图数据
 	 */
-	public var data:IBitmapData;
+	public var data(default, set):IBitmapData;
+
+	/** 切片共同持有根数据；公开视图释放不等于根纹理立即释放。 */
+	private var owner:BitmapDataOwner;
+	#if js
+	private static var owners:js.lib.WeakMap<BitmapDataOwner> = new js.lib.WeakMap();
+	#elseif cpp
+	private static var owners:haxe.ds.WeakMap<IBitmapData, BitmapDataOwner> = new haxe.ds.WeakMap();
+	#else
+	private static var owners:haxe.ds.ObjectMap<IBitmapData, BitmapDataOwner> = new haxe.ds.ObjectMap();
+	#end
+
+	/** 替换数据时先退出旧所有权，再建立独占根所有权。 */
+	private function set_data(value:IBitmapData):IBitmapData {
+		if (data == value) return value;
+		if (owner != null) owner.release();
+		owner = value == null ? null : owners.get(value);
+		if (value != null) {
+			if (owner == null || owner.references == 0) { owner = new BitmapDataOwner(value); owners.set(value, owner); }
+			else owner.references++;
+		}
+		return data = value;
+	}
 
 	/**
 	 * 位图切割区域
@@ -90,7 +112,12 @@ class BitmapData {
 	 * @return 切割后的新BitmapData实例
 	 */
 	public function sub(x:Float, y:Float, width:Float, height:Float):BitmapData {
-		var bitmapData = BitmapData.formData(this.data);
+		if (data == null) throw "已经释放的位图不能创建切片";
+		var bitmapData:BitmapData = new BitmapData();
+		// 先直接建立共享视图，避免 setter 误建第二个独占所有者。
+		@:bypassAccessor bitmapData.data = data;
+		bitmapData.owner = owner;
+		owner.references++;
 		bitmapData.rect = new Rectangle(x, y, width, height);
 		return bitmapData;
 	}
@@ -163,8 +190,27 @@ class BitmapData {
 	 */
 	public function dispose():Void {
 		if (data != null) {
-			data.dispose();
 			data = null;
+		}
+	}
+}
+
+/** 根数据的视图所有权；渲染快照的后端持有另行配对管理。 */
+@:access(hx.display.BitmapData)
+private class BitmapDataOwner {
+	public var references:Int = 1;
+	private var root:IBitmapData;
+	public function new(root:IBitmapData) { this.root = root; }
+	/** 最后一个公开视图退出后才请求后端释放，重复 dispose 由视图保证幂等。 */
+	public function release():Void {
+		references--;
+		if (references == 0) {
+			#if js
+			BitmapData.owners.delete(root);
+			#else
+			BitmapData.owners.remove(root);
+			#end
+			root.dispose(); root = null;
 		}
 	}
 }

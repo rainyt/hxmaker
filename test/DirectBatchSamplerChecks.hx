@@ -2,7 +2,8 @@ package;
 
 import hx.render2d.openfl.DirectBatchRenderer;
 import hx.render3d.openfl.RenderStateGuard3D;
-import hx.render3d.openfl.TextureBridge3D;
+import hx.render2d.openfl.TextureBridge2D;
+import hx.render2d.openfl.TextureInputError;
 import openfl.display.BitmapData;
 import openfl.display.OpenGLRenderer;
 import openfl.display.Shader;
@@ -29,7 +30,7 @@ class DirectBatchSamplerChecks {
 	}
 
 	static function main():Void {
-		var activeSlot = 0;
+		var activeSlot:Int = 0;
 		var uniformUnits:Map<Int, Int> = [];
 		var bindings:Map<Int, Dynamic> = [];
 		bindings.set(0, "原绑定");
@@ -53,7 +54,7 @@ class DirectBatchSamplerChecks {
 		var background = Type.createEmptyInstance(BitmapData);
 		var source = Type.createEmptyInstance(BitmapData);
 		var unused = Type.createEmptyInstance(BitmapData);
-		buffer.inputs = [unused, background, unused, null, source];
+		buffer.inputs = [unused, background, unused, background, source];
 		for (ref in buffer.inputRefs) {
 			buffer.inputFilter.push(ref.filter);
 			buffer.inputMipFilter.push(ref.mipFilter);
@@ -75,9 +76,9 @@ class DirectBatchSamplerChecks {
 		guard.queryCount = guard.textureSlotCount = 0;
 		var direct = new DirectBatchRenderer();
 		direct.gl = cast gl;
-		var resolved = 0;
-		var originalResolve = TextureBridge3D.resolve;
-		untyped TextureBridge3D.resolve = function(bitmap:BitmapData, unusedContext:Dynamic):TextureBase {
+		var resolved:Int = 0;
+		var originalResolve:Dynamic = TextureBridge2D.resolve;
+		untyped TextureBridge2D.resolve = function(bitmap:BitmapData, unusedContext:Dynamic):TextureBase {
 			check(bitmap != unused, "未使用的 sampler 不能上传纹理或占用纹理单元");
 			resolved++;
 			return cast {
@@ -90,14 +91,19 @@ class DirectBatchSamplerChecks {
 			direct.bindNativeTextures(buffer, renderer, guard);
 			check(bindings.get(uniformUnits.get(0)) == "背景纹理", "背景 sampler 与实际绑定的纹理单元不一致");
 			check(bindings.get(uniformUnits.get(9)) == "当前图片", "源图片 sampler 与实际绑定的纹理单元不一致");
-			check(bindings.get(uniformUnits.get(5)) == null, "空活动输入仍在采样上一批次的纹理");
-			check(resolved == 2 && guard.textureSlotCount == 3, "空活动输入必须占位，未使用输入必须跳过");
+			check(bindings.get(uniformUnits.get(5)) == "背景纹理", "活动输入没有绑定本批次纹理");
+			check(resolved == 3 && guard.textureSlotCount == 3, "空活动输入必须占位，未使用输入必须跳过");
 			check(guard.textures.get(1) == "上一批次的离屏目标", "解绑前必须保存旧绑定以供状态恢复");
+			buffer.inputs[3] = null;
+			var rejected:Bool = false;
+			try { direct.bindNativeTextures(buffer, renderer, guard); }
+			catch (error:TextureInputError) { rejected = error.kind == NotReady; }
+			check(rejected, "必需活动输入为空时必须分类失败，不能静默取消遮罩");
 		} catch (error:Dynamic) {
-			untyped TextureBridge3D.resolve = originalResolve;
+			untyped TextureBridge2D.resolve = originalResolve;
 			throw error;
 		}
-		untyped TextureBridge3D.resolve = originalResolve;
+		untyped TextureBridge2D.resolve = originalResolve;
 		trace("直接渲染 sampler 映射检查完成");
 	}
 }

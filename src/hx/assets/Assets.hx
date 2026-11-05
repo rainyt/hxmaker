@@ -110,6 +110,7 @@ class Assets extends Future<Assets, Dynamic> {
 	 * 加载的资源列表
 	 */
 	public var futures:Array<Future<Dynamic, Dynamic>> = [];
+	private var loadGeneration:Int = 0;
 
 	/**
 	 * 位图列表
@@ -439,12 +440,14 @@ class Assets extends Future<Assets, Dynamic> {
 			return;
 		}
 		futures.push(future);
+		var generation:Int = loadGeneration;
 		future.onComplete((data) -> {
+			if (generation != loadGeneration) { data.release(); return; }
 			// data 是 AssetObject，由 Future.completeValue 自动包装
 			assetObjects.push(data);
 			onCompleted(future, data.data);
 		});
-		future.onError(__onError);
+		future.onError(function(error:FutureErrorEvent):Void { if (generation == loadGeneration) __onError(error); });
 	}
 
 	/**
@@ -554,16 +557,14 @@ class Assets extends Future<Assets, Dynamic> {
 		for (key => value in assets.bundles) {
 			this.bundles.set(key, value);
 		}
-		// 为合并过来的资源创建 AssetObject 追踪，并增加引用计数
-		for (obj in assets.assetObjects) {
-			var newObj = new AssetObject(obj.nativePath, obj.data);
-			newObj.childAssetObjects = obj.childAssetObjects.copy();
-			newObj.retain();
-			this.assetObjects.push(newObj);
+		// 共享追踪对象同时共享代号和所有权，最后一个 Assets 才释放图集视图。
+		for (object in assets.assetObjects) {
+			object.retain(); this.assetObjects.push(object);
 		}
 	}
 
 	public function clean(dispose:Bool = true):Void {
+		loadGeneration++; stop(); futures.resize(0); __loadIndex = 0;
 		for (object in assetObjects) {
 			object.release();
 		}
@@ -827,9 +828,11 @@ class Assets extends Future<Assets, Dynamic> {
 		if (tryLoadTimes != -1 && __tryLoadTimes++ >= tryLoadTimes) {
 			super.errorValue(data);
 		} else {
-			// 1秒后重试
+			// 延后重试必须仍属于当前宿主代次。
+			var generation:Int = loadGeneration;
 			trace("加载失败", data);
 			Timer.getInstance().setTimeout(() -> {
+				if (generation != loadGeneration) return;
 				trace("Assets: 重试加载 futures.length=", futures.length, __tryLoadTimes);
 				this.isError = false;
 				this.isComplete = false;

@@ -1,0 +1,22 @@
+[
+  {
+    "name": "direct-batch-indices",
+    "passed": true
+  },
+  {
+    "name": "direct-batch-samplers",
+    "passed": true
+  },
+  {
+    "name": "blend-mode-texture-lifetime",
+    "passed": true
+  },
+  {
+    "name": "stale-sampler-before",
+    "passed": true
+  },
+  {
+    "name": "stale-sampler-after",
+    "passed": true
+  }
+]

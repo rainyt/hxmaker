@@ -23,11 +23,14 @@ class RenderFilter {
 	 */
 	public var isStageRenderFilter = false;
 
-	public function init():Void {}
+	/** dispose 后必须显式 init 才能重新挂载，避免半销毁状态。 */
+	public var isDisposed(default, null):Bool = false;
+	public function init():Void { isDisposed = false; __dirty = true; }
 
 	public var nowTime:Float = 0;
 
 	public function update(display:DisplayObject, dt:Float):Void {
+		if (isDisposed) throw "已经销毁的滤镜需要先 init 才能重新挂载";
 		nowTime += dt;
 	}
 
@@ -46,6 +49,7 @@ class RenderFilter {
 	}
 
 	public function dispose():Void {
+		isDisposed = true;
 		render = null;
 	}
 

@@ -1,175 +1,158 @@
 package;
 
 import hx.core.Engine;
+import hx.core.Hxmaker;
+import hx.core.IEngine;
+import hx.core.OpenFlBitmapData;
 import hx.core.Render;
-import hx.display.BlendMode;
-import hx.display.DisplayObject;
 import hx.display.IBitmapData;
+import hx.display.BitmapData;
 import hx.filters.StageBitmapData;
-import hx.geom.Matrix;
-import hx.geom.Rectangle;
 import hx.render.ImageBufferData;
-import hx.render3d.openfl.TextureBridge3D;
+import hx.render2d.openfl.DirectBatchDisplay;
+import hx.render2d.openfl.DirectBatchRenderer;
+import hx.render2d.openfl.TextureLifetime;
 import hx.shader.MultiTextureShader;
-import hx.utils.ContextStats;
-import openfl.display.BitmapData;
-import openfl.display.Shader;
+import hx.net.RequestQueue;
 import openfl.display.ShaderInput;
 
-/** 只记录释放次数，不创建 GPU 纹理。 */
-private class PoolBitmap implements IBitmapData {
-	public var disposed:Int = 0;
-	public function new() {}
-	public function getTexture():Dynamic return null;
-	public function getWidth():Int return 16;
-	public function getHeight():Int return 16;
-	public function clear(?rect:Rectangle):Void {}
-	public function draw(source:DisplayObject, matrix:Matrix, ?blendMode:BlendMode, updateTransform:Bool = true):Void {}
-	public function dispose():Void { disposed++; }
-}
-
-/** 检查静止画面、闲置回收、强制失效与批次缩小时的纹理生命周期，不创建 GPU。 */
-@:access(hx.filters.StageBitmapData)
-@:access(hx.core.Render)
+/** 在浏览器执行真实资源协议检查，使用公开池接口，不依赖旧的帧索引实现。 */
 @:access(hx.core.Engine)
-@:access(hx.shader.MultiTextureShader)
+@:access(hx.core.Hxmaker)
+@:access(hx.core.Render)
+@:access(hx.net.RequestQueue)
+@:access(openfl.display.BitmapData)
 class BlendModeTextureLifetimeChecks {
-	private static function check(value:Bool, message:String):Void {
-		if (!value) throw message;
+	private static function check(value:Bool, message:String):Void { if (!value) throw message; }
+	/** 构造不上传 GPU 的有效原生位图，销毁仍使用真实 BitmapData.dispose。 */
+	private static function bitmap():openfl.display.BitmapData {
+		var result:openfl.display.BitmapData = new openfl.display.BitmapData(16, 16, true, 0);
+		return result;
 	}
-
-	private static function checkPoolLifetime():Void {
-		var first = new PoolBitmap();
-		var second = new PoolBitmap();
-		var idle = new PoolBitmap();
-		StageBitmapData.__pool = [first, second, idle];
-		StageBitmapData.__poolIndex = 2;
-		StageBitmapData.__cacheSize = 0;
-		StageBitmapData.__lastUpdateTime = 0;
-		ContextStats.reset();
-		StageBitmapData.update(7);
-		check(first.disposed == 0 && second.disposed == 0, "画面静止超过六秒，仍在显示的纹理不能释放");
-		check(idle.disposed == 1 && StageBitmapData.counts == 2, "超时应只回收闲置尾部");
-		StageBitmapData.update(7);
-		check(first.disposed == 0 && second.disposed == 0, "多轮空闲更新也必须保留画面引用");
-
-		// 模拟重建为没有混合模式的画面，旧结果才真正闲置。
-		StageBitmapData.resetPool();
-		StageBitmapData.update(7);
-		check(first.disposed == 1 && second.disposed == 1 && StageBitmapData.counts == 0,
-			"下一次遍历不再使用纹理后，应允许回收");
-
-		var cached = new PoolBitmap();
-		var extra = new PoolBitmap();
-		StageBitmapData.__pool = [cached, extra];
-		StageBitmapData.__cacheSize = 1;
-		StageBitmapData.disposeAll();
-		check(cached.disposed == 0 && extra.disposed == 1 && StageBitmapData.counts == 1,
-			"普通回收必须保留预设缓存容量");
-		StageBitmapData.__poolIndex = 1;
-		StageBitmapData.disposeAll(true);
-		check(cached.disposed == 1 && StageBitmapData.counts == 0 && StageBitmapData.__poolIndex == 0,
-			"强制失效必须清空全部实例，即使池大小没有超过缓存容量");
-		check(StageBitmapData.__cacheSize == 1, "强制失效后应保留缓存容量配置");
-		StageBitmapData.__cacheSize = 0;
+	/** 根与切片拥有明确所有权，两个公开视图释放后才销毁。 */
+	private static function checkViews():Void {
+		var raw:openfl.display.BitmapData = bitmap();
+		var root:BitmapData = OpenFlBitmapData.fromBitmapData(raw);
+		var child:BitmapData = root.sub(0, 0, 4, 4);
+		root.dispose(); check(raw.width == 16 && child.data != null, "释放根视图不能误删子视图的纹理");
+		child.dispose(); child.dispose(); check(raw.width == 0, "最后一个视图退出后应最终释放");
+		var shared:openfl.display.BitmapData = bitmap();
+		var a:BitmapData = OpenFlBitmapData.fromBitmapData(shared); var b:BitmapData = OpenFlBitmapData.fromBitmapData(shared);
+		var alias:BitmapData = BitmapData.formData(a.data);
+		a.dispose(); alias.dispose(); check(shared.width == 16, "同原生根的两个包装器应共享释放权");
+		b.dispose(); check(shared.width == 0, "最后一个后端所有者退出后才物理释放");
 	}
-
-	private static function checkBatchTextures():Void {
-		var current = Type.createEmptyInstance(BitmapData);
-		var stale = Type.createEmptyInstance(BitmapData);
-		var mask = Type.createEmptyInstance(BitmapData);
-		var inputs:Array<ShaderInput<BitmapData>> = [];
-		for (index in 0...3) {
-			var input = new ShaderInput<BitmapData>();
-			input.input = stale;
-			inputs.push(input);
-		}
-		var shader = Type.createEmptyInstance(Shader);
+	/** 快照持续持有；池归还和帧索引重置不能允许反馈覆盖。 */
+	private static function checkPool():Void {
+		var previous:IEngine = Hxmaker.engine;
+		var engine:Engine = Type.createEmptyInstance(Engine);
+		engine.____stageWidth = 16; engine.____stageHeight = 16; engine.contextGeneration = 0;
+		Hxmaker.__engine = engine;
+		var a:StageBitmapData = new StageBitmapData(); a.clear();
+		var raw:openfl.display.BitmapData = a.data.getTexture();
+		var batch:DirectBatchDisplay = new DirectBatchDisplay(new DirectBatchRenderer()); batch.addTexture(raw);
+		a.dispose(); StageBitmapData.resetPool();
+		var b:StageBitmapData = new StageBitmapData(); b.clear();
+		check(b.data.getTexture() != raw, "池不能覆盖仍被静止快照读取的目标");
+		StageBitmapData.update(10); check(raw.width == 16, "闲置维护不能销毁读取中的目标");
+		b.dispose(); batch.retire(); batch.retire(); batch.dispose();
+		StageBitmapData.disposeAll(); check(raw.width == 0 && StageBitmapData.counts == 0, "全部借用和读取退出后可以回收");
+		Hxmaker.__engine = previous;
+	}
+	/** 显式自动槽清尾，材质专用输入保持原值。 */
+	private static function checkSlots():Void {
+		var current:openfl.display.BitmapData = bitmap(); var stale:openfl.display.BitmapData = bitmap();
+		var mask:openfl.display.BitmapData = bitmap();
+		var shader:MultiTextureShader = Type.createEmptyInstance(MultiTextureShader);
+		var inputs:Array<ShaderInput<openfl.display.BitmapData>> = [];
+		for (index in 0...3) { var input:ShaderInput<openfl.display.BitmapData> = new ShaderInput(); input.input = stale; inputs.push(input); }
 		shader.data = cast {uSampler0:inputs[0], uSampler1:inputs[1], uSampler2:inputs[2]};
-		var renderer = Type.createEmptyInstance(Render);
-		renderer.currentShader = shader;
-		var batch = Type.createEmptyInstance(ImageBufferData);
-		batch.bitmapDatas = [current];
-		batch.smoothing = false;
-		var oldUnits = MultiTextureShader.__supportedMultiTextureUnits;
-		var oldEnabled = MultiTextureShader.multiTextureEnabled;
-		MultiTextureShader.__supportedMultiTextureUnits = 3;
-		MultiTextureShader.multiTextureEnabled = true;
-		try {
-			renderer.setBatchTextures(batch, true);
-			for (input in inputs)
-				check(input.input == current, "默认批次缩小时，空余槽不能保留历史纹理引用");
-			MultiTextureShader.multiTextureEnabled = false;
-			inputs[2].input = stale;
-			renderer.setBatchTextures(batch, true);
-			check(inputs[2].input == current, "运行时关闭多纹理后，已编译着色器的空余槽仍须清理");
-			inputs[1].input = mask;
-			renderer.setBatchTextures(batch, false);
-			check(inputs[0].input == current && inputs[1].input == mask,
-				"自定义滤镜额外设置的背景或遮罩输入不能被默认槽清理覆盖");
-		} catch (error:Dynamic) {
-			MultiTextureShader.__supportedMultiTextureUnits = oldUnits;
-			MultiTextureShader.multiTextureEnabled = oldEnabled;
-			throw error;
+		shader.batchTextureSlots = ["uSampler0", "uSampler1", "uSampler2"];
+		var render:Render = Type.createEmptyInstance(Render); render.currentShader = shader;
+		var data:ImageBufferData = new ImageBufferData(); data.bitmapDatas = [current];
+		render.setBatchTextures(data, false);
+		for (input in inputs) check(input.input == current, "纯多纹理自定义 Shader 必须覆盖全部管理槽");
+		shader.batchTextureSlots = ["uSampler0"]; inputs[1].input = mask;
+		render.setBatchTextures(data, false); check(inputs[1].input == mask, "材质槽不能被自动合批覆盖");
+		current.dispose(); stale.dispose(); mask.dispose();
+	}
+	/** 缓存零业务计数仍须等待快照退役，重复 release 不能下溢。 */
+	private static function checkCache():Void {
+		var key:String = "__render_lifetime_check__";
+		var entry:Dynamic = RequestQueue.ensureCacheEntry(key, function(data:Dynamic, error:Dynamic):Void {});
+		var raw:openfl.display.BitmapData = bitmap(); var data:BitmapData = OpenFlBitmapData.fromBitmapData(raw);
+		RequestQueue.resolveCacheEntry(key, entry, data, null);
+		RequestQueue.retain(key); RequestQueue.release(key); RequestQueue.release(key);
+		check(RequestQueue.getRefCount(key) == 0, "重复 release 不能产生负引用");
+		var batch:DirectBatchDisplay = new DirectBatchDisplay(new DirectBatchRenderer()); batch.addTexture(raw);
+		RequestQueue.collectUnused(64, 100, 8388608); check(raw.width == 16 && RequestQueue.hasCache(key), "旧快照持有的缓存不得提前清理");
+		batch.retire(); batch.dispose(); RequestQueue.collectUnused(64, 100, 8388608);
+		check(raw.width == 0 && !RequestQueue.hasCache(key), "快照退役后无需新请求即可回收缓存");
+	}
+	/** 强制撤销后的旧完成结果和旧代号不能误改同 URL 的新条目。 */
+	private static function checkCacheGeneration():Void {
+		var key:String = "__render_generation_check__";
+		var old:Dynamic = RequestQueue.ensureCacheEntry(key, function(data:Dynamic, error:Dynamic):Void {});
+		var oldId:Int = RequestQueue.getEntryId(key); RequestQueue.removeCache(key);
+		var current:Dynamic = RequestQueue.ensureCacheEntry(key, function(data:Dynamic, error:Dynamic):Void {});
+		var raw:openfl.display.BitmapData = bitmap();
+		check(!RequestQueue.resolveCacheEntry(key, old, OpenFlBitmapData.fromBitmapData(raw), null) && raw.width == 0,
+			"撤销后的异步结果必须释放并拒绝接收");
+		check(RequestQueue.retain(key, oldId) == 0 && RequestQueue.getRefCount(key) == 0, "旧代号不能增加新条目计数");
+		check(RequestQueue.getEntryId(key) != oldId, "相同 URL 的新请求必须获得新代号");
+		RequestQueue.removeCache(key);
+	}
+	/** 等待回调重入清理、重发时，也不能删除或保留错误的缓存代次。 */
+	private static function checkReentrantCache():Void {
+		for (failed in [false, true]) {
+			var key:String = "__reentrant_cache__";
+			var entry:Dynamic = RequestQueue.ensureCacheEntry(key, function(data:Dynamic, error:Dynamic):Void {});
+			var replacementId:Int = 0;
+			RequestQueue.ensureCacheEntry(key, function(data:Dynamic, error:Dynamic):Void {
+				RequestQueue.removeCache(key);
+				RequestQueue.ensureCacheEntry(key, function(value:Dynamic, failure:Dynamic):Void {});
+				replacementId = RequestQueue.getEntryId(key);
+			});
+			var raw:openfl.display.BitmapData = failed ? null : bitmap();
+			var error:hx.events.FutureErrorEvent = failed ? hx.events.FutureErrorEvent.create(hx.events.FutureErrorEvent.LOAD_ERROR, -1, "注入加载失败") : null;
+			var accepted:Bool = RequestQueue.resolveCacheEntry(key, entry, raw == null ? null : OpenFlBitmapData.fromBitmapData(raw), error);
+			check(replacementId > 0 && RequestQueue.getEntryId(key) == replacementId, "回调重入不能删除同 URL 的新条目");
+			if (!failed) check(!accepted && raw.width == 0, "首个成功回调不能接收已经被等待者撤销的结果");
+			RequestQueue.removeCache(key);
 		}
-		MultiTextureShader.__supportedMultiTextureUnits = oldUnits;
-		MultiTextureShader.multiTextureEnabled = oldEnabled;
 	}
 
-	private static function checkDeferredResize():Void {
-		var oldTexture = new PoolBitmap();
-		StageBitmapData.__pool = [oldTexture];
-		StageBitmapData.__poolIndex = 1;
-		StageBitmapData.__cacheSize = 0;
-		var events:Array<String> = [];
-		var renderer = Type.createEmptyInstance(Render);
-		// 尺寸事件尚未进入下一帧时，OpenFL 仍可能绘制旧批次。
-		untyped renderer.clear = function():Void {
-			check(oldTexture.disposed == 0, "拆除旧批次之前不能释放其纹理");
-			events.push("拆除旧批次");
-			StageBitmapData.resetPool();
-		};
-		untyped renderer.onStageSizeChange = function():Void {
-			check(oldTexture.disposed == 1 && StageBitmapData.counts == 0, "重建目标前必须完成旧纹理释放");
-			events.push("重建目标");
-		};
-		var engine = Type.createEmptyInstance(Engine);
-		engine.renderer = renderer;
-		engine.stages = [];
-		engine.requestStageBitmapReset();
-		engine.requestStageBitmapReset();
-		check(oldTexture.disposed == 0 && engine.__stageBitmapResetPending,
-			"多个尺寸事件应合并为待重建状态，旧画面纹理在帧间仍然有效");
-		engine.beginRenderFrame();
-		check(events.join(" → ") == "拆除旧批次 → 重建目标" && !engine.__stageBitmapResetPending,
-			"帧入口必须按拆除、释放、重建的顺序消费尺寸变化请求");
+	/** 共享 Assets 最后一个持有者退出才释放图集切片；清理后的异步完成不得复活宿主。 */
+	private static function checkAssets():Void {
+		var raw:openfl.display.BitmapData = bitmap(); var root:BitmapData = OpenFlBitmapData.fromBitmapData(raw);
+		var atlas:hx.assets.Atlas = new hx.assets.Atlas(root);
+		var view:BitmapData = root.sub(0, 0, 4, 4); atlas.bitmapDatas.set("view", view);
+		var tracked:hx.assets.AssetObject<Dynamic> = new hx.assets.AssetObject(null, atlas); tracked.retain();
+		var first:hx.assets.Assets = new hx.assets.Assets(); first.assetObjects.push(tracked);
+		var second:hx.assets.Assets = new hx.assets.Assets(); second.pushAssets(first);
+		first.clean(); check(view.data != null, "一个 Assets 清理不能释放另一个 Assets 的图集");
+		second.clean(); check(view.data == null, "最后一个 Assets 清理后退出图集视图所有权"); root.dispose();
+		check(raw.width == 0, "图集视图退出后根纹理可最终释放");
+		var host:hx.assets.Assets = new hx.assets.Assets();
+		var future:hx.assets.Future<Dynamic, String> = new hx.assets.Future("__late_result__", false);
+		host.pushFuture(future); host.clean(); future.completeValue("late");
+		check(host.assetObjects.length == 0 && !host.strings.keys().hasNext(), "宿主清理后异步结果不得复活资源表");
 	}
-
-	private static function checkInvalidTextureMessage():Void {
-		var message = "";
-		try {
-			TextureBridge3D.resolve(null, null, "二维着色器输入 uSampler1");
-		} catch (error:Dynamic) {
-			message = Std.string(error);
+	/** 非法、空及超预算目标在分配前拒绝，小数边界采用向上取整。 */
+	private static function checkBounds():Void {
+		for (width in [0., -1., Math.NaN, Math.POSITIVE_INFINITY, 1e9]) {
+			var rejected:Bool = false;
+			try { hx.render2d.openfl.RenderTargetBudget.validate(width, 16); }
+			catch (error:hx.render2d.openfl.TextureInputError) { rejected = error.kind == InvalidSize; }
+			check(rejected, "非法边界必须分类拒绝");
 		}
-		check(StringTools.contains(message, "二维着色器输入 uSampler1") && StringTools.contains(message, "缺少纹理位图"),
-			"错误必须指出实际使用方及无效原因");
-		check(!StringTools.contains(message, "分离 Alpha"), "缺少位图不能误报为压缩纹理");
-		var invalid:BitmapData = Type.createEmptyInstance(BitmapData);
-		try {
-			TextureBridge3D.resolve(invalid, null, "二维批次纹理槽 0");
-		} catch (error:Dynamic) {
-			message = Std.string(error);
-		}
-		check(StringTools.contains(message, "二维批次纹理槽 0") && StringTools.contains(message, "已经释放或尺寸无效"),
-			"无效位图必须在上传前明确报错，不能误报为分离 Alpha 压缩纹理");
+		var filter:hx.filters.DisplayObjectFilter = new hx.filters.DisplayObjectFilter();
+		var value:BitmapData = filter.createCacheBitmapData(1.2, 2.2);
+		check(value.width == 2 && value.height == 3, "小数边界不能向下取整截断像素"); value.dispose(); filter.dispose();
 	}
 
 	private static function main():Void {
-		checkPoolLifetime();
-		checkDeferredResize();
-		checkBatchTextures();
-		checkInvalidTextureMessage();
+		checkViews(); checkPool(); checkSlots(); checkCache(); checkCacheGeneration(); checkReentrantCache(); checkAssets(); checkBounds();
 		trace("混合模式纹理生命周期检查完成");
 	}
 }

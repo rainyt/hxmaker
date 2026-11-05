@@ -263,6 +263,7 @@ class DisplayObject extends EventDispatcher {
 
 	private function set_blendFilter(value:RenderFilter):RenderFilter {
 		if (__blendFilter != value) {
+			if (__blendFilter != null) __blendFilter.dispose();
 			__blendFilter = value;
 			this.setDirty();
 		}
@@ -1028,7 +1029,13 @@ class DisplayObject extends EventDispatcher {
 	 * 销毁所有有关显示对象的资源引用
 	 */
 	public function dispose():Void {
+		if (isDisposed) return;
 		isDisposed = true;
+		if (__blendFilter != null) { __blendFilter.dispose(); __blendFilter = null; }
+		if (__filters != null) {
+			for (filter in __filters) if (filter != null && !filter.isDisposed) filter.dispose();
+			__filters = null;
+		}
 		__worldTransformParent = null;
 		contextMenu = null;
 		removeEventListeners();

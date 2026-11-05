@@ -1,0 +1,911 @@
+{
+  "createdAt": "2026-11-05T15:02:48.062Z",
+  "platform": "darwin",
+  "arch": "arm64",
+  "version": {
+    "Browser": "Chrome/156.0.8078.81",
+    "File-Path-Style": "posix",
+    "Protocol-Version": "1.3",
+    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36",
+    "V8-Version": "15.6.75.27",
+    "WebKit-Version": "537.36 (@060bedfb508f73250e93aeb9ca8149b3958995d8)",
+    "webSocketDebuggerUrl": "ws://127.0.0.1:9425/devtools/browser/614a5ef4-9bd1-43ac-ac65-8bcbc3ad3b00"
+  },
+  "gpu": {
+    "devices": [
+      {
+        "vendorId": 4203,
+        "deviceId": 0,
+        "vendorString": "Google Inc. (Apple)",
+        "deviceString": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1 Pro, Version 26.6.2 (Build 25G83))",
+        "driverVendor": "Apple",
+        "driverVersion": "26.6.2"
+      }
+    ],
+    "auxAttributes": {
+      "amdSwitchable": false,
+      "canSupportThreadedTextureMailbox": false,
+      "directRenderingVersion": "",
+      "displayType": "ANGLE_METAL",
+      "glExtensions": "GL_AMD_performance_monitor GL_ANGLE_base_vertex_base_instance_shader_builtin GL_ANGLE_blob_cache GL_ANGLE_client_arrays GL_ANGLE_clip_cull_distance GL_ANGLE_compressed_texture_etc GL_ANGLE_depth_texture GL_ANGLE_framebuffer_blit GL_ANGLE_framebuffer_multisample GL_ANGLE_get_serialized_context_string GL_ANGLE_get_tex_level_parameter GL_ANGLE_instanced_arrays GL_ANGLE_memory_size GL_ANGLE_pack_reverse_row_order GL_ANGLE_polygon_mode GL_ANGLE_program_binary_readiness_query GL_ANGLE_program_cache_control GL_ANGLE_provoking_vertex GL_ANGLE_renderability_validation GL_ANGLE_request_extension GL_ANGLE_rgbx_internal_format GL_ANGLE_robust_client_memory GL_ANGLE_shader_pixel_local_storage GL_ANGLE_shader_pixel_local_storage_coherent GL_ANGLE_stencil_texturing GL_ANGLE_texture_compression_dxt3 GL_ANGLE_texture_compression_dxt5 GL_ANGLE_texture_multisample GL_ANGLE_translated_shader_source GL_APPLE_clip_distance GL_ARM_rgba8 GL_CHROMIUM_bind_generates_resource GL_CHROMIUM_bind_uniform_location GL_CHROMIUM_copy_texture GL_CHROMIUM_lose_context GL_EXT_base_instance GL_EXT_blend_func_extended GL_EXT_blend_minmax GL_EXT_clip_control GL_EXT_color_buffer_float GL_EXT_color_buffer_half_float GL_EXT_compressed_ETC1_RGB8_sub_texture GL_EXT_conservative_depth GL_EXT_debug_label GL_EXT_debug_marker GL_EXT_depth_clamp GL_EXT_discard_framebuffer GL_EXT_disjoint_timer_query GL_EXT_draw_buffers GL_EXT_draw_buffers_indexed GL_EXT_draw_elements_base_vertex GL_EXT_float_blend GL_EXT_frag_depth GL_EXT_instanced_arrays GL_EXT_map_buffer_range GL_EXT_multisampled_render_to_texture GL_EXT_occlusion_query_boolean GL_EXT_polygon_offset_clamp GL_EXT_pvrtc_sRGB GL_EXT_read_format_bgra GL_EXT_render_snorm GL_EXT_robustness GL_EXT_sRGB GL_EXT_shader_texture_lod GL_EXT_texture_compression_bptc GL_EXT_texture_compression_dxt1 GL_EXT_texture_compression_rgtc GL_EXT_texture_compression_s3tc_srgb GL_EXT_texture_filter_anisotropic GL_EXT_texture_format_BGRA8888 GL_EXT_texture_mirror_clamp_to_edge GL_EXT_texture_norm16 GL_EXT_texture_rg GL_EXT_texture_sRGB_R8 GL_EXT_texture_sRGB_RG8 GL_EXT_texture_shadow_lod GL_EXT_texture_storage GL_IMG_texture_compression_pvrtc GL_KHR_debug GL_KHR_parallel_shader_compile GL_KHR_robustness GL_KHR_texture_compression_astc_hdr GL_KHR_texture_compression_astc_ldr GL_KHR_texture_compression_astc_sliced_3d GL_MESA_framebuffer_flip_y GL_NV_fence GL_NV_framebuffer_blit GL_NV_pixel_buffer_object GL_NV_shader_noperspective_interpolation GL_OES_EGL_image GL_OES_EGL_sync GL_OES_compressed_ETC1_RGB8_texture GL_OES_depth24 GL_OES_depth32 GL_OES_depth_texture GL_OES_draw_buffers_indexed GL_OES_draw_elements_base_vertex GL_OES_element_index_uint GL_OES_fbo_render_mipmap GL_OES_get_program_binary GL_OES_mapbuffer GL_OES_packed_depth_stencil GL_OES_required_internalformat GL_OES_rgb8_rgba8 GL_OES_sample_variables GL_OES_shader_multisample_interpolation GL_OES_standard_derivatives GL_OES_surfaceless_context GL_OES_texture_3D GL_OES_texture_float GL_OES_texture_float_linear GL_OES_texture_half_float GL_OES_texture_half_float_linear GL_OES_texture_npot GL_OES_texture_stencil8 GL_OES_vertex_array_object GL_QCOM_render_shared_exponent ",
+      "glImplementationParts": "(gl=egl-angle,angle=metal)",
+      "glRenderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1 Pro, Version 26.6.2 (Build 25G83))",
+      "glResetNotificationStrategy": 33362,
+      "glVendor": "Google Inc. (Apple)",
+      "glVersion": "OpenGL ES 3.0 (ANGLE 2.1.28975 git hash: 127e783de334)",
+      "glWsExtensions": "",
+      "glWsVendor": "",
+      "glWsVersion": "",
+      "inProcessGpu": false,
+      "initializationTime": 0.064976,
+      "isAsan": false,
+      "isClangCoverage": false,
+      "jpegDecodeAcceleratorSupported": false,
+      "maxMsaaSamples": "4",
+      "optimus": false,
+      "passthroughCmdDecoder": true,
+      "pixelShaderVersion": "3.00",
+      "processCrashCount": 0,
+      "sandboxed": true,
+      "skiaBackendType": "GraphiteDawnMetal",
+      "subpixelFontRendering": true,
+      "targetCpuBits": 64,
+      "vertexShaderVersion": "3.00",
+      "visibilityCallbackCallCount": 0
+    },
+    "featureStatus": {
+      "2d_canvas": "enabled",
+      "direct_rendering_display_compositor": "disabled_off_ok",
+      "gpu_compositing": "enabled",
+      "multiple_raster_threads": "enabled_on",
+      "opengl": "enabled_on",
+      "rasterization": "enabled",
+      "raw_draw": "disabled_off_ok",
+      "skia_graphite": "enabled_on",
+      "trees_in_viz": "disabled_off",
+      "video_decode": "enabled",
+      "video_encode": "enabled",
+      "webgl": "enabled",
+      "webgpu": "enabled",
+      "webnn": "disabled_off"
+    },
+    "driverBugWorkarounds": [
+      "disable_2d_canvas_auto_flush",
+      "enable_webgl_timer_query_extensions",
+      "disabled_extension_GL_KHR_blend_equation_advanced",
+      "disabled_extension_GL_KHR_blend_equation_advanced_coherent"
+    ],
+    "videoDecoding": [],
+    "videoEncoding": []
+  },
+  "passed": true,
+  "checkpoints": [
+    {
+      "name": "初始",
+      "state": {
+        "astc": {
+          "enabled": true,
+          "ready": true,
+          "bytes": 32,
+          "fallback": false
+        },
+        "buildId": "74bc5dae307c3f6fe8a5",
+        "windowWidth": 960,
+        "windowHeight": 640,
+        "stageWidth": 960,
+        "stageHeight": 640,
+        "phase": 0,
+        "cycles": 0,
+        "generation": 0,
+        "recovered": 0,
+        "lost": false,
+        "pending": false,
+        "checks": [
+          "切片不受根视图释放影响",
+          "快照阻止提前物理释放",
+          "退役幂等且最终回收",
+          "两个借用者拥有不同输出目标",
+          "借用者销毁不销毁池资源",
+          "共享 Shader 数值快照隔离",
+          "共享 Shader 输入快照隔离",
+          "退役清除快照尾部引用"
+        ],
+        "pool": 2,
+        "diagnostics": {
+          "buildId": "74bc5dae307c3f6fe8a5",
+          "faults": 0,
+          "skipped": 0,
+          "drawn": 30,
+          "references": 16,
+          "pendingDisposals": 0,
+          "physicalDisposals": 6,
+          "events": [],
+          "reports": []
+        }
+      },
+      "gpu": {
+        "created": 37,
+        "deleted": 2,
+        "live": 35,
+        "peak": 35,
+        "losses": 0
+      },
+      "heap": 119703923
+    },
+    {
+      "name": "模拟前后台一百轮",
+      "state": {
+        "astc": {
+          "enabled": true,
+          "ready": true,
+          "bytes": 32,
+          "fallback": false
+        },
+        "buildId": "74bc5dae307c3f6fe8a5",
+        "windowWidth": 960,
+        "windowHeight": 640,
+        "stageWidth": 960,
+        "stageHeight": 640,
+        "phase": 0,
+        "cycles": 0,
+        "generation": 0,
+        "recovered": 0,
+        "lost": false,
+        "pending": false,
+        "checks": [
+          "切片不受根视图释放影响",
+          "快照阻止提前物理释放",
+          "退役幂等且最终回收",
+          "两个借用者拥有不同输出目标",
+          "借用者销毁不销毁池资源",
+          "共享 Shader 数值快照隔离",
+          "共享 Shader 输入快照隔离",
+          "退役清除快照尾部引用"
+        ],
+        "pool": 2,
+        "diagnostics": {
+          "buildId": "74bc5dae307c3f6fe8a5",
+          "faults": 0,
+          "skipped": 0,
+          "drawn": 206,
+          "references": 16,
+          "pendingDisposals": 0,
+          "physicalDisposals": 48,
+          "events": [],
+          "reports": []
+        }
+      },
+      "gpu": {
+        "created": 79,
+        "deleted": 44,
+        "live": 35,
+        "peak": 51,
+        "losses": 0
+      },
+      "heap": 120073143
+    },
+    {
+      "name": "尺寸变化九十次",
+      "state": {
+        "astc": {
+          "enabled": true,
+          "ready": true,
+          "bytes": 32,
+          "fallback": false
+        },
+        "buildId": "74bc5dae307c3f6fe8a5",
+        "windowWidth": 960,
+        "windowHeight": 640,
+        "stageWidth": 960,
+        "stageHeight": 640,
+        "phase": 0,
+        "cycles": 0,
+        "generation": 0,
+        "recovered": 0,
+        "lost": false,
+        "pending": false,
+        "checks": [
+          "切片不受根视图释放影响",
+          "快照阻止提前物理释放",
+          "退役幂等且最终回收",
+          "两个借用者拥有不同输出目标",
+          "借用者销毁不销毁池资源",
+          "共享 Shader 数值快照隔离",
+          "共享 Shader 输入快照隔离",
+          "退役清除快照尾部引用"
+        ],
+        "pool": 2,
+        "diagnostics": {
+          "buildId": "74bc5dae307c3f6fe8a5",
+          "faults": 0,
+          "skipped": 0,
+          "drawn": 1753,
+          "references": 16,
+          "pendingDisposals": 0,
+          "physicalDisposals": 412,
+          "events": [],
+          "reports": []
+        }
+      },
+      "gpu": {
+        "created": 443,
+        "deleted": 408,
+        "live": 35,
+        "peak": 51,
+        "losses": 0
+      },
+      "heap": 120762843
+    },
+    {
+      "name": "切换10轮",
+      "state": {
+        "astc": {
+          "enabled": true,
+          "ready": true,
+          "bytes": 32,
+          "fallback": false
+        },
+        "buildId": "74bc5dae307c3f6fe8a5",
+        "windowWidth": 960,
+        "windowHeight": 640,
+        "stageWidth": 960,
+        "stageHeight": 640,
+        "phase": 33,
+        "cycles": 11,
+        "generation": 0,
+        "recovered": 0,
+        "lost": false,
+        "pending": false,
+        "checks": [
+          "切片不受根视图释放影响",
+          "快照阻止提前物理释放",
+          "退役幂等且最终回收",
+          "两个借用者拥有不同输出目标",
+          "借用者销毁不销毁池资源",
+          "共享 Shader 数值快照隔离",
+          "共享 Shader 输入快照隔离",
+          "退役清除快照尾部引用"
+        ],
+        "pool": 2,
+        "diagnostics": {
+          "buildId": "74bc5dae307c3f6fe8a5",
+          "faults": 0,
+          "skipped": 0,
+          "drawn": 2226,
+          "references": 16,
+          "pendingDisposals": 0,
+          "physicalDisposals": 511,
+          "events": [],
+          "reports": []
+        }
+      },
+      "gpu": {
+        "created": 542,
+        "deleted": 507,
+        "live": 35,
+        "peak": 51,
+        "losses": 0
+      },
+      "heap": 120833399
+    },
+    {
+      "name": "切换50轮",
+      "state": {
+        "astc": {
+          "enabled": true,
+          "ready": true,
+          "bytes": 32,
+          "fallback": false
+        },
+        "buildId": "74bc5dae307c3f6fe8a5",
+        "windowWidth": 960,
+        "windowHeight": 640,
+        "stageWidth": 960,
+        "stageHeight": 640,
+        "phase": 153,
+        "cycles": 51,
+        "generation": 0,
+        "recovered": 0,
+        "lost": false,
+        "pending": false,
+        "checks": [
+          "切片不受根视图释放影响",
+          "快照阻止提前物理释放",
+          "退役幂等且最终回收",
+          "两个借用者拥有不同输出目标",
+          "借用者销毁不销毁池资源",
+          "共享 Shader 数值快照隔离",
+          "共享 Shader 输入快照隔离",
+          "退役清除快照尾部引用"
+        ],
+        "pool": 2,
+        "diagnostics": {
+          "buildId": "74bc5dae307c3f6fe8a5",
+          "faults": 0,
+          "skipped": 0,
+          "drawn": 3946,
+          "references": 16,
+          "pendingDisposals": 0,
+          "physicalDisposals": 871,
+          "events": [],
+          "reports": []
+        }
+      },
+      "gpu": {
+        "created": 902,
+        "deleted": 867,
+        "live": 35,
+        "peak": 51,
+        "losses": 0
+      },
+      "heap": 121264559
+    },
+    {
+      "name": "切换100轮",
+      "state": {
+        "astc": {
+          "enabled": true,
+          "ready": true,
+          "bytes": 32,
+          "fallback": false
+        },
+        "buildId": "74bc5dae307c3f6fe8a5",
+        "windowWidth": 960,
+        "windowHeight": 640,
+        "stageWidth": 960,
+        "stageHeight": 640,
+        "phase": 303,
+        "cycles": 101,
+        "generation": 0,
+        "recovered": 0,
+        "lost": false,
+        "pending": false,
+        "checks": [
+          "切片不受根视图释放影响",
+          "快照阻止提前物理释放",
+          "退役幂等且最终回收",
+          "两个借用者拥有不同输出目标",
+          "借用者销毁不销毁池资源",
+          "共享 Shader 数值快照隔离",
+          "共享 Shader 输入快照隔离",
+          "退役清除快照尾部引用"
+        ],
+        "pool": 2,
+        "diagnostics": {
+          "buildId": "74bc5dae307c3f6fe8a5",
+          "faults": 0,
+          "skipped": 0,
+          "drawn": 6096,
+          "references": 16,
+          "pendingDisposals": 0,
+          "physicalDisposals": 1321,
+          "events": [],
+          "reports": []
+        }
+      },
+      "gpu": {
+        "created": 1352,
+        "deleted": 1317,
+        "live": 35,
+        "peak": 51,
+        "losses": 0
+      },
+      "heap": 121470367
+    },
+    {
+      "name": "切换200轮",
+      "state": {
+        "astc": {
+          "enabled": true,
+          "ready": true,
+          "bytes": 32,
+          "fallback": false
+        },
+        "buildId": "74bc5dae307c3f6fe8a5",
+        "windowWidth": 960,
+        "windowHeight": 640,
+        "stageWidth": 960,
+        "stageHeight": 640,
+        "phase": 603,
+        "cycles": 201,
+        "generation": 0,
+        "recovered": 0,
+        "lost": false,
+        "pending": false,
+        "checks": [
+          "切片不受根视图释放影响",
+          "快照阻止提前物理释放",
+          "退役幂等且最终回收",
+          "两个借用者拥有不同输出目标",
+          "借用者销毁不销毁池资源",
+          "共享 Shader 数值快照隔离",
+          "共享 Shader 输入快照隔离",
+          "退役清除快照尾部引用"
+        ],
+        "pool": 2,
+        "diagnostics": {
+          "buildId": "74bc5dae307c3f6fe8a5",
+          "faults": 0,
+          "skipped": 0,
+          "drawn": 10396,
+          "references": 16,
+          "pendingDisposals": 0,
+          "physicalDisposals": 2221,
+          "events": [],
+          "reports": []
+        }
+      },
+      "gpu": {
+        "created": 2252,
+        "deleted": 2217,
+        "live": 35,
+        "peak": 51,
+        "losses": 0
+      },
+      "heap": 121710035
+    },
+    {
+      "name": "静止十秒后清理",
+      "state": {
+        "astc": {
+          "enabled": true,
+          "ready": true,
+          "bytes": 32,
+          "fallback": false
+        },
+        "buildId": "74bc5dae307c3f6fe8a5",
+        "windowWidth": 960,
+        "windowHeight": 640,
+        "stageWidth": 960,
+        "stageHeight": 640,
+        "phase": 603,
+        "cycles": 201,
+        "generation": 0,
+        "recovered": 0,
+        "lost": false,
+        "pending": false,
+        "checks": [
+          "切片不受根视图释放影响",
+          "快照阻止提前物理释放",
+          "退役幂等且最终回收",
+          "两个借用者拥有不同输出目标",
+          "借用者销毁不销毁池资源",
+          "共享 Shader 数值快照隔离",
+          "共享 Shader 输入快照隔离",
+          "退役清除快照尾部引用"
+        ],
+        "pool": 2,
+        "diagnostics": {
+          "buildId": "74bc5dae307c3f6fe8a5",
+          "faults": 0,
+          "skipped": 0,
+          "drawn": 10396,
+          "references": 16,
+          "pendingDisposals": 0,
+          "physicalDisposals": 2221,
+          "events": [],
+          "reports": []
+        }
+      },
+      "gpu": {
+        "created": 2252,
+        "deleted": 2217,
+        "live": 35,
+        "peak": 51,
+        "losses": 0
+      },
+      "heap": 121722731
+    },
+    {
+      "name": "恢复1轮",
+      "state": {
+        "astc": {
+          "enabled": true,
+          "ready": true,
+          "bytes": 32,
+          "fallback": false
+        },
+        "buildId": "74bc5dae307c3f6fe8a5",
+        "windowWidth": 960,
+        "windowHeight": 640,
+        "stageWidth": 960,
+        "stageHeight": 640,
+        "phase": 603,
+        "cycles": 201,
+        "generation": 1,
+        "recovered": 1,
+        "lost": false,
+        "pending": false,
+        "checks": [
+          "切片不受根视图释放影响",
+          "快照阻止提前物理释放",
+          "退役幂等且最终回收",
+          "两个借用者拥有不同输出目标",
+          "借用者销毁不销毁池资源",
+          "共享 Shader 数值快照隔离",
+          "共享 Shader 输入快照隔离",
+          "退役清除快照尾部引用"
+        ],
+        "pool": 2,
+        "diagnostics": {
+          "buildId": "74bc5dae307c3f6fe8a5",
+          "faults": 0,
+          "skipped": 0,
+          "drawn": 10413,
+          "references": 16,
+          "pendingDisposals": 0,
+          "physicalDisposals": 2224,
+          "events": [],
+          "reports": []
+        }
+      },
+      "gpu": {
+        "created": 2268,
+        "deleted": 2217,
+        "live": 16,
+        "peak": 51,
+        "losses": 1
+      },
+      "heap": 121417128
+    },
+    {
+      "name": "恢复20轮",
+      "state": {
+        "astc": {
+          "enabled": true,
+          "ready": true,
+          "bytes": 32,
+          "fallback": false
+        },
+        "buildId": "74bc5dae307c3f6fe8a5",
+        "windowWidth": 960,
+        "windowHeight": 640,
+        "stageWidth": 960,
+        "stageHeight": 640,
+        "phase": 603,
+        "cycles": 201,
+        "generation": 20,
+        "recovered": 20,
+        "lost": false,
+        "pending": false,
+        "checks": [
+          "切片不受根视图释放影响",
+          "快照阻止提前物理释放",
+          "退役幂等且最终回收",
+          "两个借用者拥有不同输出目标",
+          "借用者销毁不销毁池资源",
+          "共享 Shader 数值快照隔离",
+          "共享 Shader 输入快照隔离",
+          "退役清除快照尾部引用"
+        ],
+        "pool": 2,
+        "diagnostics": {
+          "buildId": "74bc5dae307c3f6fe8a5",
+          "faults": 0,
+          "skipped": 0,
+          "drawn": 10736,
+          "references": 16,
+          "pendingDisposals": 0,
+          "physicalDisposals": 2262,
+          "events": [],
+          "reports": []
+        }
+      },
+      "gpu": {
+        "created": 2572,
+        "deleted": 2217,
+        "live": 16,
+        "peak": 51,
+        "losses": 20
+      },
+      "heap": 121651928
+    },
+    {
+      "name": "原生误释放注入",
+      "state": {
+        "astc": {
+          "enabled": true,
+          "ready": true,
+          "bytes": 32,
+          "fallback": false
+        },
+        "buildId": "74bc5dae307c3f6fe8a5",
+        "windowWidth": 960,
+        "windowHeight": 640,
+        "stageWidth": 960,
+        "stageHeight": 640,
+        "phase": 603,
+        "cycles": 201,
+        "generation": 20,
+        "recovered": 20,
+        "lost": false,
+        "pending": false,
+        "checks": [
+          "切片不受根视图释放影响",
+          "快照阻止提前物理释放",
+          "退役幂等且最终回收",
+          "两个借用者拥有不同输出目标",
+          "借用者销毁不销毁池资源",
+          "共享 Shader 数值快照隔离",
+          "共享 Shader 输入快照隔离",
+          "退役清除快照尾部引用"
+        ],
+        "pool": 2,
+        "diagnostics": {
+          "buildId": "74bc5dae307c3f6fe8a5",
+          "faults": 1,
+          "skipped": 1,
+          "drawn": 10746,
+          "references": 17,
+          "pendingDisposals": 0,
+          "physicalDisposals": 2262,
+          "events": [],
+          "reports": [
+            {
+              "kind": "disposed",
+              "resourceId": 2278,
+              "input": "合批槽 0",
+              "batchId": 423,
+              "shader": "直接合批",
+              "generation": 20,
+              "message": "二维输入已被释放",
+              "revision": 1,
+              "passId": 0,
+              "count": 1,
+              "at": 1793891013.983,
+              "resources": [
+                {
+                  "resourceId": 2278,
+                  "width": 0,
+                  "height": 0,
+                  "label": "",
+                  "entryId": 0,
+                  "lastBatchId": 423,
+                  "references": 1,
+                  "pending": false,
+                  "disposed": false,
+                  "generation": 20,
+                  "releaseReason": "",
+                  "releaseStack": ""
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "gpu": {
+        "created": 2572,
+        "deleted": 2217,
+        "live": 16,
+        "peak": 51,
+        "losses": 20
+      },
+      "heap": 121548676
+    },
+    {
+      "name": "最终",
+      "state": {
+        "astc": {
+          "enabled": true,
+          "ready": true,
+          "bytes": 32,
+          "fallback": false
+        },
+        "buildId": "74bc5dae307c3f6fe8a5",
+        "windowWidth": 960,
+        "windowHeight": 640,
+        "stageWidth": 960,
+        "stageHeight": 640,
+        "phase": 603,
+        "cycles": 201,
+        "generation": 20,
+        "recovered": 20,
+        "lost": false,
+        "pending": false,
+        "checks": [
+          "切片不受根视图释放影响",
+          "快照阻止提前物理释放",
+          "退役幂等且最终回收",
+          "两个借用者拥有不同输出目标",
+          "借用者销毁不销毁池资源",
+          "共享 Shader 数值快照隔离",
+          "共享 Shader 输入快照隔离",
+          "退役清除快照尾部引用"
+        ],
+        "pool": 2,
+        "diagnostics": {
+          "buildId": "74bc5dae307c3f6fe8a5",
+          "faults": 5,
+          "skipped": 5,
+          "drawn": 10826,
+          "references": 16,
+          "pendingDisposals": 0,
+          "physicalDisposals": 2267,
+          "events": [],
+          "reports": [
+            {
+              "kind": "disposed",
+              "resourceId": 2278,
+              "input": "合批槽 0",
+              "batchId": 423,
+              "shader": "直接合批",
+              "generation": 20,
+              "message": "二维输入已被释放",
+              "revision": 1,
+              "passId": 0,
+              "count": 1,
+              "at": 1793891013.983,
+              "resources": [
+                {
+                  "resourceId": 2278,
+                  "width": 0,
+                  "height": 0,
+                  "label": "",
+                  "entryId": 0,
+                  "lastBatchId": 423,
+                  "references": 1,
+                  "pending": false,
+                  "disposed": false,
+                  "generation": 20,
+                  "releaseReason": "",
+                  "releaseStack": ""
+                }
+              ]
+            },
+            {
+              "kind": "invalidSize",
+              "resourceId": 2279,
+              "input": "合批槽 0",
+              "batchId": 424,
+              "shader": "直接合批",
+              "generation": 20,
+              "message": "二维输入尺寸无效",
+              "revision": 1,
+              "passId": 0,
+              "count": 1,
+              "at": 1793891014.416,
+              "resources": [
+                {
+                  "resourceId": 2279,
+                  "width": -1,
+                  "height": 32,
+                  "label": "",
+                  "entryId": 0,
+                  "lastBatchId": 424,
+                  "references": 1,
+                  "pending": false,
+                  "disposed": false,
+                  "generation": 20,
+                  "releaseReason": "",
+                  "releaseStack": ""
+                }
+              ]
+            },
+            {
+              "kind": "uploadFailed",
+              "resourceId": 2280,
+              "input": "二维批次纹理槽 0",
+              "batchId": 425,
+              "shader": "直接合批",
+              "generation": 20,
+              "message": "二维输入纹理上传失败：注入上传失败",
+              "revision": 1,
+              "passId": 0,
+              "count": 1,
+              "at": 1793891014.556,
+              "resources": [
+                {
+                  "resourceId": 2280,
+                  "width": 32,
+                  "height": 32,
+                  "label": "",
+                  "entryId": 0,
+                  "lastBatchId": 425,
+                  "references": 1,
+                  "pending": false,
+                  "disposed": false,
+                  "generation": 20,
+                  "releaseReason": "",
+                  "releaseStack": ""
+                }
+              ]
+            },
+            {
+              "kind": "missingRecovery",
+              "resourceId": 2281,
+              "input": "二维批次纹理槽 0",
+              "batchId": 426,
+              "shader": "直接合批",
+              "generation": 20,
+              "message": "GPU 资源没有像素或重绘来源，禁止以空纹理伪装恢复成功",
+              "revision": 1,
+              "passId": 0,
+              "count": 1,
+              "at": 1793891014.689,
+              "resources": [
+                {
+                  "resourceId": 2281,
+                  "width": 32,
+                  "height": 32,
+                  "label": "",
+                  "entryId": 0,
+                  "lastBatchId": 426,
+                  "references": 1,
+                  "pending": false,
+                  "disposed": false,
+                  "generation": -1,
+                  "releaseReason": "",
+                  "releaseStack": ""
+                }
+              ]
+            },
+            {
+              "kind": "feedback",
+              "resourceId": 2282,
+              "input": "合批槽 0",
+              "batchId": 7,
+              "shader": "直接合批",
+              "generation": 20,
+              "message": "不能采样当前正在写入的离屏目标",
+              "revision": 627,
+              "passId": 3869,
+              "count": 1,
+              "at": 1793891014.801,
+              "resources": [
+                {
+                  "resourceId": 2282,
+                  "width": 32,
+                  "height": 32,
+                  "label": "",
+                  "entryId": 0,
+                  "lastBatchId": 7,
+                  "references": 1,
+                  "pending": false,
+                  "disposed": false,
+                  "generation": 20,
+                  "releaseReason": "",
+                  "releaseStack": ""
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "gpu": {
+        "created": 2573,
+        "deleted": 2218,
+        "live": 16,
+        "peak": 51,
+        "losses": 20
+      },
+      "heap": 121564968
+    }
+  ],
+  "screenshots": [
+    "initial.png",
+    "masks-off.png",
+    "masks-on.png",
+    "textures-16.png",
+    "textures-8.png",
+    "textures-1.png",
+    "textures-16.png",
+    "textures-1.png",
+    "textures-0.png",
+    "compiled-1.png",
+    "compiled-8.png",
+    "compiled-16.png",
+    "after-foreground.png",
+    "after-resize.png",
+    "single-red.png",
+    "single-blue.png",
+    "after-200-cycles.png",
+    "after-idle-clean.png",
+    "restored-1.png",
+    "restored-20.png",
+    "fault-isolated.png",
+    "after-fault.png",
+    "after-all-faults.png"
+  ],
+  "events": [],
+  "elapsedMilliseconds": 46906
+}

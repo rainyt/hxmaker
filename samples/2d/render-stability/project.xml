@@ -1,0 +1,11 @@
+<project>
+    <meta title="hxmaker 渲染稳定性验证" package="samples.hxmaker.renderstability" version="1.0.0" />
+    <app main="Main" file="RenderStability" path="Export" />
+    <source path="Source" />
+    <assets path="Assets" rename="assets" />
+    <haxedef name="hxmaker_project" />
+    <haxelib name="hxmaker" />
+    <haxelib name="hxmaker-openfl" />
+    <haxelib name="spine-haxe" />
+    <window width="0" height="0" resizable="true" background="#162134" hardware="true" allow-high-dpi="false" />
+</project>

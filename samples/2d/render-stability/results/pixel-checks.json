@@ -1,0 +1,417 @@
+[
+  {
+    "file": "astc-fallback.png",
+    "differentPixels": 0,
+    "passed": true
+  },
+  {
+    "file": "after-foreground.png",
+    "differentPixels": 0,
+    "passed": true
+  },
+  {
+    "file": "after-resize.png",
+    "differentPixels": 0,
+    "passed": true
+  },
+  {
+    "file": "masks-on.png",
+    "differentPixels": 0,
+    "passed": true
+  },
+  {
+    "file": "textures-0.png",
+    "differentPixels": 0,
+    "passed": true
+  },
+  {
+    "file": "after-200-cycles.png",
+    "differentPixels": 0,
+    "passed": true
+  },
+  {
+    "file": "after-idle-clean.png",
+    "differentPixels": 0,
+    "passed": true
+  },
+  {
+    "file": "restored-1.png",
+    "differentPixels": 0,
+    "passed": true
+  },
+  {
+    "file": "restored-20.png",
+    "differentPixels": 0,
+    "passed": true
+  },
+  {
+    "file": "after-fault.png",
+    "differentPixels": 0,
+    "passed": true
+  },
+  {
+    "file": "after-all-faults.png",
+    "differentPixels": 0,
+    "passed": true
+  },
+  {
+    "file": "compiled-1.png",
+    "position": [
+      48,
+      448
+    ],
+    "actual": [
+      85,
+      85,
+      85
+    ],
+    "expected": [
+      85,
+      85,
+      85
+    ],
+    "passed": true
+  },
+  {
+    "file": "compiled-1.png",
+    "position": [
+      96,
+      448
+    ],
+    "actual": [
+      85,
+      85,
+      85
+    ],
+    "expected": [
+      85,
+      85,
+      85
+    ],
+    "passed": true
+  },
+  {
+    "file": "compiled-1.png",
+    "position": [
+      144,
+      448
+    ],
+    "actual": [
+      85,
+      85,
+      85
+    ],
+    "expected": [
+      85,
+      85,
+      85
+    ],
+    "passed": true
+  },
+  {
+    "file": "compiled-8.png",
+    "position": [
+      48,
+      448
+    ],
+    "actual": [
+      85,
+      85,
+      85
+    ],
+    "expected": [
+      85,
+      85,
+      85
+    ],
+    "passed": true
+  },
+  {
+    "file": "compiled-8.png",
+    "position": [
+      96,
+      448
+    ],
+    "actual": [
+      85,
+      85,
+      85
+    ],
+    "expected": [
+      85,
+      85,
+      85
+    ],
+    "passed": true
+  },
+  {
+    "file": "compiled-8.png",
+    "position": [
+      144,
+      448
+    ],
+    "actual": [
+      85,
+      85,
+      85
+    ],
+    "expected": [
+      85,
+      85,
+      85
+    ],
+    "passed": true
+  },
+  {
+    "file": "compiled-16.png",
+    "position": [
+      48,
+      448
+    ],
+    "actual": [
+      85,
+      85,
+      85
+    ],
+    "expected": [
+      85,
+      85,
+      85
+    ],
+    "passed": true
+  },
+  {
+    "file": "compiled-16.png",
+    "position": [
+      96,
+      448
+    ],
+    "actual": [
+      85,
+      85,
+      85
+    ],
+    "expected": [
+      85,
+      85,
+      85
+    ],
+    "passed": true
+  },
+  {
+    "file": "compiled-16.png",
+    "position": [
+      144,
+      448
+    ],
+    "actual": [
+      85,
+      85,
+      85
+    ],
+    "expected": [
+      85,
+      85,
+      85
+    ],
+    "passed": true
+  },
+  {
+    "file": "initial.png",
+    "position": [
+      440,
+      128
+    ],
+    "actual": [
+      85,
+      85,
+      85
+    ],
+    "expected": [
+      85,
+      85,
+      85
+    ],
+    "passed": true
+  },
+  {
+    "file": "initial.png",
+    "position": [
+      560,
+      128
+    ],
+    "actual": [
+      85,
+      85,
+      85
+    ],
+    "expected": [
+      85,
+      85,
+      85
+    ],
+    "passed": true
+  },
+  {
+    "file": "initial.png",
+    "position": [
+      620,
+      128
+    ],
+    "actual": [
+      255,
+      255,
+      255
+    ],
+    "expected": [
+      255,
+      255,
+      255
+    ],
+    "passed": true
+  },
+  {
+    "file": "initial.png",
+    "position": [
+      310,
+      280
+    ],
+    "actual": [
+      0,
+      255,
+      255
+    ],
+    "expected": [
+      0,
+      255,
+      255
+    ],
+    "passed": true
+  },
+  {
+    "file": "initial.png",
+    "position": [
+      360,
+      280
+    ],
+    "actual": [
+      22,
+      33,
+      52
+    ],
+    "expected": [
+      22,
+      33,
+      52
+    ],
+    "passed": true
+  },
+  {
+    "file": "initial.png",
+    "position": [
+      440,
+      280
+    ],
+    "actual": [
+      22,
+      33,
+      52
+    ],
+    "expected": [
+      22,
+      33,
+      52
+    ],
+    "passed": true
+  },
+  {
+    "file": "initial.png",
+    "position": [
+      480,
+      280
+    ],
+    "actual": [
+      255,
+      0,
+      255
+    ],
+    "expected": [
+      255,
+      0,
+      255
+    ],
+    "passed": true
+  },
+  {
+    "file": "masks-off.png",
+    "position": [
+      360,
+      280
+    ],
+    "actual": [
+      0,
+      255,
+      255
+    ],
+    "expected": [
+      0,
+      255,
+      255
+    ],
+    "passed": true
+  },
+  {
+    "file": "masks-off.png",
+    "position": [
+      440,
+      280
+    ],
+    "actual": [
+      255,
+      0,
+      255
+    ],
+    "expected": [
+      255,
+      0,
+      255
+    ],
+    "passed": true
+  },
+  {
+    "file": "fault-isolated.png",
+    "position": [
+      830,
+      128
+    ],
+    "actual": [
+      0,
+      255,
+      0
+    ],
+    "expected": [
+      0,
+      255,
+      0
+    ],
+    "passed": true
+  },
+  {
+    "file": "initial.png",
+    "position": [
+      700,
+      280
+    ],
+    "actual": [
+      255,
+      128,
+      0
+    ],
+    "expected": [
+      255,
+      128,
+      0
+    ],
+    "passed": true
+  }
+]

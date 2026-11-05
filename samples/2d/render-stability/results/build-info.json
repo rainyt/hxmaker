@@ -1,0 +1,65 @@
+{
+  "builtAt": "2026-11-05T15:55:24.941Z",
+  "flags": [
+    "-D hxmaker-openfl=1.0.0",
+    "-D openfl=9.2.8",
+    "-D lime=8.0.2",
+    "-D hxmaker=1.0.0",
+    "-D actuate=1.9.0",
+    "-D openfl-glsl=0.2.1",
+    "-D vector-math=2.1.2",
+    "-D spine-haxe=4.2.9",
+    "-D AIR_SDK=/Users/rainy/Documents/SDK/AIRSDK_Compiler_32.0.0.116 ",
+    "-D hxmaker_project",
+    "-D ANDROID_SETUP=true",
+    "-D ANDROID_NDK_ROOT=/Users/rainy/Documents/SDK/android-ndk-r28c",
+    "-D howlerjs",
+    "-D ANDROID_NDK_DIR=/Users/rainy/Documents/SDK",
+    "-D lime-webgl",
+    "-D lime-dom",
+    "-D lime-howlerjs",
+    "-D lime-html5",
+    "-D MAC_USE_CURRENT_SDK=1",
+    "-D tools=8.0.2",
+    "-D ANDROID_SDK=/Users/rainy/Library/Android/sdk",
+    "-D HXCPP_STACK_TRACE",
+    "-D HXCPP_CHECK_POINTER",
+    "-D lime-canvas",
+    "-D HXCPP_STACK_LINE",
+    "-D no-compilation",
+    "-D openfl-html5",
+    "-D HXCPP_DEBUG_LINK",
+    "-D html5",
+    "-D web",
+    "-D html5",
+    "-D hx_astcenc",
+    "-debug",
+    "-D source-map-content"
+  ],
+  "dependencies": {
+    "hxmaker": {
+      "revision": "f87990910546419ca545228ff665b33da2f31b03",
+      "dirty": true
+    },
+    "hxmaker-openfl": {
+      "revision": "caac7bae358878de2d49c9fd0e0145ff4586dbff",
+      "dirty": true
+    },
+    "openfl": {
+      "revision": "0ece5fcc39c5e1b74bd4e5c8903bc211efc3b651",
+      "dirty": false
+    },
+    "lime": {
+      "revision": "2a7c59f1f753e6cbac33abf79c3c3af004982cc7",
+      "dirty": false
+    },
+    "hx-astcenc": {
+      "revision": "7945737d290022a8ddf069f571e0c493ce1f1c12",
+      "dirty": false
+    }
+  },
+  "assetManifest": "程序生成色块，无外部清单",
+  "buildId": "0054cf3c432d6ec43956",
+  "javascriptSha256": "81d53da6b17ca858dde07e6085c24eb7a73970e1b06701f3c04e8cb2acd71d34",
+  "sourceMap": "RenderStability.js.map"
+}

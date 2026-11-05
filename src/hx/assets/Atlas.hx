@@ -22,6 +22,12 @@ class Atlas {
 		this.bitmapData = bitmapData;
 	}
 
+	/** 退出图集视图所有权；原始位图由加载缓存持有，不能由子图直接销毁。 */
+	public function dispose():Void {
+		for (bitmap in bitmapDatas) bitmap.dispose();
+		bitmapDatas.clear(); names.resize(0);
+	}
+
 	/**
 	 * 解析精灵图
 	 */

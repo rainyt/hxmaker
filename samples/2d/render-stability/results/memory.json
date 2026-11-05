@@ -1,0 +1,262 @@
+{
+  "passed": true,
+  "checkpoints": [
+    {
+      "cycles": 10,
+      "state": {
+        "astc": {
+          "enabled": true,
+          "ready": true,
+          "bytes": 32,
+          "fallback": false
+        },
+        "buildId": "2a881a619295bf038c62",
+        "windowWidth": 960,
+        "windowHeight": 553,
+        "stageWidth": 960,
+        "stageHeight": 553,
+        "phase": 30,
+        "cycles": 10,
+        "generation": 0,
+        "recovered": 0,
+        "lost": false,
+        "pending": false,
+        "checks": [
+          "切片不受根视图释放影响",
+          "快照阻止提前物理释放",
+          "退役幂等且最终回收",
+          "两个借用者拥有不同输出目标",
+          "借用者销毁不销毁池资源",
+          "共享 Shader 数值快照隔离",
+          "共享 Shader 输入快照隔离",
+          "退役清除快照尾部引用"
+        ],
+        "pool": 2,
+        "diagnostics": {
+          "buildId": "2a881a619295bf038c62",
+          "faults": 0,
+          "skipped": 0,
+          "drawn": 460,
+          "references": 16,
+          "pendingDisposals": 0,
+          "physicalDisposals": 106,
+          "events": [],
+          "reports": []
+        }
+      },
+      "heapSnapshot": {
+        "constructors": {
+          "hx_display_BitmapData": 61,
+          "openfl_display_BitmapData": 48,
+          "WebGLTexture (prototype)": 6,
+          "hx_render_ImageBufferData": 21,
+          "WebGLTexture (internal cache)": 6,
+          "hx_render2d_openfl_DirectBatchDisplay": 20,
+          "hx_core_OpenFlBitmapData": 42,
+          "hx_display__$BitmapData_BitmapDataOwner": 31,
+          "WebGLTexture": 7,
+          "hx_shader_LayerShader": 3,
+          "hx_render2d_openfl_RenderBitmapData": 9,
+          "hx_render2d_openfl_TextureRecord": 30,
+          "hx_filters__$StageBitmapData_StageBitmapEntry": 2,
+          "hx_filters__$StageBitmapData_StageBitmapLease": 2,
+          "WebGLTexture (prototype) / http://127.0.0.1:8876": 1,
+          "hx_render2d_openfl_RecoverableASTCBitmapData": 1,
+          "hx_text_TextFieldContextBitmapData": 1,
+          "WebGLTexture (internal cache) / http://127.0.0.1:8876": 1,
+          "hx_filters_StageBitmapData": 4
+        },
+        "sizes": {
+          "synthetic": 0,
+          "native": 76950405,
+          "string": 1267284,
+          "object shape": 4799208,
+          "code": 12630840,
+          "array": 8545360,
+          "number": 14468376,
+          "symbol": 96,
+          "closure": 2341108,
+          "object": 13572164,
+          "concatenated string": 626320,
+          "sliced string": 140,
+          "regexp": 4560
+        }
+      },
+      "heapBytes": 120227804
+    },
+    {
+      "cycles": 100,
+      "state": {
+        "astc": {
+          "enabled": true,
+          "ready": true,
+          "bytes": 32,
+          "fallback": false
+        },
+        "buildId": "2a881a619295bf038c62",
+        "windowWidth": 960,
+        "windowHeight": 553,
+        "stageWidth": 960,
+        "stageHeight": 553,
+        "phase": 300,
+        "cycles": 100,
+        "generation": 0,
+        "recovered": 0,
+        "lost": false,
+        "pending": false,
+        "checks": [
+          "切片不受根视图释放影响",
+          "快照阻止提前物理释放",
+          "退役幂等且最终回收",
+          "两个借用者拥有不同输出目标",
+          "借用者销毁不销毁池资源",
+          "共享 Shader 数值快照隔离",
+          "共享 Shader 输入快照隔离",
+          "退役清除快照尾部引用"
+        ],
+        "pool": 2,
+        "diagnostics": {
+          "buildId": "2a881a619295bf038c62",
+          "faults": 0,
+          "skipped": 0,
+          "drawn": 4330,
+          "references": 16,
+          "pendingDisposals": 0,
+          "physicalDisposals": 1006,
+          "events": [],
+          "reports": []
+        }
+      },
+      "heapBytes": 121051560
+    },
+    {
+      "cycles": 500,
+      "state": {
+        "astc": {
+          "enabled": true,
+          "ready": true,
+          "bytes": 32,
+          "fallback": false
+        },
+        "buildId": "2a881a619295bf038c62",
+        "windowWidth": 960,
+        "windowHeight": 553,
+        "stageWidth": 960,
+        "stageHeight": 553,
+        "phase": 1500,
+        "cycles": 500,
+        "generation": 0,
+        "recovered": 0,
+        "lost": false,
+        "pending": false,
+        "checks": [
+          "切片不受根视图释放影响",
+          "快照阻止提前物理释放",
+          "退役幂等且最终回收",
+          "两个借用者拥有不同输出目标",
+          "借用者销毁不销毁池资源",
+          "共享 Shader 数值快照隔离",
+          "共享 Shader 输入快照隔离",
+          "退役清除快照尾部引用"
+        ],
+        "pool": 2,
+        "diagnostics": {
+          "buildId": "2a881a619295bf038c62",
+          "faults": 0,
+          "skipped": 0,
+          "drawn": 21530,
+          "references": 16,
+          "pendingDisposals": 0,
+          "physicalDisposals": 5006,
+          "events": [],
+          "reports": []
+        }
+      },
+      "heapBytes": 121574756
+    },
+    {
+      "cycles": 1000,
+      "state": {
+        "astc": {
+          "enabled": true,
+          "ready": true,
+          "bytes": 32,
+          "fallback": false
+        },
+        "buildId": "2a881a619295bf038c62",
+        "windowWidth": 960,
+        "windowHeight": 553,
+        "stageWidth": 960,
+        "stageHeight": 553,
+        "phase": 3000,
+        "cycles": 1000,
+        "generation": 0,
+        "recovered": 0,
+        "lost": false,
+        "pending": false,
+        "checks": [
+          "切片不受根视图释放影响",
+          "快照阻止提前物理释放",
+          "退役幂等且最终回收",
+          "两个借用者拥有不同输出目标",
+          "借用者销毁不销毁池资源",
+          "共享 Shader 数值快照隔离",
+          "共享 Shader 输入快照隔离",
+          "退役清除快照尾部引用"
+        ],
+        "pool": 2,
+        "diagnostics": {
+          "buildId": "2a881a619295bf038c62",
+          "faults": 0,
+          "skipped": 0,
+          "drawn": 43030,
+          "references": 16,
+          "pendingDisposals": 0,
+          "physicalDisposals": 10006,
+          "events": [],
+          "reports": []
+        }
+      },
+      "heapSnapshot": {
+        "constructors": {
+          "hx_display_BitmapData": 61,
+          "openfl_display_BitmapData": 48,
+          "WebGLTexture (prototype)": 6,
+          "hx_render_ImageBufferData": 21,
+          "WebGLTexture (internal cache)": 6,
+          "hx_render2d_openfl_DirectBatchDisplay": 20,
+          "hx_core_OpenFlBitmapData": 42,
+          "hx_display__$BitmapData_BitmapDataOwner": 31,
+          "WebGLTexture": 7,
+          "hx_shader_LayerShader": 3,
+          "hx_text_TextFieldContextBitmapData": 1,
+          "WebGLTexture (internal cache) / http://127.0.0.1:8876": 1,
+          "hx_render2d_openfl_TextureRecord": 30,
+          "WebGLTexture (prototype) / http://127.0.0.1:8876": 1,
+          "hx_render2d_openfl_RenderBitmapData": 9,
+          "hx_filters__$StageBitmapData_StageBitmapEntry": 2,
+          "hx_filters__$StageBitmapData_StageBitmapLease": 2,
+          "hx_render2d_openfl_RecoverableASTCBitmapData": 1,
+          "hx_filters_StageBitmapData": 4
+        },
+        "sizes": {
+          "synthetic": 0,
+          "native": 77205225,
+          "string": 1266976,
+          "object shape": 4799596,
+          "code": 13845060,
+          "array": 8561384,
+          "number": 14468436,
+          "symbol": 96,
+          "closure": 2341108,
+          "object": 13572076,
+          "concatenated string": 626340,
+          "sliced string": 140,
+          "regexp": 4560
+        }
+      },
+      "heapBytes": 121598284
+    }
+  ],
+  "retainedConstructorsStable": true
+}

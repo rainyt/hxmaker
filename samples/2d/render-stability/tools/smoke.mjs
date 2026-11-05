@@ -1,0 +1,15 @@
+import { CDP } from './cdp.mjs';
+import fs from 'node:fs/promises';
+const endpoint = process.env.CDP_ENDPOINT || 'http://127.0.0.1:9425';
+const targets = await (await fetch(`${endpoint}/json/list`)).json();
+const cdp = await CDP.connect(targets.find(x => x.type === 'page').webSocketDebuggerUrl);
+await cdp.call('Page.enable'); await cdp.call('Runtime.enable'); await cdp.call('Log.enable');
+await cdp.call('Emulation.setDeviceMetricsOverride', {width:960,height:640,deviceScaleFactor:1,mobile:false});
+await cdp.call('Page.navigate', {url:'http://127.0.0.1:8876/'});
+await new Promise(resolve => setTimeout(resolve, 2000));
+console.log(JSON.stringify(await cdp.evaluate('window.__stability?.snapshot()')));
+console.log(JSON.stringify(cdp.events.filter(x=>x.method==="Runtime.exceptionThrown").map(x=>x.params.exceptionDetails)));
+const shot = await cdp.call('Page.captureScreenshot',{format:'png'});
+await fs.mkdir(new URL('../results/',import.meta.url),{recursive:true});
+await fs.writeFile(new URL('../results/initial.png',import.meta.url),Buffer.from(shot.data,'base64'));
+cdp.close();

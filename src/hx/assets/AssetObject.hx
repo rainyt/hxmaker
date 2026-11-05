@@ -14,7 +14,8 @@ class AssetObject<T> {
 	 */
 	public var nativePath:String = "";
 
-	private var __isRelease = false;
+	private var assetReferences:Int = 0;
+	public var cacheEntryId(default, null):Int = 0;
 
 	/**
 	 * 子资源处理
@@ -24,6 +25,9 @@ class AssetObject<T> {
 	public function new(key:String, data:Dynamic) {
 		this.data = data;
 		this.nativePath = key;
+		#if openfl
+		cacheEntryId = hx.net.RequestQueue.getEntryId(key);
+		#end
 	}
 
 	/**
@@ -32,11 +36,12 @@ class AssetObject<T> {
 	 * 例如 pushAssets 将资源从一个 Assets 合并到另一个时
 	 */
 	public function retain():Void {
+		assetReferences++;
 		for (object in childAssetObjects) {
 			object.retain();
 		}
 		#if openfl
-		hx.net.RequestQueue.retain(this.nativePath);
+		if (cacheEntryId > 0) hx.net.RequestQueue.retain(this.nativePath, cacheEntryId);
 		#end
 	}
 
@@ -44,11 +49,14 @@ class AssetObject<T> {
 	 * 释放资源
 	 */
 	public function release():Void {
+		if (assetReferences <= 0) return;
+		assetReferences--;
+		if (assetReferences == 0 && data is Atlas) cast(data, Atlas).dispose();
 		for (object in childAssetObjects) {
 			object.release();
 		}
 		#if openfl
-		hx.net.RequestQueue.release(this.nativePath);
+		if (cacheEntryId > 0) hx.net.RequestQueue.release(this.nativePath, cacheEntryId);
 		#end
 	}
 }

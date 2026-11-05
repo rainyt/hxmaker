@@ -1,0 +1,9 @@
+<project>
+    <include path="project.xml" />
+    <app path="Export/wechat" />
+    <haxedef name="wechat" />
+    <haxelib name="wechat-zygame-dom" />
+    <set name="DEVICE_ORIENTATION" value="landscape" />
+    <set name="PROJECT_NAME" value="hxmaker-render-stability" />
+    <set name="WX_APPID" value="touristappid" />
+</project>

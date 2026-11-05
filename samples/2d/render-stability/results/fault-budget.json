@@ -1,0 +1,2379 @@
+{
+  "passed": true,
+  "before": {
+    "astc": {
+      "enabled": true,
+      "ready": true,
+      "bytes": 32,
+      "fallback": false
+    },
+    "buildId": "0054cf3c432d6ec43956",
+    "windowWidth": 960,
+    "windowHeight": 553,
+    "stageWidth": 960,
+    "stageHeight": 553,
+    "phase": 603,
+    "cycles": 201,
+    "generation": 20,
+    "recovered": 20,
+    "lost": false,
+    "pending": false,
+    "checks": [
+      "切片不受根视图释放影响",
+      "快照阻止提前物理释放",
+      "退役幂等且最终回收",
+      "两个借用者拥有不同输出目标",
+      "借用者销毁不销毁池资源",
+      "共享 Shader 数值快照隔离",
+      "共享 Shader 输入快照隔离",
+      "退役清除快照尾部引用"
+    ],
+    "pool": 2,
+    "diagnostics": {
+      "buildId": "0054cf3c432d6ec43956",
+      "faults": 5,
+      "skipped": 5,
+      "drawn": 10843,
+      "references": 16,
+      "pendingDisposals": 0,
+      "physicalDisposals": 2472,
+      "events": [],
+      "reports": [
+        {
+          "kind": "disposed",
+          "resourceId": 2480,
+          "input": "合批槽 0",
+          "batchId": 423,
+          "shader": "直接合批",
+          "generation": 20,
+          "message": "二维输入已被释放",
+          "revision": 1,
+          "passId": 0,
+          "count": 1,
+          "at": 1793894314.553,
+          "resources": [
+            {
+              "resourceId": 2480,
+              "width": 0,
+              "height": 0,
+              "label": "",
+              "entryId": 0,
+              "lastBatchId": 423,
+              "owners": 1,
+              "references": 1,
+              "pending": false,
+              "disposed": false,
+              "generation": 20,
+              "releaseReason": "",
+              "releaseStack": ""
+            }
+          ]
+        },
+        {
+          "kind": "invalidSize",
+          "resourceId": 2481,
+          "input": "合批槽 0",
+          "batchId": 424,
+          "shader": "直接合批",
+          "generation": 20,
+          "message": "二维输入尺寸无效",
+          "revision": 1,
+          "passId": 0,
+          "count": 1,
+          "at": 1793894314.953,
+          "resources": [
+            {
+              "resourceId": 2481,
+              "width": -1,
+              "height": 32,
+              "label": "",
+              "entryId": 0,
+              "lastBatchId": 424,
+              "owners": 1,
+              "references": 1,
+              "pending": false,
+              "disposed": false,
+              "generation": 20,
+              "releaseReason": "",
+              "releaseStack": ""
+            }
+          ]
+        },
+        {
+          "kind": "uploadFailed",
+          "resourceId": 2482,
+          "input": "二维批次纹理槽 0",
+          "batchId": 425,
+          "shader": "直接合批",
+          "generation": 20,
+          "message": "二维输入纹理上传失败：注入上传失败",
+          "revision": 1,
+          "passId": 0,
+          "count": 1,
+          "at": 1793894315.092,
+          "resources": [
+            {
+              "resourceId": 2482,
+              "width": 32,
+              "height": 32,
+              "label": "",
+              "entryId": 0,
+              "lastBatchId": 425,
+              "owners": 1,
+              "references": 1,
+              "pending": false,
+              "disposed": false,
+              "generation": 20,
+              "releaseReason": "",
+              "releaseStack": ""
+            }
+          ]
+        },
+        {
+          "kind": "missingRecovery",
+          "resourceId": 2483,
+          "input": "二维批次纹理槽 0",
+          "batchId": 426,
+          "shader": "直接合批",
+          "generation": 20,
+          "message": "GPU 资源没有像素或重绘来源，禁止以空纹理伪装恢复成功",
+          "revision": 1,
+          "passId": 0,
+          "count": 1,
+          "at": 1793894315.224,
+          "resources": [
+            {
+              "resourceId": 2483,
+              "width": 32,
+              "height": 32,
+              "label": "",
+              "entryId": 0,
+              "lastBatchId": 426,
+              "owners": 1,
+              "references": 1,
+              "pending": false,
+              "disposed": false,
+              "generation": -1,
+              "releaseReason": "",
+              "releaseStack": ""
+            }
+          ]
+        },
+        {
+          "kind": "feedback",
+          "resourceId": 2484,
+          "input": "合批槽 0",
+          "batchId": 7,
+          "shader": "直接合批",
+          "generation": 20,
+          "message": "不能采样当前正在写入的离屏目标",
+          "revision": 627,
+          "passId": 3869,
+          "count": 1,
+          "at": 1793894315.337,
+          "resources": [
+            {
+              "resourceId": 2484,
+              "width": 32,
+              "height": 32,
+              "label": "",
+              "entryId": 0,
+              "lastBatchId": 7,
+              "owners": 1,
+              "references": 1,
+              "pending": false,
+              "disposed": false,
+              "generation": 20,
+              "releaseReason": "",
+              "releaseStack": ""
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "fallback": {
+    "astc": {
+      "enabled": true,
+      "ready": true,
+      "bytes": 0,
+      "fallback": true
+    },
+    "buildId": "0054cf3c432d6ec43956",
+    "windowWidth": 960,
+    "windowHeight": 553,
+    "stageWidth": 960,
+    "stageHeight": 553,
+    "phase": 603,
+    "cycles": 201,
+    "generation": 21,
+    "recovered": 21,
+    "lost": false,
+    "pending": false,
+    "checks": [
+      "切片不受根视图释放影响",
+      "快照阻止提前物理释放",
+      "退役幂等且最终回收",
+      "两个借用者拥有不同输出目标",
+      "借用者销毁不销毁池资源",
+      "共享 Shader 数值快照隔离",
+      "共享 Shader 输入快照隔离",
+      "退役清除快照尾部引用"
+    ],
+    "pool": 2,
+    "diagnostics": {
+      "buildId": "0054cf3c432d6ec43956",
+      "faults": 6,
+      "skipped": 6,
+      "drawn": 10873,
+      "references": 16,
+      "pendingDisposals": 0,
+      "physicalDisposals": 2474,
+      "events": [],
+      "reports": [
+        {
+          "kind": "disposed",
+          "resourceId": 2480,
+          "input": "合批槽 0",
+          "batchId": 423,
+          "shader": "直接合批",
+          "generation": 20,
+          "message": "二维输入已被释放",
+          "revision": 1,
+          "passId": 0,
+          "count": 1,
+          "at": 1793894314.553,
+          "resources": [
+            {
+              "resourceId": 2480,
+              "width": 0,
+              "height": 0,
+              "label": "",
+              "entryId": 0,
+              "lastBatchId": 423,
+              "owners": 1,
+              "references": 1,
+              "pending": false,
+              "disposed": false,
+              "generation": 20,
+              "releaseReason": "",
+              "releaseStack": ""
+            }
+          ]
+        },
+        {
+          "kind": "invalidSize",
+          "resourceId": 2481,
+          "input": "合批槽 0",
+          "batchId": 424,
+          "shader": "直接合批",
+          "generation": 20,
+          "message": "二维输入尺寸无效",
+          "revision": 1,
+          "passId": 0,
+          "count": 1,
+          "at": 1793894314.953,
+          "resources": [
+            {
+              "resourceId": 2481,
+              "width": -1,
+              "height": 32,
+              "label": "",
+              "entryId": 0,
+              "lastBatchId": 424,
+              "owners": 1,
+              "references": 1,
+              "pending": false,
+              "disposed": false,
+              "generation": 20,
+              "releaseReason": "",
+              "releaseStack": ""
+            }
+          ]
+        },
+        {
+          "kind": "uploadFailed",
+          "resourceId": 2482,
+          "input": "二维批次纹理槽 0",
+          "batchId": 425,
+          "shader": "直接合批",
+          "generation": 20,
+          "message": "二维输入纹理上传失败：注入上传失败",
+          "revision": 1,
+          "passId": 0,
+          "count": 1,
+          "at": 1793894315.092,
+          "resources": [
+            {
+              "resourceId": 2482,
+              "width": 32,
+              "height": 32,
+              "label": "",
+              "entryId": 0,
+              "lastBatchId": 425,
+              "owners": 1,
+              "references": 1,
+              "pending": false,
+              "disposed": false,
+              "generation": 20,
+              "releaseReason": "",
+              "releaseStack": ""
+            }
+          ]
+        },
+        {
+          "kind": "missingRecovery",
+          "resourceId": 2483,
+          "input": "二维批次纹理槽 0",
+          "batchId": 426,
+          "shader": "直接合批",
+          "generation": 20,
+          "message": "GPU 资源没有像素或重绘来源，禁止以空纹理伪装恢复成功",
+          "revision": 1,
+          "passId": 0,
+          "count": 1,
+          "at": 1793894315.224,
+          "resources": [
+            {
+              "resourceId": 2483,
+              "width": 32,
+              "height": 32,
+              "label": "",
+              "entryId": 0,
+              "lastBatchId": 426,
+              "owners": 1,
+              "references": 1,
+              "pending": false,
+              "disposed": false,
+              "generation": -1,
+              "releaseReason": "",
+              "releaseStack": ""
+            }
+          ]
+        },
+        {
+          "kind": "feedback",
+          "resourceId": 2484,
+          "input": "合批槽 0",
+          "batchId": 7,
+          "shader": "直接合批",
+          "generation": 20,
+          "message": "不能采样当前正在写入的离屏目标",
+          "revision": 627,
+          "passId": 3869,
+          "count": 1,
+          "at": 1793894315.337,
+          "resources": [
+            {
+              "resourceId": 2484,
+              "width": 32,
+              "height": 32,
+              "label": "",
+              "entryId": 0,
+              "lastBatchId": 7,
+              "owners": 1,
+              "references": 1,
+              "pending": false,
+              "disposed": false,
+              "generation": 20,
+              "releaseReason": "",
+              "releaseStack": ""
+            }
+          ]
+        },
+        {
+          "kind": "notReady",
+          "resourceId": 22,
+          "input": "ASTC",
+          "batchId": 17,
+          "shader": "直接合批",
+          "generation": 21,
+          "message": "设备能力变化，正在加载原始图片",
+          "revision": 528,
+          "passId": 0,
+          "count": 1,
+          "at": 1793894315.729,
+          "resources": [
+            {
+              "resourceId": 22,
+              "width": 4,
+              "height": 4,
+              "label": "",
+              "entryId": 0,
+              "lastBatchId": 17,
+              "owners": 1,
+              "references": 1,
+              "pending": false,
+              "disposed": false,
+              "generation": 21,
+              "releaseReason": "",
+              "releaseStack": ""
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "after": {
+    "astc": {
+      "enabled": true,
+      "ready": true,
+      "bytes": 0,
+      "fallback": true
+    },
+    "buildId": "0054cf3c432d6ec43956",
+    "windowWidth": 960,
+    "windowHeight": 553,
+    "stageWidth": 960,
+    "stageHeight": 553,
+    "phase": 603,
+    "cycles": 201,
+    "generation": 21,
+    "recovered": 21,
+    "lost": false,
+    "pending": false,
+    "checks": [
+      "切片不受根视图释放影响",
+      "快照阻止提前物理释放",
+      "退役幂等且最终回收",
+      "两个借用者拥有不同输出目标",
+      "借用者销毁不销毁池资源",
+      "共享 Shader 数值快照隔离",
+      "共享 Shader 输入快照隔离",
+      "退役清除快照尾部引用"
+    ],
+    "pool": 2,
+    "diagnostics": {
+      "buildId": "0054cf3c432d6ec43956",
+      "faults": 76,
+      "skipped": 76,
+      "drawn": 12273,
+      "references": 16,
+      "pendingDisposals": 0,
+      "physicalDisposals": 2544,
+      "events": [],
+      "reports": [
+        {
+          "kind": "disposed",
+          "resourceId": 2497,
+          "input": "合批槽 0",
+          "batchId": 433,
+          "shader": "直接合批",
+          "generation": 21,
+          "message": "二维输入已被释放",
+          "revision": 1,
+          "passId": 0,
+          "count": 1,
+          "at": 1793894316.454,
+          "resources": [
+            {
+              "resourceId": 2497,
+              "width": 0,
+              "height": 0,
+              "label": "",
+              "entryId": 0,
+              "lastBatchId": 433,
+              "owners": 1,
+              "references": 1,
+              "pending": false,
+              "disposed": false,
+              "generation": 21,
+              "releaseReason": "",
+              "releaseStack": ""
+            }
+          ]
+        },
+        {
+          "kind": "disposed",
+          "resourceId": 2498,
+          "input": "合批槽 0",
+          "batchId": 434,
+          "shader": "直接合批",
+          "generation": 21,
+          "message": "二维输入已被释放",
+          "revision": 1,
+          "passId": 0,
+          "count": 1,
+          "at": 1793894316.52,
+          "resources": [
+            {
+              "resourceId": 2498,
+              "width": 0,
+              "height": 0,
+              "label": "",
+              "entryId": 0,
+              "lastBatchId": 434,
+              "owners": 1,
+              "references": 1,
+              "pending": false,
+              "disposed": false,
+              "generation": 21,
+              "releaseReason": "",
+              "releaseStack": ""
+            }
+          ]
+        },
+        {
+          "kind": "disposed",
+          "resourceId": 2499,
+          "input": "合批槽 0",
+          "batchId": 435,
+          "shader": "直接合批",
+          "generation": 21,
+          "message": "二维输入已被释放",
+          "revision": 1,
+          "passId": 0,
+          "count": 1,
+          "at": 1793894316.587,
+          "resources": [
+            {
+              "resourceId": 2499,
+              "width": 0,
+              "height": 0,
+              "label": "",
+              "entryId": 0,
+              "lastBatchId": 435,
+              "owners": 1,
+              "references": 1,
+              "pending": false,
+              "disposed": false,
+              "generation": 21,
+              "releaseReason": "",
+              "releaseStack": ""
+            }
+          ]
+        },
+        {
+          "kind": "disposed",
+          "resourceId": 2500,
+          "input": "合批槽 0",
+          "batchId": 436,
+          "shader": "直接合批",
+          "generation": 21,
+          "message": "二维输入已被释放",
+          "revision": 1,
+          "passId": 0,
+          "count": 1,
+          "at": 1793894316.636,
+          "resources": [
+            {
+              "resourceId": 2500,
+              "width": 0,
+              "height": 0,
+              "label": "",
+              "entryId": 0,
+              "lastBatchId": 436,
+              "owners": 1,
+              "references": 1,
+              "pending": false,
+              "disposed": false,
+              "generation": 21,
+              "releaseReason": "",
+              "releaseStack": ""
+            }
+          ]
+        },
+        {
+          "kind": "disposed",
+          "resourceId": 2501,
+          "input": "合批槽 0",
+          "batchId": 437,
+          "shader": "直接合批",
+          "generation": 21,
+          "message": "二维输入已被释放",
+          "revision": 1,
+          "passId": 0,
+          "count": 1,
+          "at": 1793894316.704,
+          "resources": [
+            {
+              "resourceId": 2501,
+              "width": 0,
+              "height": 0,
+              "label": "",
+              "entryId": 0,
+              "lastBatchId": 437,
+              "owners": 1,
+              "references": 1,
+              "pending": false,
+              "disposed": false,
+              "generation": 21,
+              "releaseReason": "",
+              "releaseStack": ""
+            }
+          ]
+        },
+        {
+          "kind": "disposed",
+          "resourceId": 2502,
+          "input": "合批槽 0",
+          "batchId": 438,
+          "shader": "直接合批",
+          "generation": 21,
+          "message": "二维输入已被释放",
+          "revision": 1,
+          "passId": 0,
+          "count": 1,
+          "at": 1793894316.77,
+          "resources": [
+            {
+              "resourceId": 2502,
+              "width": 0,
+              "height": 0,
+              "label": "",
+              "entryId": 0,
+              "lastBatchId": 438,
+              "owners": 1,
+              "references": 1,
+              "pending": false,
+              "disposed": false,
+              "generation": 21,
+              "releaseReason": "",
+              "releaseStack": ""
+            }
+          ]
+        },
+        {
+          "kind": "disposed",
+          "resourceId": 2503,
+          "input": "合批槽 0",
+          "batchId": 439,
+          "shader": "直接合批",
+          "generation": 21,
+          "message": "二维输入已被释放",
+          "revision": 1,
+          "passId": 0,
+          "count": 1,
+          "at": 1793894316.819,
+          "resources": [
+            {
+              "resourceId": 2503,
+              "width": 0,
+              "height": 0,
+              "label": "",
+              "entryId": 0,
+              "lastBatchId": 439,
+              "owners": 1,
+              "references": 1,
+              "pending": false,
+              "disposed": false,
+              "generation": 21,
+              "releaseReason": "",
+              "releaseStack": ""
+            }
+          ]
+        },
+        {
+          "kind": "disposed",
+          "resourceId": 2504,
+          "input": "合批槽 0",
+          "batchId": 440,
+          "shader": "直接合批",
+          "generation": 21,
+          "message": "二维输入已被释放",
+          "revision": 1,
+          "passId": 0,
+          "count": 1,
+          "at": 1793894316.887,
+          "resources": [
+            {
+              "resourceId": 2504,
+              "width": 0,
+              "height": 0,
+              "label": "",
+              "entryId": 0,
+              "lastBatchId": 440,
+              "owners": 1,
+              "references": 1,
+              "pending": false,
+              "disposed": false,
+              "generation": 21,
+              "releaseReason": "",
+              "releaseStack": ""
+            }
+          ]
+        },
+        {
+          "kind": "disposed",
+          "resourceId": 2505,
+          "input": "合批槽 0",
+          "batchId": 441,
+          "shader": "直接合批",
+          "generation": 21,
+          "message": "二维输入已被释放",
+          "revision": 1,
+          "passId": 0,
+          "count": 1,
+          "at": 1793894316.953,
+          "resources": [
+            {
+              "resourceId": 2505,
+              "width": 0,
+              "height": 0,
+              "label": "",
+              "entryId": 0,
+              "lastBatchId": 441,
+              "owners": 1,
+              "references": 1,
+              "pending": false,
+              "disposed": false,
+              "generation": 21,
+              "releaseReason": "",
+              "releaseStack": ""
+            }
+          ]
+        },
+        {
+          "kind": "disposed",
+          "resourceId": 2506,
+          "input": "合批槽 0",
+          "batchId": 442,
+          "shader": "直接合批",
+          "generation": 21,
+          "message": "二维输入已被释放",
+          "revision": 1,
+          "passId": 0,
+          "count": 1,
+          "at": 1793894317.021,
+          "resources": [
+            {
+              "resourceId": 2506,
+              "width": 0,
+              "height": 0,
+              "label": "",
+              "entryId": 0,
+              "lastBatchId": 442,
+              "owners": 1,
+              "references": 1,
+              "pending": false,
+              "disposed": false,
+              "generation": 21,
+              "releaseReason": "",
+              "releaseStack": ""
+            }
+          ]
+        },
+        {
+          "kind": "disposed",
+          "resourceId": 2507,
+          "input": "合批槽 0",
+          "batchId": 443,
+          "shader": "直接合批",
+          "generation": 21,
+          "message": "二维输入已被释放",
+          "revision": 1,
+          "passId": 0,
+          "count": 1,
+          "at": 1793894317.071,
+          "resources": [
+            {
+              "resourceId": 2507,
+              "width": 0,
+              "height": 0,
+              "label": "",
+              "entryId": 0,
+              "lastBatchId": 443,
+              "owners": 1,
+              "references": 1,
+              "pending": false,
+              "disposed": false,
+              "generation": 21,
+              "releaseReason": "",
+              "releaseStack": ""
+            }
+          ]
+        },
+        {
+          "kind": "disposed",
+          "resourceId": 2508,
+          "input": "合批槽 0",
+          "batchId": 444,
+          "shader": "直接合批",
+          "generation": 21,
+          "message": "二维输入已被释放",
+          "revision": 1,
+          "passId": 0,
+          "count": 1,
+          "at": 1793894317.136,
+          "resources": [
+            {
+              "resourceId": 2508,
+              "width": 0,
+              "height": 0,
+              "label": "",
+              "entryId": 0,
+              "lastBatchId": 444,
+              "owners": 1,
+              "references": 1,
+              "pending": false,
+              "disposed": false,
+              "generation": 21,
+              "releaseReason": "",
+              "releaseStack": ""
+            }
+          ]
+        },
+        {
+          "kind": "disposed",
+          "resourceId": 2509,
+          "input": "合批槽 0",
+          "batchId": 445,
+          "shader": "直接合批",
+          "generation": 21,
+          "message": "二维输入已被释放",
+          "revision": 1,
+          "passId": 0,
+          "count": 1,
+          "at": 1793894317.186,
+          "resources": [
+            {
+              "resourceId": 2509,
+              "width": 0,
+              "height": 0,
+              "label": "",
+              "entryId": 0,
+              "lastBatchId": 445,
+              "owners": 1,
+              "references": 1,
+              "pending": false,
+              "disposed": false,
+              "generation": 21,
+              "releaseReason": "",
+              "releaseStack": ""
+            }
+          ]
+        },
+        {
+          "kind": "disposed",
+          "resourceId": 2510,
+          "input": "合批槽 0",
+          "batchId": 446,
+          "shader": "直接合批",
+          "generation": 21,
+          "message": "二维输入已被释放",
+          "revision": 1,
+          "passId": 0,
+          "count": 1,
+          "at": 1793894317.253,
+          "resources": [
+            {
+              "resourceId": 2510,
+              "width": 0,
+              "height": 0,
+              "label": "",
+              "entryId": 0,
+              "lastBatchId": 446,
+              "owners": 1,
+              "references": 1,
+              "pending": false,
+              "disposed": false,
+              "generation": 21,
+              "releaseReason": "",
+              "releaseStack": ""
+            }
+          ]
+        },
+        {
+          "kind": "disposed",
+          "resourceId": 2511,
+          "input": "合批槽 0",
+          "batchId": 447,
+          "shader": "直接合批",
+          "generation": 21,
+          "message": "二维输入已被释放",
+          "revision": 1,
+          "passId": 0,
+          "count": 1,
+          "at": 1793894317.303,
+          "resources": [
+            {
+              "resourceId": 2511,
+              "width": 0,
+              "height": 0,
+              "label": "",
+              "entryId": 0,
+              "lastBatchId": 447,
+              "owners": 1,
+              "references": 1,
+              "pending": false,
+              "disposed": false,
+              "generation": 21,
+              "releaseReason": "",
+              "releaseStack": ""
+            }
+          ]
+        },
+        {
+          "kind": "disposed",
+          "resourceId": 2512,
+          "input": "合批槽 0",
+          "batchId": 448,
+          "shader": "直接合批",
+          "generation": 21,
+          "message": "二维输入已被释放",
+          "revision": 1,
+          "passId": 0,
+          "count": 1,
+          "at": 1793894317.369,
+          "resources": [
+            {
+              "resourceId": 2512,
+              "width": 0,
+              "height": 0,
+              "label": "",
+              "entryId": 0,
+              "lastBatchId": 448,
+              "owners": 1,
+              "references": 1,
+              "pending": false,
+              "disposed": false,
+              "generation": 21,
+              "releaseReason": "",
+              "releaseStack": ""
+            }
+          ]
+        },
+        {
+          "kind": "disposed",
+          "resourceId": 2513,
+          "input": "合批槽 0",
+          "batchId": 449,
+          "shader": "直接合批",
+          "generation": 21,
+          "message": "二维输入已被释放",
+          "revision": 1,
+          "passId": 0,
+          "count": 1,
+          "at": 1793894317.419,
+          "resources": [
+            {
+              "resourceId": 2513,
+              "width": 0,
+              "height": 0,
+              "label": "",
+              "entryId": 0,
+              "lastBatchId": 449,
+              "owners": 1,
+              "references": 1,
+              "pending": false,
+              "disposed": false,
+              "generation": 21,
+              "releaseReason": "",
+              "releaseStack": ""
+            }
+          ]
+        },
+        {
+          "kind": "disposed",
+          "resourceId": 2514,
+          "input": "合批槽 0",
+          "batchId": 450,
+          "shader": "直接合批",
+          "generation": 21,
+          "message": "二维输入已被释放",
+          "revision": 1,
+          "passId": 0,
+          "count": 1,
+          "at": 1793894317.486,
+          "resources": [
+            {
+              "resourceId": 2514,
+              "width": 0,
+              "height": 0,
+              "label": "",
+              "entryId": 0,
+              "lastBatchId": 450,
+              "owners": 1,
+              "references": 1,
+              "pending": false,
+              "disposed": false,
+              "generation": 21,
+              "releaseReason": "",
+              "releaseStack": ""
+            }
+          ]
+        },
+        {
+          "kind": "disposed",
+          "resourceId": 2515,
+          "input": "合批槽 0",
+          "batchId": 451,
+          "shader": "直接合批",
+          "generation": 21,
+          "message": "二维输入已被释放",
+          "revision": 1,
+          "passId": 0,
+          "count": 1,
+          "at": 1793894317.536,
+          "resources": [
+            {
+              "resourceId": 2515,
+              "width": 0,
+              "height": 0,
+              "label": "",
+              "entryId": 0,
+              "lastBatchId": 451,
+              "owners": 1,
+              "references": 1,
+              "pending": false,
+              "disposed": false,
+              "generation": 21,
+              "releaseReason": "",
+              "releaseStack": ""
+            }
+          ]
+        },
+        {
+          "kind": "disposed",
+          "resourceId": 2516,
+          "input": "合批槽 0",
+          "batchId": 452,
+          "shader": "直接合批",
+          "generation": 21,
+          "message": "二维输入已被释放",
+          "revision": 1,
+          "passId": 0,
+          "count": 1,
+          "at": 1793894317.603,
+          "resources": [
+            {
+              "resourceId": 2516,
+              "width": 0,
+              "height": 0,
+              "label": "",
+              "entryId": 0,
+              "lastBatchId": 452,
+              "owners": 1,
+              "references": 1,
+              "pending": false,
+              "disposed": false,
+              "generation": 21,
+              "releaseReason": "",
+              "releaseStack": ""
+            }
+          ]
+        },
+        {
+          "kind": "disposed",
+          "resourceId": 2517,
+          "input": "合批槽 0",
+          "batchId": 453,
+          "shader": "直接合批",
+          "generation": 21,
+          "message": "二维输入已被释放",
+          "revision": 1,
+          "passId": 0,
+          "count": 1,
+          "at": 1793894317.652,
+          "resources": [
+            {
+              "resourceId": 2517,
+              "width": 0,
+              "height": 0,
+              "label": "",
+              "entryId": 0,
+              "lastBatchId": 453,
+              "owners": 1,
+              "references": 1,
+              "pending": false,
+              "disposed": false,
+              "generation": 21,
+              "releaseReason": "",
+              "releaseStack": ""
+            }
+          ]
+        },
+        {
+          "kind": "disposed",
+          "resourceId": 2518,
+          "input": "合批槽 0",
+          "batchId": 454,
+          "shader": "直接合批",
+          "generation": 21,
+          "message": "二维输入已被释放",
+          "revision": 1,
+          "passId": 0,
+          "count": 1,
+          "at": 1793894317.72,
+          "resources": [
+            {
+              "resourceId": 2518,
+              "width": 0,
+              "height": 0,
+              "label": "",
+              "entryId": 0,
+              "lastBatchId": 454,
+              "owners": 1,
+              "references": 1,
+              "pending": false,
+              "disposed": false,
+              "generation": 21,
+              "releaseReason": "",
+              "releaseStack": ""
+            }
+          ]
+        },
+        {
+          "kind": "disposed",
+          "resourceId": 2519,
+          "input": "合批槽 0",
+          "batchId": 455,
+          "shader": "直接合批",
+          "generation": 21,
+          "message": "二维输入已被释放",
+          "revision": 1,
+          "passId": 0,
+          "count": 1,
+          "at": 1793894317.787,
+          "resources": [
+            {
+              "resourceId": 2519,
+              "width": 0,
+              "height": 0,
+              "label": "",
+              "entryId": 0,
+              "lastBatchId": 455,
+              "owners": 1,
+              "references": 1,
+              "pending": false,
+              "disposed": false,
+              "generation": 21,
+              "releaseReason": "",
+              "releaseStack": ""
+            }
+          ]
+        },
+        {
+          "kind": "disposed",
+          "resourceId": 2520,
+          "input": "合批槽 0",
+          "batchId": 456,
+          "shader": "直接合批",
+          "generation": 21,
+          "message": "二维输入已被释放",
+          "revision": 1,
+          "passId": 0,
+          "count": 1,
+          "at": 1793894317.837,
+          "resources": [
+            {
+              "resourceId": 2520,
+              "width": 0,
+              "height": 0,
+              "label": "",
+              "entryId": 0,
+              "lastBatchId": 456,
+              "owners": 1,
+              "references": 1,
+              "pending": false,
+              "disposed": false,
+              "generation": 21,
+              "releaseReason": "",
+              "releaseStack": ""
+            }
+          ]
+        },
+        {
+          "kind": "disposed",
+          "resourceId": 2521,
+          "input": "合批槽 0",
+          "batchId": 457,
+          "shader": "直接合批",
+          "generation": 21,
+          "message": "二维输入已被释放",
+          "revision": 1,
+          "passId": 0,
+          "count": 1,
+          "at": 1793894317.903,
+          "resources": [
+            {
+              "resourceId": 2521,
+              "width": 0,
+              "height": 0,
+              "label": "",
+              "entryId": 0,
+              "lastBatchId": 457,
+              "owners": 1,
+              "references": 1,
+              "pending": false,
+              "disposed": false,
+              "generation": 21,
+              "releaseReason": "",
+              "releaseStack": ""
+            }
+          ]
+        },
+        {
+          "kind": "disposed",
+          "resourceId": 2522,
+          "input": "合批槽 0",
+          "batchId": 458,
+          "shader": "直接合批",
+          "generation": 21,
+          "message": "二维输入已被释放",
+          "revision": 1,
+          "passId": 0,
+          "count": 1,
+          "at": 1793894317.953,
+          "resources": [
+            {
+              "resourceId": 2522,
+              "width": 0,
+              "height": 0,
+              "label": "",
+              "entryId": 0,
+              "lastBatchId": 458,
+              "owners": 1,
+              "references": 1,
+              "pending": false,
+              "disposed": false,
+              "generation": 21,
+              "releaseReason": "",
+              "releaseStack": ""
+            }
+          ]
+        },
+        {
+          "kind": "disposed",
+          "resourceId": 2523,
+          "input": "合批槽 0",
+          "batchId": 459,
+          "shader": "直接合批",
+          "generation": 21,
+          "message": "二维输入已被释放",
+          "revision": 1,
+          "passId": 0,
+          "count": 1,
+          "at": 1793894318.02,
+          "resources": [
+            {
+              "resourceId": 2523,
+              "width": 0,
+              "height": 0,
+              "label": "",
+              "entryId": 0,
+              "lastBatchId": 459,
+              "owners": 1,
+              "references": 1,
+              "pending": false,
+              "disposed": false,
+              "generation": 21,
+              "releaseReason": "",
+              "releaseStack": ""
+            }
+          ]
+        },
+        {
+          "kind": "disposed",
+          "resourceId": 2524,
+          "input": "合批槽 0",
+          "batchId": 460,
+          "shader": "直接合批",
+          "generation": 21,
+          "message": "二维输入已被释放",
+          "revision": 1,
+          "passId": 0,
+          "count": 1,
+          "at": 1793894318.086,
+          "resources": [
+            {
+              "resourceId": 2524,
+              "width": 0,
+              "height": 0,
+              "label": "",
+              "entryId": 0,
+              "lastBatchId": 460,
+              "owners": 1,
+              "references": 1,
+              "pending": false,
+              "disposed": false,
+              "generation": 21,
+              "releaseReason": "",
+              "releaseStack": ""
+            }
+          ]
+        },
+        {
+          "kind": "disposed",
+          "resourceId": 2525,
+          "input": "合批槽 0",
+          "batchId": 461,
+          "shader": "直接合批",
+          "generation": 21,
+          "message": "二维输入已被释放",
+          "revision": 1,
+          "passId": 0,
+          "count": 1,
+          "at": 1793894318.136,
+          "resources": [
+            {
+              "resourceId": 2525,
+              "width": 0,
+              "height": 0,
+              "label": "",
+              "entryId": 0,
+              "lastBatchId": 461,
+              "owners": 1,
+              "references": 1,
+              "pending": false,
+              "disposed": false,
+              "generation": 21,
+              "releaseReason": "",
+              "releaseStack": ""
+            }
+          ]
+        },
+        {
+          "kind": "disposed",
+          "resourceId": 2526,
+          "input": "合批槽 0",
+          "batchId": 462,
+          "shader": "直接合批",
+          "generation": 21,
+          "message": "二维输入已被释放",
+          "revision": 1,
+          "passId": 0,
+          "count": 1,
+          "at": 1793894318.202,
+          "resources": [
+            {
+              "resourceId": 2526,
+              "width": 0,
+              "height": 0,
+              "label": "",
+              "entryId": 0,
+              "lastBatchId": 462,
+              "owners": 1,
+              "references": 1,
+              "pending": false,
+              "disposed": false,
+              "generation": 21,
+              "releaseReason": "",
+              "releaseStack": ""
+            }
+          ]
+        },
+        {
+          "kind": "disposed",
+          "resourceId": 2527,
+          "input": "合批槽 0",
+          "batchId": 463,
+          "shader": "直接合批",
+          "generation": 21,
+          "message": "二维输入已被释放",
+          "revision": 1,
+          "passId": 0,
+          "count": 1,
+          "at": 1793894318.253,
+          "resources": [
+            {
+              "resourceId": 2527,
+              "width": 0,
+              "height": 0,
+              "label": "",
+              "entryId": 0,
+              "lastBatchId": 463,
+              "owners": 1,
+              "references": 1,
+              "pending": false,
+              "disposed": false,
+              "generation": 21,
+              "releaseReason": "",
+              "releaseStack": ""
+            }
+          ]
+        },
+        {
+          "kind": "disposed",
+          "resourceId": 2528,
+          "input": "合批槽 0",
+          "batchId": 464,
+          "shader": "直接合批",
+          "generation": 21,
+          "message": "二维输入已被释放",
+          "revision": 1,
+          "passId": 0,
+          "count": 1,
+          "at": 1793894318.319,
+          "resources": [
+            {
+              "resourceId": 2528,
+              "width": 0,
+              "height": 0,
+              "label": "",
+              "entryId": 0,
+              "lastBatchId": 464,
+              "owners": 1,
+              "references": 1,
+              "pending": false,
+              "disposed": false,
+              "generation": 21,
+              "releaseReason": "",
+              "releaseStack": ""
+            }
+          ]
+        },
+        {
+          "kind": "disposed",
+          "resourceId": 2529,
+          "input": "合批槽 0",
+          "batchId": 465,
+          "shader": "直接合批",
+          "generation": 21,
+          "message": "二维输入已被释放",
+          "revision": 1,
+          "passId": 0,
+          "count": 1,
+          "at": 1793894318.37,
+          "resources": [
+            {
+              "resourceId": 2529,
+              "width": 0,
+              "height": 0,
+              "label": "",
+              "entryId": 0,
+              "lastBatchId": 465,
+              "owners": 1,
+              "references": 1,
+              "pending": false,
+              "disposed": false,
+              "generation": 21,
+              "releaseReason": "",
+              "releaseStack": ""
+            }
+          ]
+        },
+        {
+          "kind": "disposed",
+          "resourceId": 2530,
+          "input": "合批槽 0",
+          "batchId": 466,
+          "shader": "直接合批",
+          "generation": 21,
+          "message": "二维输入已被释放",
+          "revision": 1,
+          "passId": 0,
+          "count": 1,
+          "at": 1793894318.436,
+          "resources": [
+            {
+              "resourceId": 2530,
+              "width": 0,
+              "height": 0,
+              "label": "",
+              "entryId": 0,
+              "lastBatchId": 466,
+              "owners": 1,
+              "references": 1,
+              "pending": false,
+              "disposed": false,
+              "generation": 21,
+              "releaseReason": "",
+              "releaseStack": ""
+            }
+          ]
+        },
+        {
+          "kind": "disposed",
+          "resourceId": 2531,
+          "input": "合批槽 0",
+          "batchId": 467,
+          "shader": "直接合批",
+          "generation": 21,
+          "message": "二维输入已被释放",
+          "revision": 1,
+          "passId": 0,
+          "count": 1,
+          "at": 1793894318.503,
+          "resources": [
+            {
+              "resourceId": 2531,
+              "width": 0,
+              "height": 0,
+              "label": "",
+              "entryId": 0,
+              "lastBatchId": 467,
+              "owners": 1,
+              "references": 1,
+              "pending": false,
+              "disposed": false,
+              "generation": 21,
+              "releaseReason": "",
+              "releaseStack": ""
+            }
+          ]
+        },
+        {
+          "kind": "disposed",
+          "resourceId": 2532,
+          "input": "合批槽 0",
+          "batchId": 468,
+          "shader": "直接合批",
+          "generation": 21,
+          "message": "二维输入已被释放",
+          "revision": 1,
+          "passId": 0,
+          "count": 1,
+          "at": 1793894318.552,
+          "resources": [
+            {
+              "resourceId": 2532,
+              "width": 0,
+              "height": 0,
+              "label": "",
+              "entryId": 0,
+              "lastBatchId": 468,
+              "owners": 1,
+              "references": 1,
+              "pending": false,
+              "disposed": false,
+              "generation": 21,
+              "releaseReason": "",
+              "releaseStack": ""
+            }
+          ]
+        },
+        {
+          "kind": "disposed",
+          "resourceId": 2533,
+          "input": "合批槽 0",
+          "batchId": 469,
+          "shader": "直接合批",
+          "generation": 21,
+          "message": "二维输入已被释放",
+          "revision": 1,
+          "passId": 0,
+          "count": 1,
+          "at": 1793894318.619,
+          "resources": [
+            {
+              "resourceId": 2533,
+              "width": 0,
+              "height": 0,
+              "label": "",
+              "entryId": 0,
+              "lastBatchId": 469,
+              "owners": 1,
+              "references": 1,
+              "pending": false,
+              "disposed": false,
+              "generation": 21,
+              "releaseReason": "",
+              "releaseStack": ""
+            }
+          ]
+        },
+        {
+          "kind": "disposed",
+          "resourceId": 2534,
+          "input": "合批槽 0",
+          "batchId": 470,
+          "shader": "直接合批",
+          "generation": 21,
+          "message": "二维输入已被释放",
+          "revision": 1,
+          "passId": 0,
+          "count": 1,
+          "at": 1793894318.687,
+          "resources": [
+            {
+              "resourceId": 2534,
+              "width": 0,
+              "height": 0,
+              "label": "",
+              "entryId": 0,
+              "lastBatchId": 470,
+              "owners": 1,
+              "references": 1,
+              "pending": false,
+              "disposed": false,
+              "generation": 21,
+              "releaseReason": "",
+              "releaseStack": ""
+            }
+          ]
+        },
+        {
+          "kind": "disposed",
+          "resourceId": 2535,
+          "input": "合批槽 0",
+          "batchId": 471,
+          "shader": "直接合批",
+          "generation": 21,
+          "message": "二维输入已被释放",
+          "revision": 1,
+          "passId": 0,
+          "count": 1,
+          "at": 1793894318.736,
+          "resources": [
+            {
+              "resourceId": 2535,
+              "width": 0,
+              "height": 0,
+              "label": "",
+              "entryId": 0,
+              "lastBatchId": 471,
+              "owners": 1,
+              "references": 1,
+              "pending": false,
+              "disposed": false,
+              "generation": 21,
+              "releaseReason": "",
+              "releaseStack": ""
+            }
+          ]
+        },
+        {
+          "kind": "disposed",
+          "resourceId": 2536,
+          "input": "合批槽 0",
+          "batchId": 472,
+          "shader": "直接合批",
+          "generation": 21,
+          "message": "二维输入已被释放",
+          "revision": 1,
+          "passId": 0,
+          "count": 1,
+          "at": 1793894318.803,
+          "resources": [
+            {
+              "resourceId": 2536,
+              "width": 0,
+              "height": 0,
+              "label": "",
+              "entryId": 0,
+              "lastBatchId": 472,
+              "owners": 1,
+              "references": 1,
+              "pending": false,
+              "disposed": false,
+              "generation": 21,
+              "releaseReason": "",
+              "releaseStack": ""
+            }
+          ]
+        },
+        {
+          "kind": "disposed",
+          "resourceId": 2537,
+          "input": "合批槽 0",
+          "batchId": 473,
+          "shader": "直接合批",
+          "generation": 21,
+          "message": "二维输入已被释放",
+          "revision": 1,
+          "passId": 0,
+          "count": 1,
+          "at": 1793894318.87,
+          "resources": [
+            {
+              "resourceId": 2537,
+              "width": 0,
+              "height": 0,
+              "label": "",
+              "entryId": 0,
+              "lastBatchId": 473,
+              "owners": 1,
+              "references": 1,
+              "pending": false,
+              "disposed": false,
+              "generation": 21,
+              "releaseReason": "",
+              "releaseStack": ""
+            }
+          ]
+        },
+        {
+          "kind": "disposed",
+          "resourceId": 2538,
+          "input": "合批槽 0",
+          "batchId": 474,
+          "shader": "直接合批",
+          "generation": 21,
+          "message": "二维输入已被释放",
+          "revision": 1,
+          "passId": 0,
+          "count": 1,
+          "at": 1793894318.92,
+          "resources": [
+            {
+              "resourceId": 2538,
+              "width": 0,
+              "height": 0,
+              "label": "",
+              "entryId": 0,
+              "lastBatchId": 474,
+              "owners": 1,
+              "references": 1,
+              "pending": false,
+              "disposed": false,
+              "generation": 21,
+              "releaseReason": "",
+              "releaseStack": ""
+            }
+          ]
+        },
+        {
+          "kind": "disposed",
+          "resourceId": 2539,
+          "input": "合批槽 0",
+          "batchId": 475,
+          "shader": "直接合批",
+          "generation": 21,
+          "message": "二维输入已被释放",
+          "revision": 1,
+          "passId": 0,
+          "count": 1,
+          "at": 1793894319.003,
+          "resources": [
+            {
+              "resourceId": 2539,
+              "width": 0,
+              "height": 0,
+              "label": "",
+              "entryId": 0,
+              "lastBatchId": 475,
+              "owners": 1,
+              "references": 1,
+              "pending": false,
+              "disposed": false,
+              "generation": 21,
+              "releaseReason": "",
+              "releaseStack": ""
+            }
+          ]
+        },
+        {
+          "kind": "disposed",
+          "resourceId": 2540,
+          "input": "合批槽 0",
+          "batchId": 476,
+          "shader": "直接合批",
+          "generation": 21,
+          "message": "二维输入已被释放",
+          "revision": 1,
+          "passId": 0,
+          "count": 1,
+          "at": 1793894319.052,
+          "resources": [
+            {
+              "resourceId": 2540,
+              "width": 0,
+              "height": 0,
+              "label": "",
+              "entryId": 0,
+              "lastBatchId": 476,
+              "owners": 1,
+              "references": 1,
+              "pending": false,
+              "disposed": false,
+              "generation": 21,
+              "releaseReason": "",
+              "releaseStack": ""
+            }
+          ]
+        },
+        {
+          "kind": "disposed",
+          "resourceId": 2541,
+          "input": "合批槽 0",
+          "batchId": 477,
+          "shader": "直接合批",
+          "generation": 21,
+          "message": "二维输入已被释放",
+          "revision": 1,
+          "passId": 0,
+          "count": 1,
+          "at": 1793894319.119,
+          "resources": [
+            {
+              "resourceId": 2541,
+              "width": 0,
+              "height": 0,
+              "label": "",
+              "entryId": 0,
+              "lastBatchId": 477,
+              "owners": 1,
+              "references": 1,
+              "pending": false,
+              "disposed": false,
+              "generation": 21,
+              "releaseReason": "",
+              "releaseStack": ""
+            }
+          ]
+        },
+        {
+          "kind": "disposed",
+          "resourceId": 2542,
+          "input": "合批槽 0",
+          "batchId": 478,
+          "shader": "直接合批",
+          "generation": 21,
+          "message": "二维输入已被释放",
+          "revision": 1,
+          "passId": 0,
+          "count": 1,
+          "at": 1793894319.186,
+          "resources": [
+            {
+              "resourceId": 2542,
+              "width": 0,
+              "height": 0,
+              "label": "",
+              "entryId": 0,
+              "lastBatchId": 478,
+              "owners": 1,
+              "references": 1,
+              "pending": false,
+              "disposed": false,
+              "generation": 21,
+              "releaseReason": "",
+              "releaseStack": ""
+            }
+          ]
+        },
+        {
+          "kind": "disposed",
+          "resourceId": 2543,
+          "input": "合批槽 0",
+          "batchId": 479,
+          "shader": "直接合批",
+          "generation": 21,
+          "message": "二维输入已被释放",
+          "revision": 1,
+          "passId": 0,
+          "count": 1,
+          "at": 1793894319.254,
+          "resources": [
+            {
+              "resourceId": 2543,
+              "width": 0,
+              "height": 0,
+              "label": "",
+              "entryId": 0,
+              "lastBatchId": 479,
+              "owners": 1,
+              "references": 1,
+              "pending": false,
+              "disposed": false,
+              "generation": 21,
+              "releaseReason": "",
+              "releaseStack": ""
+            }
+          ]
+        },
+        {
+          "kind": "disposed",
+          "resourceId": 2544,
+          "input": "合批槽 0",
+          "batchId": 480,
+          "shader": "直接合批",
+          "generation": 21,
+          "message": "二维输入已被释放",
+          "revision": 1,
+          "passId": 0,
+          "count": 1,
+          "at": 1793894319.303,
+          "resources": [
+            {
+              "resourceId": 2544,
+              "width": 0,
+              "height": 0,
+              "label": "",
+              "entryId": 0,
+              "lastBatchId": 480,
+              "owners": 1,
+              "references": 1,
+              "pending": false,
+              "disposed": false,
+              "generation": 21,
+              "releaseReason": "",
+              "releaseStack": ""
+            }
+          ]
+        },
+        {
+          "kind": "disposed",
+          "resourceId": 2545,
+          "input": "合批槽 0",
+          "batchId": 481,
+          "shader": "直接合批",
+          "generation": 21,
+          "message": "二维输入已被释放",
+          "revision": 1,
+          "passId": 0,
+          "count": 1,
+          "at": 1793894319.369,
+          "resources": [
+            {
+              "resourceId": 2545,
+              "width": 0,
+              "height": 0,
+              "label": "",
+              "entryId": 0,
+              "lastBatchId": 481,
+              "owners": 1,
+              "references": 1,
+              "pending": false,
+              "disposed": false,
+              "generation": 21,
+              "releaseReason": "",
+              "releaseStack": ""
+            }
+          ]
+        },
+        {
+          "kind": "disposed",
+          "resourceId": 2546,
+          "input": "合批槽 0",
+          "batchId": 482,
+          "shader": "直接合批",
+          "generation": 21,
+          "message": "二维输入已被释放",
+          "revision": 1,
+          "passId": 0,
+          "count": 1,
+          "at": 1793894319.437,
+          "resources": [
+            {
+              "resourceId": 2546,
+              "width": 0,
+              "height": 0,
+              "label": "",
+              "entryId": 0,
+              "lastBatchId": 482,
+              "owners": 1,
+              "references": 1,
+              "pending": false,
+              "disposed": false,
+              "generation": 21,
+              "releaseReason": "",
+              "releaseStack": ""
+            }
+          ]
+        },
+        {
+          "kind": "disposed",
+          "resourceId": 2547,
+          "input": "合批槽 0",
+          "batchId": 483,
+          "shader": "直接合批",
+          "generation": 21,
+          "message": "二维输入已被释放",
+          "revision": 1,
+          "passId": 0,
+          "count": 1,
+          "at": 1793894319.486,
+          "resources": [
+            {
+              "resourceId": 2547,
+              "width": 0,
+              "height": 0,
+              "label": "",
+              "entryId": 0,
+              "lastBatchId": 483,
+              "owners": 1,
+              "references": 1,
+              "pending": false,
+              "disposed": false,
+              "generation": 21,
+              "releaseReason": "",
+              "releaseStack": ""
+            }
+          ]
+        },
+        {
+          "kind": "disposed",
+          "resourceId": 2548,
+          "input": "合批槽 0",
+          "batchId": 484,
+          "shader": "直接合批",
+          "generation": 21,
+          "message": "二维输入已被释放",
+          "revision": 1,
+          "passId": 0,
+          "count": 1,
+          "at": 1793894319.553,
+          "resources": [
+            {
+              "resourceId": 2548,
+              "width": 0,
+              "height": 0,
+              "label": "",
+              "entryId": 0,
+              "lastBatchId": 484,
+              "owners": 1,
+              "references": 1,
+              "pending": false,
+              "disposed": false,
+              "generation": 21,
+              "releaseReason": "",
+              "releaseStack": ""
+            }
+          ]
+        },
+        {
+          "kind": "disposed",
+          "resourceId": 2549,
+          "input": "合批槽 0",
+          "batchId": 485,
+          "shader": "直接合批",
+          "generation": 21,
+          "message": "二维输入已被释放",
+          "revision": 1,
+          "passId": 0,
+          "count": 1,
+          "at": 1793894319.62,
+          "resources": [
+            {
+              "resourceId": 2549,
+              "width": 0,
+              "height": 0,
+              "label": "",
+              "entryId": 0,
+              "lastBatchId": 485,
+              "owners": 1,
+              "references": 1,
+              "pending": false,
+              "disposed": false,
+              "generation": 21,
+              "releaseReason": "",
+              "releaseStack": ""
+            }
+          ]
+        },
+        {
+          "kind": "disposed",
+          "resourceId": 2550,
+          "input": "合批槽 0",
+          "batchId": 486,
+          "shader": "直接合批",
+          "generation": 21,
+          "message": "二维输入已被释放",
+          "revision": 1,
+          "passId": 0,
+          "count": 1,
+          "at": 1793894319.669,
+          "resources": [
+            {
+              "resourceId": 2550,
+              "width": 0,
+              "height": 0,
+              "label": "",
+              "entryId": 0,
+              "lastBatchId": 486,
+              "owners": 1,
+              "references": 1,
+              "pending": false,
+              "disposed": false,
+              "generation": 21,
+              "releaseReason": "",
+              "releaseStack": ""
+            }
+          ]
+        },
+        {
+          "kind": "disposed",
+          "resourceId": 2551,
+          "input": "合批槽 0",
+          "batchId": 487,
+          "shader": "直接合批",
+          "generation": 21,
+          "message": "二维输入已被释放",
+          "revision": 1,
+          "passId": 0,
+          "count": 1,
+          "at": 1793894319.737,
+          "resources": [
+            {
+              "resourceId": 2551,
+              "width": 0,
+              "height": 0,
+              "label": "",
+              "entryId": 0,
+              "lastBatchId": 487,
+              "owners": 1,
+              "references": 1,
+              "pending": false,
+              "disposed": false,
+              "generation": 21,
+              "releaseReason": "",
+              "releaseStack": ""
+            }
+          ]
+        },
+        {
+          "kind": "disposed",
+          "resourceId": 2552,
+          "input": "合批槽 0",
+          "batchId": 488,
+          "shader": "直接合批",
+          "generation": 21,
+          "message": "二维输入已被释放",
+          "revision": 1,
+          "passId": 0,
+          "count": 1,
+          "at": 1793894319.803,
+          "resources": [
+            {
+              "resourceId": 2552,
+              "width": 0,
+              "height": 0,
+              "label": "",
+              "entryId": 0,
+              "lastBatchId": 488,
+              "owners": 1,
+              "references": 1,
+              "pending": false,
+              "disposed": false,
+              "generation": 21,
+              "releaseReason": "",
+              "releaseStack": ""
+            }
+          ]
+        },
+        {
+          "kind": "disposed",
+          "resourceId": 2553,
+          "input": "合批槽 0",
+          "batchId": 489,
+          "shader": "直接合批",
+          "generation": 21,
+          "message": "二维输入已被释放",
+          "revision": 1,
+          "passId": 0,
+          "count": 1,
+          "at": 1793894319.869,
+          "resources": [
+            {
+              "resourceId": 2553,
+              "width": 0,
+              "height": 0,
+              "label": "",
+              "entryId": 0,
+              "lastBatchId": 489,
+              "owners": 1,
+              "references": 1,
+              "pending": false,
+              "disposed": false,
+              "generation": 21,
+              "releaseReason": "",
+              "releaseStack": ""
+            }
+          ]
+        },
+        {
+          "kind": "disposed",
+          "resourceId": 2554,
+          "input": "合批槽 0",
+          "batchId": 490,
+          "shader": "直接合批",
+          "generation": 21,
+          "message": "二维输入已被释放",
+          "revision": 1,
+          "passId": 0,
+          "count": 1,
+          "at": 1793894319.919,
+          "resources": [
+            {
+              "resourceId": 2554,
+              "width": 0,
+              "height": 0,
+              "label": "",
+              "entryId": 0,
+              "lastBatchId": 490,
+              "owners": 1,
+              "references": 1,
+              "pending": false,
+              "disposed": false,
+              "generation": 21,
+              "releaseReason": "",
+              "releaseStack": ""
+            }
+          ]
+        },
+        {
+          "kind": "disposed",
+          "resourceId": 2555,
+          "input": "合批槽 0",
+          "batchId": 491,
+          "shader": "直接合批",
+          "generation": 21,
+          "message": "二维输入已被释放",
+          "revision": 1,
+          "passId": 0,
+          "count": 1,
+          "at": 1793894319.986,
+          "resources": [
+            {
+              "resourceId": 2555,
+              "width": 0,
+              "height": 0,
+              "label": "",
+              "entryId": 0,
+              "lastBatchId": 491,
+              "owners": 1,
+              "references": 1,
+              "pending": false,
+              "disposed": false,
+              "generation": 21,
+              "releaseReason": "",
+              "releaseStack": ""
+            }
+          ]
+        },
+        {
+          "kind": "disposed",
+          "resourceId": 2556,
+          "input": "合批槽 0",
+          "batchId": 492,
+          "shader": "直接合批",
+          "generation": 21,
+          "message": "二维输入已被释放",
+          "revision": 1,
+          "passId": 0,
+          "count": 1,
+          "at": 1793894320.053,
+          "resources": [
+            {
+              "resourceId": 2556,
+              "width": 0,
+              "height": 0,
+              "label": "",
+              "entryId": 0,
+              "lastBatchId": 492,
+              "owners": 1,
+              "references": 1,
+              "pending": false,
+              "disposed": false,
+              "generation": 21,
+              "releaseReason": "",
+              "releaseStack": ""
+            }
+          ]
+        },
+        {
+          "kind": "disposed",
+          "resourceId": 2557,
+          "input": "合批槽 0",
+          "batchId": 493,
+          "shader": "直接合批",
+          "generation": 21,
+          "message": "二维输入已被释放",
+          "revision": 1,
+          "passId": 0,
+          "count": 1,
+          "at": 1793894320.103,
+          "resources": [
+            {
+              "resourceId": 2557,
+              "width": 0,
+              "height": 0,
+              "label": "",
+              "entryId": 0,
+              "lastBatchId": 493,
+              "owners": 1,
+              "references": 1,
+              "pending": false,
+              "disposed": false,
+              "generation": 21,
+              "releaseReason": "",
+              "releaseStack": ""
+            }
+          ]
+        },
+        {
+          "kind": "disposed",
+          "resourceId": 2558,
+          "input": "合批槽 0",
+          "batchId": 494,
+          "shader": "直接合批",
+          "generation": 21,
+          "message": "二维输入已被释放",
+          "revision": 1,
+          "passId": 0,
+          "count": 1,
+          "at": 1793894320.17,
+          "resources": [
+            {
+              "resourceId": 2558,
+              "width": 0,
+              "height": 0,
+              "label": "",
+              "entryId": 0,
+              "lastBatchId": 494,
+              "owners": 1,
+              "references": 1,
+              "pending": false,
+              "disposed": false,
+              "generation": 21,
+              "releaseReason": "",
+              "releaseStack": ""
+            }
+          ]
+        },
+        {
+          "kind": "disposed",
+          "resourceId": 2559,
+          "input": "合批槽 0",
+          "batchId": 495,
+          "shader": "直接合批",
+          "generation": 21,
+          "message": "二维输入已被释放",
+          "revision": 1,
+          "passId": 0,
+          "count": 1,
+          "at": 1793894320.236,
+          "resources": [
+            {
+              "resourceId": 2559,
+              "width": 0,
+              "height": 0,
+              "label": "",
+              "entryId": 0,
+              "lastBatchId": 495,
+              "owners": 1,
+              "references": 1,
+              "pending": false,
+              "disposed": false,
+              "generation": 21,
+              "releaseReason": "",
+              "releaseStack": ""
+            }
+          ]
+        },
+        {
+          "kind": "disposed",
+          "resourceId": 2560,
+          "input": "合批槽 0",
+          "batchId": 496,
+          "shader": "直接合批",
+          "generation": 21,
+          "message": "二维输入已被释放",
+          "revision": 1,
+          "passId": 0,
+          "count": 1,
+          "at": 1793894320.286,
+          "resources": [
+            {
+              "resourceId": 2560,
+              "width": 0,
+              "height": 0,
+              "label": "",
+              "entryId": 0,
+              "lastBatchId": 496,
+              "owners": 1,
+              "references": 1,
+              "pending": false,
+              "disposed": false,
+              "generation": 21,
+              "releaseReason": "",
+              "releaseStack": ""
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

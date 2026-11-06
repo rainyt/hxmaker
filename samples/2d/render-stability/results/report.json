@@ -1,5 +1,5 @@
 {
-  "createdAt": "2026-11-05T15:57:49.588Z",
+  "createdAt": "2026-11-05T23:02:08.233Z",
   "platform": "darwin",
   "arch": "arm64",
   "version": {
@@ -83,13 +83,16 @@
     {
       "name": "初始",
       "state": {
+        "applicationVisible": true,
+        "updateCount": 14,
+        "resizePending": false,
         "astc": {
           "enabled": true,
           "ready": true,
           "bytes": 32,
           "fallback": false
         },
-        "buildId": "0054cf3c432d6ec43956",
+        "buildId": "4c1e21d6fbb4c32adbb3",
         "windowWidth": 960,
         "windowHeight": 640,
         "stageWidth": 960,
@@ -112,7 +115,7 @@
         ],
         "pool": 2,
         "diagnostics": {
-          "buildId": "0054cf3c432d6ec43956",
+          "buildId": "4c1e21d6fbb4c32adbb3",
           "faults": 0,
           "skipped": 0,
           "drawn": 30,
@@ -130,18 +133,21 @@
         "peak": 36,
         "losses": 0
       },
-      "heap": 11102136
+      "heap": 35664253
     },
     {
       "name": "模拟前后台一百轮",
       "state": {
+        "applicationVisible": true,
+        "updateCount": 176,
+        "resizePending": false,
         "astc": {
           "enabled": true,
           "ready": true,
           "bytes": 32,
           "fallback": false
         },
-        "buildId": "0054cf3c432d6ec43956",
+        "buildId": "4c1e21d6fbb4c32adbb3",
         "windowWidth": 960,
         "windowHeight": 640,
         "stageWidth": 960,
@@ -164,10 +170,10 @@
         ],
         "pool": 2,
         "diagnostics": {
-          "buildId": "0054cf3c432d6ec43956",
+          "buildId": "4c1e21d6fbb4c32adbb3",
           "faults": 0,
           "skipped": 0,
-          "drawn": 206,
+          "drawn": 1606,
           "references": 16,
           "pendingDisposals": 0,
           "physicalDisposals": 48,
@@ -182,18 +188,21 @@
         "peak": 52,
         "losses": 0
       },
-      "heap": 11490468
+      "heap": 36216557
     },
     {
       "name": "尺寸变化九十次",
       "state": {
+        "applicationVisible": true,
+        "updateCount": 374,
+        "resizePending": false,
         "astc": {
           "enabled": true,
           "ready": true,
           "bytes": 32,
           "fallback": false
         },
-        "buildId": "0054cf3c432d6ec43956",
+        "buildId": "4c1e21d6fbb4c32adbb3",
         "windowWidth": 960,
         "windowHeight": 640,
         "stageWidth": 960,
@@ -216,10 +225,10 @@
         ],
         "pool": 2,
         "diagnostics": {
-          "buildId": "0054cf3c432d6ec43956",
+          "buildId": "4c1e21d6fbb4c32adbb3",
           "faults": 0,
           "skipped": 0,
-          "drawn": 1753,
+          "drawn": 3153,
           "references": 16,
           "pendingDisposals": 0,
           "physicalDisposals": 412,
@@ -234,18 +243,21 @@
         "peak": 52,
         "losses": 0
       },
-      "heap": 12191377
+      "heap": 36476929
     },
     {
       "name": "切换10轮",
       "state": {
+        "applicationVisible": true,
+        "updateCount": 450,
+        "resizePending": false,
         "astc": {
           "enabled": true,
           "ready": true,
           "bytes": 32,
           "fallback": false
         },
-        "buildId": "0054cf3c432d6ec43956",
+        "buildId": "4c1e21d6fbb4c32adbb3",
         "windowWidth": 960,
         "windowHeight": 640,
         "stageWidth": 960,
@@ -268,10 +280,10 @@
         ],
         "pool": 2,
         "diagnostics": {
-          "buildId": "0054cf3c432d6ec43956",
+          "buildId": "4c1e21d6fbb4c32adbb3",
           "faults": 0,
           "skipped": 0,
-          "drawn": 2226,
+          "drawn": 3636,
           "references": 16,
           "pendingDisposals": 0,
           "physicalDisposals": 522,
@@ -286,18 +298,21 @@
         "peak": 52,
         "losses": 0
       },
-      "heap": 12252777
+      "heap": 36592845
     },
     {
       "name": "切换50轮",
       "state": {
+        "applicationVisible": true,
+        "updateCount": 691,
+        "resizePending": false,
         "astc": {
           "enabled": true,
           "ready": true,
           "bytes": 32,
           "fallback": false
         },
-        "buildId": "0054cf3c432d6ec43956",
+        "buildId": "4c1e21d6fbb4c32adbb3",
         "windowWidth": 960,
         "windowHeight": 640,
         "stageWidth": 960,
@@ -320,10 +335,10 @@
         ],
         "pool": 2,
         "diagnostics": {
-          "buildId": "0054cf3c432d6ec43956",
+          "buildId": "4c1e21d6fbb4c32adbb3",
           "faults": 0,
           "skipped": 0,
-          "drawn": 3946,
+          "drawn": 5356,
           "references": 16,
           "pendingDisposals": 0,
           "physicalDisposals": 922,
@@ -338,18 +353,21 @@
         "peak": 52,
         "losses": 0
       },
-      "heap": 12709477
+      "heap": 36891437
     },
     {
       "name": "切换100轮",
       "state": {
+        "applicationVisible": true,
+        "updateCount": 992,
+        "resizePending": false,
         "astc": {
           "enabled": true,
           "ready": true,
           "bytes": 32,
           "fallback": false
         },
-        "buildId": "0054cf3c432d6ec43956",
+        "buildId": "4c1e21d6fbb4c32adbb3",
         "windowWidth": 960,
         "windowHeight": 640,
         "stageWidth": 960,
@@ -372,10 +390,10 @@
         ],
         "pool": 2,
         "diagnostics": {
-          "buildId": "0054cf3c432d6ec43956",
+          "buildId": "4c1e21d6fbb4c32adbb3",
           "faults": 0,
           "skipped": 0,
-          "drawn": 6096,
+          "drawn": 7506,
           "references": 16,
           "pendingDisposals": 0,
           "physicalDisposals": 1422,
@@ -390,18 +408,21 @@
         "peak": 52,
         "losses": 0
       },
-      "heap": 12925433
+      "heap": 37169937
     },
     {
       "name": "切换200轮",
       "state": {
+        "applicationVisible": true,
+        "updateCount": 1593,
+        "resizePending": false,
         "astc": {
           "enabled": true,
           "ready": true,
           "bytes": 32,
           "fallback": false
         },
-        "buildId": "0054cf3c432d6ec43956",
+        "buildId": "4c1e21d6fbb4c32adbb3",
         "windowWidth": 960,
         "windowHeight": 640,
         "stageWidth": 960,
@@ -424,10 +445,10 @@
         ],
         "pool": 2,
         "diagnostics": {
-          "buildId": "0054cf3c432d6ec43956",
+          "buildId": "4c1e21d6fbb4c32adbb3",
           "faults": 0,
           "skipped": 0,
-          "drawn": 10396,
+          "drawn": 11806,
           "references": 16,
           "pendingDisposals": 0,
           "physicalDisposals": 2422,
@@ -442,18 +463,21 @@
         "peak": 52,
         "losses": 0
       },
-      "heap": 13185193
+      "heap": 37302189
     },
     {
       "name": "静止十秒后清理",
       "state": {
+        "applicationVisible": true,
+        "updateCount": 2229,
+        "resizePending": false,
         "astc": {
           "enabled": true,
           "ready": true,
           "bytes": 32,
           "fallback": false
         },
-        "buildId": "0054cf3c432d6ec43956",
+        "buildId": "4c1e21d6fbb4c32adbb3",
         "windowWidth": 960,
         "windowHeight": 640,
         "stageWidth": 960,
@@ -476,10 +500,10 @@
         ],
         "pool": 2,
         "diagnostics": {
-          "buildId": "0054cf3c432d6ec43956",
+          "buildId": "4c1e21d6fbb4c32adbb3",
           "faults": 0,
           "skipped": 0,
-          "drawn": 10396,
+          "drawn": 11806,
           "references": 16,
           "pendingDisposals": 0,
           "physicalDisposals": 2422,
@@ -494,18 +518,21 @@
         "peak": 52,
         "losses": 0
       },
-      "heap": 13196577
+      "heap": 37317793
     },
     {
       "name": "恢复1轮",
       "state": {
+        "applicationVisible": true,
+        "updateCount": 2240,
+        "resizePending": false,
         "astc": {
           "enabled": true,
           "ready": true,
           "bytes": 32,
           "fallback": false
         },
-        "buildId": "0054cf3c432d6ec43956",
+        "buildId": "4c1e21d6fbb4c32adbb3",
         "windowWidth": 960,
         "windowHeight": 640,
         "stageWidth": 960,
@@ -528,10 +555,10 @@
         ],
         "pool": 2,
         "diagnostics": {
-          "buildId": "0054cf3c432d6ec43956",
+          "buildId": "4c1e21d6fbb4c32adbb3",
           "faults": 0,
           "skipped": 0,
-          "drawn": 10413,
+          "drawn": 11823,
           "references": 16,
           "pendingDisposals": 0,
           "physicalDisposals": 2425,
@@ -546,18 +573,21 @@
         "peak": 52,
         "losses": 1
       },
-      "heap": 12868533
+      "heap": 37000874
     },
     {
       "name": "恢复20轮",
       "state": {
+        "applicationVisible": true,
+        "updateCount": 2416,
+        "resizePending": false,
         "astc": {
           "enabled": true,
           "ready": true,
           "bytes": 32,
           "fallback": false
         },
-        "buildId": "0054cf3c432d6ec43956",
+        "buildId": "4c1e21d6fbb4c32adbb3",
         "windowWidth": 960,
         "windowHeight": 640,
         "stageWidth": 960,
@@ -580,10 +610,10 @@
         ],
         "pool": 2,
         "diagnostics": {
-          "buildId": "0054cf3c432d6ec43956",
+          "buildId": "4c1e21d6fbb4c32adbb3",
           "faults": 0,
           "skipped": 0,
-          "drawn": 10736,
+          "drawn": 12146,
           "references": 16,
           "pendingDisposals": 0,
           "physicalDisposals": 2463,
@@ -598,18 +628,21 @@
         "peak": 52,
         "losses": 20
       },
-      "heap": 13108845
+      "heap": 37274390
     },
     {
       "name": "原生误释放注入",
       "state": {
+        "applicationVisible": true,
+        "updateCount": 2428,
+        "resizePending": false,
         "astc": {
           "enabled": true,
           "ready": true,
           "bytes": 32,
           "fallback": false
         },
-        "buildId": "0054cf3c432d6ec43956",
+        "buildId": "4c1e21d6fbb4c32adbb3",
         "windowWidth": 960,
         "windowHeight": 640,
         "stageWidth": 960,
@@ -632,10 +665,10 @@
         ],
         "pool": 2,
         "diagnostics": {
-          "buildId": "0054cf3c432d6ec43956",
+          "buildId": "4c1e21d6fbb4c32adbb3",
           "faults": 1,
           "skipped": 1,
-          "drawn": 10746,
+          "drawn": 12156,
           "references": 17,
           "pendingDisposals": 0,
           "physicalDisposals": 2463,
@@ -652,7 +685,7 @@
               "revision": 1,
               "passId": 0,
               "count": 1,
-              "at": 1793894314.553,
+              "at": 1793919773.438,
               "resources": [
                 {
                   "resourceId": 2480,
@@ -681,18 +714,21 @@
         "peak": 52,
         "losses": 20
       },
-      "heap": 13004825
+      "heap": 37172094
     },
     {
       "name": "最终",
       "state": {
+        "applicationVisible": true,
+        "updateCount": 2476,
+        "resizePending": false,
         "astc": {
           "enabled": true,
           "ready": true,
           "bytes": 32,
           "fallback": false
         },
-        "buildId": "0054cf3c432d6ec43956",
+        "buildId": "4c1e21d6fbb4c32adbb3",
         "windowWidth": 960,
         "windowHeight": 640,
         "stageWidth": 960,
@@ -715,10 +751,10 @@
         ],
         "pool": 2,
         "diagnostics": {
-          "buildId": "0054cf3c432d6ec43956",
+          "buildId": "4c1e21d6fbb4c32adbb3",
           "faults": 5,
           "skipped": 5,
-          "drawn": 10826,
+          "drawn": 12236,
           "references": 16,
           "pendingDisposals": 0,
           "physicalDisposals": 2468,
@@ -735,7 +771,7 @@
               "revision": 1,
               "passId": 0,
               "count": 1,
-              "at": 1793894314.553,
+              "at": 1793919773.438,
               "resources": [
                 {
                   "resourceId": 2480,
@@ -765,7 +801,7 @@
               "revision": 1,
               "passId": 0,
               "count": 1,
-              "at": 1793894314.953,
+              "at": 1793919773.853,
               "resources": [
                 {
                   "resourceId": 2481,
@@ -795,7 +831,7 @@
               "revision": 1,
               "passId": 0,
               "count": 1,
-              "at": 1793894315.092,
+              "at": 1793919773.993,
               "resources": [
                 {
                   "resourceId": 2482,
@@ -825,7 +861,7 @@
               "revision": 1,
               "passId": 0,
               "count": 1,
-              "at": 1793894315.224,
+              "at": 1793919774.129,
               "resources": [
                 {
                   "resourceId": 2483,
@@ -853,9 +889,9 @@
               "generation": 20,
               "message": "不能采样当前正在写入的离屏目标",
               "revision": 627,
-              "passId": 3869,
+              "passId": 4269,
               "count": 1,
-              "at": 1793894315.337,
+              "at": 1793919774.241,
               "resources": [
                 {
                   "resourceId": 2484,
@@ -884,7 +920,7 @@
         "peak": 52,
         "losses": 20
       },
-      "heap": 13027489
+      "heap": 37180442
     }
   ],
   "screenshots": [
@@ -913,5 +949,5 @@
     "after-all-faults.png"
   ],
   "events": [],
-  "elapsedMilliseconds": 45881
+  "elapsedMilliseconds": 46154
 }

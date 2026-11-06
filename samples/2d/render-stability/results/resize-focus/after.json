@@ -1,0 +1,536 @@
+{
+  "passed": true,
+  "expectedBroken": false,
+  "version": {
+    "Browser": "Chrome/156.0.8078.81",
+    "File-Path-Style": "posix",
+    "Protocol-Version": "1.3",
+    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36",
+    "V8-Version": "15.6.75.27",
+    "WebKit-Version": "537.36 (@060bedfb508f73250e93aeb9ca8149b3958995d8)",
+    "webSocketDebuggerUrl": "ws://127.0.0.1:9425/devtools/browser/614a5ef4-9bd1-43ac-ac65-8bcbc3ad3b00"
+  },
+  "states": [
+    {
+      "name": "初始",
+      "engine": {
+        "applicationVisible": true,
+        "updateCount": 18,
+        "resizePending": false,
+        "astc": {
+          "enabled": true,
+          "ready": true,
+          "bytes": 32,
+          "fallback": false
+        },
+        "buildId": "4c1e21d6fbb4c32adbb3",
+        "windowWidth": 960,
+        "windowHeight": 640,
+        "stageWidth": 960,
+        "stageHeight": 640,
+        "phase": 0,
+        "cycles": 0,
+        "generation": 0,
+        "recovered": 0,
+        "lost": false,
+        "pending": false,
+        "checks": [
+          "切片不受根视图释放影响",
+          "快照阻止提前物理释放",
+          "退役幂等且最终回收",
+          "两个借用者拥有不同输出目标",
+          "借用者销毁不销毁池资源",
+          "共享 Shader 数值快照隔离",
+          "共享 Shader 输入快照隔离",
+          "退役清除快照尾部引用"
+        ],
+        "pool": 2,
+        "diagnostics": {
+          "buildId": "4c1e21d6fbb4c32adbb3",
+          "faults": 0,
+          "skipped": 0,
+          "drawn": 30,
+          "references": 16,
+          "pendingDisposals": 0,
+          "physicalDisposals": 6,
+          "events": [],
+          "reports": []
+        }
+      },
+      "hidden": false,
+      "visibility": "visible",
+      "focused": false,
+      "events": []
+    },
+    {
+      "name": "切换其他浏览器窗口后",
+      "engine": {
+        "applicationVisible": true,
+        "updateCount": 35,
+        "resizePending": false,
+        "astc": {
+          "enabled": true,
+          "ready": true,
+          "bytes": 32,
+          "fallback": false
+        },
+        "buildId": "4c1e21d6fbb4c32adbb3",
+        "windowWidth": 960,
+        "windowHeight": 640,
+        "stageWidth": 960,
+        "stageHeight": 640,
+        "phase": 0,
+        "cycles": 0,
+        "generation": 0,
+        "recovered": 0,
+        "lost": false,
+        "pending": false,
+        "checks": [
+          "切片不受根视图释放影响",
+          "快照阻止提前物理释放",
+          "退役幂等且最终回收",
+          "两个借用者拥有不同输出目标",
+          "借用者销毁不销毁池资源",
+          "共享 Shader 数值快照隔离",
+          "共享 Shader 输入快照隔离",
+          "退役清除快照尾部引用"
+        ],
+        "pool": 2,
+        "diagnostics": {
+          "buildId": "4c1e21d6fbb4c32adbb3",
+          "faults": 0,
+          "skipped": 0,
+          "drawn": 30,
+          "references": 16,
+          "pendingDisposals": 0,
+          "physicalDisposals": 6,
+          "events": [],
+          "reports": []
+        }
+      },
+      "hidden": false,
+      "visibility": "visible",
+      "focused": false,
+      "events": []
+    },
+    {
+      "name": "可见页面发送 blur 后",
+      "engine": {
+        "applicationVisible": true,
+        "updateCount": 40,
+        "resizePending": false,
+        "astc": {
+          "enabled": true,
+          "ready": true,
+          "bytes": 32,
+          "fallback": false
+        },
+        "buildId": "4c1e21d6fbb4c32adbb3",
+        "windowWidth": 960,
+        "windowHeight": 640,
+        "stageWidth": 960,
+        "stageHeight": 640,
+        "phase": 0,
+        "cycles": 0,
+        "generation": 0,
+        "recovered": 0,
+        "lost": false,
+        "pending": false,
+        "checks": [
+          "切片不受根视图释放影响",
+          "快照阻止提前物理释放",
+          "退役幂等且最终回收",
+          "两个借用者拥有不同输出目标",
+          "借用者销毁不销毁池资源",
+          "共享 Shader 数值快照隔离",
+          "共享 Shader 输入快照隔离",
+          "退役清除快照尾部引用"
+        ],
+        "pool": 2,
+        "diagnostics": {
+          "buildId": "4c1e21d6fbb4c32adbb3",
+          "faults": 0,
+          "skipped": 0,
+          "drawn": 30,
+          "references": 16,
+          "pendingDisposals": 0,
+          "physicalDisposals": 6,
+          "events": [],
+          "reports": []
+        }
+      },
+      "hidden": false,
+      "visibility": "visible",
+      "focused": false,
+      "events": [
+        {
+          "type": "blur",
+          "trusted": false
+        }
+      ]
+    },
+    {
+      "name": "失焦时缩放后",
+      "engine": {
+        "applicationVisible": true,
+        "updateCount": 55,
+        "resizePending": false,
+        "astc": {
+          "enabled": true,
+          "ready": true,
+          "bytes": 32,
+          "fallback": false
+        },
+        "buildId": "4c1e21d6fbb4c32adbb3",
+        "windowWidth": 800,
+        "windowHeight": 600,
+        "stageWidth": 853,
+        "stageHeight": 640,
+        "phase": 0,
+        "cycles": 0,
+        "generation": 0,
+        "recovered": 0,
+        "lost": false,
+        "pending": false,
+        "checks": [
+          "切片不受根视图释放影响",
+          "快照阻止提前物理释放",
+          "退役幂等且最终回收",
+          "两个借用者拥有不同输出目标",
+          "借用者销毁不销毁池资源",
+          "共享 Shader 数值快照隔离",
+          "共享 Shader 输入快照隔离",
+          "退役清除快照尾部引用"
+        ],
+        "pool": 2,
+        "diagnostics": {
+          "buildId": "4c1e21d6fbb4c32adbb3",
+          "faults": 0,
+          "skipped": 0,
+          "drawn": 47,
+          "references": 16,
+          "pendingDisposals": 0,
+          "physicalDisposals": 10,
+          "events": [],
+          "reports": []
+        }
+      },
+      "hidden": false,
+      "visibility": "visible",
+      "focused": false,
+      "events": [
+        {
+          "type": "blur",
+          "trusted": false
+        }
+      ]
+    },
+    {
+      "name": "失焦持续更新开始",
+      "engine": {
+        "applicationVisible": true,
+        "updateCount": 310,
+        "resizePending": false,
+        "astc": {
+          "enabled": true,
+          "ready": true,
+          "bytes": 32,
+          "fallback": false
+        },
+        "buildId": "4c1e21d6fbb4c32adbb3",
+        "windowWidth": 800,
+        "windowHeight": 600,
+        "stageWidth": 853,
+        "stageHeight": 640,
+        "phase": 0,
+        "cycles": 0,
+        "generation": 0,
+        "recovered": 0,
+        "lost": false,
+        "pending": false,
+        "checks": [
+          "切片不受根视图释放影响",
+          "快照阻止提前物理释放",
+          "退役幂等且最终回收",
+          "两个借用者拥有不同输出目标",
+          "借用者销毁不销毁池资源",
+          "共享 Shader 数值快照隔离",
+          "共享 Shader 输入快照隔离",
+          "退役清除快照尾部引用"
+        ],
+        "pool": 2,
+        "diagnostics": {
+          "buildId": "4c1e21d6fbb4c32adbb3",
+          "faults": 0,
+          "skipped": 0,
+          "drawn": 727,
+          "references": 16,
+          "pendingDisposals": 0,
+          "physicalDisposals": 170,
+          "events": [],
+          "reports": []
+        }
+      },
+      "hidden": false,
+      "visibility": "visible",
+      "focused": false,
+      "events": [
+        {
+          "type": "blur",
+          "trusted": false
+        }
+      ]
+    },
+    {
+      "name": "未点击且仍失焦的后续帧",
+      "engine": {
+        "applicationVisible": true,
+        "updateCount": 334,
+        "resizePending": false,
+        "astc": {
+          "enabled": true,
+          "ready": true,
+          "bytes": 32,
+          "fallback": false
+        },
+        "buildId": "4c1e21d6fbb4c32adbb3",
+        "windowWidth": 800,
+        "windowHeight": 600,
+        "stageWidth": 853,
+        "stageHeight": 640,
+        "phase": 0,
+        "cycles": 0,
+        "generation": 0,
+        "recovered": 0,
+        "lost": false,
+        "pending": false,
+        "checks": [
+          "切片不受根视图释放影响",
+          "快照阻止提前物理释放",
+          "退役幂等且最终回收",
+          "两个借用者拥有不同输出目标",
+          "借用者销毁不销毁池资源",
+          "共享 Shader 数值快照隔离",
+          "共享 Shader 输入快照隔离",
+          "退役清除快照尾部引用"
+        ],
+        "pool": 2,
+        "diagnostics": {
+          "buildId": "4c1e21d6fbb4c32adbb3",
+          "faults": 0,
+          "skipped": 0,
+          "drawn": 727,
+          "references": 16,
+          "pendingDisposals": 0,
+          "physicalDisposals": 170,
+          "events": [],
+          "reports": []
+        }
+      },
+      "hidden": false,
+      "visibility": "visible",
+      "focused": false,
+      "events": [
+        {
+          "type": "blur",
+          "trusted": false
+        }
+      ]
+    },
+    {
+      "name": "隐藏事件后",
+      "engine": {
+        "applicationVisible": false,
+        "updateCount": 343,
+        "resizePending": false,
+        "astc": {
+          "enabled": true,
+          "ready": true,
+          "bytes": 32,
+          "fallback": false
+        },
+        "buildId": "4c1e21d6fbb4c32adbb3",
+        "windowWidth": 960,
+        "windowHeight": 640,
+        "stageWidth": 960,
+        "stageHeight": 640,
+        "phase": 0,
+        "cycles": 0,
+        "generation": 0,
+        "recovered": 0,
+        "lost": false,
+        "pending": false,
+        "checks": [
+          "切片不受根视图释放影响",
+          "快照阻止提前物理释放",
+          "退役幂等且最终回收",
+          "两个借用者拥有不同输出目标",
+          "借用者销毁不销毁池资源",
+          "共享 Shader 数值快照隔离",
+          "共享 Shader 输入快照隔离",
+          "退役清除快照尾部引用"
+        ],
+        "pool": 2,
+        "diagnostics": {
+          "buildId": "4c1e21d6fbb4c32adbb3",
+          "faults": 0,
+          "skipped": 0,
+          "drawn": 744,
+          "references": 16,
+          "pendingDisposals": 0,
+          "physicalDisposals": 174,
+          "events": [],
+          "reports": []
+        }
+      },
+      "hidden": true,
+      "visibility": "hidden",
+      "focused": false,
+      "events": [
+        {
+          "type": "blur",
+          "trusted": false
+        },
+        {
+          "type": "visibilitychange",
+          "hidden": true,
+          "trusted": false
+        }
+      ]
+    },
+    {
+      "name": "隐藏期间",
+      "engine": {
+        "applicationVisible": false,
+        "updateCount": 343,
+        "resizePending": false,
+        "astc": {
+          "enabled": true,
+          "ready": true,
+          "bytes": 32,
+          "fallback": false
+        },
+        "buildId": "4c1e21d6fbb4c32adbb3",
+        "windowWidth": 960,
+        "windowHeight": 640,
+        "stageWidth": 960,
+        "stageHeight": 640,
+        "phase": 0,
+        "cycles": 0,
+        "generation": 0,
+        "recovered": 0,
+        "lost": false,
+        "pending": false,
+        "checks": [
+          "切片不受根视图释放影响",
+          "快照阻止提前物理释放",
+          "退役幂等且最终回收",
+          "两个借用者拥有不同输出目标",
+          "借用者销毁不销毁池资源",
+          "共享 Shader 数值快照隔离",
+          "共享 Shader 输入快照隔离",
+          "退役清除快照尾部引用"
+        ],
+        "pool": 2,
+        "diagnostics": {
+          "buildId": "4c1e21d6fbb4c32adbb3",
+          "faults": 0,
+          "skipped": 0,
+          "drawn": 744,
+          "references": 16,
+          "pendingDisposals": 0,
+          "physicalDisposals": 174,
+          "events": [],
+          "reports": []
+        }
+      },
+      "hidden": true,
+      "visibility": "hidden",
+      "focused": false,
+      "events": [
+        {
+          "type": "blur",
+          "trusted": false
+        },
+        {
+          "type": "visibilitychange",
+          "hidden": true,
+          "trusted": false
+        }
+      ]
+    },
+    {
+      "name": "仅恢复可见，不发送 focus",
+      "engine": {
+        "applicationVisible": true,
+        "updateCount": 352,
+        "resizePending": false,
+        "astc": {
+          "enabled": true,
+          "ready": true,
+          "bytes": 32,
+          "fallback": false
+        },
+        "buildId": "4c1e21d6fbb4c32adbb3",
+        "windowWidth": 960,
+        "windowHeight": 640,
+        "stageWidth": 960,
+        "stageHeight": 640,
+        "phase": 0,
+        "cycles": 0,
+        "generation": 0,
+        "recovered": 0,
+        "lost": false,
+        "pending": false,
+        "checks": [
+          "切片不受根视图释放影响",
+          "快照阻止提前物理释放",
+          "退役幂等且最终回收",
+          "两个借用者拥有不同输出目标",
+          "借用者销毁不销毁池资源",
+          "共享 Shader 数值快照隔离",
+          "共享 Shader 输入快照隔离",
+          "退役清除快照尾部引用"
+        ],
+        "pool": 2,
+        "diagnostics": {
+          "buildId": "4c1e21d6fbb4c32adbb3",
+          "faults": 0,
+          "skipped": 0,
+          "drawn": 758,
+          "references": 16,
+          "pendingDisposals": 0,
+          "physicalDisposals": 174,
+          "events": [],
+          "reports": []
+        }
+      },
+      "hidden": false,
+      "visibility": "visible",
+      "focused": false,
+      "events": [
+        {
+          "type": "blur",
+          "trusted": false
+        },
+        {
+          "type": "visibilitychange",
+          "hidden": true,
+          "trusted": false
+        },
+        {
+          "type": "visibilitychange",
+          "hidden": false,
+          "trusted": false
+        }
+      ]
+    }
+  ],
+  "screenshots": [
+    "after-initial.png",
+    "after-blurred-resize.png",
+    "after-unfocused-restored-size.png",
+    "after-visible-without-focus.png"
+  ],
+  "focusDriver": "DOM blur 经现有 Lime/OpenFL 事件转发"
+}

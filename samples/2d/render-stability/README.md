@@ -50,3 +50,5 @@ checks.mjs 运行已编译到 bin 的索引、采样器和位图生命周期检�
 完整接入协议见 `docs/wechat-render-stability.md`。微信真机由项目方执行，本仓库结果不会把该部分标为已通过。
 
 ASTC 常量块布局参照 [Arm astc-encoder](https://github.com/ARM-software/astc-encoder/blob/main/Source/astcenc_symbolic_physical.cpp)；恢复注入采用 [Khronos WEBGL_lose_context](https://registry.khronos.org/webgl/extensions/WEBGL_lose_context/) 的真实丢失与恢复事件。
+
+2026-11-06：补充 [浏览器失焦缩放回归](浏览器失焦缩放回归.md)。专项执行 resize-focus.mjs 和 verify_resize_focus.py，主压力脚本也已改为在 blur 后执行尺寸变化。

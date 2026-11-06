@@ -81,6 +81,9 @@ try {
   }
   assert.equal((await cdp.evaluate('window.__stability.snapshot()')).generation,0);
   await checkpoint('模拟前后台一百轮'); await shot('after-foreground.png');
+  await cdp.evaluate('window.dispatchEvent(new Event("blur"))');
+  const beforeResize=await cdp.evaluate('window.__stability.snapshot()');
+  assert.equal(beforeResize.applicationVisible,true,'可见窗口失焦不能暂停渲染');
   for(let i=0;i<30;i++) {
     for(const [width,height] of [[800,600],[480,800],[1280,720]]) {
       await cdp.call('Emulation.setDeviceMetricsOverride',{width,height,deviceScaleFactor:1,mobile:false});
@@ -92,7 +95,10 @@ try {
   await cdp.evaluate('window.__stability.resize(960,640)'); await frames(5);
   await cdp.evaluate('window.__stability.memory()'); await frames();
   const resized=await checkpoint('尺寸变化九十次'); assert.equal(resized.state.diagnostics.faults,0);
-  assert.ok(resized.state.diagnostics.drawn>1000,'尺寸事件没有进入实际渲染');
+  assert.ok(resized.state.diagnostics.drawn>beforeResize.diagnostics.drawn,'尺寸事件没有进入实际渲染');
+  assert.ok(resized.state.updateCount>beforeResize.updateCount,'失焦期间必须继续更新');
+  assert.equal(resized.state.resizePending,false);
+  await cdp.evaluate('window.dispatchEvent(new Event("focus"))');
   await shot('after-resize.png');
   await cdp.evaluate('window.__stability.step()'); await frames(); await shot('single-red.png');
   await cdp.evaluate('window.__stability.step()'); await frames(); await shot('single-blue.png');

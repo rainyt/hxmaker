@@ -1,5 +1,5 @@
 {
-  "builtAt": "2026-11-05T15:55:24.941Z",
+  "builtAt": "2026-11-05T23:00:24.444Z",
   "flags": [
     "-D hxmaker-openfl=1.0.0",
     "-D openfl=9.2.8",
@@ -38,11 +38,11 @@
   ],
   "dependencies": {
     "hxmaker": {
-      "revision": "f87990910546419ca545228ff665b33da2f31b03",
-      "dirty": true
+      "revision": "939b764bed7c1f0342416ca29da6b0411f1c4e93",
+      "dirty": false
     },
     "hxmaker-openfl": {
-      "revision": "caac7bae358878de2d49c9fd0e0145ff4586dbff",
+      "revision": "76ec2c70ae7cbd27c6783091f8278d97e589d185",
       "dirty": true
     },
     "openfl": {
@@ -59,7 +59,7 @@
     }
   },
   "assetManifest": "程序生成色块，无外部清单",
-  "buildId": "0054cf3c432d6ec43956",
-  "javascriptSha256": "81d53da6b17ca858dde07e6085c24eb7a73970e1b06701f3c04e8cb2acd71d34",
+  "buildId": "4c1e21d6fbb4c32adbb3",
+  "javascriptSha256": "ce2e814e1ece6226680acde14833de3b4c59c342568cfbd493013a187775ad48",
   "sourceMap": "RenderStability.js.map"
 }

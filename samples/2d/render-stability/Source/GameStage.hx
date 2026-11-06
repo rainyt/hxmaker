@@ -20,6 +20,7 @@ import hx.shader.MultiTextureShader;
 /** 可由自动化和人工共用的确定性场景；固定色块用于像素验收。 */
 @:access(hx.display.DisplayObject)
 @:access(hx.core.Render)
+@:access(hx.core.Engine)
 class GameStage extends hx.display.Stage {
 	private var content:Sprite;
 	private var gray:Image;
@@ -34,6 +35,7 @@ class GameStage extends hx.display.Stage {
 	private var backing:Array<BitmapData> = [];
 	private var cycles:Int = 0;
 	private var phase:Int = 0;
+	private var updateCount:Int = 0;
 	private var checks:Array<String> = [];
 	private var probe:Render;
 	private var leaseBatch:DirectBatchDisplay;
@@ -116,6 +118,7 @@ class GameStage extends hx.display.Stage {
 	/** 自动循环由现有主循环驱动，不额外注册定时器或渲染循环。 */
 	override public function onUpdate(dt:Float):Void {
 		super.onUpdate(dt);
+		updateCount++;
 		if (manualRemaining > 0) { step(); manualRemaining--; if (manualRemaining == 0) updateManualStatus(); }
 	}
 	/** 真机状态只在操作完成后更新，方便静止画面压力验证。 */
@@ -312,7 +315,7 @@ class GameStage extends hx.display.Stage {
 			fallback:astcData != null && cast(astcData.data.getTexture(), hx.render2d.openfl.RecoverableASTCBitmapData).fallbackActive};
 		#end
 		var engine:Engine = cast Hxmaker.engine;
-		return {astc:astc, buildId:hx.utils.RenderBuildInfo.buildId, windowWidth:openfl.Lib.current.stage.window.width, windowHeight:openfl.Lib.current.stage.window.height, stageWidth:engine.stageWidth, stageHeight:engine.stageHeight, phase:phase, cycles:cycles, generation:engine.contextGeneration, recovered:engine.contextRecoveryCount,
+		return {applicationVisible:engine.applicationVisible, updateCount:updateCount, resizePending:engine.__stageBitmapResetPending, astc:astc, buildId:hx.utils.RenderBuildInfo.buildId, windowWidth:openfl.Lib.current.stage.window.width, windowHeight:openfl.Lib.current.stage.window.height, stageWidth:engine.stageWidth, stageHeight:engine.stageHeight, phase:phase, cycles:cycles, generation:engine.contextGeneration, recovered:engine.contextRecoveryCount,
 			lost:engine.contextLost, pending:engine.contextRecoveryPending, checks:checks.copy(), pool:StageBitmapData.counts,
 			diagnostics:RenderDiagnostics.snapshot()};
 	}

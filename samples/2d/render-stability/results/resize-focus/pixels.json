@@ -1,0 +1,68 @@
+[
+  {
+    "file": "before-initial.png",
+    "position": [
+      64,
+      128
+    ],
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "expectedRed": true,
+    "passed": true
+  },
+  {
+    "file": "before-blurred-resize.png",
+    "position": [
+      53,
+      107
+    ],
+    "color": [
+      22,
+      33,
+      52
+    ],
+    "expectedRed": false,
+    "passed": true
+  },
+  {
+    "file": "before-focus-restored.png",
+    "position": [
+      53,
+      107
+    ],
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "expectedRed": true,
+    "passed": true
+  },
+  {
+    "file": "after-blurred-resize.png",
+    "position": [
+      53,
+      107
+    ],
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "expectedRed": true,
+    "passed": true
+  },
+  {
+    "file": "after-unfocused-restored-size.png",
+    "differentPixels": 0,
+    "passed": true
+  },
+  {
+    "file": "after-visible-without-focus.png",
+    "differentPixels": 0,
+    "passed": true
+  }
+]

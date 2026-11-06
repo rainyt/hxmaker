@@ -56,7 +56,7 @@ var released:Int = hx.net.RequestQueue.collectUnused(64, 2, 67108864, false, "�
 
 ### 设备恢复与诊断
 
-复用 Engine.contextGeneration。帧入口检查丢失状态，恢复时退役旧批次，失效程序、池、文本和离屏内容，再重建画面。普通前台恢复只重置时间基准，不无条件重建全部纹理。
+复用 Engine.contextGeneration。帧入口检查丢失状态，恢复时退役旧批次，失效程序、池、文本和离屏内容，再重建画面。普通前台恢复重置时间基准并请求一次重绘，不无条件重建全部纹理。普通浏览器区分焦点与页面可见性：可见窗口失焦继续渲染，真正隐藏时才暂停，并监听 visibilitychange 处理没有 focus 的恢复。微信和缺少页面可见性 API 的宿主沿用激活事件。
 
 普通图片保留 CPU 像素恢复；GPU-only 离屏目标依靠滤镜重绘；文本图集清理字形视图后重写。后端的 RecoverableASTCBitmapData 保留最多 64 MiB 压缩来源，在恢复时重新检查扩展并重传。清单型 ASTC 原图路径存在时，能力变化可进行一次原图回退；失败进入终态，不逐帧重新请求。直接从外部 GPU 句柄创建、没有像素及重绘来源的位图会报告 missingRecovery，不能宣称恢复成功。
 

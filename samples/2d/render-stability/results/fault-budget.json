@@ -1,13 +1,16 @@
 {
   "passed": true,
   "before": {
+    "applicationVisible": true,
+    "updateCount": 2480,
+    "resizePending": false,
     "astc": {
       "enabled": true,
       "ready": true,
       "bytes": 32,
       "fallback": false
     },
-    "buildId": "0054cf3c432d6ec43956",
+    "buildId": "4c1e21d6fbb4c32adbb3",
     "windowWidth": 960,
     "windowHeight": 553,
     "stageWidth": 960,
@@ -30,10 +33,10 @@
     ],
     "pool": 2,
     "diagnostics": {
-      "buildId": "0054cf3c432d6ec43956",
+      "buildId": "4c1e21d6fbb4c32adbb3",
       "faults": 5,
       "skipped": 5,
-      "drawn": 10843,
+      "drawn": 12253,
       "references": 16,
       "pendingDisposals": 0,
       "physicalDisposals": 2472,
@@ -50,7 +53,7 @@
           "revision": 1,
           "passId": 0,
           "count": 1,
-          "at": 1793894314.553,
+          "at": 1793919773.438,
           "resources": [
             {
               "resourceId": 2480,
@@ -80,7 +83,7 @@
           "revision": 1,
           "passId": 0,
           "count": 1,
-          "at": 1793894314.953,
+          "at": 1793919773.853,
           "resources": [
             {
               "resourceId": 2481,
@@ -110,7 +113,7 @@
           "revision": 1,
           "passId": 0,
           "count": 1,
-          "at": 1793894315.092,
+          "at": 1793919773.993,
           "resources": [
             {
               "resourceId": 2482,
@@ -140,7 +143,7 @@
           "revision": 1,
           "passId": 0,
           "count": 1,
-          "at": 1793894315.224,
+          "at": 1793919774.129,
           "resources": [
             {
               "resourceId": 2483,
@@ -168,9 +171,9 @@
           "generation": 20,
           "message": "不能采样当前正在写入的离屏目标",
           "revision": 627,
-          "passId": 3869,
+          "passId": 4269,
           "count": 1,
-          "at": 1793894315.337,
+          "at": 1793919774.241,
           "resources": [
             {
               "resourceId": 2484,
@@ -193,13 +196,16 @@
     }
   },
   "fallback": {
+    "applicationVisible": true,
+    "updateCount": 2501,
+    "resizePending": false,
     "astc": {
       "enabled": true,
       "ready": true,
       "bytes": 0,
       "fallback": true
     },
-    "buildId": "0054cf3c432d6ec43956",
+    "buildId": "4c1e21d6fbb4c32adbb3",
     "windowWidth": 960,
     "windowHeight": 553,
     "stageWidth": 960,
@@ -222,10 +228,10 @@
     ],
     "pool": 2,
     "diagnostics": {
-      "buildId": "0054cf3c432d6ec43956",
+      "buildId": "4c1e21d6fbb4c32adbb3",
       "faults": 6,
       "skipped": 6,
-      "drawn": 10873,
+      "drawn": 12283,
       "references": 16,
       "pendingDisposals": 0,
       "physicalDisposals": 2474,
@@ -242,7 +248,7 @@
           "revision": 1,
           "passId": 0,
           "count": 1,
-          "at": 1793894314.553,
+          "at": 1793919773.438,
           "resources": [
             {
               "resourceId": 2480,
@@ -272,7 +278,7 @@
           "revision": 1,
           "passId": 0,
           "count": 1,
-          "at": 1793894314.953,
+          "at": 1793919773.853,
           "resources": [
             {
               "resourceId": 2481,
@@ -302,7 +308,7 @@
           "revision": 1,
           "passId": 0,
           "count": 1,
-          "at": 1793894315.092,
+          "at": 1793919773.993,
           "resources": [
             {
               "resourceId": 2482,
@@ -332,7 +338,7 @@
           "revision": 1,
           "passId": 0,
           "count": 1,
-          "at": 1793894315.224,
+          "at": 1793919774.129,
           "resources": [
             {
               "resourceId": 2483,
@@ -360,9 +366,9 @@
           "generation": 20,
           "message": "不能采样当前正在写入的离屏目标",
           "revision": 627,
-          "passId": 3869,
+          "passId": 4269,
           "count": 1,
-          "at": 1793894315.337,
+          "at": 1793919774.241,
           "resources": [
             {
               "resourceId": 2484,
@@ -389,10 +395,10 @@
           "shader": "直接合批",
           "generation": 21,
           "message": "设备能力变化，正在加载原始图片",
-          "revision": 528,
+          "revision": 628,
           "passId": 0,
           "count": 1,
-          "at": 1793894315.729,
+          "at": 1793919774.649,
           "resources": [
             {
               "resourceId": 22,
@@ -415,13 +421,16 @@
     }
   },
   "after": {
+    "applicationVisible": true,
+    "updateCount": 2769,
+    "resizePending": false,
     "astc": {
       "enabled": true,
       "ready": true,
       "bytes": 0,
       "fallback": true
     },
-    "buildId": "0054cf3c432d6ec43956",
+    "buildId": "4c1e21d6fbb4c32adbb3",
     "windowWidth": 960,
     "windowHeight": 553,
     "stageWidth": 960,
@@ -444,10 +453,10 @@
     ],
     "pool": 2,
     "diagnostics": {
-      "buildId": "0054cf3c432d6ec43956",
+      "buildId": "4c1e21d6fbb4c32adbb3",
       "faults": 76,
       "skipped": 76,
-      "drawn": 12273,
+      "drawn": 13683,
       "references": 16,
       "pendingDisposals": 0,
       "physicalDisposals": 2544,
@@ -464,7 +473,7 @@
           "revision": 1,
           "passId": 0,
           "count": 1,
-          "at": 1793894316.454,
+          "at": 1793919775.404,
           "resources": [
             {
               "resourceId": 2497,
@@ -494,7 +503,7 @@
           "revision": 1,
           "passId": 0,
           "count": 1,
-          "at": 1793894316.52,
+          "at": 1793919775.471,
           "resources": [
             {
               "resourceId": 2498,
@@ -524,7 +533,7 @@
           "revision": 1,
           "passId": 0,
           "count": 1,
-          "at": 1793894316.587,
+          "at": 1793919775.52,
           "resources": [
             {
               "resourceId": 2499,
@@ -554,7 +563,7 @@
           "revision": 1,
           "passId": 0,
           "count": 1,
-          "at": 1793894316.636,
+          "at": 1793919775.586,
           "resources": [
             {
               "resourceId": 2500,
@@ -584,7 +593,7 @@
           "revision": 1,
           "passId": 0,
           "count": 1,
-          "at": 1793894316.704,
+          "at": 1793919775.654,
           "resources": [
             {
               "resourceId": 2501,
@@ -614,7 +623,7 @@
           "revision": 1,
           "passId": 0,
           "count": 1,
-          "at": 1793894316.77,
+          "at": 1793919775.704,
           "resources": [
             {
               "resourceId": 2502,
@@ -644,7 +653,7 @@
           "revision": 1,
           "passId": 0,
           "count": 1,
-          "at": 1793894316.819,
+          "at": 1793919775.77,
           "resources": [
             {
               "resourceId": 2503,
@@ -674,7 +683,7 @@
           "revision": 1,
           "passId": 0,
           "count": 1,
-          "at": 1793894316.887,
+          "at": 1793919775.836,
           "resources": [
             {
               "resourceId": 2504,
@@ -704,7 +713,7 @@
           "revision": 1,
           "passId": 0,
           "count": 1,
-          "at": 1793894316.953,
+          "at": 1793919775.904,
           "resources": [
             {
               "resourceId": 2505,
@@ -734,7 +743,7 @@
           "revision": 1,
           "passId": 0,
           "count": 1,
-          "at": 1793894317.021,
+          "at": 1793919775.97,
           "resources": [
             {
               "resourceId": 2506,
@@ -764,7 +773,7 @@
           "revision": 1,
           "passId": 0,
           "count": 1,
-          "at": 1793894317.071,
+          "at": 1793919776.02,
           "resources": [
             {
               "resourceId": 2507,
@@ -794,7 +803,7 @@
           "revision": 1,
           "passId": 0,
           "count": 1,
-          "at": 1793894317.136,
+          "at": 1793919776.086,
           "resources": [
             {
               "resourceId": 2508,
@@ -824,7 +833,7 @@
           "revision": 1,
           "passId": 0,
           "count": 1,
-          "at": 1793894317.186,
+          "at": 1793919776.153,
           "resources": [
             {
               "resourceId": 2509,
@@ -854,7 +863,7 @@
           "revision": 1,
           "passId": 0,
           "count": 1,
-          "at": 1793894317.253,
+          "at": 1793919776.203,
           "resources": [
             {
               "resourceId": 2510,
@@ -884,7 +893,7 @@
           "revision": 1,
           "passId": 0,
           "count": 1,
-          "at": 1793894317.303,
+          "at": 1793919776.27,
           "resources": [
             {
               "resourceId": 2511,
@@ -914,7 +923,7 @@
           "revision": 1,
           "passId": 0,
           "count": 1,
-          "at": 1793894317.369,
+          "at": 1793919776.336,
           "resources": [
             {
               "resourceId": 2512,
@@ -944,7 +953,7 @@
           "revision": 1,
           "passId": 0,
           "count": 1,
-          "at": 1793894317.419,
+          "at": 1793919776.386,
           "resources": [
             {
               "resourceId": 2513,
@@ -974,7 +983,7 @@
           "revision": 1,
           "passId": 0,
           "count": 1,
-          "at": 1793894317.486,
+          "at": 1793919776.453,
           "resources": [
             {
               "resourceId": 2514,
@@ -1004,7 +1013,7 @@
           "revision": 1,
           "passId": 0,
           "count": 1,
-          "at": 1793894317.536,
+          "at": 1793919776.52,
           "resources": [
             {
               "resourceId": 2515,
@@ -1034,7 +1043,7 @@
           "revision": 1,
           "passId": 0,
           "count": 1,
-          "at": 1793894317.603,
+          "at": 1793919776.587,
           "resources": [
             {
               "resourceId": 2516,
@@ -1064,7 +1073,7 @@
           "revision": 1,
           "passId": 0,
           "count": 1,
-          "at": 1793894317.652,
+          "at": 1793919776.637,
           "resources": [
             {
               "resourceId": 2517,
@@ -1094,7 +1103,7 @@
           "revision": 1,
           "passId": 0,
           "count": 1,
-          "at": 1793894317.72,
+          "at": 1793919776.703,
           "resources": [
             {
               "resourceId": 2518,
@@ -1124,7 +1133,7 @@
           "revision": 1,
           "passId": 0,
           "count": 1,
-          "at": 1793894317.787,
+          "at": 1793919776.771,
           "resources": [
             {
               "resourceId": 2519,
@@ -1154,7 +1163,7 @@
           "revision": 1,
           "passId": 0,
           "count": 1,
-          "at": 1793894317.837,
+          "at": 1793919776.836,
           "resources": [
             {
               "resourceId": 2520,
@@ -1184,7 +1193,7 @@
           "revision": 1,
           "passId": 0,
           "count": 1,
-          "at": 1793894317.903,
+          "at": 1793919776.903,
           "resources": [
             {
               "resourceId": 2521,
@@ -1214,7 +1223,7 @@
           "revision": 1,
           "passId": 0,
           "count": 1,
-          "at": 1793894317.953,
+          "at": 1793919776.97,
           "resources": [
             {
               "resourceId": 2522,
@@ -1244,7 +1253,7 @@
           "revision": 1,
           "passId": 0,
           "count": 1,
-          "at": 1793894318.02,
+          "at": 1793919777.02,
           "resources": [
             {
               "resourceId": 2523,
@@ -1274,7 +1283,7 @@
           "revision": 1,
           "passId": 0,
           "count": 1,
-          "at": 1793894318.086,
+          "at": 1793919777.087,
           "resources": [
             {
               "resourceId": 2524,
@@ -1304,7 +1313,7 @@
           "revision": 1,
           "passId": 0,
           "count": 1,
-          "at": 1793894318.136,
+          "at": 1793919777.153,
           "resources": [
             {
               "resourceId": 2525,
@@ -1334,7 +1343,7 @@
           "revision": 1,
           "passId": 0,
           "count": 1,
-          "at": 1793894318.202,
+          "at": 1793919777.22,
           "resources": [
             {
               "resourceId": 2526,
@@ -1364,7 +1373,7 @@
           "revision": 1,
           "passId": 0,
           "count": 1,
-          "at": 1793894318.253,
+          "at": 1793919777.271,
           "resources": [
             {
               "resourceId": 2527,
@@ -1394,7 +1403,7 @@
           "revision": 1,
           "passId": 0,
           "count": 1,
-          "at": 1793894318.319,
+          "at": 1793919777.336,
           "resources": [
             {
               "resourceId": 2528,
@@ -1424,7 +1433,7 @@
           "revision": 1,
           "passId": 0,
           "count": 1,
-          "at": 1793894318.37,
+          "at": 1793919777.387,
           "resources": [
             {
               "resourceId": 2529,
@@ -1454,7 +1463,7 @@
           "revision": 1,
           "passId": 0,
           "count": 1,
-          "at": 1793894318.436,
+          "at": 1793919777.471,
           "resources": [
             {
               "resourceId": 2530,
@@ -1484,7 +1493,7 @@
           "revision": 1,
           "passId": 0,
           "count": 1,
-          "at": 1793894318.503,
+          "at": 1793919777.537,
           "resources": [
             {
               "resourceId": 2531,
@@ -1514,7 +1523,7 @@
           "revision": 1,
           "passId": 0,
           "count": 1,
-          "at": 1793894318.552,
+          "at": 1793919777.604,
           "resources": [
             {
               "resourceId": 2532,
@@ -1544,7 +1553,7 @@
           "revision": 1,
           "passId": 0,
           "count": 1,
-          "at": 1793894318.619,
+          "at": 1793919777.653,
           "resources": [
             {
               "resourceId": 2533,
@@ -1574,7 +1583,7 @@
           "revision": 1,
           "passId": 0,
           "count": 1,
-          "at": 1793894318.687,
+          "at": 1793919777.72,
           "resources": [
             {
               "resourceId": 2534,
@@ -1604,7 +1613,7 @@
           "revision": 1,
           "passId": 0,
           "count": 1,
-          "at": 1793894318.736,
+          "at": 1793919777.787,
           "resources": [
             {
               "resourceId": 2535,
@@ -1634,7 +1643,7 @@
           "revision": 1,
           "passId": 0,
           "count": 1,
-          "at": 1793894318.803,
+          "at": 1793919777.853,
           "resources": [
             {
               "resourceId": 2536,
@@ -1664,7 +1673,7 @@
           "revision": 1,
           "passId": 0,
           "count": 1,
-          "at": 1793894318.87,
+          "at": 1793919777.92,
           "resources": [
             {
               "resourceId": 2537,
@@ -1694,7 +1703,7 @@
           "revision": 1,
           "passId": 0,
           "count": 1,
-          "at": 1793894318.92,
+          "at": 1793919777.97,
           "resources": [
             {
               "resourceId": 2538,
@@ -1724,7 +1733,7 @@
           "revision": 1,
           "passId": 0,
           "count": 1,
-          "at": 1793894319.003,
+          "at": 1793919778.036,
           "resources": [
             {
               "resourceId": 2539,
@@ -1754,7 +1763,7 @@
           "revision": 1,
           "passId": 0,
           "count": 1,
-          "at": 1793894319.052,
+          "at": 1793919778.103,
           "resources": [
             {
               "resourceId": 2540,
@@ -1784,7 +1793,7 @@
           "revision": 1,
           "passId": 0,
           "count": 1,
-          "at": 1793894319.119,
+          "at": 1793919778.17,
           "resources": [
             {
               "resourceId": 2541,
@@ -1814,7 +1823,7 @@
           "revision": 1,
           "passId": 0,
           "count": 1,
-          "at": 1793894319.186,
+          "at": 1793919778.236,
           "resources": [
             {
               "resourceId": 2542,
@@ -1844,7 +1853,7 @@
           "revision": 1,
           "passId": 0,
           "count": 1,
-          "at": 1793894319.254,
+          "at": 1793919778.286,
           "resources": [
             {
               "resourceId": 2543,
@@ -1874,7 +1883,7 @@
           "revision": 1,
           "passId": 0,
           "count": 1,
-          "at": 1793894319.303,
+          "at": 1793919778.354,
           "resources": [
             {
               "resourceId": 2544,
@@ -1904,7 +1913,7 @@
           "revision": 1,
           "passId": 0,
           "count": 1,
-          "at": 1793894319.369,
+          "at": 1793919778.421,
           "resources": [
             {
               "resourceId": 2545,
@@ -1934,7 +1943,7 @@
           "revision": 1,
           "passId": 0,
           "count": 1,
-          "at": 1793894319.437,
+          "at": 1793919778.47,
           "resources": [
             {
               "resourceId": 2546,
@@ -1964,7 +1973,7 @@
           "revision": 1,
           "passId": 0,
           "count": 1,
-          "at": 1793894319.486,
+          "at": 1793919778.537,
           "resources": [
             {
               "resourceId": 2547,
@@ -1994,7 +2003,7 @@
           "revision": 1,
           "passId": 0,
           "count": 1,
-          "at": 1793894319.553,
+          "at": 1793919778.604,
           "resources": [
             {
               "resourceId": 2548,
@@ -2024,7 +2033,7 @@
           "revision": 1,
           "passId": 0,
           "count": 1,
-          "at": 1793894319.62,
+          "at": 1793919778.654,
           "resources": [
             {
               "resourceId": 2549,
@@ -2054,7 +2063,7 @@
           "revision": 1,
           "passId": 0,
           "count": 1,
-          "at": 1793894319.669,
+          "at": 1793919778.737,
           "resources": [
             {
               "resourceId": 2550,
@@ -2084,7 +2093,7 @@
           "revision": 1,
           "passId": 0,
           "count": 1,
-          "at": 1793894319.737,
+          "at": 1793919778.787,
           "resources": [
             {
               "resourceId": 2551,
@@ -2114,7 +2123,7 @@
           "revision": 1,
           "passId": 0,
           "count": 1,
-          "at": 1793894319.803,
+          "at": 1793919778.853,
           "resources": [
             {
               "resourceId": 2552,
@@ -2144,7 +2153,7 @@
           "revision": 1,
           "passId": 0,
           "count": 1,
-          "at": 1793894319.869,
+          "at": 1793919778.92,
           "resources": [
             {
               "resourceId": 2553,
@@ -2174,7 +2183,7 @@
           "revision": 1,
           "passId": 0,
           "count": 1,
-          "at": 1793894319.919,
+          "at": 1793919778.988,
           "resources": [
             {
               "resourceId": 2554,
@@ -2204,7 +2213,7 @@
           "revision": 1,
           "passId": 0,
           "count": 1,
-          "at": 1793894319.986,
+          "at": 1793919779.053,
           "resources": [
             {
               "resourceId": 2555,
@@ -2234,7 +2243,7 @@
           "revision": 1,
           "passId": 0,
           "count": 1,
-          "at": 1793894320.053,
+          "at": 1793919779.12,
           "resources": [
             {
               "resourceId": 2556,
@@ -2264,7 +2273,7 @@
           "revision": 1,
           "passId": 0,
           "count": 1,
-          "at": 1793894320.103,
+          "at": 1793919779.188,
           "resources": [
             {
               "resourceId": 2557,
@@ -2294,7 +2303,7 @@
           "revision": 1,
           "passId": 0,
           "count": 1,
-          "at": 1793894320.17,
+          "at": 1793919779.254,
           "resources": [
             {
               "resourceId": 2558,
@@ -2324,7 +2333,7 @@
           "revision": 1,
           "passId": 0,
           "count": 1,
-          "at": 1793894320.236,
+          "at": 1793919779.303,
           "resources": [
             {
               "resourceId": 2559,
@@ -2354,7 +2363,7 @@
           "revision": 1,
           "passId": 0,
           "count": 1,
-          "at": 1793894320.286,
+          "at": 1793919779.37,
           "resources": [
             {
               "resourceId": 2560,

@@ -12,6 +12,8 @@ typedef ASTCBuildOptions = {
 	/** zlib 压缩等级，范围为 0～9，默认 9；仅在 zlib 开启时生效。 */
 	var ?zlibLevel:Int;
 	var ?strict:Bool;
+	/** 默认仅按源图修改时间复用缓存；开启后执行原有内容哈希和输出完整性校验。 */
 	var ?verifyHashes:Bool;
+	/** 强制重新编码；修改编码器或编码参数后，使用此选项刷新未修改的源图。 */
 	var ?force:Bool;
 }

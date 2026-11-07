@@ -44,13 +44,15 @@ class ASTCBuilder {
 		var failed:Int = 0;
 		var inputs:Array<String> = [];
 		if (FileSystem.exists(source) && FileSystem.isDirectory(source))
-			scan(source, "", inputs);
+			scan(source, "", inputs, Path.normalize(FileSystem.fullPath(source)));
 		else if (options.strict == true)
 			throw "ASTC 源目录不存在：" + source;
 		else
 			Sys.println("[ASTC] 源目录不存在，清单使用空目录：" + source);
 		inputs.sort(Reflect.compare);
-		var encoder:String = inputs.length == 0 ? "" : findEncoder(options.encoder);
+		// 全部命中缓存时，不查找编码器，也不读取编码器状态。
+		var encoder:Null<String> = null;
+		var settings:Null<String> = null;
 		var block:String = options.block ?? "6x6";
 		var quality:String = options.quality ?? "-exhaustive";
 		var premultiply:Bool = options.alphaPremultiply != false;
@@ -62,22 +64,35 @@ class ASTCBuilder {
 			throw "不支持的 ASTC 压缩块：" + block;
 		if (["-fastest", "-fast", "-medium", "-thorough", "-verythorough", "-exhaustive"].indexOf(quality) < 0)
 			throw "不支持的 ASTC 编码质量：" + quality;
-		var settings:String = Sha256.encode("hxmaker-astc-1|" + encoderIdentity(encoder, options.verifyHashes == true)
-			+ "|-cl|" + block + "|" + quality + "|" + premultiply + "|zlib:" + zlib + "|level:" + zlibLevel);
 		for (relative in inputs) {
 			var input:String = Path.join([source, relative]);
 			var target:String = Path.join([output, relative.substr(0, relative.length - 4) + ".astc"]);
-			var temporary:String = target + "." + uniqueSuffix() + ".tmp.astc";
+			var temporary:Null<String> = null;
 			try {
-				if (encoder == "")
-					throw "找不到 ASTC 编码器，请安装 hx-astcenc 或配置 encoder";
 				var stat:sys.FileStat = FileSystem.stat(input);
 				var cached:ASTCCacheEntry = previous.get(relative);
+				var sameMtime:Bool = cached != null && cached.mtime == stat.mtime.getTime();
+				// 默认仅按源图修改时间复用，不读取图片内容、输出文件头或解压 zlib。
+				if (options.force != true && options.verifyHashes != true && sameMtime && cached.outputHash != null
+					&& FileSystem.exists(target) && !FileSystem.isDirectory(target)) {
+					next.set(relative, cached);
+					files.push(relative);
+					revisions.push(relative + ":" + cached.outputHash);
+					reused++;
+					continue;
+				}
+				if (encoder == null)
+					encoder = findEncoder(options.encoder);
+				if (encoder == "")
+					throw "找不到 ASTC 编码器，请安装 hx-astcenc 或配置 encoder";
+				if (settings == null)
+					settings = Sha256.encode("hxmaker-astc-1|" + encoderIdentity(encoder, options.verifyHashes == true)
+						+ "|-cl|" + block + "|" + quality + "|" + premultiply + "|zlib:" + zlib + "|level:" + zlibLevel);
 				var sameStat:Bool = cached != null && cached.size == stat.size && cached.mtime == stat.mtime.getTime();
 				var hash:String = sameStat && options.verifyHashes != true ? cached.hash : Sha256.make(File.getBytes(input)).toHex();
 				var dimensions:{width:Int, height:Int} = readPngSize(input);
 				var signature:String = Sha256.encode(hash + "|" + settings);
-				var valid:Bool = options.force != true && cached != null && cached.signature == signature
+				var valid:Bool = options.force != true && sameMtime && cached.signature == signature
 					&& FileSystem.exists(target) && !FileSystem.isDirectory(target)
 					&& FileSystem.stat(target).size == cached.outputSize
 					&& FileSystem.stat(target).mtime.getTime() == cached.outputMtime
@@ -89,6 +104,7 @@ class ASTCBuilder {
 					reused++;
 					outputHash = cached.outputHash;
 				} else {
+					temporary = target + "." + uniqueSuffix() + ".tmp.astc";
 					FileSystem.createDirectory(Path.directory(target));
 					var args:Array<String> = ["-cl", input, temporary, block, quality];
 					if (premultiply)
@@ -112,7 +128,8 @@ class ASTCBuilder {
 				revisions.push(relative + ":" + outputHash);
 			} catch (error:Dynamic) {
 				failed++;
-				deleteIfExists(temporary);
+				if (temporary != null)
+					deleteIfExists(temporary);
 				// 该输出路径由本生成器管理，转换失败时不能让打包工具误用过期纹理。
 				deleteIfExists(target);
 				Sys.println("[ASTC] 使用原图片：" + input + "，" + Std.string(error));
@@ -145,7 +162,7 @@ class ASTCBuilder {
 	}
 
 	/** 扫描 PNG；不跟随指向源目录外部的符号链接。 */
-	private static function scan(root:String, relative:String, files:Array<String>, ?ancestors:Map<String, Bool>):Void {
+	private static function scan(root:String, relative:String, files:Array<String>, realRoot:String, ?ancestors:Map<String, Bool>):Void {
 		if (ancestors == null)
 			ancestors = [];
 		var directory:String = Path.join([root, relative]);
@@ -161,10 +178,10 @@ class ASTCBuilder {
 				continue;
 			var full:String = Path.join([root, child]);
 			var real:String = Path.normalize(FileSystem.fullPath(full));
-			if (!StringTools.startsWith(real, Path.normalize(FileSystem.fullPath(root)) + "/"))
+			if (!StringTools.startsWith(real, realRoot + "/"))
 				continue;
 			if (FileSystem.isDirectory(full))
-				scan(root, child, files, ancestors);
+				scan(root, child, files, realRoot, ancestors);
 			else if (StringTools.endsWith(child, ".png"))
 				files.push(child);
 		}

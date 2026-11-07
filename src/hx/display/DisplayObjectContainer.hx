@@ -21,6 +21,8 @@ class DisplayObjectContainer extends DisplayObject {
 	@:noCompletion private var __mouseChildren:Bool = true;
 	@:noCompletion private var __layout:ILayout;
 	@:noCompletion private var __layoutDirty:Bool = false;
+	// 布局进行中标记，防止布局期间读取宽高触发边界计算时重入整棵子树
+	@:noCompletion private var __updatingLayout:Bool = false;
 
 	/**
 	 * 布局
@@ -39,29 +41,59 @@ class DisplayObjectContainer extends DisplayObject {
 		return __layout;
 	}
 
-	private var __updateLayouting:Bool = false;
+	/** 标记布局失效；原地修改布局参数后调用，下次布局或坐标查询时统一结算。 */
+	public function invalidateLayout():Void {
+		__layoutDirty = true;
+		setDirty();
+	}
 
-	private function __updateLayout() {
-		if (__layoutDirty && !__updateLayouting) {
-			__layoutDirty = false;
-			__updateLayouting = true;
+	/**
+	 * 递归和按需查询共用的布局入口。
+	 * force 为 true 时即使当前节点没有失效也执行一次，保持与原递归逻辑一致；
+	 * 布局期间的重入会被忽略，由外层布局统一消费，避免整棵子树被重复计算。
+	 */
+	private function __updateLayout(force:Bool = false):Void {
+		if (__updatingLayout || (!force && !__layoutDirty))
+			return;
+		__layoutDirty = false;
+		__updatingLayout = true;
+		try {
 			updateLayout();
-			__updateLayouting = false;
+		} catch (error:Dynamic) {
+			__layoutDirty = true;
+			__updatingLayout = false;
+			throw error;
 		}
+		__updatingLayout = false;
 	}
 
 	/**
 	 * 更新布局
 	 */
 	public function updateLayout():Void {
-		if (layout != null) {
-			layout.update(this.children.filter((object) -> !object.hide && object.includeInLayout));
+		// 公开调用仍强制刷新整棵子树；布局期间的重入只执行当前层，不再重复展开。
+		var ownsLayout:Bool = !__updatingLayout;
+		if (ownsLayout) {
+			__layoutDirty = false;
+			__updatingLayout = true;
 		}
-		for (object in this.children) {
-			if (object is DisplayObjectContainer) {
-				cast(object, DisplayObjectContainer).updateLayout();
+		try {
+			if (layout != null) {
+				layout.update(this.children.filter((object) -> !object.hide && object.includeInLayout));
 			}
+			for (object in this.children) {
+				if (object is DisplayObjectContainer) {
+					cast(object, DisplayObjectContainer).__updateLayout(true);
+				}
+			}
+		} catch (error:Dynamic) {
+			__layoutDirty = true;
+			if (ownsLayout)
+				__updatingLayout = false;
+			throw error;
 		}
+		if (ownsLayout)
+			__updatingLayout = false;
 	}
 
 	/**
@@ -369,13 +401,21 @@ class DisplayObjectContainer extends DisplayObject {
 	}
 
 	override function set_width(value:Float):Float {
-		__layoutDirty = true;
-		return super.set_width(value);
+		var previousWidth:Null<Float> = __width;
+		var previousScale:Float = __scaleX;
+		var result:Float = super.set_width(value);
+		if (previousWidth != __width || previousScale != __scaleX)
+			__layoutDirty = true;
+		return result;
 	}
 
 	override function set_height(value:Float):Float {
-		__layoutDirty = true;
-		return super.set_height(value);
+		var previousHeight:Null<Float> = __height;
+		var previousScale:Float = __scaleY;
+		var result:Float = super.set_height(value);
+		if (previousHeight != __height || previousScale != __scaleY)
+			__layoutDirty = true;
+		return result;
 	}
 
 	override public function dispose():Void {

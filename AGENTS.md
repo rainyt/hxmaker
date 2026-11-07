@@ -89,3 +89,6 @@ haxe tools/tools.hxml
 所有API的设计必须遵循最佳性能来处理：
 1. 尽可能减少不必要的检查；
 2. 以最佳性能为主；
+
+## 框架限制
+1. 你可以修改hxmaker-openfl库，但是不能去修改 openfl 或者 lime 库；

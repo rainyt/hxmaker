@@ -482,13 +482,16 @@ class DisplayObject extends EventDispatcher {
 	}
 
 	private function set_width(value:Float):Float {
+		var previousWidth:Null<Float> = __width;
+		var previousScale:Float = __scaleX;
 		this.__width = value;
-		var bounds = __getRect();
+		var bounds:Rectangle = __getRect();
 		if (bounds.width == 0)
 			this.scaleX = 1;
 		else
 			this.scaleX = value / bounds.width;
-		setTransformDirty();
+		if (previousWidth != __width || previousScale != __scaleX)
+			setTransformDirty();
 		return value;
 	}
 
@@ -505,13 +508,16 @@ class DisplayObject extends EventDispatcher {
 	}
 
 	private function set_height(value:Float):Float {
+		var previousHeight:Null<Float> = __height;
+		var previousScale:Float = __scaleY;
 		this.__height = value;
-		var bounds = __getRect();
+		var bounds:Rectangle = __getRect();
 		if (bounds.height == 0)
 			this.scaleY = 1;
 		else
 			this.scaleY = value / bounds.height;
-		setTransformDirty();
+		if (previousHeight != __height || previousScale != __scaleY)
+			setTransformDirty();
 		return value;
 	}
 
@@ -614,8 +620,10 @@ class DisplayObject extends EventDispatcher {
 	public var x(get, set):Float;
 
 	private function set_x(value:Float):Float {
-		__transform.tx = value;
-		setTransformDirty();
+		if (__transform.tx != value) {
+			__transform.tx = value;
+			setTransformDirty();
+		}
 		return value;
 	}
 
@@ -629,8 +637,10 @@ class DisplayObject extends EventDispatcher {
 	public var y(get, set):Float;
 
 	private function set_y(value:Float):Float {
-		__transform.ty = value;
-		setTransformDirty();
+		if (__transform.ty != value) {
+			__transform.ty = value;
+			setTransformDirty();
+		}
 		return value;
 	}
 

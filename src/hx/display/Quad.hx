@@ -59,16 +59,20 @@ class Quad extends Graphics implements IDataProider<UInt> implements IRootDataPr
 	}
 
 	override function set_width(value:Float):Float {
-		this.__width = value;
-		__graphicsDirty = true;
-		setTransformDirty();
+		if (__width != value) {
+			this.__width = value;
+			__graphicsDirty = true;
+			setTransformDirty();
+		}
 		return value;
 	}
 
 	override function set_height(value:Float):Float {
-		this.__height = value;
-		__graphicsDirty = true;
-		setTransformDirty();
+		if (__height != value) {
+			this.__height = value;
+			__graphicsDirty = true;
+			setTransformDirty();
+		}
 		return value;
 	}
 

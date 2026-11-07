@@ -89,6 +89,51 @@ haxe tools/tools.hxml
 所有API的设计必须遵循最佳性能来处理：
 1. 尽可能减少不必要的检查；
 2. 以最佳性能为主；
+## 布局性能专项记录（2026-11-07，graphis-api-1.1.0）
 
-## 框架限制
-1. 你可以修改hxmaker-openfl库，但是不能去修改 openfl 或者 lime 库；
+### 背景
+
+在 `graphis-api-1.1.0` 分支上录制 DevTools Performance（`profile2.json.gz`，3.32s / 222 帧 / 采样 23584 次）后确认：性能下降与 `Graphics` 路径 API、抗锯齿无关（Graphics 相关调用栈仅占 0.2%），瓶颈集中在布局与边界计算：
+
+- 81.5% 的主线程采样出现在 `updateLayout` 调用栈内；
+- 69.9% 出现在 `__getBounds` 调用栈内；
+- 自身耗时 Top：`DisplayObjectContainer.__getBounds` 15.1%、`Box.__getBounds` 11.8%、`DisplayObject.__getBounds` 10.1%、`Rectangle.transform` 9.9%、`DisplayObjectContainer.__updateLayout` 6.4%，另有 Matrix clone/concat/Rectangle 分配约 8%；
+- 每 250ms 时间片都有约 80% 耗在布局，说明布局每帧都在重复执行，而不是只在启动阶段；
+- 帧间隔 p50 25.6ms、p90 29ms、最差 219ms。
+
+### 根因
+
+1. `DisplayObjectContainer.updateLayout()` 无条件递归所有子容器，`__updateLayout()` 只判断自身脏标记，没有“布局进行中”保护。
+2. 布局管理器读取 `width`/`height` 时，若 `__width`/`__height` 为空会退化为 `__getBounds()`；而容器的 `__getBounds()` 开头又会调用 `__updateLayout()`，并递归遍历整棵子树计算边界（`__transform.clone()` + `Matrix.concat()` + `new Rectangle()`）。
+3. 第 2 步会重入第 1 步，profile 中出现 10 层 `updateLayout` + 6 层 `__getBounds` 的嵌套，UI 层级越深代价越大。
+4. `Box`、`Quad`、`DisplayObjectContainer` 的 `set_width`/`set_height` 不判等就置 `__layoutDirty = true`；布局管理器每轮又会写回相同尺寸，形成“布局 → 置脏 → 下一帧再布局”的自持循环。
+5. 新 Graphics 的 `__geometryChanged()` 会把 `__parent.__layoutDirty` 置为 `true`（Quad 重绘、Spine 每帧 `drawTriangles` 都会触发），在缺少重入保护的老布局代码上会持续点燃上述级联。
+
+这些逻辑在 main 的 `383dcd7`（性能优化）、`2ac2fda`（修复布局问题）、`dc3bccd`（世界矩阵缓存）中已有处理，但 `graphis-api-1.1.0` 基于 v1.1.0，尚未包含。
+
+### 本次移植内容（只做性能收敛，不改变布局算法与结果）
+
+- `DisplayObjectContainer`：新增 `__updatingLayout` 重入保护；`__updateLayout(force)` 区分按需失效与递归强制刷新；`updateLayout()` 公开调用仍强制刷新整棵子树；布局期间产生的新失效会保留给下一次结算，异常时恢复脏标记；新增 `invalidateLayout()` 供原地修改布局参数后显式失效。
+- `DisplayObjectContainer.set_width/set_height`：尺寸或缩放未变化时不再制造布局失效。
+- `Box.set_width/set_height`、`Quad.set_width/set_height`：相同值不重复置脏（`null` → 明确尺寸的首次赋值仍会布局）。
+- `DisplayObject.set_width/set_height`：仅在宽度/高度或缩放实际变化时 `setTransformDirty()`。
+- `DisplayObject.set_x/set_y`：相同坐标不重复置脏。
+- `BoxContainer.updateLayout()`：消费内部 `box` 的布局脏标记，避免后续查询再次布局。
+
+未改变布局管理器的排列算法、`AnchorLayout`/`HorizontalLayout`/`VerticalLayout`/`FlowLayout` 的结果，以及 `updateLayout()` 对外“强制刷新整棵子树”的语义。
+
+`2ac2fda` 中 `layoutData`/`layout`/`hide`/`includeInLayout` 的自动父布局失效通知暂未移植，保持 1.1.0 的现有行为；原地修改布局参数后如需立即重排，请调用新增的 `invalidateLayout()`。
+
+### 验证
+
+```bash
+haxe test/layout-refresh.hxml
+```
+
+`test/LayoutRefreshChecks.hx` 覆盖：首次递归每个容器只布局一次、无失效不重复布局、重复尺寸赋值不制造失效、尺寸变化后百分比布局生效、公开 `updateLayout` 仍刷新整棵子树、布局期间新失效保留、异常恢复、`BoxContainer` 内部 box 脏标记消费。该用例编译通过并可在浏览器/带 DOM 桩的 Node 环境执行。
+
+### 后续可选优化
+
+- `Graphics.__geometryChanged()` 目前只要几何变化就通知父布局；可改为仅在包围盒实际变化时通知，减少 Spine/动态 Quad 所在父容器的每帧布局。
+- main 的 `dc3bccd` 世界矩阵缓存（`__ensureWorldTransform`）尚未移植，可在坐标查询/命中测试成为新瓶颈时再引入。
+- 从 main 迁移时只取与性能/布局相关的逻辑，不要整体合并：main 的渲染机制与 1.1.0 差异较大，本分支以稳定性和性能优先。

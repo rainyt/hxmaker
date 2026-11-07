@@ -7,6 +7,10 @@ typedef ASTCBuildOptions = {
 	var ?block:String;
 	var ?quality:String;
 	var ?alphaPremultiply:Bool;
+	/** 是否对 ASTC 文件进行外层 zlib 压缩，默认关闭；扩展名保持 .astc。 */
+	var ?zlib:Bool;
+	/** zlib 压缩等级，范围为 0～9，默认 9；仅在 zlib 开启时生效。 */
+	var ?zlibLevel:Int;
 	var ?strict:Bool;
 	var ?verifyHashes:Bool;
 	var ?force:Bool;

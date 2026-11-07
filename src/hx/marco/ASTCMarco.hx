@@ -19,7 +19,7 @@ class ASTCMarco {
 	private static var pending:Map<String, ASTCManifestData> = [];
 	private static var scheduled:Bool = false;
 
-	/** 增量生成同路径 ASTC 并内嵌清单；第二个参数与 assets 的 rename 保持一致。 */
+	/** 增量生成同路径 ASTC 并内嵌清单；options.zlib 可开启纹理外层压缩，第二个参数对应 assets 的 rename。 */
 	public static function build(source:String, prefix:String, ?options:ASTCBuildOptions):Void {
 		if (Context.defined("display"))
 			return;

@@ -6,6 +6,7 @@ import haxe.Json;
 import haxe.crypto.Sha256;
 import haxe.io.Bytes;
 import haxe.io.Path;
+import haxe.zip.Compress;
 import hx.assets.ASTCFormat;
 import hx.assets.ASTCManifestData;
 import sys.FileSystem;
@@ -53,12 +54,16 @@ class ASTCBuilder {
 		var block:String = options.block ?? "6x6";
 		var quality:String = options.quality ?? "-exhaustive";
 		var premultiply:Bool = options.alphaPremultiply != false;
+		var zlib:Bool = options.zlib == true;
+		var zlibLevel:Int = zlib ? (options.zlibLevel ?? 9) : 0;
+		if (zlibLevel < 0 || zlibLevel > 9)
+			throw "zlib 压缩等级必须在 0～9 之间";
 		if (["4x4", "5x4", "5x5", "6x5", "6x6", "8x5", "8x6", "8x8", "10x5", "10x6", "10x8", "10x10", "12x10", "12x12"].indexOf(block) < 0)
 			throw "不支持的 ASTC 压缩块：" + block;
 		if (["-fastest", "-fast", "-medium", "-thorough", "-verythorough", "-exhaustive"].indexOf(quality) < 0)
 			throw "不支持的 ASTC 编码质量：" + quality;
 		var settings:String = Sha256.encode("hxmaker-astc-1|" + encoderIdentity(encoder, options.verifyHashes == true)
-			+ "|-cl|" + block + "|" + quality + "|" + premultiply);
+			+ "|-cl|" + block + "|" + quality + "|" + premultiply + "|zlib:" + zlib + "|level:" + zlibLevel);
 		for (relative in inputs) {
 			var input:String = Path.join([source, relative]);
 			var target:String = Path.join([output, relative.substr(0, relative.length - 4) + ".astc"]);
@@ -73,9 +78,10 @@ class ASTCBuilder {
 				var dimensions:{width:Int, height:Int} = readPngSize(input);
 				var signature:String = Sha256.encode(hash + "|" + settings);
 				var valid:Bool = options.force != true && cached != null && cached.signature == signature
-					&& validOutput(target, dimensions.width, dimensions.height)
+					&& FileSystem.exists(target) && !FileSystem.isDirectory(target)
 					&& FileSystem.stat(target).size == cached.outputSize
-					&& FileSystem.stat(target).mtime.getTime() == cached.outputMtime;
+					&& FileSystem.stat(target).mtime.getTime() == cached.outputMtime
+					&& validOutput(target, dimensions.width, dimensions.height, zlib);
 				if (valid && options.verifyHashes == true)
 					valid = Sha256.make(File.getBytes(target)).toHex() == cached.outputHash;
 				var outputHash:String;
@@ -89,6 +95,12 @@ class ASTCBuilder {
 						args.push("-pp-premultiply");
 					if (Sys.command(encoder, args) != 0 || !validOutput(temporary, dimensions.width, dimensions.height))
 						throw "ASTC 编码失败或输出校验失败";
+					if (zlib) {
+						var compressed:Bytes = Compress.run(File.getBytes(temporary), zlibLevel);
+						File.saveBytes(temporary, compressed);
+						if (!validOutput(temporary, dimensions.width, dimensions.height, true))
+							throw "ASTC 外层 zlib 压缩校验失败";
+					}
 					outputHash = Sha256.make(File.getBytes(temporary)).toHex();
 					replaceFile(temporary, target);
 					converted++;
@@ -192,10 +204,18 @@ class ASTCBuilder {
 		return {width: width, height: height};
 	}
 
-	/** 只读取 ASTC 文件头，校验完整文件长度和源图片尺寸。 */
-	private static function validOutput(path:String, width:Int, height:Int):Bool {
+	/** 裸 ASTC 只读取文件头；zlib 输出先有界解压，再核对完整长度和源图片尺寸。 */
+	private static function validOutput(path:String, width:Int, height:Int, zlib:Bool = false):Bool {
 		if (!FileSystem.exists(path) || FileSystem.isDirectory(path))
 			return false;
+		if (zlib) {
+			try {
+				var bytes:Bytes = File.getBytes(path);
+				return ASTCFormat.isZlib(bytes) && ASTCFormat.isValid(ASTCFormat.decode(bytes), null, width, height);
+			} catch (error:Dynamic) {
+				return false;
+			}
+		}
 		var input:sys.io.FileInput = File.read(path, true);
 		var header:Bytes;
 		try { header = input.read(16); } catch (error:Dynamic) { input.close(); return false; }

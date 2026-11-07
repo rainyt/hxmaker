@@ -83,3 +83,6 @@ haxe tools/tools.hxml
 
 - 注释使用中文，变量名/函数名/类名使用英文
 - 包结构：`hx.core` → 核心 | `hx.display` → 显示对象 | `hx.events` → 事件 | `hx.assets` → 资源 | `hx.geom` → 几何 | `hx.layout` → 布局 | `hx.ui` → UI 管理 | `hx.utils` → 工具 | `hx.macro` → 编译时宏 | `hx.procedure` → 流程管理
+
+## 务必阅读AGENTS.md
+一定要要阅读一下AGENTS.md

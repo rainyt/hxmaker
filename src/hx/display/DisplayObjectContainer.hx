@@ -39,10 +39,14 @@ class DisplayObjectContainer extends DisplayObject {
 		return __layout;
 	}
 
+	private var __updateLayouting:Bool = false;
+
 	private function __updateLayout() {
-		if (__layoutDirty) {
+		if (__layoutDirty && !__updateLayouting) {
 			__layoutDirty = false;
+			__updateLayouting = true;
 			updateLayout();
+			__updateLayouting = false;
 		}
 	}
 

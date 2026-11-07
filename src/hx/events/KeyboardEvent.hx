@@ -22,27 +22,27 @@ class KeyboardEvent extends Event {
 	/**
 	 * 是否处于输入法组合输入状态
 	 */
-	public var isComposing:Bool;
+	public var isComposing:Bool = false;
 
 	/**
 	 * 是否按下 Ctrl 键
 	 */
-	public var ctrlKey:Bool;
+	public var ctrlKey:Bool = false;
 
 	/**
 	 * 是否按下 Command 键
 	 */
-	public var metaKey:Bool;
+	public var metaKey:Bool = false;
 
 	/**
 	 * 是否按下 Alt 键
 	 */
-	public var altKey:Bool;
+	public var altKey:Bool = false;
 
 	/**
 	 * 是否按下 Shift 键
 	 */
-	public var shiftKey:Bool;
+	public var shiftKey:Bool = false;
 
 	/**
 	 * 转换为字符串表示

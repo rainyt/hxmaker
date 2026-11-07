@@ -6,13 +6,20 @@ import hx.layout.AnchorLayoutData;
 import hx.layout.AnchorLayout;
 import hx.utils.TextInputUtils;
 import hx.events.MouseEvent;
+import hx.events.Event;
 import hx.providers.ITextFieldLayoutProvider;
 import StringTools;
 
 /**
  * 输入文本组件
  */
-class InputLabel extends Box implements IDataProider<String> {
+class InputLabel extends Box implements IDataProider<String> implements ITabFocusable {
+	/** 默认参与 Tab 切换。 */
+	public var tabEnabled:Bool = true;
+
+	/** 数值越小越先获得焦点，同值按显示树顺序。 */
+	public var tabIndex:Int = 0;
+
 	public var line:Quad = new Quad(1, 1, 0xffffff);
 
 	public var label:Label = new Label();
@@ -433,6 +440,7 @@ class InputLabel extends Box implements IDataProider<String> {
 		this.addEventListener(MouseEvent.CLICK, onClick);
 		this.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
 		this.addEventListener(MouseEvent.DOUBLE_CLICK, onDoubleClick);
+		this.addEventListener(Event.FOCUS_OUT, onFocusOut);
 		this.layout = new AnchorLayout();
 		this.label.layoutData = AnchorLayoutData.fill();
 		this.placeholderLabel.layoutData = AnchorLayoutData.fill();
@@ -597,6 +605,13 @@ class InputLabel extends Box implements IDataProider<String> {
 	}
 
 	private var __isFocus:Bool = false;
+
+	private function onFocusOut(event:Event):Void {
+		if (event.target != this)
+			return;
+		deactivate();
+		line.visible = false;
+	}
 
 	public function focus():Void {
 		__isFocus = true;

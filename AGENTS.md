@@ -83,3 +83,9 @@ haxe tools/tools.hxml
 
 - 注释使用中文，变量名/函数名/类名使用英文
 - 包结构：`hx.core` → 核心 | `hx.display` → 显示对象 | `hx.events` → 事件 | `hx.assets` → 资源 | `hx.geom` → 几何 | `hx.layout` → 布局 | `hx.ui` → UI 管理 | `hx.utils` → 工具 | `hx.macro` → 编译时宏 | `hx.procedure` → 流程管理
+
+
+## 性能优先
+所有API的设计必须遵循最佳性能来处理：
+1. 尽可能减少不必要的检查；
+2. 以最佳性能为主；

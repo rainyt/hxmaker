@@ -28,7 +28,7 @@ class GraphicsChecks {
 			{name: "路径修改不污染已提交图形", check: pathSnapshot},
 			{name: "样式修改不污染已提交描边", check: styleSnapshot},
 			{name: "空集、重复点和零半径安全", check: degenerateInputs},
-			{name: "非法输入明确报错", check: invalidInputs},
+			{name: "结构非法输入明确报错", check: invalidInputs},
 			{name: "自交、孔洞拒绝且提交原子化", check: unsupportedContours},
 			{name: "低层引用修改可手动失效", check: borrowedGeometry},
 			{name: "抗锯齿仅处理外轮廓", check: antialiasBoundary},
@@ -248,7 +248,6 @@ class GraphicsChecks {
 
 	private static function invalidInputs():Void {
 		var g = new Graphics();
-		reject(() -> g.drawTriangles([0, 0, 10, 0, 0, 10], [0, 1, 9], [0, 0, 1, 0, 0, 1]));
 		reject(() -> g.drawTriangles([0, 0, 10], [0, 1, 2], [0, 0, 1, 0]));
 		reject(() -> g.drawTriangles([0, 0, 10, 0, 0, 10], [0, 1], [0, 0, 1, 0, 0, 1]));
 		reject(() -> g.drawRectMask(0, 0, 10, 10, 0, 32));

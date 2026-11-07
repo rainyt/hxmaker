@@ -81,19 +81,12 @@ class Graphics extends DisplayObject {
 	/**
 	 * 提交三角形，保留数组和颜色变换引用以兼容 Spine 等动态网格。
 	 * 提交后修改引用数据需自行调用 invalidate()；普通路径接口采用提交时快照。
+	 * 为避免动态网格热路径开销，不逐项校验顶点、UV 与索引；调用方须保证数组数据有效。
 	 * 顶点和 UV 按 x/y、u/v 成对存放，索引必须组成完整三角形。
 	 */
 	public function drawTriangles(vertices:Array<Float>, indices:Array<Int>, uvs:Array<Float>, alpha:Float = 1,
 			?colorTransform:ColorTransform, applyBlendAddMode:Bool = false):Void {
 		alpha = __normalizeAlpha(alpha);
-		if (vertices == null || indices == null || uvs == null) throw "三角形的顶点、索引和 UV 数组不能为空";
-		if (vertices.length % 2 != 0 || indices.length % 3 != 0) throw "顶点必须成对，索引必须组成完整三角形";
-		if (vertices.length == 0 && indices.length == 0) return;
-		if (uvs.length < vertices.length || uvs.length % 2 != 0) throw "UV 数量不足或没有成对存放";
-		for (value in vertices) if (!Math.isFinite(value)) throw "三角形顶点必须是有限数值";
-		for (value in uvs) if (!Math.isFinite(value)) throw "三角形 UV 必须是有限数值";
-		var count = Std.int(vertices.length / 2);
-		for (index in indices) if (index < 0 || index >= count) throw "三角形顶点索引越界";
 		__validateColorTransform(colorTransform);
 		if (indices.length == 0) return;
 		if (colorTransform == null && __beginFill != null) colorTransform = __makeColor(__beginFill);

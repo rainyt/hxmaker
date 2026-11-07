@@ -172,6 +172,8 @@ class BoxContainer extends Box {
 	 * 更新内部box的布局
 	 */
 	override function updateLayout() {
-		this.box.updateLayout();
+		__layoutDirty = false;
+		// 内部 box 也要消费布局脏标记，避免后续坐标查询再次布局。
+		this.box.__updateLayout(true);
 	}
 }

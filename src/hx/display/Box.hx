@@ -86,8 +86,12 @@ class Box extends DisplayObjectContainer {
 	 * @return 设置后的宽度值
 	 */
 	override function set_width(value:Float):Float {
-		__width = value;
-		__layoutDirty = true;
+		// null 表示自动尺寸；首次声明明确尺寸仍需布局，即使显示宽度相同。
+		if (__width != value) {
+			__width = value;
+			__layoutDirty = true;
+			setDirty();
+		}
 		return value;
 	}
 
@@ -97,8 +101,11 @@ class Box extends DisplayObjectContainer {
 	 * @return 设置后的高度值
 	 */
 	override function set_height(value:Float):Float {
-		__height = value;
-		__layoutDirty = true;
+		if (__height != value) {
+			__height = value;
+			__layoutDirty = true;
+			setDirty();
+		}
 		return value;
 	}
 }

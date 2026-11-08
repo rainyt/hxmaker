@@ -1,0 +1,12 @@
+--main SpineOptionalCompile
+--class-path src
+--class-path test
+--library actuate
+--library openfl
+--library openfl-glsl
+--library vector-math
+--library lime
+--library hxmaker-openfl
+--macro hx.macro.SpineMacro.configure()
+--js bin/spine-optional.js
+--no-output

@@ -606,8 +606,12 @@ class DisplayObject extends EventDispatcher {
 	public var visible(get, set):Bool;
 
 	public function set_visible(value:Bool):Bool {
-		this.setDirty();
-		return __visible = value;
+		// 比较原始可见性，避免 hide 影响判断及重复赋值触发舞台重绘。
+		if (__visible != value) {
+			__visible = value;
+			this.setDirty();
+		}
+		return value;
 	}
 
 	public function get_visible():Bool {

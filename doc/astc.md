@@ -155,6 +155,8 @@ hx.marco.ASTCMarco.build("Assets", "assets", {
 2. **清单命中且设备支持 ASTC**：请求同路径的 `.astc`，读取字节后直接上传 GPU。
 3. **原图**：清单未命中或设备不支持 ASTC，沿用原来的 PNG/JPG 流程。
 
+`BitmapDataFuture` 在进入图片请求队列之前先判断资源包：如果已加载的资源包提供了对应原图（`UIManager.hasBytesByBundle`，只查条目不解压），就直接使用包内位图；否则再按清单走 ASTC。
+
 清单命中的资源优先使用 ASTC，失败时默认回退原图：
 
 - 字节下载失败、文件损坏、GPU 上传失败时记录警告并回退原图，同一资源 30 秒内不再重复尝试

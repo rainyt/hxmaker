@@ -25,6 +25,7 @@ class FutureErrorEvent extends Event {
 		var e:FutureErrorEvent = new FutureErrorEvent(type);
 		e.errorCode = errorCode;
 		e.error = error;
+		e.path = path;
 		return e;
 	}
 

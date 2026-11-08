@@ -8,8 +8,8 @@ import hx.display.BitmapData;
 using StringTools;
 
 /**
- * 运行时 ASTC 分发：资源包命中的位图由调用方优先处理，这里只接管清单命中的纹理。
- * 清单一旦命中即视为该资源只提供 ASTC，加载失败直接回报错误，不回退原图。
+ * 运行时 ASTC 加载：清单命中的纹理在进入图片请求队列之前接管。
+ * 加载失败由调用方决定回退原图，这里只负责读取、校验和上传。
  */
 class ASTCLoader {
 	/** 由渲染后端注入的解码器，核心只通过接口调用。 */
@@ -26,11 +26,19 @@ class ASTCLoader {
 		decoder = value;
 	}
 
+	/** 判断该路径是否需要走 ASTC，不产生任何请求。 */
+	public static function canLoad(url:String):Bool {
+		var current:IASTCDecoder = decoder;
+		if (current == null || !current.isSupported())
+			return false;
+		return resolvePath(url) != null;
+	}
+
 	/**
 	 * 尝试接管一次图片请求。
 	 * @param url 原图请求路径
 	 * @param callback 成功时给出位图，失败时给出错误信息
-	 * @return false 表示该路径与 ASTC 无关，调用方继续原图流程；true 表示已接管，成功或失败只回调一次
+	 * @return false 表示该路径与 ASTC 无关；true 表示已接管，成功或失败只回调一次
 	 */
 	public static function load(url:String, callback:BitmapData->Null<String>->Void):Bool {
 		var current:IASTCDecoder = decoder;
@@ -50,7 +58,7 @@ class ASTCLoader {
 			callback(bitmap, error);
 		}
 		function deferFinish(bitmap:BitmapData, error:Null<String>):Void {
-			// 资源包里的字节是同步返回的，统一推迟到下一轮，避免在请求计数更新前结算。
+			// 资源包里的字节是同步返回的，统一推迟到下一轮，避免在请求结算前回调。
 			Timer.delay(function() finish(bitmap, error), 0);
 		}
 		timer = Timer.delay(function() deferFinish(null, "ASTC 加载超时：" + path), timeoutMilliseconds);

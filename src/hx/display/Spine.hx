@@ -76,6 +76,37 @@ class Spine extends Graphics implements ISpine {
 		return value;
 	}
 
+	override function set_width(value:Float):Float {
+		if (useBoundsSize)
+			return super.set_width(value);
+		__width = value;
+		return value;
+	}
+
+	/**
+	 * 使用骨架的bounds来设置Spine渲染器的宽高，默认值为`false`，如果设置为`true`，则会使用骨架的bounds来设置Spine渲染器的宽高
+	**/
+	public var useBoundsSize:Bool = false;
+
+	override function get_width():Float {
+		if (!useBoundsSize && __width != null)
+			return __width;
+		return super.get_width();
+	}
+
+	override function set_height(value:Float):Float {
+		if (useBoundsSize)
+			return super.set_height(value);
+		__height = value;
+		return value;
+	}
+
+	override function get_height():Float {
+		if (__height != null)
+			return __height;
+		return super.get_height();
+	}
+
 	/**
 	 * Spine骨架
 	 */

@@ -11,7 +11,9 @@ import hx.display.ImageLoader;
 import hx.display.InputLabel;
 import hx.display.Quad;
 import hx.display.MovieClip;
+#if (spine_haxe || spine_hx)
 import hx.display.Spine;
+#end
 import hx.display.ListView;
 import hx.display.FinderView;
 import hx.display.BreadcrumbBar;
@@ -43,9 +45,7 @@ import haxe.io.Path;
 import hx.assets.Assets;
 import hx.display.Image;
 import hx.display.DisplayObject;
-#if (spine_haxe || spine_hx)
-import spine.SkeletonData;
-#end
+import hx.spine.SpineTypes.SkeletonData;
 
 using hx.utils.XmlTools;
 using StringTools;

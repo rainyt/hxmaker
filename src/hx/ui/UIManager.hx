@@ -169,6 +169,19 @@ class UIManager {
 	}
 
 	/**
+	 * 资源包中是否存在该文件，不触发解压或解码。
+	 * @param file
+	 * @return 是否存在
+	 */
+	public static function hasBytesByBundle(file:String):Bool {
+		for (key => value in getAssetsBundleList()) {
+			if (value.has(file))
+				return true;
+		}
+		return false;
+	}
+
+	/**
 	 * 从资源包加载位图资源
 	 * @param file 
 	 * @return Future<BitmapData>

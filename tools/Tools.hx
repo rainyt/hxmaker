@@ -22,6 +22,11 @@ class Tools {
 				throw "Unknown project type: " + project;
 		}
 		switch (command) {
+			case "prepare":
+				// 只准备生成资源，供项目在资源包构建之前复用同一份宏配置。
+				var prepareArgs:Array<String> = args.slice(2);
+				prepareArgs.insert(prepareArgs.length - 1, "hxmaker_prepare_assets");
+				project.build(prepareArgs);
 			case "build":
 				// 编译指定目标
 				project.build(args.slice(2));

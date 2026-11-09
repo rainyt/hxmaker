@@ -12,8 +12,8 @@ hxmaker 是一个使用 Haxe 编写的统一 2D 游戏引擎，核心引擎逻�
 # 主要开发构建（OpenFL 后端，编译为 JS 到 bin/main.js）
 haxe vscode-openfl.hxml
 
-# 使用 Spine 3.8 的构建
-haxe vscode-openfl-spine3-8.hxml
+# 使用 Spine 3.2 的构建
+haxe vscode-openfl-spine3-2.hxml
 
 # 生成 API 文档（使用 dox，输出到 api_docs/）
 haxe doc.hxml
@@ -69,7 +69,7 @@ haxe tools/tools.hxml
 ## 依赖
 
 - `actuate` — 补间动画库
-- `spine-haxe`（4.2.x）或 `spine-hx`（3.8.x）— Spine 骨骼动画运行时，二选一
+- `spine-haxe` 或 `spine-hx` — Spine 骨骼动画运行时
 - `openfl` + `lime` — 跨平台框架（当前主要后端）
 - `openfl-glsl` — OpenFL 着色器支持
 - `vector-math` — 向量数学库

@@ -9,5 +9,4 @@
 --library lime
 --library hxmaker-openfl
 --js bin/main.js
---macro hx.macro.SpineMacro.configure()
 --no-output

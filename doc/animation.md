@@ -72,7 +72,7 @@ mc.stopAt(5);
 
 ## Spine — 骨骼动画
 
-使用 Spine 时选择 `spine-hx 3.8.2` 或 `spine-haxe 4.2.x`，引擎根据引入的库在编译期自动选择适配路径，不能同时引入两库。资源导出版本须与运行时匹配。参阅[双运行时支持说明](../docs/Spine双运行时支持说明.md)及[Spine 3.8 示例](../samples/2d/spine3.8/README.md)。
+> **注意**：使用 Spine 需要安装 `spine-haxe` 或 `spine-hx` 运行时库。
 
 `Spine` 用于播放 Spine 骨骼动画，支持骨骼绑定、皮肤切换和动画混合。
 
@@ -82,12 +82,12 @@ mc.stopAt(5);
 import hx.display.Spine;
 
 // 从已加载的骨骼数据创建 Spine 对象
-var spine:Spine = new Spine(skeletonData);
+var spine = new Spine(skeletonData);
 spine.x = 400;
 spine.y = 300;
 
 // 播放动画
-spine.play("walk", 0, true);  // 动画名称、轨道索引、是否循环
+spine.play("walk", true);  // 动画名称, 是否循环
 
 this.addChild(spine);
 ```
@@ -95,11 +95,11 @@ this.addChild(spine);
 ### 常用操作
 
 ```haxe
-var spine:Spine = new Spine(skeletonData);
+var spine = new Spine(skeletonData);
 
 // 播放动画
-spine.play("idle", 0, true);
-spine.play("attack", 0, false);
+spine.play("idle", true);
+spine.play("attack", false);
 
 // 停止动画
 spine.stop();
@@ -115,32 +115,31 @@ spine.renderFps = 30;
 
 | 属性 | 类型 | 说明 |
 |------|------|------|
-| `renderFps` | Int | 骨骼动画渲染帧率，必须大于零 |
+| `renderFps` | Float | 骨骼动画渲染帧率 |
 | `mustVisibleRender` | Bool | 是否必须在可见时才渲染 |
 
 ### 主要方法
 
 | 方法 | 说明 |
 |------|------|
-| `play(name, index, isLoop)` | 播放指定动画，轨道默认为 0，默认循环 |
+| `play(name, loop)` | 播放指定动画 |
 | `stop()` | 停止动画 |
 | `setSkinByName(name)` | 切换皮肤 |
 
 ### Spine 事件
 
 ```haxe
-import hx.events.SpineEvent;
-
-spine.addEventListener(SpineEvent.START, function(event:SpineEvent):Void {
+spine.addEventListener(SpineEvent.START, function(event) {
     trace("动画开始");
 });
 
-spine.addEventListener(SpineEvent.END, function(event:SpineEvent):Void {
+spine.addEventListener(SpineEvent.END, function(event) {
     trace("动画结束");
 });
 
-spine.addEventListener(SpineEvent.EVENT, function(event:SpineEvent):Void {
-    trace("骨骼事件：" + event.event);
+spine.addEventListener(SpineEvent.EVENT, function(event) {
+    var spineEvent = cast(event, SpineEvent);
+    trace("骨骼事件：" + spineEvent.event);
 });
 ```
 

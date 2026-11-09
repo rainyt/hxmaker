@@ -2,20 +2,20 @@ package hx.assets;
 
 import hx.utils.SoundManager;
 import hx.utils.Timer;
-#if (spine_haxe || spine_hx)
 import hx.display.Spine;
-#end
 import hx.ui.UIManager;
 import hx.ui.UIAssets;
-#if (spine_haxe || spine_hx)
 import hx.assets.SpineTextureAtlas;
-#end
 import hx.events.FutureErrorEvent;
 import hx.assets.Atlas;
 import haxe.io.Path;
 import hx.assets.StyleFuture;
 import hx.display.BitmapData;
-import hx.spine.SpineTypes.SkeletonData;
+#if (spine_haxe || spine_hx)
+import spine.SkeletonData;
+#else
+typedef SkeletonData = Dynamic;
+#end
 
 /**
  * 资源管理器

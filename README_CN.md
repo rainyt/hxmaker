@@ -48,8 +48,6 @@
 | hx.events.KeyboardEvent | 键盘事件 | ✅ | / |
 | hx.assets.Assets | 资源加载器，支持图片、音频、精灵图、XML、JSON等常见资源格式加载 | ✅ | / |
 
-Spine 可按依赖库在编译期选择 `spine-hx 3.8.2` 或 `spine-haxe 4.2.x`。配置与当前边界见[双运行时支持说明](docs/Spine双运行时支持说明.md)，可运行工程见[Spine 3.8 示例](samples/2d/spine3.8/README.md)。
-
 # 布局支持
 | 布局 | 名称 | 描述 |
 --- | --- | --- |

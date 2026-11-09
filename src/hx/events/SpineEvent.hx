@@ -1,42 +1,46 @@
 package hx.events;
 
-import hx.spine.SpineTypes.TrackEntry;
-import hx.spine.SpineTypes.NativeEvent;
+#if spine_hx
+import spine.AnimationState.TrackEntry;
+#elseif spine_haxe
+import spine.animation.TrackEntry;
+#else
+typedef TrackEntry = Dynamic;
+#end
 
 /**
  * Spine事件
  */
-@:build(hx.macro.SpineMacro.build())
 class SpineEvent extends Event {
 	/**
 	 * Spine事件
 	 */
-	public static inline var EVENT:String = "spine_event";
+	public static inline var EVENT = "spine_event";
 
 	/**
 	 * 开始事件
 	 */
-	public static inline var START:String = "spine_start";
+	public static inline var START = "spine_start";
 
 	/**
 	 * 结束事件
 	 */
-	public static inline var END:String = "spine_end";
+	public static inline var END = "spine_end";
 
 	/**
 	 * 销毁事件
 	 */
-	public static inline var DISPOSE:String = "spine_dispose";
+	public static inline var DISPOSE = "spine_dispose";
 
 	/**
 	 * 中断事件
 	 */
-	public static inline var INTERRUPT:String = "spine_interrupt";
+	public static inline var INTERRUPT = "spine_interrupt";
 
 	/**
 	 * Spine原生事件对象
 	 */
-	public var event:NativeEvent;
+	public var event:spine.Event;
 
 	/**
 	 * Spine动画对象

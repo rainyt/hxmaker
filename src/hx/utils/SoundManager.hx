@@ -97,19 +97,12 @@ class SoundManager {
 		if (!__effectEnable)
 			return null;
 		if (sound != null) {
-			// [ABN-PATCH 2026-11-10] 音量随 play 一起传下去（新声道一开始就是正确音量），
-			// 而不是"先满音量播出来再 setVolume 修正"。见 ISound.hx / 台账 §2。
-			var channel = sound.root.play(isLoop, __effectSoundTransform.volume, __effectSoundTransform.pan);
+			var channel = sound.root.play(isLoop);
 			if (channel != null) {
 				channel.setVolume(__effectSoundTransform.volume, __effectSoundTransform.pan);
 				__effectSoundChannel.push(channel);
 				channel.addEventListener(SoundEvent.SOUND_COMPLETE, (e) -> {
-					// [ABN-PATCH 2026-11-10] 循环声道每轮都会派发 SOUND_COMPLETE；不能就此移出跟踪表，
-					// 否则 `setEffectSoundTransform()`（改音量）与 `stopAllEffectSound()`（停）之后都管不到它
-					// ⇒ 表现为"循环音效改音量无效 / 关掉音效它还在响"。
-					if (!isLoop) {
-						__effectSoundChannel.remove(channel);
-					}
+					__effectSoundChannel.remove(channel);
 				});
 			}
 			return channel;
@@ -139,8 +132,7 @@ class SoundManager {
 		}
 		var sound = UIManager.getSound(id);
 		if (sound != null) {
-			// [ABN-PATCH 2026-11-10] 同上：音量随 play 一起传下去
-			__bgmSoundChannel = sound.root.play(true, __musicSoundTransform.volume, __musicSoundTransform.pan);
+			__bgmSoundChannel = sound.root.play(true);
 			if (__bgmSoundChannel != null) {
 				__bgmSoundChannel.setVolume(__musicSoundTransform.volume, __musicSoundTransform.pan);
 			}

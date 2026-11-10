@@ -12,8 +12,22 @@ import js.Browser;
 class HTML5FocusNavigation {
 	private static var __initialized:Bool = false;
 
+	/**
+	 * [ABN-PATCH 2026-10-25 / 2026-11-10 重放] 非浏览器宿主（hxnodejs 下跑同一份 html5 构建做无头自检）
+	 * 没有全局 `window`；而 `Browser.window` 会被编成**裸全局名 `window`** ⇒ 直接判空就先抛
+	 * `ReferenceError: window is not defined`，根本走不到判空。必须用 `typeof` 守卫。
+	 *
+	 * ⚠ 这是**本仓库对引擎的本地补丁**（上游 `24b8062` 原版没有它）。引擎更新后若此处又变回
+	 * `Browser.window == null`，本仓库 11 个 node 自检会全灭 —— 见
+	 * `docs/engine-local-patch-ledger-knowledge.md`（台账 P1）与
+	 * `docs/engine-update-compat-knowledge.md §4.1`；体检：`node tools/engine-patch-check/check.mjs`。
+	 */
+	private static function __hasWindow():Bool {
+		return js.Syntax.code("typeof window != 'undefined' && window != null");
+	}
+
 	public static function init():Void {
-		if (__initialized || Browser.window == null || !Reflect.isFunction(Reflect.field(Browser.window, "addEventListener")))
+		if (__initialized || !__hasWindow() || !Reflect.isFunction(Reflect.field(Browser.window, "addEventListener")))
 			return;
 		__initialized = true;
 		// 捕获阶段先接管，避免隐藏输入框与 OpenFL 后端重复处理同一次 Tab。
@@ -22,6 +36,9 @@ class HTML5FocusNavigation {
 
 	/** 页面中的其他原生编辑控件不使用引擎的 Tab 导航。 */
 	public static function isExternalEditorFocused():Bool {
+		// [ABN-PATCH 2026-10-25 / 2026-11-10 重放] 同 `init()`：node 宿主没有 window/document
+		if (!__hasWindow() || Browser.document == null)
+			return false;
 		var active = Browser.document.activeElement;
 		return active != null && active != HTML5TextInputUtils.textureArea
 			&& (active.tagName == "INPUT" || active.tagName == "TEXTAREA" || Reflect.field(active, "isContentEditable") == true);

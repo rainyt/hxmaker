@@ -295,9 +295,9 @@ class Label extends DisplayObject implements IDataProider<String> implements IRo
 			this.textFormat = textFormat;
 	}
 
-	override function __updateTransform(parent:DisplayObject) {
+	override function __prepareWorldTransform():Void {
+		super.__prepareWorldTransform();
 		this.updateAlignTranform();
-		super.__updateTransform(parent);
 	}
 
 	/**
@@ -338,6 +338,8 @@ class Label extends DisplayObject implements IDataProider<String> implements IRo
 	 * 更新对齐位置
 	 */
 	private function updateAlignTranform():Void {
+		var originX:Float = __originWorldX;
+		var originY:Float = __originWorldY;
 		if (root != null) {
 			switch __verticalAlign {
 				case TOP:
@@ -356,6 +358,8 @@ class Label extends DisplayObject implements IDataProider<String> implements IRo
 					__originWorldX = (this.width - Math.min(this.width, this.root.getTextWidth()));
 			}
 		}
+		if (originX != __originWorldX || originY != __originWorldY)
+			this.setTransformDirty();
 	}
 
 	override function __getRect():Rectangle {

@@ -295,9 +295,13 @@ class DisplayObjectContainer extends DisplayObject {
 		}
 	}
 
+	override function __prepareWorldTransform():Void {
+		super.__prepareWorldTransform();
+		this.__updateLayout();
+	}
+
 	override function __updateTransform(parent:DisplayObject) {
 		super.__updateTransform(parent);
-		this.__updateLayout();
 		if (this.background != null) {
 			this.background.__updateTransform(this);
 		}

@@ -42,6 +42,7 @@ class BitmapLabel extends Box implements IDataProider<String> {
 			return value;
 		__text = value;
 		__textDirty = true;
+		this.setTransformDirty();
 		return value;
 	}
 
@@ -154,6 +155,7 @@ class BitmapLabel extends Box implements IDataProider<String> {
 	private function set_space(value:Float):Float {
 		this.space = value;
 		__textDirty = true;
+		this.setTransformDirty();
 		return value;
 	}
 
@@ -170,6 +172,7 @@ class BitmapLabel extends Box implements IDataProider<String> {
 	private function set_warpWord(value:Bool):Bool {
 		this.warpWord = value;
 		__textDirty = true;
+		this.setTransformDirty();
 		return value;
 	}
 
@@ -253,10 +256,10 @@ class BitmapLabel extends Box implements IDataProider<String> {
 	 * 更新变换矩阵
 	 * @param parent 父显示对象
 	 */
-	override function __updateTransform(parent:DisplayObject) {
+	override function __prepareWorldTransform():Void {
 		__onUpdateText();
 		this.updateAlignTranform();
-		super.__updateTransform(parent);
+		super.__prepareWorldTransform();
 	}
 
 	/**
@@ -264,6 +267,8 @@ class BitmapLabel extends Box implements IDataProider<String> {
 	 * 根据设置的对齐方式调整文本的位置
 	 */
 	private function updateAlignTranform():Void {
+		var originX:Float = __originWorldX;
+		var originY:Float = __originWorldY;
 		switch __verticalAlign {
 			case TOP:
 			case MIDDLE:
@@ -282,6 +287,8 @@ class BitmapLabel extends Box implements IDataProider<String> {
 				if (__width != null)
 					__originWorldX = (this.__width - this.getTextWidth());
 		}
+		if (originX != __originWorldX || originY != __originWorldY)
+			this.setTransformDirty();
 	}
 
 	/**

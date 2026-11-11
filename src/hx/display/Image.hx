@@ -15,11 +15,25 @@ using haxe.io.Path;
  */
 @:keep
 class Image extends DisplayObject implements IDataProider<BitmapData> implements IRootDataProvider<Dynamic> {
+	private var __worldFrameX:Float = 0;
+	private var __worldFrameY:Float = 0;
 	@:noCompletion private var __bitmapData:BitmapData;
 	@:noCompletion private var __smoothing:Bool = true;
 	@:noCompletion private var __graphic:Graphics;
 	@:noCompletion private var __scale9Grid:Rectangle;
 	@:noCompletion private var __scale9GridDirty:Bool = false;
+
+	override function __prepareWorldTransform():Void {
+		super.__prepareWorldTransform();
+		var frame = this.data == null ? null : this.data.frameRect;
+		var frameX:Float = frame == null ? 0. : frame.x;
+		var frameY:Float = frame == null ? 0. : frame.y;
+		if (__worldFrameX != frameX || __worldFrameY != frameY) {
+			__worldFrameX = frameX;
+			__worldFrameY = frameY;
+			this.setTransformDirty();
+		}
+	}
 
 	/**
 	 * 如果纹理存在frameRect时，则使用frameRect的宽高作为位图的宽高，否则使用切割图的宽高作为位图的宽高，默认值为`true`
@@ -223,7 +237,7 @@ class Image extends DisplayObject implements IDataProider<BitmapData> implements
 	private function set_data(value:BitmapData):BitmapData {
 		__bitmapData = value;
 		__uvsDirty = true;
-		this.setDirty();
+		this.setTransformDirty();
 		return value;
 	}
 
@@ -267,7 +281,9 @@ class Image extends DisplayObject implements IDataProider<BitmapData> implements
 	 * 更新tranform
 	 * @param parent 如果提供了parent，则会根据parent更新worldTransform
 	 */
-	override private function __updateTransform(parent:DisplayObject):Void {
+	override private function __updateWorldTransform(parent:DisplayObject):Void {
+		if (parent == this)
+			parent = null;
 		if (parent != null) {
 			this.__worldAlpha = parent.__worldAlpha * this.__alpha;
 			// 世界矩阵
@@ -290,6 +306,7 @@ class Image extends DisplayObject implements IDataProider<BitmapData> implements
 			this.__worldTransform.translate(this.__originWorldX, this.__originWorldY);
 			this.__worldTransform.concat(__transform);
 		}
+		this.__markWorldTransformUpdated(parent);
 	}
 
 	override function __getRect():Rectangle {
@@ -312,6 +329,11 @@ class Image extends DisplayObject implements IDataProider<BitmapData> implements
 
 	override function setTransformDirty(value:Bool = true) {
 		super.setTransformDirty(value);
+		__scale9GridDirty = true;
+		__repeatDirty = true;
+	}
+
+	override private function __onRenderParentTransformChanged():Void {
 		__scale9GridDirty = true;
 		__repeatDirty = true;
 	}

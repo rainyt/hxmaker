@@ -97,8 +97,16 @@ class SoundManager {
 		if (!__effectEnable)
 			return null;
 		if (sound != null) {
+			// [ABN-PATCH 2026-11-12] 起播前先把当前音量写到后端（`OpenFLSound.volume/pan`），
+			// 让它随 `Sound.play(startTime, loops, sndTransform)` 一起进声道。
+			// 为什么不能只靠下面那句 setVolume：html5 后端（howler `<audio>`）在 `_playLock` 时
+			// 会把 `Howl.volume()` 塞进队列，而 howler 的 `_loadQueue` 只认 "play" ⇒ 该记录**永不执行**
+			// ⇒ 该次播放整条按满音量（玩家实测：命中音效不受音量控制）。
+			// `ISound` 接口不动（作者口径）：反射写字段，没有该字段的后端无害。
+			setRootPlayVolume(sound, __effectSoundTransform.volume, __effectSoundTransform.pan);
 			var channel = sound.root.play(isLoop);
 			if (channel != null) {
+				// 保留：① 让"正在播的声道"跟随之后的音量变化；② 兼容不认起播音量的后端
 				channel.setVolume(__effectSoundTransform.volume, __effectSoundTransform.pan);
 				__effectSoundChannel.push(channel);
 				channel.addEventListener(SoundEvent.SOUND_COMPLETE, (e) -> {
@@ -109,6 +117,20 @@ class SoundManager {
 		} else {
 			return null;
 		}
+	}
+
+	/**
+	 * [ABN-PATCH 2026-11-12] 把"起播音量"写到 `ISound` 实现上（目前只有 `OpenFLSound` 有这个字段）。
+	 *
+	 * 用反射而不是接口参数：`ISound.play(isLoop, volume, pan)` 那种改法对其它后端是破坏性变更
+	 * （引擎作者明确反对）；这里对没有该字段的实现是无害空操作。
+	 * 失败静默：任何后端都不该因为"设不了起播音量"而让一次播放失败。
+	 */
+	private static function setRootPlayVolume(sound:Sound, volume:Float, pan:Float):Void {
+		try {
+			Reflect.setField(sound.root, "volume", volume);
+			Reflect.setField(sound.root, "pan", pan);
+		} catch (e:Dynamic) {}
 	}
 
 	private var __bgmSoundChannel:ISoundChannel;
@@ -132,6 +154,8 @@ class SoundManager {
 		}
 		var sound = UIManager.getSound(id);
 		if (sound != null) {
+			// [ABN-PATCH 2026-11-12] 同 playEffectSound：BGM 也把音量写在起播前（理由见那里）
+			setRootPlayVolume(sound, __musicSoundTransform.volume, __musicSoundTransform.pan);
 			__bgmSoundChannel = sound.root.play(true);
 			if (__bgmSoundChannel != null) {
 				__bgmSoundChannel.setVolume(__musicSoundTransform.volume, __musicSoundTransform.pan);

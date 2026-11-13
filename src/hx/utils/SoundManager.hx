@@ -97,13 +97,20 @@ class SoundManager {
 		if (!__effectEnable)
 			return null;
 		if (sound != null) {
-			var channel = sound.root.play(isLoop);
+			var channel:ISoundChannel = sound.play(isLoop, __effectSoundTransform.volume, __effectSoundTransform.pan);
 			if (channel != null) {
-				channel.setVolume(__effectSoundTransform.volume, __effectSoundTransform.pan);
 				__effectSoundChannel.push(channel);
-				channel.addEventListener(SoundEvent.SOUND_COMPLETE, (e) -> {
+				var onSoundEnd:SoundEvent->Void = null;
+				onSoundEnd = function(event:SoundEvent):Void {
+					// 循环的单轮完成不代表声道结束，仍需响应调音和统一停止。
+					if (isLoop && event.type == SoundEvent.SOUND_COMPLETE)
+						return;
+					channel.removeEventListener(SoundEvent.SOUND_COMPLETE, onSoundEnd);
+					channel.removeEventListener(SoundEvent.SOUND_STOP, onSoundEnd);
 					__effectSoundChannel.remove(channel);
-				});
+				};
+				channel.addEventListener(SoundEvent.SOUND_COMPLETE, onSoundEnd);
+				channel.addEventListener(SoundEvent.SOUND_STOP, onSoundEnd);
 			}
 			return channel;
 		} else {
@@ -132,9 +139,16 @@ class SoundManager {
 		}
 		var sound = UIManager.getSound(id);
 		if (sound != null) {
-			__bgmSoundChannel = sound.root.play(true);
-			if (__bgmSoundChannel != null) {
-				__bgmSoundChannel.setVolume(__musicSoundTransform.volume, __musicSoundTransform.pan);
+			__bgmSoundChannel = sound.play(true, __musicSoundTransform.volume, __musicSoundTransform.pan);
+			var channel:ISoundChannel = __bgmSoundChannel;
+			if (channel != null) {
+				var onSoundStop:SoundEvent->Void = null;
+				onSoundStop = function(event:SoundEvent):Void {
+					channel.removeEventListener(SoundEvent.SOUND_STOP, onSoundStop);
+					if (__bgmSoundChannel == channel)
+						__bgmSoundChannel = null;
+				};
+				channel.addEventListener(SoundEvent.SOUND_STOP, onSoundStop);
 			}
 		}
 		return __bgmSoundChannel;
@@ -158,10 +172,12 @@ class SoundManager {
 	}
 
 	public function stopAllEffectSound():Void {
-		for (channel in __effectSoundChannel) {
+		// 停止通知会移除跟踪项，先换出数组，避免遍历时删除导致漏停。
+		var channels:Array<ISoundChannel> = __effectSoundChannel;
+		__effectSoundChannel = [];
+		for (channel in channels) {
 			channel.stop();
 		}
-		__effectSoundChannel = [];
 	}
 
 	public function resumeBGMSound():Void {

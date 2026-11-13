@@ -15,9 +15,9 @@ import hx.utils.ColorUtils;
  * 路径及描边数据类型位于 hx.display.graphics 包。
  */
 class Graphics extends DisplayObject {
-	/** 路径填充和描边的边缘覆盖抗锯齿，默认开启；低层三角形不受影响。 */
+	/** 路径填充和描边的边缘覆盖抗锯齿，默认关闭；低层三角形不受影响。 */
 	public var antialiasing(get, set):Bool;
-	private var __antialiasing:Bool = true;
+	private var __antialiasing:Bool = false;
 	/** 向外过渡带宽度，单位为最终物理屏幕像素，范围为 (0, 4]。 */
 	public var antialiasWidth(get, set):Float;
 	private var __antialiasWidth:Float = 1;

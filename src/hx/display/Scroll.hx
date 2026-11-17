@@ -144,6 +144,12 @@ class Scroll extends BoxContainer {
 		}
 	}
 
+	override function dispose() {
+		super.dispose();
+		this.stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+		this.stage.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
+	}
+
 	private var startX:Float = 0;
 
 	private var startY:Float = 0;

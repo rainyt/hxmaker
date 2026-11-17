@@ -209,6 +209,11 @@ class Button extends BoxContainer {
 		this.stage.removeEventListener(MouseEvent.MOUSE_UP, this.onMouseEvent);
 	}
 
+	override function dispose() {
+		super.dispose();
+		this.stage.removeEventListener(MouseEvent.MOUSE_UP, this.onMouseEvent);
+	}
+
 	/**
 	 * 按钮是否处于按下状态
 	 */

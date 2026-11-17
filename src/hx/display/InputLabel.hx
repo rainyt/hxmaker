@@ -488,6 +488,12 @@ class InputLabel extends Box implements IDataProider<String> implements ITabFocu
 		}
 	}
 
+	override function dispose() {
+		super.dispose();
+		this.stage.removeEventListener(MouseEvent.MOUSE_MOVE, onStageMouseMove);
+		this.stage.removeEventListener(MouseEvent.MOUSE_UP, onStageMouseUp);
+	}
+
 	private function onStageMouseMove(event:MouseEvent):Void {
 		if (!__dragging)
 			return;

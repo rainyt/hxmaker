@@ -47,6 +47,15 @@ class VScrollBar extends BaseScrollBar {
 		stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 	}
 
+	/**
+	 * 释放的是，需要释放事件侦听
+	 */
+	override function dispose() {
+		super.dispose();
+		stage.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
+		stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+	}
+
 	private function onMouseMove(e:MouseEvent) {
 		this.dragDisplay.y += e.stageY - __y;
 		if (this.dragDisplay.y < 0) {

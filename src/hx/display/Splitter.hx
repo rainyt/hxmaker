@@ -120,12 +120,6 @@ class Splitter extends Box {
 		this.stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 	}
 
-	override function dispose() {
-		super.dispose();
-		this.stage.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
-		this.stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
-	}
-
 	override function onRemoveToStage() {
 		super.onRemoveToStage();
 		this.stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);

@@ -87,15 +87,6 @@ class VirtualTouchKey extends Box {
 
 	override function onRemoveToStage() {
 		super.onRemoveToStage();
-		__removeAllLieners();
-	}
-
-	override function dispose() {
-		super.dispose();
-		__removeAllLieners();
-	}
-
-	private function __removeAllLieners() {
 		if (_isAutoListener) {
 			if (_touchEvent) {
 				stage.removeEventListener(TouchEvent.TOUCH_BEGIN, onKeyMouseDown);

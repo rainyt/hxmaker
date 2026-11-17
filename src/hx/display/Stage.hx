@@ -40,6 +40,31 @@ class Stage extends Box {
 	private static var __focus:DisplayObject;
 
 	/**
+	 * 对象被移除/销毁时，清掉指向它的静态引用。
+	 * `__focus` 和 `__overDisplayObject` 都是静态保存的：界面关闭后这两个变量仍指向界面里的按钮，
+	 * 会把它连同整棵父级树（界面 → 数据 → 世界 → 全部怪物）永久钉在内存里。
+	 * Heap Snapshot 实测：不清理时回主城后仍残留 1 个结算界面、1 个副本世界、70+ 只怪物。
+	 */
+	@:noCompletion public static function clearFocusUnder(target:DisplayObject):Void {
+		if (target == null)
+			return;
+		if (__focus != null && __isUnder(__focus, target))
+			__focus = null;
+		if (__overDisplayObject != null && __isUnder(__overDisplayObject, target))
+			__overDisplayObject = null;
+	}
+
+	/** node 是否等于 root 或位于 root 的子树内 */
+	private static function __isUnder(node:DisplayObject, root:DisplayObject):Bool {
+		while (node != null) {
+			if (node == root)
+				return true;
+			node = node.parent;
+		}
+		return false;
+	}
+
+	/**
 	 * 设置舞台焦点对象
 	 * @param value 要设置为焦点的显示对象
 	 * @return 设置后的焦点对象

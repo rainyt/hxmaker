@@ -206,7 +206,21 @@ class Button extends BoxContainer {
 	 */
 	override function onRemoveToStage() {
 		super.onRemoveToStage();
-		this.stage.removeEventListener(MouseEvent.MOUSE_UP, this.onMouseEvent);
+		var st = this.stage;
+		if (st != null)
+			st.removeEventListener(MouseEvent.MOUSE_UP, this.onMouseEvent);
+	}
+
+	/**
+	 * 销毁时也要摘掉挂在 stage 上的监听。
+	 * 界面整棵子树被销毁时不走 onRemoveToStage，监听会一直留在 stage 上，
+	 * 闭包反向拽住按钮及其父界面（Heap Snapshot 实测整棵界面因此无法释放）。
+	 */
+	override function dispose():Void {
+		var st = this.stage;
+		if (st != null)
+			st.removeEventListener(MouseEvent.MOUSE_UP, this.onMouseEvent);
+		super.dispose();
 	}
 
 	/**

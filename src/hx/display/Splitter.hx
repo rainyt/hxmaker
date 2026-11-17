@@ -122,9 +122,25 @@ class Splitter extends Box {
 
 	override function onRemoveToStage() {
 		super.onRemoveToStage();
-		this.stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
-		this.stage.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
+		removeStageListeners();
 		this.__dragging = false;
+	}
+
+	/**
+	 * 销毁时也要摘掉挂在 stage 上的监听。
+	 * 界面整棵子树被销毁时不走 onRemoveToStage，监听会留在 stage 上并把整个界面拽住
+	 */
+	override function dispose():Void {
+		removeStageListeners();
+		super.dispose();
+	}
+
+	private function removeStageListeners():Void {
+		var st = this.stage;
+		if (st == null)
+			return;
+		st.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+		st.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
 	}
 
 	private function onMouseDown(e:MouseEvent) {

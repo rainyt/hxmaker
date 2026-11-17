@@ -59,8 +59,24 @@ class VScrollBar extends BaseScrollBar {
 	}
 
 	private function onMouseUp(e:MouseEvent) {
-		stage.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
-		stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+		removeStageListeners();
+	}
+
+	/**
+	 * 销毁时也要摘掉拖拽期间挂在 stage 上的监听。
+	 * 拖动中界面被关掉时 onMouseUp 不会触发，监听会把整个界面拽在内存里
+	 */
+	override function dispose():Void {
+		removeStageListeners();
+		super.dispose();
+	}
+
+	private function removeStageListeners():Void {
+		var st = this.stage;
+		if (st == null)
+			return;
+		st.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
+		st.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 	}
 
 	override function measure(isScroll:Bool = false) {

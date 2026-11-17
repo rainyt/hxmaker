@@ -626,6 +626,19 @@ class InputLabel extends Box implements IDataProider<String> {
 		this.endDragSelection();
 	}
 
+	/**
+	 * 销毁时也要做同样的清理。
+	 * 拖拽选区时会在 stage 上挂监听，界面整棵销毁时不走 onRemoveToStage，
+	 * 监听会把输入框及其父界面一直留在内存里
+	 */
+	override function dispose():Void {
+		if (__isFocus && TextInputUtils.input == this)
+			TextInputUtils.closeInput(this);
+		__isFocus = false;
+		this.endDragSelection();
+		super.dispose();
+	}
+
 	private var __dt:Float = 0;
 
 	override function onUpdate(dt:Float) {

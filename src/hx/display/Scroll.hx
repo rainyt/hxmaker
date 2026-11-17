@@ -136,12 +136,29 @@ class Scroll extends BoxContainer {
 
 	override function onRemoveToStage() {
 		super.onRemoveToStage();
-		if (this.hasEventListener(MouseEvent.MOUSE_DOWN)) {
-			this.removeEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
-			this.removeEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
-			this.stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
-			this.stage.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
+		removeStageListeners();
+	}
+
+	/**
+	 * 移除挂在 stage 上的监听。
+	 * 界面整棵子树被销毁时不一定走 onRemoveToStage，监听会永久留在 stage 上，
+	 * 而闭包会反向引用这个 Scroll 及其父界面（Heap Snapshot 实测整棵界面因此无法释放）。
+	 */
+	private function removeStageListeners():Void {
+		if (!this.hasEventListener(MouseEvent.MOUSE_DOWN))
+			return;
+		this.removeEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
+		this.removeEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
+		var st = this.stage;
+		if (st != null) {
+			st.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+			st.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
 		}
+	}
+
+	override function dispose():Void {
+		removeStageListeners();
+		super.dispose();
 	}
 
 	private var startX:Float = 0;

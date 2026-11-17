@@ -37,7 +37,8 @@ import hx.utils.KeyboardTools;
  * - `goInto(item)`进入指定文件夹；`goUp()`返回上一级，并像访达一样自动选中刚退出的文件夹；`goToRoot()`回到根层级
  * - `showParentRow`开启（默认）时，非根层级的第一行显示`..`行，双击它返回上一级
  * - `currentItem`为当前目录（`null`表示根层级），`path`是从根到当前目录的节点链，可用于自建面包屑导航
- * - 目录切换后清空选中并回到列表顶部，`PATH_CHANGED`的`event.data`为新目录（根层级为`null`）
+ * - 进入目录后清空选中并立即回到列表顶部；返回上级时自动选中并定位刚退出的文件夹
+ * - `PATH_CHANGED`的`event.data`为新目录（根层级为`null`）
  *
  * ### 多选
  *
@@ -400,9 +401,14 @@ class FinderView extends Scroll {
 		this.__selectSingleItem(null);
 		this.__rowsDirty = true;
 		this.__dataDirty = true;
-		var pos = this.getMoveingToData({scrollX: 0, scrollY: 0});
-		this.scrollX = pos.scrollX;
-		this.scrollY = pos.scrollY;
+		// 终止旧目录的补间、惯性和拖动，防止后续更新或鼠标松开时恢复旧位置
+		this.stopFreeSliding();
+		this.__down = false;
+		this.__mouseMoveTargetX = null;
+		this.__mouseMoveTargetY = null;
+		// 顶部坐标始终有效，无需读取尚未更新的旧目录内容尺寸
+		this.scrollX = 0;
+		this.scrollY = 0;
 		this.invalidate();
 		this.dispatchEvent(new Event(PATH_CHANGED, false, false, value));
 		if (selectExited && exited != null) {

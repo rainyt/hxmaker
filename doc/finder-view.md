@@ -58,7 +58,7 @@ finder.addEventListener(FinderView.PATH_CHANGED, function(event) {
 });
 ```
 
-事件的派发顺序：双击文件夹时先派发 `ITEM_DOUBLE_CLICKED`，进入后派发 `PATH_CHANGED`。目录切换后选择自动清空，列表回到顶部。
+事件的派发顺序：双击文件夹时先派发 `ITEM_DOUBLE_CLICKED`，进入后派发 `PATH_CHANGED`。进入目录时会终止旧目录的滚动动画、惯性和拖动，清空选择并立即回到列表顶部（`selectedIndex = -1`，不会自动选中第一行）。返回上级时仍自动选中并定位刚退出的文件夹。
 
 ### `..` 返回上级行
 

@@ -7,5 +7,5 @@ interface IEventDispatcher {
 	public function removeEventListener<T>(type:String, listener:T->Void):Void;
 	public function removeEventListeners(type:String = null):Void;
 	public function dispatchEvent(event:Event):Void;
-	public function hasEventListener(type:String):Bool;
+	public function hasEventListener(type:String, func:Event->Void = null):Bool;
 }

@@ -67,9 +67,13 @@ class EventDispatcher implements IEventDispatcher {
 	/**
 	 * 检查是否存在指定类型的事件侦听器
 	 * @param type 事件类型
-	 * @return 是否存在该类型的事件侦听器
+	 * @param func 可选的事件处理函数，为null时仅检查该类型是否存在侦听器
+	 * @return 是否存在符合条件的事件侦听器
 	 */
-	public function hasEventListener(type:String):Bool {
-		return __listeners.exists(type) && __listeners.get(type).length > 0;
+	public function hasEventListener(type:String, func:Event->Void = null):Bool {
+		var listeners = __listeners.get(type);
+		if (listeners == null)
+			return false;
+		return func == null ? listeners.length > 0 : listeners.contains(func);
 	}
 }

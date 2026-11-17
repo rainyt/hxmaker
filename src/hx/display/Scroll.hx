@@ -126,7 +126,7 @@ class Scroll extends BoxContainer {
 
 	override function onAddToStage() {
 		super.onAddToStage();
-		if (!this.hasEventListener(MouseEvent.MOUSE_DOWN)) {
+		if (!this.hasEventListener(MouseEvent.MOUSE_DOWN, cast onMouseDown)) {
 			this.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
 			this.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
 			this.stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
@@ -136,7 +136,7 @@ class Scroll extends BoxContainer {
 
 	override function onRemoveToStage() {
 		super.onRemoveToStage();
-		if (this.hasEventListener(MouseEvent.MOUSE_DOWN)) {
+		if (this.hasEventListener(MouseEvent.MOUSE_DOWN, cast onMouseDown)) {
 			this.removeEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
 			this.removeEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
 			this.stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);

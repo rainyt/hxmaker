@@ -410,10 +410,17 @@ class UIManager {
 				if (xml.exists(key)) {
 					var value = Std.parseInt(xml.get(key));
 					if (value != null)
-					Reflect.setField(appearance, key, value);
+						Reflect.setField(appearance, key, value);
 				}
 			}
-			for (key in ["padding", "itemPadding", "separatorWidth", "ellipsisWidth", "minimumCurrentWidth", "hoverAlpha"]) {
+			for (key in [
+				"padding",
+				"itemPadding",
+				"separatorWidth",
+				"ellipsisWidth",
+				"minimumCurrentWidth",
+				"hoverAlpha"
+			]) {
 				if (xml.exists(key))
 					Reflect.setField(appearance, key, Std.parseFloat(xml.get(key)));
 			}

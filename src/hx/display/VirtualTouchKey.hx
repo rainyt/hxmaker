@@ -87,16 +87,31 @@ class VirtualTouchKey extends Box {
 
 	override function onRemoveToStage() {
 		super.onRemoveToStage();
-		if (_isAutoListener) {
-			if (_touchEvent) {
-				stage.removeEventListener(TouchEvent.TOUCH_BEGIN, onKeyMouseDown);
-				stage.removeEventListener(TouchEvent.TOUCH_MOVE, onKeyMouseMove);
-				stage.removeEventListener(TouchEvent.TOUCH_END, onKeyMouseUp);
-			} else {
-				stage.removeEventListener(MouseEvent.MOUSE_DOWN, onKeyMouseDown);
-				stage.removeEventListener(MouseEvent.MOUSE_MOVE, onKeyMouseMove);
-				stage.removeEventListener(MouseEvent.MOUSE_UP, onKeyMouseUp);
-			}
+		removeStageListeners();
+	}
+
+	/**
+	 * 销毁时也要摘掉挂在 stage 上的监听，否则闭包会把摇杆及其父界面一直拽在内存里
+	 */
+	override function dispose():Void {
+		removeStageListeners();
+		super.dispose();
+	}
+
+	private function removeStageListeners():Void {
+		if (!_isAutoListener)
+			return;
+		var st = this.stage;
+		if (st == null)
+			return;
+		if (_touchEvent) {
+			st.removeEventListener(TouchEvent.TOUCH_BEGIN, onKeyMouseDown);
+			st.removeEventListener(TouchEvent.TOUCH_MOVE, onKeyMouseMove);
+			st.removeEventListener(TouchEvent.TOUCH_END, onKeyMouseUp);
+		} else {
+			st.removeEventListener(MouseEvent.MOUSE_DOWN, onKeyMouseDown);
+			st.removeEventListener(MouseEvent.MOUSE_MOVE, onKeyMouseMove);
+			st.removeEventListener(MouseEvent.MOUSE_UP, onKeyMouseUp);
 		}
 	}
 	#end

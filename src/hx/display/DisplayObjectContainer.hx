@@ -151,6 +151,8 @@ class DisplayObjectContainer extends DisplayObject {
 	 */
 	public function removeChild(child:DisplayObject):Void {
 		if (this.__children.remove(child)) {
+			// 摘除子树时如果全局焦点/悬停对象在它下面，先清掉，避免界面关掉后整棵树被静态引用钉住
+			Stage.clearFocusUnder(child);
 			if (child.__parent != null)
 				child.onRemoveToStage();
 			if (child.hasEventListener(Event.REMOVED_FROM_STAGE))

@@ -101,8 +101,9 @@ class Image extends DisplayObject implements IDataProider<BitmapData> implements
 					var leftWidth = rect.x;
 					var topHeight = rect.y;
 					var bottomHeight = (this.data.height - rect.y - rect.height);
-					var textureWidth = this.data.data.getWidth();
-					var textureHeight = this.data.data.getHeight();
+					// data.data 可能已被 dispose 置空，这里不能抛异常
+					var textureWidth = this.data.data != null ? this.data.data.getWidth() : 0;
+					var textureHeight = this.data.data != null ? this.data.data.getHeight() : 0;
 					var offsetX = this.data.uvOffsetX;
 					var offsetY = this.data.uvOffsetY;
 					// 左上
@@ -163,8 +164,9 @@ class Image extends DisplayObject implements IDataProider<BitmapData> implements
 					var outWidth = this.width % pWidth;
 					if (outWidth == 0)
 						outWidth = pWidth;
-					var textureWidth = this.data.data.getWidth();
-					var textureHeight = this.data.data.getHeight();
+					// data.data 可能已被 dispose 置空，这里不能抛异常
+					var textureWidth = this.data.data != null ? this.data.data.getWidth() : 0;
+					var textureHeight = this.data.data != null ? this.data.data.getHeight() : 0;
 					var offsetX = this.data.uvOffsetX;
 					var offsetY = this.data.uvOffsetY;
 					var drawX = 0.;
@@ -302,9 +304,14 @@ class Image extends DisplayObject implements IDataProider<BitmapData> implements
 			} else if (data.rect != null) {
 				__rect.width = data.rect.width;
 				__rect.height = data.rect.height;
-			} else {
+			} else if (data.data != null) {
 				__rect.width = data.data.getWidth();
 				__rect.height = data.data.getHeight();
+			} else {
+				// 位图已经被 dispose（data.data 被置空），但对象还挂在显示树上：
+				// 这里不能抛异常，否则整条布局/渲染流程会中断，游戏卡死。退化成 0 尺寸。
+				__rect.width = 0;
+				__rect.height = 0;
 			}
 		}
 		return super.__getRect();

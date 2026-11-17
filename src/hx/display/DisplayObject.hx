@@ -939,6 +939,8 @@ class DisplayObject extends EventDispatcher {
 		isDisposed = true;
 		contextMenu = null;
 		removeEventListeners();
+		// 清掉指向自己的全局焦点/悬停引用，否则整棵父级树无法回收
+		Stage.clearFocusUnder(this);
 	}
 
 	/** 是否已经销毁，用于防止菜单继续绑定以及恢复失效焦点。 */

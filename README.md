@@ -1,6 +1,8 @@
 # hxmaker
 A game engine that pursues fast development and rendering performance. It can freely implement game engine rendering backend, thereby enabling rendering to other engines.
 
+Spine JSON、二进制与分页图集加载说明见 [Spine 资源加载](docs/Spine资源加载.md)。
+
 # Stats
 At present, the game engine is still under development and cannot be fully put into use.
 
